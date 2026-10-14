@@ -1,0 +1,20 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "group": "red_mints",
+    "key": {
+        "#": {
+            "item": "cobblemon:red_mint_leaf"
+        },
+        "W": {
+            "item": "cobblemon:green_mint_leaf"
+        }
+    },
+    "pattern": [
+        "##",
+        "#W"
+    ],
+    "result": {
+        "id": "cobblemon:brave_mint"
+    }
+}

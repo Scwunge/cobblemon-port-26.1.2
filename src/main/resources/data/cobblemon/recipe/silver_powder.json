@@ -1,0 +1,21 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [
+        {
+            "item": "cobblemon:bug_gem"
+        },
+        {
+            "tag": "c:nuggets/iron"
+        },
+        {
+            "tag": "c:strings"
+        },
+        {
+            "item": "minecraft:paper"
+        }
+    ],
+    "result": {
+        "id": "cobblemon:silver_powder"
+    }
+}

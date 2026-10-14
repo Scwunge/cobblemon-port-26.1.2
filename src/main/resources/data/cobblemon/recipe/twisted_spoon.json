@@ -1,0 +1,18 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "misc",
+    "ingredients": [
+        {
+            "tag": "c:nuggets/iron"
+        },
+        {
+            "tag": "c:ingots/iron"
+        },
+        {
+            "item": "cobblemon:psychic_gem"
+        }
+    ],
+    "result": {
+        "id": "cobblemon:twisted_spoon"
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "species": "cobblemon:vileplume",
+  "order": 1,
+  "variations": [
+    {
+      "aspects": ["female"],
+      "model": "cobblemon:vileplume_female.geo"
+    }
+  ]
+}
