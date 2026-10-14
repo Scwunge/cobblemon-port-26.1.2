@@ -1,0 +1,12 @@
+{
+  "wants": {
+    "id": "minecraft:emerald",
+    "count": 5
+  },
+  "gives": {
+    "id": "cobblemon:chipped_pot"
+  },
+  "max_uses": 1,
+  "reputation_discount": 0.05,
+  "xp": 2
+}

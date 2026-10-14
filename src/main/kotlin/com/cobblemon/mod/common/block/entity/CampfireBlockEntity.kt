@@ -424,7 +424,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
     override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
         super.loadAdditional(tag, registries)
 
-        this.cookingProgress = tag.getInt("CookingProgress")
+        this.cookingProgress = tag.getIntOr("CookingProgress", 0)
 
         // Minecraft doesn't save empty item stacks to the items tag, so we have to manually clear them
         // otherwise they would never clear and seasonings would always render wrongly
@@ -433,7 +433,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
         ContainerHelper.loadAllItems(tag, this.items, registries)
 
         if (tag.contains("PotComponent")) {
-            val component = PotComponent.CODEC.parse(NbtOps.INSTANCE, tag.getCompound("PotComponent"))
+            val component = PotComponent.CODEC.parse(NbtOps.INSTANCE, tag.getCompoundOrEmpty("PotComponent"))
                 .result()
                 ?.orElse(null)
             potComponent = component

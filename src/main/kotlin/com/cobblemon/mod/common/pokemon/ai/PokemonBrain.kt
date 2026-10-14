@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
+import net.minecraft.world.entity.ai.Brain
 import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonBehaviours
 import com.cobblemon.mod.common.CobblemonMemories
@@ -84,7 +85,7 @@ object PokemonBrain {
 //            CobblemonSensors.NPC_BATTLING
     )
 
-    fun applyBrain(entity: PokemonEntity, pokemon: Pokemon, dynamic: Dynamic<*>) {
+    fun applyBrain(entity: PokemonEntity, pokemon: Pokemon, dynamic: Brain.Packed) {
         /*
          * Something to note here is that if we changed the autoPokemonPresets to be a set of presets rather than
          * the configurations inside the presets, the logic in ApplyPresets would actually result in the top

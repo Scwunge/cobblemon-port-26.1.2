@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.ai
 
+import net.minecraft.world.entity.ai.Brain
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
@@ -72,7 +73,7 @@ class BehaviourConfigurationContext {
         onAdd.add(script)
     }
 
-    fun apply(entity: LivingEntity, behaviourConfigs: List<BehaviourConfig>, dynamic: Dynamic<*>) {
+    fun apply(entity: LivingEntity, behaviourConfigs: List<BehaviourConfig>, dynamic: Brain.Packed) {
         runtime.withQueryValue("entity", entity.asMostSpecificMoLangValue())
         runtime.withQueryValue("brain", createBrainStruct(entity, this))
 

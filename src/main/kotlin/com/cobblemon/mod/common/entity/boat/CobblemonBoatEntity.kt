@@ -74,7 +74,7 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
 
     override fun readAdditionalSaveData(nbt: CompoundTag) {
         if (nbt.contains(TYPE_KEY, Tag.TAG_STRING.toInt())) {
-            this.boatType = CobblemonBoatType.valueOf(nbt.getString(TYPE_KEY))
+            this.boatType = CobblemonBoatType.valueOf(nbt.getStringOr(TYPE_KEY, ""))
         }
     }
 

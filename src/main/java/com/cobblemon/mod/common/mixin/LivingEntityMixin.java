@@ -159,4 +159,25 @@ public abstract class LivingEntityMixin extends Entity implements OrientationCon
         }
     }
 
+    /**
+     * Ridden Pokémon movement. PokemonEntity used to override this method, which is private since 26.1; see
+     * PokemonEntity#handleRiddenFrictionMovement.
+     */
+    @Inject(method = "handleRelativeFrictionAndCalculateMovement", at = @At("HEAD"), cancellable = true)
+    private void cobblemon$riddenFrictionMovement(Vec3 input, float friction, CallbackInfoReturnable<Vec3> cir) {
+        if ((Object) this instanceof PokemonEntity pokemonEntity) {
+            Vec3 movement = pokemonEntity.handleRiddenFrictionMovement(input, friction);
+            if (movement != null) {
+                cir.setReturnValue(movement);
+            }
+        }
+    }
+
+    /** The PokemonEntity override returned the entity's delta movement after vanilla movement ran; keep doing so. */
+    @Inject(method = "handleRelativeFrictionAndCalculateMovement", at = @At("RETURN"), cancellable = true)
+    private void cobblemon$unriddenFrictionMovement(Vec3 input, float friction, CallbackInfoReturnable<Vec3> cir) {
+        if ((Object) this instanceof PokemonEntity) {
+            cir.setReturnValue(this.getDeltaMovement());
+        }
+    }
 }

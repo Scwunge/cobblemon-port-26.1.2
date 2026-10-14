@@ -9,6 +9,8 @@
 package com.cobblemon.mod.common.block.entity
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.util.getUUID
+import com.cobblemon.mod.common.util.putUUID
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.api.cooking.getColourMixFromColors
@@ -284,7 +286,7 @@ open class PokeSnackBlockEntity(pos: BlockPos, state: BlockState) :
 
         loadTint(tag)
 
-        amountSpawned = tag.getInt(DataKeys.AMOUNT_SPAWNED)
+        amountSpawned = tag.getIntOr(DataKeys.AMOUNT_SPAWNED, 0)
 
         if (tag.contains(DataKeys.FOOD_COLOUR)) {
             CobblemonItemComponents.FOOD_COLOUR.codec()
@@ -314,7 +316,7 @@ open class PokeSnackBlockEntity(pos: BlockPos, state: BlockState) :
         }
 
         if (tag.contains(DataKeys.TICKS_UNTIL_NEXT_SPAWN)) {
-            randomTicksUntilNextSpawn = tag.getFloat(DataKeys.TICKS_UNTIL_NEXT_SPAWN)
+            randomTicksUntilNextSpawn = tag.getFloatOr(DataKeys.TICKS_UNTIL_NEXT_SPAWN, 0F)
         }
 
         if (tag.contains(DataKeys.PLACED_BY)) {

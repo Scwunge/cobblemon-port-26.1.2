@@ -21,7 +21,8 @@ import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.tags.TagKey
 import net.minecraft.world.inventory.MenuType
-import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.level.gamerules.GameRule
+import net.minecraft.world.level.gamerules.GameRuleCategory
 import net.minecraft.world.level.ItemLike
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.levelgen.GenerationStep
@@ -146,15 +147,14 @@ interface CobblemonImplementation {
     fun <A : ArgumentType<*>, T : ArgumentTypeInfo.Template<A>> registerCommandArgument(identifier: Identifier, argumentClass: KClass<A>, serializer: ArgumentTypeInfo<A, T>)
 
     /**
-     * TODO
+     * Registers a boolean game rule in the Cobblemon namespace.
      *
-     * @param T
-     * @param name
-     * @param category
-     * @param type
-     * @return
+     * @param name The path of the rule's identifier.
+     * @param category The category the rule is listed under.
+     * @param defaultValue The value of the rule in new worlds.
+     * @return The registered rule.
      */
-    fun <T : GameRules.Value<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T>
+    fun registerBooleanGameRule(name: String, category: GameRuleCategory, defaultValue: Boolean): GameRule<Boolean>
 
     /**
      * TODO

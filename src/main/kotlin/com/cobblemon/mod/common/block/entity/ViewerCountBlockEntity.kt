@@ -48,7 +48,7 @@ open class ViewerCountBlockEntity(type: BlockEntityType<*>?, blockPos: BlockPos,
 
     override fun loadAdditional(compoundTag: CompoundTag, registryLookup: HolderLookup.Provider) {
         super.loadAdditional(compoundTag, registryLookup)
-        viewerCount = if (compoundTag.contains(DataKeys.BLOCK_ENTITY_USER_AMOUNT)) compoundTag.getInt(DataKeys.BLOCK_ENTITY_USER_AMOUNT) else 0
+        viewerCount = if (compoundTag.contains(DataKeys.BLOCK_ENTITY_USER_AMOUNT)) compoundTag.getIntOr(DataKeys.BLOCK_ENTITY_USER_AMOUNT, 0) else 0
     }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {

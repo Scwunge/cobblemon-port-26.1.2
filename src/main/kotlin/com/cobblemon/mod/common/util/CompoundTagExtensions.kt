@@ -12,5 +12,5 @@ import com.cobblemon.mod.common.CobblemonEntities
 import net.minecraft.nbt.CompoundTag
 
 fun CompoundTag.isPokemonEntity() : Boolean {
-    return this.getString("id").equals(CobblemonEntities.POKEMON_KEY.toString())
+    return this.getStringOr("id", "").equals(CobblemonEntities.POKEMON_KEY.toString())
 }

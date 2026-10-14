@@ -9,22 +9,26 @@
 package com.cobblemon.mod.common.world.gamerules
 
 import com.cobblemon.mod.common.Cobblemon
-import com.cobblemon.mod.common.mixin.invoker.BooleanRuleInvoker
-import net.minecraft.world.level.gamerules.GameRules
+import net.minecraft.world.level.gamerules.GameRule
+import net.minecraft.world.level.gamerules.GameRuleCategory
 
+/**
+ * Cobblemon's game rules. Since 26.1 game rules are registry entries with lowercase identifiers, so the rules that
+ * were previously named e.g. "doPokemonSpawning" are now "cobblemon:do_pokemon_spawning".
+ */
 object CobblemonGameRules {
 
     @JvmField
-    val BATTLE_INVULNERABILITY: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("battleInvulnerability", GameRules.Category.PLAYER, BooleanRuleInvoker.`cobblemon$create`(false))
+    val BATTLE_INVULNERABILITY: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("battle_invulnerability", GameRuleCategory.PLAYER, false)
     @JvmField
-    val DO_POKEMON_SPAWNING: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("doPokemonSpawning", GameRules.Category.SPAWNING, BooleanRuleInvoker.`cobblemon$create`(true))
+    val DO_POKEMON_SPAWNING: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("do_pokemon_spawning", GameRuleCategory.SPAWNING, true)
     @JvmField
-    val DO_POKEMON_LOOT: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("doPokemonLoot", GameRules.Category.DROPS, BooleanRuleInvoker.`cobblemon$create`(true))
+    val DO_POKEMON_LOOT: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("do_pokemon_loot", GameRuleCategory.DROPS, true)
     @JvmField
-    val MOB_TARGET_IN_BATTLE: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("mobTargetInBattle", GameRules.Category.MOBS, BooleanRuleInvoker.`cobblemon$create`(true))
+    val MOB_TARGET_IN_BATTLE: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("mob_target_in_battle", GameRuleCategory.MOBS, true)
     @JvmField
-    val SHINY_STARTERS: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("doShinyStarters", GameRules.Category.MISC, BooleanRuleInvoker.`cobblemon$create`(false))
+    val SHINY_STARTERS: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("do_shiny_starters", GameRuleCategory.MISC, false)
     @JvmField
-    val HEALERS_HEAL_PC: GameRules.Key<GameRules.BooleanValue> = Cobblemon.implementation.registerGameRule("healersHealPC", GameRules.Category.MISC, BooleanRuleInvoker.`cobblemon$create`(false))
+    val HEALERS_HEAL_PC: GameRule<Boolean> = Cobblemon.implementation.registerBooleanGameRule("healers_heal_pc", GameRuleCategory.MISC, false)
 
 }

@@ -230,7 +230,7 @@ interface Evolution : EvolutionLike {
         this.shed(pokemon)
 
         val ownerPlayer = pokemon.getOwnerPlayer()
-        if (ownerPlayer != null && ownerPlayer.level().gameRules.getBoolean(CobblemonGameRules.DO_POKEMON_LOOT)) {
+        if (ownerPlayer != null && ownerPlayer.level().gameRules.get(CobblemonGameRules.DO_POKEMON_LOOT)) {
             drops.drop(
                 pokemon.entity,
                 ownerPlayer.level() as ServerLevel,

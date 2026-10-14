@@ -62,8 +62,8 @@ class PersistentStatusContainer(
 
         @Deprecated("Use the Codec instead", ReplaceWith("PersistentStatusContainer.CODEC"))
         fun loadFromNBT(nbt: CompoundTag): PersistentStatusContainer? {
-            val statusId = nbt.getString(DataKeys.POKEMON_STATUS_NAME)
-            val activeSeconds = nbt.getInt(DataKeys.POKEMON_STATUS_TIMER)
+            val statusId = nbt.getStringOr(DataKeys.POKEMON_STATUS_NAME, "")
+            val activeSeconds = nbt.getIntOr(DataKeys.POKEMON_STATUS_TIMER, 0)
 
             // Missing status id
             if (statusId.isEmpty()) {

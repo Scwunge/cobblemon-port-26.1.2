@@ -63,7 +63,7 @@ class ScriptNPCInteractionConfiguration : NPCInteractConfiguration {
     }
 
     override fun readFromNBT(compoundTag: CompoundTag) {
-        script = Identifier.parse(compoundTag.getString(DataKeys.NPC_INTERACT_SCRIPT))
+        script = Identifier.parse(compoundTag.getStringOr(DataKeys.NPC_INTERACT_SCRIPT, ""))
     }
 
     override fun isDifferentTo(other: NPCInteractConfiguration) = other !is ScriptNPCInteractionConfiguration || other.script != script

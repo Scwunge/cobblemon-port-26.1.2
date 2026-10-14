@@ -59,7 +59,7 @@ internal class PokemonP1(
         other.species = this.species
         other.form = this.form
         this.features.forEach { featureNbt ->
-            val featureId = featureNbt.getString(FEATURE_ID)
+            val featureId = featureNbt.getStringOr(FEATURE_ID, "")
             if (featureId.isEmpty()) {
                 return@forEach
             }
@@ -67,7 +67,7 @@ internal class PokemonP1(
             val feature = speciesFeatureProviders.firstNotNullOfOrNull { provider -> provider(featureNbt) } ?: return@forEach
             if (
                 featureNbt.contains("keys", Tag.TAG_STRING.toInt()) &&
-                !featureNbt.getList("keys", Tag.TAG_STRING.toInt()).contains(StringTag.valueOf(featureId))
+                !featureNbt.getListOrEmpty("keys").contains(StringTag.valueOf(featureId))
             ) {
                 return@forEach
             }

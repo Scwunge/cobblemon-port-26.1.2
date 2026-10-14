@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "cobblemon:wandering_trader/vivichoke_seeds",
+    "cobblemon:wandering_trader/saccharine_sapling",
+    "cobblemon:wandering_trader/hearty_grains",
+    "cobblemon:wandering_trader/chipped_pot",
+    "cobblemon:wandering_trader/masterpiece_teacup"
+  ]
+}

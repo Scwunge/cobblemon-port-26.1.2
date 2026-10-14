@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.molang
 
 import com.bedrockk.molang.runtime.MoLangRuntime
+import com.cobblemon.mod.common.util.allKeys
 import com.bedrockk.molang.runtime.MoParams
 import com.bedrockk.molang.runtime.struct.ArrayStruct
 import com.bedrockk.molang.runtime.struct.QueryStruct

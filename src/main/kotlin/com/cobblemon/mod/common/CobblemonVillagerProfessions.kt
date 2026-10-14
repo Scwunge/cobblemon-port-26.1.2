@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap
+import net.minecraft.network.chat.Component
+import net.minecraft.world.item.trading.TradeSet
 import com.cobblemon.mod.common.platform.PlatformRegistry
 import com.google.common.collect.ImmutableSet
 import net.minecraft.core.Holder
@@ -24,7 +27,7 @@ object CobblemonVillagerProfessions: PlatformRegistry<Registry<VillagerProfessio
     override val resourceKey: ResourceKey<Registry<VillagerProfession>> = Registries.VILLAGER_PROFESSION
 
     @JvmField
-    val NURSE = profession(CobblemonPoiTypes.NURSE_KEY, CobblemonSounds.VILLAGER_WORK_NURSE)
+    val NURSE = profession(CobblemonPoiTypes.NURSE_KEY, CobblemonSounds.VILLAGER_WORK_NURSE, CobblemonTradeOffers.NURSE_TRADE_SETS)
 
     /**
      * Register a villager profession texture override for Cobblemon villagers of the given [VillagerProfession] for specified names.
@@ -37,11 +40,12 @@ object CobblemonVillagerProfessions: PlatformRegistry<Registry<VillagerProfessio
         else -> null
     }
 
-    private fun profession(resourceKey: ResourceKey<PoiType>, soundEvent: SoundEvent?): VillagerProfession =
+    private fun profession(resourceKey: ResourceKey<PoiType>, soundEvent: SoundEvent?, tradeSets: Int2ObjectMap<ResourceKey<TradeSet>>): VillagerProfession =
         create(resourceKey.identifier().path, VillagerProfession(
-            resourceKey.identifier().toString(),
+            // The translation key villagers of a modded profession used before professions carried their own name.
+            Component.translatable("entity.minecraft.villager.${resourceKey.identifier().namespace}.${resourceKey.identifier().path}"),
             { holder: Holder<PoiType> -> holder.`is`(resourceKey) },
             { holder: Holder<PoiType> -> holder.`is`(resourceKey) },
-            ImmutableSet.of(), ImmutableSet.of(), soundEvent
+            ImmutableSet.of(), ImmutableSet.of(), soundEvent, tradeSets
         ))
 }

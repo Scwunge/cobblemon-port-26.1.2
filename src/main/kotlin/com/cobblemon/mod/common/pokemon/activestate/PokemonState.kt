@@ -9,6 +9,8 @@
 package com.cobblemon.mod.common.pokemon.activestate
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.util.getUUID
+import com.cobblemon.mod.common.util.putUUID
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
@@ -154,7 +156,7 @@ class ShoulderedState() : ActivePokemonState() {
 
     override fun readFromNBT(nbt: CompoundTag): PokemonState {
         super.readFromNBT(nbt)
-        isLeftShoulder = nbt.getBoolean(DataKeys.POKEMON_STATE_SHOULDER)
+        isLeftShoulder = nbt.getBooleanOr(DataKeys.POKEMON_STATE_SHOULDER, false)
         playerUUID = nbt.getUUID(DataKeys.POKEMON_STATE_PLAYER_UUID)
         stateId = nbt.getUUID(DataKeys.POKEMON_STATE_ID)
         pokemonUUID = nbt.getUUID(DataKeys.POKEMON_STATE_POKEMON_UUID)
@@ -219,8 +221,8 @@ class ShoulderedState() : ActivePokemonState() {
     }
 
     private fun isShoulderedPokemon(nbt: CompoundTag): Boolean = nbt.isPokemonEntity()
-            && nbt.getCompound(DataKeys.POKEMON)
-            .getCompound(DataKeys.POKEMON_STATE)
+            && nbt.getCompoundOrEmpty(DataKeys.POKEMON)
+            .getCompoundOrEmpty(DataKeys.POKEMON_STATE)
             .getUUID(DataKeys.POKEMON_STATE_ID) == this.stateId
 
     fun isStillShouldered(player: ServerPlayer) = isShoulderedPokemon(if (isLeftShoulder) player.shoulderEntityLeft else player.shoulderEntityRight)

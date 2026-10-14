@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.api.multiblock
 
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
+import com.cobblemon.mod.common.util.writeBlockPos
 import com.cobblemon.mod.common.util.DataKeys
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -55,7 +56,7 @@ abstract class MultiblockEntity(
             nbt.put(DataKeys.MULTIBLOCK_STORAGE, multiblockStructure!!.writeToNbt(registryLookup))
         }
         else if (masterBlockPos != null) {
-            nbt.put(DataKeys.CONTROLLER_BLOCK, NbtUtils.writeBlockPos(masterBlockPos))
+            nbt.put(DataKeys.CONTROLLER_BLOCK, writeBlockPos(masterBlockPos))
         }
     }
 

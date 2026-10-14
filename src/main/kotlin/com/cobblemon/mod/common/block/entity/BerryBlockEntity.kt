@@ -256,27 +256,27 @@ class BerryBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobblemon
     }
 
     override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        this.berryIdentifier = Identifier.parse(nbt.getString(BERRY).takeIf { it.isNotBlank() } ?: "cobblemon:pecha")
+        this.berryIdentifier = Identifier.parse(nbt.getStringOr(BERRY, "").takeIf { it.isNotBlank() } ?: "cobblemon:pecha")
         this.wasLoading = true
         this.growthPoints.clear()
-        this.growthTimer = nbt.getInt(GROWTH_TIMER).coerceAtLeast(0)
-        this.stageTimer = nbt.getInt(STAGE_TIMER).coerceAtLeast(0)
-        //this.lifeCycles = nbt.getInt(LIFE_CYCLES).coerceAtLeast(0)
-        nbt.getList(GROWTH_POINTS, ListTag.TAG_STRING.toInt()).filterIsInstance<StringTag>().forEach { element ->
+        this.growthTimer = nbt.getIntOr(GROWTH_TIMER, 0).coerceAtLeast(0)
+        this.stageTimer = nbt.getIntOr(STAGE_TIMER, 0).coerceAtLeast(0)
+        //this.lifeCycles = nbt.getIntOr(LIFE_CYCLES, 0).coerceAtLeast(0)
+        nbt.getListOrEmpty(GROWTH_POINTS).filterIsInstance<StringTag>().forEach { element ->
             // In case some 3rd party mutates the NBT incorrectly
             try {
                 val identifier = Identifier.parse(element.asString)
                 this.growthPoints += identifier
             } catch (ignored: IdentifierException) {}
         }
-        this.mulchDuration = nbt.getInt(MULCH_DURATION)
-        this.lastTickTime = nbt.getLong(LAST_TICK_TIME)
+        this.mulchDuration = nbt.getIntOr(MULCH_DURATION, 0)
+        this.lastTickTime = nbt.getLongOr(LAST_TICK_TIME, 0L)
         this.wasLoading = false
         if (nbt.contains(GROWTH_POINTS_SEQUENCE)) {
-            growthPointSequence = nbt.getString(GROWTH_POINTS_SEQUENCE)
+            growthPointSequence = nbt.getStringOr(GROWTH_POINTS_SEQUENCE, "")
         }
         if (nbt.contains(MULCH_VARIANT)) {
-            mulchVariant = MulchVariant.valueOf(nbt.getString(MULCH_VARIANT))
+            mulchVariant = MulchVariant.valueOf(nbt.getStringOr(MULCH_VARIANT, ""))
         }
         this.renderState?.needsRebuild = true
     }

@@ -9,6 +9,10 @@
 package com.cobblemon.mod.common.block.entity
 
 import com.cobblemon.mod.common.Cobblemon
+import com.cobblemon.mod.common.util.allKeys
+import com.cobblemon.mod.common.util.hasUUID
+import com.cobblemon.mod.common.util.getUUID
+import com.cobblemon.mod.common.util.putUUID
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
@@ -133,7 +137,7 @@ class HealingMachineBlockEntity(
         if (player != null) {
             val party = player.party()
             party.heal()
-            val healPC = player.level().gameRules.getBoolean(CobblemonGameRules.HEALERS_HEAL_PC);
+            val healPC = player.level().gameRules.get(CobblemonGameRules.HEALERS_HEAL_PC);
             if (healPC){
                 player.pc().forEach {it.heal()}
             }
@@ -164,11 +168,11 @@ class HealingMachineBlockEntity(
             this.currentUser = compoundTag.getUUID(DataKeys.HEALER_MACHINE_USER)
         }
         if (compoundTag.contains(DataKeys.HEALER_MACHINE_POKEBALLS)) {
-            val pokeBallsTag = compoundTag.getCompound(DataKeys.HEALER_MACHINE_POKEBALLS)
+            val pokeBallsTag = compoundTag.getCompoundOrEmpty(DataKeys.HEALER_MACHINE_POKEBALLS)
             // Keep around for compat with old format
             var index = 0
             for (key in pokeBallsTag.allKeys) {
-                val pokeBallId = pokeBallsTag.getString(key)
+                val pokeBallId = pokeBallsTag.getStringOr(key, "")
                 if (pokeBallId.isEmpty()) {
                     continue
                 }
@@ -181,13 +185,13 @@ class HealingMachineBlockEntity(
             }
         }
         if (compoundTag.contains(DataKeys.HEALER_MACHINE_TIME_LEFT)) {
-            this.healTimeLeft = compoundTag.getInt(DataKeys.HEALER_MACHINE_TIME_LEFT)
+            this.healTimeLeft = compoundTag.getIntOr(DataKeys.HEALER_MACHINE_TIME_LEFT, 0)
         }
         if (compoundTag.contains(DataKeys.HEALER_MACHINE_CHARGE)) {
-            this.healingCharge = compoundTag.getFloat(DataKeys.HEALER_MACHINE_CHARGE).coerceIn(0F..maxCharge)
+            this.healingCharge = compoundTag.getFloatOr(DataKeys.HEALER_MACHINE_CHARGE, 0F).coerceIn(0F..maxCharge)
         }
         if (compoundTag.contains(DataKeys.HEALER_MACHINE_INFINITE)) {
-            this.infinite = compoundTag.getBoolean(DataKeys.HEALER_MACHINE_INFINITE)
+            this.infinite = compoundTag.getBooleanOr(DataKeys.HEALER_MACHINE_INFINITE, false)
         }
     }
 

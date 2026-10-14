@@ -101,13 +101,13 @@ class GenericBedrockEntity(world: Level) : Entity(CobblemonEntities.GENERIC_BEDR
     }
 
     override fun readAdditionalSaveData(nbt: CompoundTag) {
-        this.category = Identifier.parse(nbt.getString(DataKeys.GENERIC_BEDROCK_CATEGORY))
-        this.aspects = nbt.getList(DataKeys.GENERIC_BEDROCK_ASPECTS, Tag.TAG_STRING.toInt()).map { it.asString }.toSet()
-        this.entityData.set(POSE_TYPE, PoseType.values()[nbt.getByte(DataKeys.GENERIC_BEDROCK_POSE_TYPE).toInt()])
-        this.scale = nbt.getFloat(DataKeys.GENERIC_BEDROCK_SCALE)
-        this.colliderWidth = nbt.getFloat(DataKeys.GENERIC_BEDROCK_COLLIDER_WIDTH)
-        this.colliderHeight = nbt.getFloat(DataKeys.GENERIC_BEDROCK_COLLIDER_HEIGHT)
-        this.syncAge = nbt.getBoolean(DataKeys.GENERIC_BEDROCK_SYNC_AGE)
+        this.category = Identifier.parse(nbt.getStringOr(DataKeys.GENERIC_BEDROCK_CATEGORY, ""))
+        this.aspects = nbt.getListOrEmpty(DataKeys.GENERIC_BEDROCK_ASPECTS).map { it.asString }.toSet()
+        this.entityData.set(POSE_TYPE, PoseType.values()[nbt.getByteOr(DataKeys.GENERIC_BEDROCK_POSE_TYPE, 0.toByte()).toInt()])
+        this.scale = nbt.getFloatOr(DataKeys.GENERIC_BEDROCK_SCALE, 0F)
+        this.colliderWidth = nbt.getFloatOr(DataKeys.GENERIC_BEDROCK_COLLIDER_WIDTH, 0F)
+        this.colliderHeight = nbt.getFloatOr(DataKeys.GENERIC_BEDROCK_COLLIDER_HEIGHT, 0F)
+        this.syncAge = nbt.getBooleanOr(DataKeys.GENERIC_BEDROCK_SYNC_AGE, false)
     }
 
     override fun addAdditionalSaveData(nbt: CompoundTag) {

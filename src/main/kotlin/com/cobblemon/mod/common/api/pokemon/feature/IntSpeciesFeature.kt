@@ -40,7 +40,7 @@ class IntSpeciesFeature(override var name: String) : SynchronizedSpeciesFeature,
     }
 
     override fun loadFromNBT(pokemonNBT: CompoundTag): SynchronizedSpeciesFeature {
-        value = pokemonNBT.getInt(name)
+        value = pokemonNBT.getIntOr(name, 0)
         return this
     }
 
@@ -144,7 +144,7 @@ class IntSpeciesFeatureProvider : SynchronizedSpeciesFeatureProvider<IntSpeciesF
     override fun invoke(nbt: CompoundTag): IntSpeciesFeature? {
         val key = keys.find { nbt.contains(it) }
         if (key == null) return null
-        return IntSpeciesFeature(keys.first(), nbt.getInt(key));
+        return IntSpeciesFeature(keys.first(), nbt.getIntOr(key, 0));
     }
 
     override fun invoke(json: JsonObject): IntSpeciesFeature? {

@@ -8,6 +8,16 @@
 
 package com.cobblemon.mod.fabric
 
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents
+import net.fabricmc.fabric.api.loot.v3.LootTableEvents
+import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PoiHelper
+import net.fabricmc.fabric.api.registry.CompostableRegistry
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader
+import net.fabricmc.fabric.api.resource.v1.pack.PackActivationType
+import net.fabricmc.fabric.impl.resource.ResourceLoaderImpl
 import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.advancement.predicate.CobblemonEntitySubPredicates
@@ -35,27 +45,17 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.entity.event.v1.EntitySleepEvents
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.event.player.UseBlockCallback
 import net.fabricmc.fabric.api.event.player.UseEntityCallback
-import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
-import net.fabricmc.fabric.api.loot.v2.LootTableEvents
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleBuilder
+import net.minecraft.world.level.gamerules.GameRule
+import net.minecraft.world.level.gamerules.GameRuleCategory
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricDefaultAttributeRegistry
-import net.fabricmc.fabric.api.`object`.builder.v1.trade.TradeOfferHelper
-import net.fabricmc.fabric.api.`object`.builder.v1.world.poi.PointOfInterestHelper
-import net.fabricmc.fabric.api.registry.CompostingChanceRegistry
 import net.fabricmc.fabric.api.registry.StrippableBlockRegistry
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType
-import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.Minecraft
 import net.minecraft.commands.synchronization.ArgumentTypeInfo
@@ -73,7 +73,6 @@ import net.minecraft.server.packs.resources.PreparableReloadListener
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.stats.Stats
 import net.minecraft.tags.TagKey
-import net.minecraft.util.profiling.ProfilerFiller
 import net.minecraft.world.InteractionResult
 import net.minecraft.world.level.gamerules.GameRules
 import net.minecraft.world.level.ItemLike
@@ -143,13 +142,13 @@ object CobblemonFabric : CobblemonImplementation {
             .forEach {
                 val mod = FabricLoader.getInstance().getModContainer(Cobblemon.MODID).get()
                 val resourcePackActivationType = when (it.activationBehaviour) {
-                    ResourcePackActivationBehaviour.NORMAL -> ResourcePackActivationType.NORMAL
-                    ResourcePackActivationBehaviour.DEFAULT_ENABLED -> ResourcePackActivationType.DEFAULT_ENABLED
-                    ResourcePackActivationBehaviour.ALWAYS_ENABLED -> ResourcePackActivationType.ALWAYS_ENABLED
+                    ResourcePackActivationBehaviour.NORMAL -> PackActivationType.NORMAL
+                    ResourcePackActivationBehaviour.DEFAULT_ENABLED -> PackActivationType.DEFAULT_ENABLED
+                    ResourcePackActivationBehaviour.ALWAYS_ENABLED -> PackActivationType.ALWAYS_ENABLED
                 }
                 val id = cobblemonResource(it.id)
                 val subPath = "${ if (it.packType == PackType.CLIENT_RESOURCES) "resourcepacks" else "datapacks" }/${id.path}"
-                ResourceManagerHelperImpl.registerBuiltinResourcePack(id, subPath, mod, it.displayName, resourcePackActivationType)
+                ResourceLoaderImpl.registerBuiltinPack(id, subPath, mod, it.displayName, resourcePackActivationType)
             }
 
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register { player, isLogin ->
@@ -186,7 +185,7 @@ object CobblemonFabric : CobblemonImplementation {
             return@register true
         }
 
-        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register { player, origin, destination ->
+        ServerEntityLevelChangeEvents.AFTER_PLAYER_CHANGE_LEVEL.register { player, origin, destination ->
             PlatformEvents.CHANGE_DIMENSION.post(ChangeDimensionEvent(player, origin, destination))
         }
 
@@ -214,8 +213,8 @@ object CobblemonFabric : CobblemonImplementation {
             return@register InteractionResult.PASS
         }
 
-        LootTableEvents.MODIFY.register { id, tableBuilder, source ->
-            LootInjector.attemptInjection(id.location(), tableBuilder::withPool)
+        LootTableEvents.MODIFY.register { key, tableBuilder, _, _ ->
+            LootInjector.attemptInjection(key.identifier(), tableBuilder::withPool)
         }
 
         CommandRegistrationCallback.EVENT.register(CobblemonCommands::register)
@@ -252,6 +251,7 @@ object CobblemonFabric : CobblemonImplementation {
         EntityDataSerializers.registerSerializer(PlatformTypeDataSerializer)
         EntityDataSerializers.registerSerializer(IdentifierDataSerializer)
         EntityDataSerializers.registerSerializer(UUIDSetDataSerializer)
+        EntityDataSerializers.registerSerializer(OptionalUUIDDataSerializer)
         EntityDataSerializers.registerSerializer(NPCPlayerTextureSerializer)
         EntityDataSerializers.registerSerializer(RideBoostsDataSerializer)
     }
@@ -259,7 +259,7 @@ object CobblemonFabric : CobblemonImplementation {
     override fun registerItems() {
         CobblemonItems.register { identifier, item -> Registry.register(CobblemonItems.registry, identifier, item) }
         CobblemonItemGroups.register { provider ->
-            Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, provider.key, FabricItemGroup.builder()
+            Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, provider.key, FabricCreativeModeTab.builder()
                 .title(provider.displayName)
                 .icon(provider.displayIconProvider)
                 .displayItems(provider.entryCollector)
@@ -267,7 +267,7 @@ object CobblemonFabric : CobblemonImplementation {
         }
 
         CobblemonItemGroups.injectorKeys().forEach { key ->
-            ItemGroupEvents.modifyEntriesEvent(key).register { content ->
+            CreativeModeTabEvents.modifyOutputEvent(key).register { content ->
                 val fabricInjector = FabricItemGroupInjector(content)
                 CobblemonItemGroups.inject(key, fabricInjector)
             }
@@ -292,15 +292,13 @@ object CobblemonFabric : CobblemonImplementation {
     }
 
     override fun registerPoiTypes() {
-        CobblemonPoiTypes.register { identifier, type -> PointOfInterestHelper.register(identifier, type.maxTickets, type.validRange, type.matchingStates) }
+        CobblemonPoiTypes.register { identifier, type -> PoiHelper.register(identifier, type.maxTickets, type.validRange, type.matchingStates) }
     }
 
     override fun registerVillagers() {
         CobblemonVillagerProfessions.register { identifier, profession -> Registry.register(CobblemonVillagerProfessions.registry, identifier, profession) }
 
-        CobblemonTradeOffers.tradeOffersForAll().forEach { tradeOffer -> TradeOfferHelper.registerVillagerOffers(tradeOffer.profession, tradeOffer.requiredLevel) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
-        // 1 = common trades, 2 = rare, it has no concept of levels
-        CobblemonTradeOffers.resolveWanderingTradeOffers().forEach { tradeOffer -> TradeOfferHelper.registerWanderingTraderOffers(if (tradeOffer.isRareTrade) 2 else 1) { factories -> factories.addAll(tradeOffer.tradeOffers) } }
+        // Trades are data driven since 26.1, see CobblemonTradeOffers.
     }
 
     override fun registerRecipeSerializers() {
@@ -333,7 +331,8 @@ object CobblemonFabric : CobblemonImplementation {
         ArgumentTypeRegistry.registerArgumentType(identifier, argumentClass.java, serializer)
     }
 
-    override fun <T : GameRules.Value<T>> registerGameRule(name: String, category: GameRules.Category, type: GameRules.Type<T>): GameRules.Key<T> = GameRuleRegistry.register(name, category, type)
+    override fun registerBooleanGameRule(name: String, category: GameRuleCategory, defaultValue: Boolean): GameRule<Boolean> =
+        GameRuleBuilder.forBoolean(defaultValue).category(category).buildAndRegister(cobblemonResource(name))
 
     override fun registerCriteria() {
         CobblemonCriteria.register { id, obj ->
@@ -353,52 +352,15 @@ object CobblemonFabric : CobblemonImplementation {
         dependencies: Collection<Identifier>,
         reloaderFactory: (HolderLookup.Provider) -> PreparableReloadListener
     ) {
-        if (type == PackType.SERVER_DATA) {
-            val resourceLoader = ResourceManagerHelper.get(PackType.SERVER_DATA)
-            resourceLoader.registerReloadListener(identifier,  { object : IdentifiableResourceReloadListener {
-                override fun reload(
-                    synchronizer: PreparableReloadListener.PreparationBarrier,
-                    manager: ResourceManager,
-                    prepareProfiler: ProfilerFiller,
-                    applyProfiler: ProfilerFiller,
-                    prepareExecutor: Executor,
-                    applyExecutor: Executor
-                ): CompletableFuture<Void> {
-                    return reloaderFactory.invoke(it).reload(synchronizer,
-                        manager, prepareProfiler, applyProfiler,
-                        prepareExecutor, applyExecutor)
-                }
-
-                override fun getFabricId() = identifier
-
-            }})
-        }
-        else {
-            val resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES)
-            resourceLoader.registerReloadListener(object : IdentifiableResourceReloadListener {
-                override fun reload(
-                    synchronizer: PreparableReloadListener.PreparationBarrier,
-                    manager: ResourceManager,
-                    prepareProfiler: ProfilerFiller,
-                    applyProfiler: ProfilerFiller,
-                    prepareExecutor: Executor,
-                    applyExecutor: Executor
-                ): CompletableFuture<Void> {
-                    return reloaderFactory.invoke(RegistryAccess.EMPTY).reload(synchronizer,
-                        manager, prepareProfiler, applyProfiler,
-                        prepareExecutor, applyExecutor)
-                }
-
-                override fun getFabricId() = identifier
-
-            })
-        }
+        val resourceLoader = ResourceLoader.get(type)
+        resourceLoader.registerReloadListener(identifier, CobblemonReloadListener(type, reloaderFactory))
+        dependencies.forEach { dependency -> resourceLoader.addListenerOrdering(dependency, identifier) }
     }
 
     override fun server(): MinecraftServer? = if (this.environment() == Environment.CLIENT) Minecraft.getInstance().singleplayerServer else this.server
 
     override fun registerCompostable(item: ItemLike, chance: Float) {
-        CompostingChanceRegistry.INSTANCE.add(item, chance)
+        CompostableRegistry.INSTANCE.add(item, chance)
     }
 
     override fun registerMobEffects() {
@@ -407,28 +369,35 @@ object CobblemonFabric : CobblemonImplementation {
         }
     }
 
-    private class CobblemonReloadListener(private val identifier: Identifier, private val reloader: PreparableReloadListener, private val dependencies: Collection<Identifier>) : IdentifiableResourceReloadListener {
-
-        override fun reload(synchronizer: PreparableReloadListener.PreparationBarrier, manager: ResourceManager, prepareProfiler: ProfilerFiller, applyProfiler: ProfilerFiller, prepareExecutor: Executor, applyExecutor: Executor): CompletableFuture<Void> = this.reloader.reload(synchronizer, manager, prepareProfiler, applyProfiler, prepareExecutor, applyExecutor)
-
-        override fun getFabricId(): Identifier = this.identifier
-
-        override fun getName(): String = this.reloader.name
-
-        override fun getFabricDependencies(): MutableCollection<Identifier> = this.dependencies.toMutableList()
+    /**
+     * Creates the actual reloader for each reload; server data reloaders get the registries being reloaded.
+     */
+    private class CobblemonReloadListener(
+        private val type: PackType,
+        private val reloaderFactory: (HolderLookup.Provider) -> PreparableReloadListener
+    ) : PreparableReloadListener {
+        override fun reload(
+            currentReload: PreparableReloadListener.SharedState,
+            taskExecutor: Executor,
+            preparationBarrier: PreparableReloadListener.PreparationBarrier,
+            reloadExecutor: Executor
+        ): CompletableFuture<Void> {
+            val registries = if (type == PackType.SERVER_DATA) currentReload.get(ResourceLoader.REGISTRY_LOOKUP_KEY) else RegistryAccess.EMPTY
+            return reloaderFactory(registries).reload(currentReload, taskExecutor, preparationBarrier, reloadExecutor)
+        }
     }
 
-    private class FabricItemGroupInjector(private val fabricItemGroupEntries: FabricItemGroupEntries) : CobblemonItemGroups.Injector {
+    private class FabricItemGroupInjector(private val fabricItemGroupEntries: FabricCreativeModeTabOutput) : CobblemonItemGroups.Injector {
         override fun putFirst(item: ItemLike) {
             this.fabricItemGroupEntries.prepend(item)
         }
 
         override fun putBefore(item: ItemLike, target: ItemLike) {
-            this.fabricItemGroupEntries.addBefore(target, item)
+            this.fabricItemGroupEntries.insertBefore(target, item)
         }
 
         override fun putAfter(item: ItemLike, target: ItemLike) {
-            this.fabricItemGroupEntries.addAfter(target, item)
+            this.fabricItemGroupEntries.insertAfter(target, item)
         }
 
         override fun putLast(item: ItemLike) {

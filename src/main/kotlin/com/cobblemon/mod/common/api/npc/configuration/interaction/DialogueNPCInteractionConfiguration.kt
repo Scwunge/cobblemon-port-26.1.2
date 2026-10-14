@@ -63,7 +63,7 @@ class DialogueNPCInteractionConfiguration : NPCInteractConfiguration {
     }
 
     override fun readFromNBT(compoundTag: CompoundTag) {
-        dialogue = Identifier.parse(compoundTag.getString(DataKeys.NPC_INTERACT_DIALOGUE))
+        dialogue = Identifier.parse(compoundTag.getStringOr(DataKeys.NPC_INTERACT_DIALOGUE, ""))
     }
 
     override fun isDifferentTo(other: NPCInteractConfiguration): Boolean {

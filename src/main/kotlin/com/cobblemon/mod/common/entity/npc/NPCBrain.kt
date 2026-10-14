@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.npc
 
+import net.minecraft.world.entity.ai.Brain
 import com.cobblemon.mod.common.CobblemonBehaviours
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.ai.BehaviourConfigurationContext
@@ -15,10 +16,9 @@ import com.cobblemon.mod.common.api.ai.config.AddVariablesConfig
 import com.cobblemon.mod.common.api.ai.config.ApplyBehaviours
 import com.cobblemon.mod.common.api.ai.config.BehaviourConfig
 import com.cobblemon.mod.common.api.npc.NPCClass
-import com.mojang.serialization.Dynamic
 
 object NPCBrain {
-    fun configure(npcEntity: NPCEntity, npcClass: NPCClass, dynamic: Dynamic<*>) {
+    fun configure(npcEntity: NPCEntity, npcClass: NPCClass, dynamic: Brain.Packed) {
         var behaviourConfigurations: List<BehaviourConfig> = CobblemonBehaviours.autoNPCBehaviours.flatMap { it.configurations } + npcClass.behaviours
         if (npcEntity.behavioursAreCustom) {
             behaviourConfigurations = listOf(ApplyBehaviours().apply { behaviours.addAll(npcEntity.behaviours) })

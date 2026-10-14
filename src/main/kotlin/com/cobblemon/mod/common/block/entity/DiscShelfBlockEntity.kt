@@ -246,7 +246,7 @@ class DiscShelfBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobbl
         super.loadAdditional(tag, registries)
         items.clear()
         ContainerHelper.loadAllItems(tag, items, registries)
-        lastInteractedSlot = tag.getInt("LastInteractedSlot")
+        lastInteractedSlot = tag.getIntOr("LastInteractedSlot", 0)
     }
 
     companion object {

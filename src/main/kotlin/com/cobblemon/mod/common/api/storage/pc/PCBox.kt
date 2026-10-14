@@ -158,16 +158,16 @@ open class PCBox(val pc: PCStore) : Iterable<Pokemon> {
 
     open fun loadFromNBT(nbt: CompoundTag, registryAccess: RegistryAccess): PCBox {
         if (nbt.contains(DataKeys.STORE_BOX_NAME)) {
-            name = nbt.getString(DataKeys.STORE_BOX_NAME)
+            name = nbt.getStringOr(DataKeys.STORE_BOX_NAME, "")
         }
 
         if (nbt.contains(DataKeys.STORE_BOX_WALLPAPER)) {
-            wallpaper = Identifier.parse(nbt.getString(DataKeys.STORE_BOX_WALLPAPER))
+            wallpaper = Identifier.parse(nbt.getStringOr(DataKeys.STORE_BOX_WALLPAPER, ""))
         }
 
         for (slot in 0 until POKEMON_PER_BOX) {
             if (nbt.contains(DataKeys.STORE_SLOT + slot)) {
-                val pokemonNBT = nbt.getCompound(DataKeys.STORE_SLOT + slot)
+                val pokemonNBT = nbt.getCompoundOrEmpty(DataKeys.STORE_SLOT + slot)
                 try {
                     pokemon[slot] = Pokemon.loadFromNBT(registryAccess, pokemonNBT)
                 } catch (_: InvalidSpeciesException) {

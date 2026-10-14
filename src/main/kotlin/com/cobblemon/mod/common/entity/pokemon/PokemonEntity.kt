@@ -8,7 +8,17 @@
 
 package com.cobblemon.mod.common.entity.pokemon
 
+import com.cobblemon.mod.common.api.net.serializers.OptionalUUIDDataSerializer
+import com.cobblemon.mod.common.util.asCompoundTag
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.level.storage.ValueInput
 import net.minecraft.world.entity.LivingEntity
+import com.cobblemon.mod.common.util.readBlockPos
+import com.cobblemon.mod.common.util.writeBlockPos
+import com.cobblemon.mod.common.util.hasUUID
+import com.cobblemon.mod.common.util.getUUID
+import com.cobblemon.mod.common.util.putUUID
 import net.minecraft.world.entity.EntityReference
 import java.util.UUID
 import com.bedrockk.molang.runtime.MoLangRuntime
@@ -131,7 +141,6 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
-import net.minecraft.network.protocol.game.DebugPackets
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
@@ -207,7 +216,7 @@ open class PokemonEntity(
         @JvmStatic val PHASING_TARGET_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.INT)
         @JvmStatic val PLATFORM_TYPE = SynchedEntityData.defineId(PokemonEntity::class.java, PlatformTypeDataSerializer)
         @JvmStatic val BEAM_MODE = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BYTE)
-        @JvmStatic val BATTLE_ID = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.OPTIONAL_UUID)
+        @JvmStatic val BATTLE_ID = SynchedEntityData.defineId(PokemonEntity::class.java, OptionalUUIDDataSerializer)
         @JvmStatic val ASPECTS = SynchedEntityData.defineId(PokemonEntity::class.java, StringSetDataSerializer)
         @JvmStatic val DYING_EFFECTS_STARTED = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.BOOLEAN)
         @JvmStatic val POSE_TYPE = SynchedEntityData.defineId(PokemonEntity::class.java, PoseTypeDataSerializer)
@@ -256,7 +265,8 @@ open class PokemonEntity(
         get() = form.behaviour
 
     /** Essentially a cached form of what was serialized to make memory reloads still work despite dynamic brain activities. */
-    private var brainDynamic: Dynamic<*>? = null
+    private var brainDynamic: Brain.Packed? = null
+    private var lastMoveDist = 0F
 
     var pokemon: Pokemon = pokemon
         set(value) {
@@ -537,17 +547,8 @@ open class PokemonEntity(
         super.handleEntityEvent(status)
     }
 
-    override fun sendDebugPackets() {
-        super.sendDebugPackets()
-        DebugPackets.sendEntityBrain(this)
-        DebugPackets.sendGoalSelector(level(), this, this.goalSelector)
-        DebugPackets.sendPathFindingPacket(
-            level(),
-            this,
-            this.navigation.path,
-            this.navigation.path?.distToTarget ?: 0F
-        )
-    }
+    // The brain/goal/path debug packets sent from sendDebugPackets were replaced by vanilla's debug subscription system
+    // in 1.21.9, which reports this entity's brain and path on its own.
 
     public override fun removePassenger(passenger: Entity) {
         occupiedSeats.entries.removeIf { it.value == passenger }
@@ -591,15 +592,15 @@ open class PokemonEntity(
         // Deals with special cases in which Pokemon should either be immune or buffed by lightning strikes.
         val isAbilityImmune = when (pokemon.ability.name) {
             "lightningrod" -> {
-                this.addEffect(MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 1))
+                this.addEffect(MobEffectInstance(MobEffects.STRENGTH, 1200, 1))
                 true
             }
             "motordrive" -> {
-                this.addEffect(MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, 1))
+                this.addEffect(MobEffectInstance(MobEffects.SPEED, 1200, 1))
                 true
             }
             "voltabsorb" -> {
-                this.addEffect(MobEffectInstance(MobEffects.HEAL, 1, 1))
+                this.addEffect(MobEffectInstance(MobEffects.INSTANT_HEALTH, 1, 1))
                 true
             }
             else -> false
@@ -659,7 +660,9 @@ open class PokemonEntity(
         super.tick()
 
         isPokemonFlying = flyDist - flyDistO > 0.005F
-        isPokemonWalking = walkDist - walkDistO > 0.005F
+        // Entity#walkDist/walkDistO are gone since 1.21.5; moveDist is the remaining (horizontal + climbing) counter.
+        isPokemonWalking = moveDist - lastMoveDist > 0.005F
+        lastMoveDist = moveDist
 
         if (passengers.isNotEmpty() && level().isClientSide) {
             rideSoundManager.tick()
@@ -713,7 +716,7 @@ open class PokemonEntity(
         ticksLived++
 
         if (ticksLived <= 20) {
-            clearRestriction()
+            clearHome()
             val spawnDirection = entityData.get(SPAWN_DIRECTION).takeIf { it.isFinite() } ?: 0F
             yBodyRot = (spawnDirection * 1000F).toInt() / 1000F
         }
@@ -777,10 +780,10 @@ open class PokemonEntity(
         }
     }
 
-    override fun customServerAiStep() {
-        this.getBrain().tick(level() as ServerLevel, this)
+    override fun customServerAiStep(level: ServerLevel) {
+        this.getBrain().tick(level, this)
 //        PokemonBrain.updateActivities(this)
-        super.customServerAiStep()
+        super.customServerAiStep(level)
     }
 
     fun getRideVelocity(): Vec3 {
@@ -816,7 +819,7 @@ open class PokemonEntity(
     /**
      * Prevents flying type Pokémon from taking fall damage.
      */
-    override fun causeFallDamage(fallDistance: Float, damageMultiplier: Float, damageSource: DamageSource): Boolean {
+    override fun causeFallDamage(fallDistance: Double, damageMultiplier: Float, damageSource: DamageSource): Boolean {
         /*return if (pokemon.ability.name == "levitate") {
             false
         } else {
@@ -831,7 +834,7 @@ open class PokemonEntity(
         return super.causeFallDamage(fallDistance, damageMultiplier, damageSource)
     }
 
-    override fun isInvulnerableTo(damageSource: DamageSource): Boolean {
+    override fun isInvulnerableTo(level: ServerLevel, damageSource: DamageSource): Boolean {
         // If the entity is busy, it cannot be hurt.
         if (busyLocks.isNotEmpty()) {
             return true
@@ -851,7 +854,7 @@ open class PokemonEntity(
             return true
         }
 
-        return super.isInvulnerableTo(damageSource)
+        return super.isInvulnerableTo(level, damageSource)
     }
 
     /**
@@ -912,7 +915,10 @@ open class PokemonEntity(
         return future
     }
 
-    override fun saveWithoutId(nbt: CompoundTag): CompoundTag {
+    override fun saveWithoutId(output: ValueOutput) {
+        // Entities save through ValueOutput since 1.21.6; Cobblemon's data is still assembled as NBT and written at the
+        // same top-level keys as before.
+        val nbt = CompoundTag()
         val tethering = this.tethering
         if (tethering != null) {
             val tetheringNbt = CompoundTag()
@@ -920,9 +926,9 @@ open class PokemonEntity(
             tetheringNbt.putUUID(DataKeys.POKEMON_UUID, tethering.pokemonId)
             tetheringNbt.putUUID(DataKeys.POKEMON_OWNER_ID, tethering.playerId)
             tetheringNbt.putUUID(DataKeys.PC_ID, tethering.pcId)
-            tetheringNbt.put(DataKeys.TETHER_MIN_ROAM_POS, NbtUtils.writeBlockPos(tethering.minRoamPos))
-            tetheringNbt.put(DataKeys.TETHER_MAX_ROAM_POS, NbtUtils.writeBlockPos(tethering.maxRoamPos))
-            tetheringNbt.put(DataKeys.TETHER_PASTURE_POS, NbtUtils.writeBlockPos(tethering.pasturePos))
+            tetheringNbt.put(DataKeys.TETHER_MIN_ROAM_POS, writeBlockPos(tethering.minRoamPos))
+            tetheringNbt.put(DataKeys.TETHER_MAX_ROAM_POS, writeBlockPos(tethering.maxRoamPos))
+            tetheringNbt.put(DataKeys.TETHER_PASTURE_POS, writeBlockPos(tethering.pasturePos))
             nbt.put(DataKeys.TETHERING, tetheringNbt)
         } else {
             nbt.put(DataKeys.POKEMON, pokemon.saveToNBT(registryAccess()))
@@ -951,10 +957,7 @@ open class PokemonEntity(
         if (!enablePoseTypeRecalculation) {
             nbt.putBoolean(DataKeys.POKEMON_RECALCULATE_POSE, enablePoseTypeRecalculation)
         }
-        val dataResult = this.brain.serializeStart(NbtOps.INSTANCE)
-        dataResult.resultOrPartial(::error).ifPresent { brain ->
-            nbt.put("Brain", brain)
-        }
+        // The brain itself ("Brain") is written by LivingEntity#addAdditionalSaveData since 26.1.
         nbt.putFloat(DataKeys.POKEMON_SCALE_MODIFIER, entityData.get(SCALE_MODIFIER))
 
         // save active effects
@@ -962,20 +965,22 @@ open class PokemonEntity(
 
         CobblemonEvents.POKEMON_ENTITY_SAVE.post(PokemonEntitySaveEvent(this, nbt))
 
-        return super.saveWithoutId(nbt)
+        output.putAll(nbt)
+        super.saveWithoutId(output)
     }
 
-    override fun load(nbt: CompoundTag) {
-        super.load(nbt)
+    override fun load(input: ValueInput) {
+        super.load(input)
+        val nbt = input.asCompoundTag()
         if (nbt.contains(DataKeys.TETHERING)) {
-            val tetheringNBT = nbt.getCompound(DataKeys.TETHERING)
+            val tetheringNBT = nbt.getCompoundOrEmpty(DataKeys.TETHERING)
             val tetheringId = tetheringNBT.getUUID(DataKeys.TETHERING_ID)
             val pcId = tetheringNBT.getUUID(DataKeys.PC_ID)
             val pokemonId = tetheringNBT.getUUID(DataKeys.POKEMON_UUID)
             val playerId = tetheringNBT.getUUID(DataKeys.POKEMON_OWNER_ID)
-            val minRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MIN_ROAM_POS).get()
-            val maxRoamPos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_MAX_ROAM_POS).get()
-            val pasturePos = NbtUtils.readBlockPos(tetheringNBT, DataKeys.TETHER_PASTURE_POS).get()
+            val minRoamPos = tetheringNBT.readBlockPos(DataKeys.TETHER_MIN_ROAM_POS).get()
+            val maxRoamPos = tetheringNBT.readBlockPos(DataKeys.TETHER_MAX_ROAM_POS).get()
+            val pasturePos = tetheringNBT.readBlockPos(DataKeys.TETHER_PASTURE_POS).get()
 
             val loadedPokemon = Cobblemon.storage.getPC(pcId, registryAccess())[pokemonId]
             if (loadedPokemon != null && loadedPokemon.tetheringId == tetheringId) {
@@ -1001,7 +1006,7 @@ open class PokemonEntity(
             // this will fuck with storages, as they are tied to these very pokemon instances and their observables
             val ops = registryAccess().createSerializationContext(NbtOps.INSTANCE)
             pokemon = try {
-                this.sidedCodec().decode(ops, nbt.getCompound(DataKeys.POKEMON)).orThrow.first
+                this.sidedCodec().decode(ops, nbt.getCompoundOrEmpty(DataKeys.POKEMON)).orThrow.first
             } catch (_: IllegalStateException) {
                 health = 0F
                 this.createSidedPokemon()
@@ -1020,7 +1025,7 @@ open class PokemonEntity(
 
         // apply active effects
         if (nbt.contains(DataKeys.ENTITY_EFFECTS)) effects.loadFromNBT(
-            nbt.getCompound(DataKeys.ENTITY_EFFECTS),
+            nbt.getCompoundOrEmpty(DataKeys.ENTITY_EFFECTS),
             this.level().registryAccess()
         )
 
@@ -1029,37 +1034,35 @@ open class PokemonEntity(
         entityData.set(NICKNAME, pokemon.nickname ?: Component.empty())
         entityData.set(MARK, pokemon.activeMark?.identifier.toString())
         entityData.set(LABEL_LEVEL, pokemon.level)
-        entityData.set(POSE_TYPE, PoseType.valueOf(nbt.getString(DataKeys.POKEMON_POSE_TYPE)))
-        entityData.set(BEHAVIOUR_FLAGS, nbt.getByte(DataKeys.POKEMON_BEHAVIOUR_FLAGS))
+        entityData.set(POSE_TYPE, PoseType.valueOf(nbt.getStringOr(DataKeys.POKEMON_POSE_TYPE, "")))
+        entityData.set(BEHAVIOUR_FLAGS, nbt.getByteOr(DataKeys.POKEMON_BEHAVIOUR_FLAGS, 0.toByte()))
         if (nbt.contains(DataKeys.POKEMON_FREEZE_FRAME)) {
-            entityData.set(FREEZE_FRAME, nbt.getFloat(DataKeys.POKEMON_FREEZE_FRAME))
+            entityData.set(FREEZE_FRAME, nbt.getFloatOr(DataKeys.POKEMON_FREEZE_FRAME, 0F))
         }
 
         if (nbt.contains(DataKeys.POKEMON_HIDE_LABEL)) {
-            entityData.set(HIDE_LABEL, nbt.getBoolean(DataKeys.POKEMON_HIDE_LABEL))
+            entityData.set(HIDE_LABEL, nbt.getBooleanOr(DataKeys.POKEMON_HIDE_LABEL, false))
         }
         if (nbt.contains(DataKeys.POKEMON_UNBATTLEABLE)) {
-            entityData.set(UNBATTLEABLE, nbt.getBoolean(DataKeys.POKEMON_UNBATTLEABLE))
+            entityData.set(UNBATTLEABLE, nbt.getBooleanOr(DataKeys.POKEMON_UNBATTLEABLE, false))
         }
         if (nbt.contains(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP)) {
-            countsTowardsSpawnCap = nbt.getBoolean(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP)
+            countsTowardsSpawnCap = nbt.getBooleanOr(DataKeys.POKEMON_COUNTS_TOWARDS_SPAWN_CAP, false)
         }
         if (nbt.contains(DataKeys.POKEMON_RECALCULATE_POSE)) {
-            enablePoseTypeRecalculation = nbt.getBoolean(DataKeys.POKEMON_RECALCULATE_POSE)
+            enablePoseTypeRecalculation = nbt.getBooleanOr(DataKeys.POKEMON_RECALCULATE_POSE, false)
         }
 
         if (nbt.contains(DataKeys.POKEMON_PLATFORM_TYPE)) {
-            entityData.set(PLATFORM_TYPE, PlatformType.valueOf(nbt.getString(DataKeys.POKEMON_PLATFORM_TYPE)))
+            entityData.set(PLATFORM_TYPE, PlatformType.valueOf(nbt.getStringOr(DataKeys.POKEMON_PLATFORM_TYPE, "")))
         }
 
-        if (nbt.contains("Brain", 10)) {
-            this.brain = this.makeBrain(Dynamic(NbtOps.INSTANCE, nbt.get("Brain")))
-        }
+        // The brain itself ("Brain") is read by LivingEntity#readAdditionalSaveData since 26.1.
 
         remakeBrain()
 
         if (nbt.contains(DataKeys.POKEMON_SCALE_MODIFIER)) {
-            entityData.set(SCALE_MODIFIER, nbt.getFloat(DataKeys.POKEMON_SCALE_MODIFIER))
+            entityData.set(SCALE_MODIFIER, nbt.getFloatOr(DataKeys.POKEMON_SCALE_MODIFIER, 0F))
         }
 
         CobblemonEvents.POKEMON_ENTITY_LOAD.postThen(
@@ -1089,7 +1092,7 @@ open class PokemonEntity(
     override fun getNavigation() = navigation as OmniPathNavigation
     override fun createNavigation(world: Level) = OmniPathNavigation(world, this)
 
-    override fun makeBrain(dynamic: Dynamic<*>): Brain<PokemonEntity> {
+    override fun makeBrain(dynamic: Brain.Packed): Brain<PokemonEntity> {
         this.brainDynamic = dynamic
         val target = pokemon
         if (target != null) {
@@ -1097,7 +1100,7 @@ open class PokemonEntity(
             return getBrain()
         } else {
             // Look around, nobody cares.
-            val brain = brainProvider().makeBrain(dynamic)
+            val brain = brainProvider().makeBrain(this, dynamic)
             return brain
         }
     }
@@ -1107,15 +1110,15 @@ open class PokemonEntity(
     }
 
     override fun assignNewBrainWithMemoriesAndSensors(
-        dynamic: Dynamic<*>,
+        dynamic: Brain.Packed,
         memories: Set<MemoryModuleType<*>>,
         sensors: Set<SensorType<*>>
     ): Brain<PokemonEntity> {
         val allSensors = BuiltInRegistries.SENSOR_TYPE.toSet().filterIsInstance<SensorType<Sensor<in PokemonEntity>>>()
-        val brain = Brain.provider(
+        val brain = Brain.provider<PokemonEntity>(
             memories,
             allSensors.filter { it in sensors }.toSet()
-        ).makeBrain(dynamic)
+        ) { emptyList() }.makeBrain(this, dynamic)
         this.brain = brain
         return brain
     }
@@ -1124,7 +1127,7 @@ open class PokemonEntity(
     override fun getBrain(): Brain<PokemonEntity> = super.getBrain() as Brain<PokemonEntity>
 
     // Won't be the final call but Mojang is very confident we'll use their same structure. Think again, bucko.
-    override fun brainProvider(): Brain.Provider<PokemonEntity> = Brain.provider(PokemonBrain.MEMORY_MODULES, PokemonBrain.SENSORS)
+    fun brainProvider(): Brain.Provider<PokemonEntity> = Brain.provider(PokemonBrain.MEMORY_MODULES, PokemonBrain.SENSORS) { emptyList() }
 
     override fun onPathfindingDone() {
         super.onPathfindingDone()
@@ -1177,7 +1180,7 @@ open class PokemonEntity(
         return pokemon.form.shoulderMountable && !pokemon.isAlpha
     }
 
-    override fun wantsToPickUp(stack: ItemStack): Boolean {
+    override fun wantsToPickUp(level: ServerLevel, stack: ItemStack): Boolean {
         val pickupItems = config.getObjectList<ObtainableItem>(PokemonItemSensor.PICKUP_ITEMS)
         return this.canHoldItem(stack) &&
                 (pickupItems.findMatchingEntry(registryAccess(), stack)?.pickupPriority
@@ -1348,8 +1351,8 @@ open class PokemonEntity(
         return super.doHurtTarget(target)
     }
 
-    override fun hurt(source: DamageSource, amount: Float): Boolean {
-        return if (super.hurt(source, amount)) {
+    override fun hurtServer(level: ServerLevel, source: DamageSource, amount: Float): Boolean {
+        return if (super.hurtServer(level, source, amount)) {
             effects.mockEffect?.takeIf { it is IllusionEffect && this.battleId == null }?.end(this)
 
             if (this.health == 0F) {
@@ -1671,10 +1674,10 @@ open class PokemonEntity(
         var isLeft = false
         // Use copies because player doesn't expose a forceful update of shoulder data
         val nbt = when {
-            player.shoulderEntityRight.isPokemonEntity() && player.shoulderEntityRight.getCompound(DataKeys.POKEMON)
+            player.shoulderEntityRight.isPokemonEntity() && player.shoulderEntityRight.getCompoundOrEmpty(DataKeys.POKEMON)
                 .getUUID(DataKeys.POKEMON_UUID) == this.pokemon.uuid -> player.shoulderEntityRight.copy()
 
-            player.shoulderEntityLeft.isPokemonEntity() && player.shoulderEntityLeft.getCompound(DataKeys.POKEMON)
+            player.shoulderEntityLeft.isPokemonEntity() && player.shoulderEntityLeft.getCompoundOrEmpty(DataKeys.POKEMON)
                 .getUUID(DataKeys.POKEMON_UUID) == this.pokemon.uuid -> {
                 isLeft = true
                 player.shoulderEntityLeft.copy()
@@ -1810,7 +1813,7 @@ open class PokemonEntity(
             pokemon.tetheringId = null
         }
         if (evolutionEntity != null) {
-            evolutionEntity!!.kill()
+            (level() as? ServerLevel)?.let { evolutionEntity!!.kill(it) }
             pokemon.entity?.evolutionEntity = null
         }
     }
@@ -1840,18 +1843,16 @@ open class PokemonEntity(
         }
     }
 
-    override fun dropExperience(attacker: Entity?) {
+    override fun dropExperience(level: ServerLevel, attacker: Entity?) {
         // Copied over the entire function because it's the simplest way to switch out the gamerule check
         if (
-            level() is ServerLevel && !this.wasExperienceConsumed() &&
+            !this.wasExperienceConsumed() &&
             (isAlwaysExperienceDropper ||
-                    lastHurtByPlayerTime > 0 &&
+                    lastHurtByPlayerMemoryTime > 0 &&
                     shouldDropExperience() &&
-                    level().gameRules.getBoolean(
-                        CobblemonGameRules.DO_POKEMON_LOOT
-                    ))
+                    level.gameRules.get(CobblemonGameRules.DO_POKEMON_LOOT))
         ) {
-            ExperienceOrb.award(level() as ServerLevel, position(), baseExperienceReward)
+            ExperienceOrb.award(level, position(), getBaseExperienceReward(level))
         }
     }
 
@@ -1872,9 +1873,14 @@ open class PokemonEntity(
         }
     }
 
-    override fun handleRelativeFrictionAndCalculateMovement(deltaMovement: Vec3, friction: Float): Vec3 {
+    /**
+     * Ridden movement, formerly an override of LivingEntity#handleRelativeFrictionAndCalculateMovement (private since
+     * 26.1, so LivingEntityMixin calls this instead). Returns null when vanilla movement should run; in that case the
+     * mixin still returns the resulting delta movement, as this override did.
+     */
+    fun handleRiddenFrictionMovement(deltaMovement: Vec3, friction: Float): Vec3? {
         if (!this.hasRider() || this.controllingPassenger == null) {
-            super.handleRelativeFrictionAndCalculateMovement(deltaMovement, friction)
+            return null
         } else {
             val velocity = ifRidingAvailableSupply(fallback = Vec3.ZERO) { behaviour, settings, state ->
                 behaviour.velocity(settings, state, this, this.controllingPassenger as Player, deltaMovement)
@@ -1950,7 +1956,7 @@ open class PokemonEntity(
 
                 this.move(MoverType.SELF, this.deltaMovement)
 
-                if (this.horizontalCollision && this.isControlledByLocalInstance) {
+                if (this.horizontalCollision && this.isLocalInstanceAuthoritative) {
                     ifRidingAvailable { behaviour, settings, state ->
                         // Tried minus performed = vector pointing at where we *couldn't* go
                         val delta = triedMovement.subtract(this.deltaMovement)
@@ -2148,7 +2154,7 @@ open class PokemonEntity(
 
     override fun dampensVibrations(): Boolean = pokemon.dampensVibrations()
 
-    override fun shear(shearedSoundCategory: SoundSource) {
+    override fun shear(level: ServerLevel, shearedSoundCategory: SoundSource, tool: ItemStack) {
         val slowpokeTailFeature = SlowpokeTailRegrowthSpeciesFeatureProvider.getFromPokemon(pokemon)
         if (slowpokeTailFeature != null && slowpokeTailFeature.regrowthSeconds <= 0) {
             this.level().playSound(null, this, SoundEvents.SHEEP_SHEAR, shearedSoundCategory, 1.0F, 1.0F)
@@ -2182,7 +2188,7 @@ open class PokemonEntity(
                 "pink" -> Items.PINK_WOOL
                 else -> Items.WHITE_WOOL
             }
-            val itemEntity = this.spawnAtLocation(woolItem, 1) ?: return
+            val itemEntity = this.spawnAtLocation(level, ItemStack(woolItem), 1F) ?: return
             jitterDropItem(itemEntity)
         }
     }
@@ -2390,7 +2396,7 @@ open class PokemonEntity(
                     //val velocity = Vec3d(-sin(f) * jumpVector.x, jumpVector.y, cos(f) * jumpVector.z)
 
                     this.addDeltaMovement(velocity)
-                    hasImpulse = true
+                    needsSync = true
                     jumping = false
                 }
 

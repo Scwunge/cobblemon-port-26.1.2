@@ -79,16 +79,16 @@ class HabitatSpawn {
     }
 
     fun readFromNBT(nbt: CompoundTag) {
-        species = PokemonSpecies.getByIdentifier(nbt.getString(DataKeys.HABITAT_POOL_SPAWN_SPECIES).asIdentifierDefaultingNamespace())!!
-        spawnablePositionType = nbt.getString(DataKeys.HABITAT_POOL_SPAWN_POSITION_TYPE)
-        weight = nbt.getFloat(DataKeys.HABITAT_POOL_SPAWN_WEIGHT)
-        levelRange = IntRangeAdapter.deserialize(nbt.getString(DataKeys.HABITAT_POOL_SPAWN_LEVEL_RANGE))
-        modifiers = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MODIFIERS)) PokemonProperties.parse(nbt.getString(DataKeys.HABITAT_POOL_SPAWN_MODIFIERS)) else null
-        phases = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_PHASES)) IntRangesAdapter.basic.deserialize(nbt.getString(DataKeys.HABITAT_POOL_SPAWN_PHASES)) else null
-        timeRange = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_TIMES)) TimeRange.adapter.deserialize(nbt.getString(DataKeys.HABITAT_POOL_SPAWN_TIMES)) else null
-        minLight = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MIN_LIGHT)) nbt.getInt(DataKeys.HABITAT_POOL_SPAWN_MIN_LIGHT) else null
-        maxLight = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MAX_LIGHT)) nbt.getInt(DataKeys.HABITAT_POOL_SPAWN_MAX_LIGHT) else null
-        bucket = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_BUCKET)) nbt.getString(DataKeys.HABITAT_POOL_SPAWN_BUCKET) else "common"
+        species = PokemonSpecies.getByIdentifier(nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_SPECIES, "").asIdentifierDefaultingNamespace())!!
+        spawnablePositionType = nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_POSITION_TYPE, "")
+        weight = nbt.getFloatOr(DataKeys.HABITAT_POOL_SPAWN_WEIGHT, 0F)
+        levelRange = IntRangeAdapter.deserialize(nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_LEVEL_RANGE, ""))
+        modifiers = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MODIFIERS)) PokemonProperties.parse(nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_MODIFIERS, "")) else null
+        phases = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_PHASES)) IntRangesAdapter.basic.deserialize(nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_PHASES, "")) else null
+        timeRange = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_TIMES)) TimeRange.adapter.deserialize(nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_TIMES, "")) else null
+        minLight = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MIN_LIGHT)) nbt.getIntOr(DataKeys.HABITAT_POOL_SPAWN_MIN_LIGHT, 0) else null
+        maxLight = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_MAX_LIGHT)) nbt.getIntOr(DataKeys.HABITAT_POOL_SPAWN_MAX_LIGHT, 0) else null
+        bucket = if (nbt.contains(DataKeys.HABITAT_POOL_SPAWN_BUCKET)) nbt.getStringOr(DataKeys.HABITAT_POOL_SPAWN_BUCKET, "") else "common"
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {

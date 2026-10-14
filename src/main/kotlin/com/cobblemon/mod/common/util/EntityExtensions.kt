@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
+import net.minecraft.world.entity.ai.Brain
 import com.google.common.collect.ImmutableMap
 import com.mojang.serialization.Dynamic
 import com.mojang.serialization.JavaOps
@@ -40,10 +41,8 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 
 
-fun Entity.makeEmptyBrainDynamic() = Dynamic(
-    NbtOps.INSTANCE,
-    NbtOps.INSTANCE.createMap(ImmutableMap.of(NbtOps.INSTANCE.createString("memories"), NbtOps.INSTANCE.emptyMap() as Tag)) as Tag
-)
+/** A brain with no saved memories (brains are packed as [Brain.Packed] rather than raw NBT since 26.1). */
+fun Entity.makeEmptyBrainDynamic(): Brain.Packed = Brain.Packed.EMPTY
 
 fun Entity.effectiveName() = this.displayName ?: this.name
 
