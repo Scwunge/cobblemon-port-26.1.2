@@ -133,8 +133,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             it.environment.query.addFunction("get_pokedex") { CobblemonClient.clientPokedexData.struct }
         }
 
-        var x: Int = 0
-        var y: Int = 0
+        // The row position is the entry's own x/y (Entry is a LayoutElement since 1.21.9)
 
         override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             // Entry geometry is no longer passed in (1.21.9); these match the old arguments.

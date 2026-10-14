@@ -339,3 +339,11 @@ fun ByteBuf.readMatrix4f(): Matrix4f {
     )
 }
 
+
+/** A list whose entries may decode to null; FriendlyByteBuf#readList no longer allows that since 1.21.9. */
+fun <T> FriendlyByteBuf.readNullableEntryList(reader: (FriendlyByteBuf) -> T?): List<T?> {
+    val size = readVarInt()
+    val list = ArrayList<T?>(size)
+    repeat(size) { list.add(reader(this)) }
+    return list
+}

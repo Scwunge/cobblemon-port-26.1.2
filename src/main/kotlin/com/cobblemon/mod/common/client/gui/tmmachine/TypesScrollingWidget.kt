@@ -99,8 +99,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
             private val slotDisabledResource = cobblemonResource("textures/gui/tmmachine/type_slot_disabled.png")
         }
 
-        var x: Int = 0
-        var y: Int = 0
+        // The row position is the entry's own x/y (Entry is a LayoutElement since 1.21.9)
         var disabled: Boolean = false
         var disabledExclusions: Set<ElementalType?> = setOf(null)
 

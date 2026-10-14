@@ -46,8 +46,8 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
 
     /** AbstractSelectionList#getScrollAmount/setScrollAmount before 1.21.9. */
     var scrollAmount: Double
-        get() = scrollAmount()
-        set(value) { setScrollAmount(value) }
+        @JvmName("getCobblemonScrollAmount") get() = scrollAmount()
+        @JvmName("setCobblemonScrollAmount") set(value) { setScrollAmount(value) }
 
     /** The total height of the rows (AbstractSelectionList#getMaxPosition before 1.21.9). */
     open val maxPosition: Int

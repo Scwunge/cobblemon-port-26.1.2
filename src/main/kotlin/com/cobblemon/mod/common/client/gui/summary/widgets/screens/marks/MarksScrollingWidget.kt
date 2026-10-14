@@ -112,8 +112,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
             private val slotResource = cobblemonResource("textures/gui/summary/summary_mark_slot.png")
         }
 
-        var x: Int = 0
-        var y: Int = 0
+        // The row position is the entry's own x/y (Entry is a LayoutElement since 1.21.9)
 
         fun renderRow(context: GuiGraphicsExtractor, y: Int, x: Int, mouseX: Int, mouseY: Int): Boolean {
             var anyHovered = false
