@@ -83,7 +83,7 @@ class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBloc
 
     override fun canSurvive(state: BlockState, world: LevelReader, pos: BlockPos): Boolean {
         val floor = world.getBlockState(pos.below())
-        return (world.getRawBrightness(pos, 0) >= 8 || world.canSeeSky(pos)) && ((this.isWild(state) && (floor.`is`(BlockTags.DIRT) || floor.`is`(Blocks.FARMLAND)) || this.mayPlaceOn(floor, world, pos)))
+        return (world.getRawBrightness(pos, 0) >= 8 || world.canSeeSky(pos)) && ((this.isWild(state) && (floor.`is`(BlockTags.SUBSTRATE_OVERWORLD) || floor.`is`(Blocks.FARMLAND)) || this.mayPlaceOn(floor, world, pos)))
     }
 
     fun isWild(state: BlockState): Boolean = state.getValue(IS_WILD)
@@ -91,7 +91,7 @@ class BugwortBlock(settings: Properties) : CropBlock(settings), BonemealableBloc
         val blockPos = pos!!.below()
         val down = pos.below()
         val floor = world.getBlockState(down)
-        return floor.`is`(BlockTags.DIRT) || floor.`is`(Blocks.FARMLAND)
+        return floor.`is`(BlockTags.SUBSTRATE_OVERWORLD) || floor.`is`(Blocks.FARMLAND)
     }
 
     // TODO after 1.7

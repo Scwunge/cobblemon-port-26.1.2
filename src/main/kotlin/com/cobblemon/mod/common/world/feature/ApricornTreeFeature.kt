@@ -58,7 +58,7 @@ class ApricornTreeFeature : Feature<BlockStateConfiguration>(BlockStateConfigura
             }
         }
 
-        if (!worldGenLevel.getBlockState(origin.below()).`is`(BlockTags.DIRT)) {
+        if (!worldGenLevel.getBlockState(origin.below()).`is`(BlockTags.SUBSTRATE_OVERWORLD)) {
             return false
         }
 

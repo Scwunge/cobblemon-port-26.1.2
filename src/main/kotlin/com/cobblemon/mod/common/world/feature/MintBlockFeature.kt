@@ -25,7 +25,7 @@ class MintBlockFeature : Feature<BlockStateConfiguration>(BlockStateConfiguratio
         val blockState = context.config().state
         val floor = blockPos.below()
 
-        if (!world.getBlockState(floor).`is`(BlockTags.DIRT)) return false
+        if (!world.getBlockState(floor).`is`(BlockTags.SUBSTRATE_OVERWORLD)) return false
 
         // Attempt to get at least one other valid position for the crop
         val validPlacements = getValidPositions(world, blockPos)
@@ -51,7 +51,7 @@ class MintBlockFeature : Feature<BlockStateConfiguration>(BlockStateConfiguratio
                     if (x == 0 && z == 0) continue
                     val offsetPos = origin.offset(x, y, z)
                     val floorBlockState = world.getBlockState(offsetPos.below())
-                    if (world.isEmptyBlock(offsetPos) && floorBlockState.`is`(BlockTags.DIRT)) {
+                    if (world.isEmptyBlock(offsetPos) && floorBlockState.`is`(BlockTags.SUBSTRATE_OVERWORLD)) {
                         validPositions.add(offsetPos)
                     }
                 }

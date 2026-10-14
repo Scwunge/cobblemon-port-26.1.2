@@ -52,4 +52,9 @@ public class GuiMixin {
         }
         return hideGui;
     }
+
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void cobblemon$renderPokedexScanner(GuiGraphicsExtractor context, DeltaTracker tickCounter, CallbackInfo ci) {
+        CobblemonClient.INSTANCE.renderPokedexScanner(context, tickCounter);
+    }
 }
