@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"1": "cobblemon:block/decorative/wide_lens",
-        "particle": "cobblemon:item/held_items/wide_lens"
+        "particle": "cobblemon:block/held_items/wide_lens"
 	},
 	"elements": [
 		{

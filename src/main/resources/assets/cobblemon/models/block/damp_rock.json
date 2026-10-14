@@ -2,7 +2,7 @@
 	"texture_size": [32, 32],
 	"textures": {
 		"0": "cobblemon:block/decorative/damp_rock",
-		"particle": "cobblemon:item/held_items/damp_rock"
+		"particle": "cobblemon:block/held_items/damp_rock"
 	},
 	"elements": [
 		{
