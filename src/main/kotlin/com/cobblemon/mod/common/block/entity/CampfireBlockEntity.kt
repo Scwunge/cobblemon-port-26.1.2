@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -159,7 +161,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
             fun <T : CookingPotRecipeBase> fetchRecipe(
                 recipeType: RecipeType<T>
             ): Optional<RecipeHolder<CookingPotRecipeBase>> {
-                val optional = level.recipeManager.getRecipeFor(recipeType, craftingInput, level)
+                val optional = level.recipeAccess().synchronizedRecipes.getFirstMatch(recipeType, craftingInput, level)
                 @Suppress("UNCHECKED_CAST")
                 return optional.map { it as RecipeHolder<CookingPotRecipeBase> }
             }
@@ -176,7 +178,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
             else {
                 val cookingPotRecipe = optionalRecipe
                 val recipe = cookingPotRecipe.value()
-                val cookedItem = recipe.assemble(craftingInput, level.registryAccess())
+                val cookedItem = recipe.assemble(craftingInput)
                 val resultSlotItem = campfireBlockEntity.getItem(0)
 
                 recipe.applySeasoning(cookedItem, campfireBlockEntity.getSeasonings().filter { it.`is`(recipe.seasoningTag) })
@@ -422,7 +424,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
 
             tag.putInt("CookingProgress", this.cookingProgress)
 
-            ContainerHelper.saveAllItems(tag, this.items, registries)
+            saveAllItems(tag, this.items, registries)
             potComponent?.let { component ->
                 PotComponent.CODEC.encodeStart(NbtOps.INSTANCE, component)
                     .result()
@@ -444,7 +446,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
         // otherwise they would never clear and seasonings would always render wrongly
 
         clearContent()
-        ContainerHelper.loadAllItems(tag, this.items, registries)
+        loadAllItems(tag, this.items, registries)
 
         if (tag.contains("PotComponent")) {
             val component = PotComponent.CODEC.parse(NbtOps.INSTANCE, tag.getCompoundOrEmpty("PotComponent"))

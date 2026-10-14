@@ -8,37 +8,37 @@
 
 package com.cobblemon.mod.common
 
-import net.minecraft.world.item.crafting.RecipeBookCategories
-import net.minecraft.world.inventory.RecipeBookType
+import com.cobblemon.mod.common.item.crafting.CookingPotBookCategory
+import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.core.Registry
+import net.minecraft.core.registries.BuiltInRegistries
+import net.minecraft.world.item.crafting.RecipeBookCategory
 
-enum class CobblemonRecipeCategories {
+/**
+ * The recipe book categories of the cooking pot.
+ *
+ * Recipe book categories are registry entries since 1.21.2, the search tab that aggregates them lives on the client
+ * (see CookingPotRecipeBookComponent).
+ */
+object CobblemonRecipeCategories {
+    val COOKING_POT_FOODS: RecipeBookCategory = register("cooking_pot_foods")
+    val COOKING_POT_MEDICINES: RecipeBookCategory = register("cooking_pot_medicines")
+    val COOKING_POT_COMPLEX_DISHES: RecipeBookCategory = register("cooking_pot_complex_dishes")
+    val COOKING_POT_MISC: RecipeBookCategory = register("cooking_pot_misc")
 
-    COOKING_POT_SEARCH("COBBLEMON_COOKING_POT_SEARCH"),
-    COOKING_POT_FOODS("COBBLEMON_COOKING_POT_FOODS"),
-    COOKING_POT_MEDICINES("COBBLEMON_COOKING_POT_MEDICINES"),
-    COOKING_POT_COMPLEX_DISHES("COBBLEMON_COOKING_POT_COMPLEX_DISHES"),
-    COOKING_POT_MISC("COBBLEMON_COOKING_POT_MISC");
+    val COOKING_POT_CATEGORIES = listOf(COOKING_POT_FOODS, COOKING_POT_MEDICINES, COOKING_POT_COMPLEX_DISHES, COOKING_POT_MISC)
 
-    companion object {
-        val customAggregateCategories: Map<RecipeBookCategories, List<RecipeBookCategories>> = mapOf(
-            COOKING_POT_SEARCH.toVanillaCategory() to listOf(
-                COOKING_POT_FOODS.toVanillaCategory(), COOKING_POT_MISC.toVanillaCategory(), COOKING_POT_MEDICINES.toVanillaCategory(), COOKING_POT_COMPLEX_DISHES.toVanillaCategory()
-            )
-        )
+    fun forCookingPotCategory(category: CookingPotBookCategory): RecipeBookCategory = when (category) {
+        CookingPotBookCategory.FOODS -> COOKING_POT_FOODS
+        CookingPotBookCategory.MEDICINES -> COOKING_POT_MEDICINES
+        CookingPotBookCategory.COMPLEX_DISHES -> COOKING_POT_COMPLEX_DISHES
+        CookingPotBookCategory.MISC -> COOKING_POT_MISC
     }
 
-    var id: String
+    /** Forces the categories to be registered. */
+    fun register() {}
 
-    constructor(id: String) {
-        this.id = id
+    private fun register(name: String): RecipeBookCategory {
+        return Registry.register(BuiltInRegistries.RECIPE_BOOK_CATEGORY, cobblemonResource(name), RecipeBookCategory())
     }
-
-    fun toVanillaCategory(): RecipeBookCategories {
-        return RecipeBookCategories.valueOf(this.id)
-    }
-}
-
-object CobblemonRecipeBookTypes {
-    const val COOKING_POT_NAME = "COBBLEMON_COOKING_POT"
-    val COOKING_POT: RecipeBookType = RecipeBookType.valueOf(COOKING_POT_NAME)
 }

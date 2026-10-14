@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning
 
+import com.cobblemon.mod.common.util.maxBuildHeight
 import com.cobblemon.mod.common.api.spawning.influence.ConditionalSpawningZoneInfluence
 import com.cobblemon.mod.common.api.spawning.influence.SpawningInfluence
 import com.cobblemon.mod.common.api.spawning.influence.UnconditionalSpawningZoneInfluence

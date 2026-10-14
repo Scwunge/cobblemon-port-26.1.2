@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.fabric
 
+import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization
+import com.cobblemon.mod.common.CobblemonRecipeCategories
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTabOutput
@@ -304,10 +306,16 @@ object CobblemonFabric : CobblemonImplementation {
 
     override fun registerRecipeSerializers() {
         CobblemonRecipeSerializers.register { identifier, factory -> Registry.register(CobblemonRecipeSerializers.registry, identifier, factory) }
+        // Since 1.21.2 the client only receives recipes that are explicitly synchronized; the cooking pot and brewing
+        // stand look their recipes up on the client (seasoning slots, tooltips, previews), as they did before.
+        RecipeSynchronization.synchronizeRecipeSerializer(CobblemonRecipeSerializers.COOKING_POT_COOKING)
+        RecipeSynchronization.synchronizeRecipeSerializer(CobblemonRecipeSerializers.COOKING_POT_SHAPELESS)
+        RecipeSynchronization.synchronizeRecipeSerializer(CobblemonRecipeSerializers.BREWING_STAND)
     }
 
     override fun registerRecipeTypes() {
         CobblemonRecipeTypes.register { identifier, factory -> Registry.register(CobblemonRecipeTypes.registry, identifier, factory) }
+        CobblemonRecipeCategories.register()
     }
 
 

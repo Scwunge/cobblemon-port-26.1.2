@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.ai
 
+import com.cobblemon.mod.common.util.getNearbyPlayers
 import com.cobblemon.mod.common.api.serialization.StringIdentifiedObjectAdapter
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions

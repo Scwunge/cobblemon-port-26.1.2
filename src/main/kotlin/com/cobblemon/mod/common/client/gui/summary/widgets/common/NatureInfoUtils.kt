@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.summary.widgets.common
 
+import com.cobblemon.mod.common.util.description
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.text.italicise
 import com.cobblemon.mod.common.api.text.onHover

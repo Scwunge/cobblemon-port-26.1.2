@@ -9,12 +9,14 @@
 package com.cobblemon.mod.common.item.crafting
 
 import com.cobblemon.mod.common.CobblemonItems
-import net.minecraft.core.HolderLookup
+import com.cobblemon.mod.common.CobblemonRecipeCategories
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.CraftingInput
 import net.minecraft.world.item.crafting.Recipe
+import net.minecraft.world.item.crafting.RecipeBookCategory
+import net.minecraft.world.item.crafting.display.SlotDisplay
 import net.minecraft.world.level.Level
 
 interface CookingPotRecipeBase : Recipe<CraftingInput> {
@@ -24,23 +26,26 @@ interface CookingPotRecipeBase : Recipe<CraftingInput> {
     val seasoningTag: TagKey<Item>
     val seasoningProcessors: List<SeasoningProcessor>
 
-    override fun getGroup() = groupName
+    override fun group() = groupName
     override fun matches(input: CraftingInput, level: Level): Boolean
     fun category() = category
-    override fun getResultItem(registries: HolderLookup.Provider) = this.result
+    fun getResultItem() = this.result
 
-    override fun assemble(input: CraftingInput, registries: HolderLookup.Provider): ItemStack {
+    override fun assemble(input: CraftingInput): ItemStack {
         return result.copy()
     }
+
+    override fun showNotification() = true
+
+    override fun recipeBookCategory(): RecipeBookCategory = CobblemonRecipeCategories.forCookingPotCategory(category)
+
+    /** The station shown for this recipe in recipe displays. */
+    fun craftingStationDisplay(): SlotDisplay = SlotDisplay.ItemSlotDisplay(CobblemonItems.CAMPFIRE_POT_RED)
 
     fun applySeasoning(stack: ItemStack, seasoning: List<ItemStack>) {
         for (processor in seasoningProcessors) {
             processor.apply(stack, seasoning)
         }
-    }
-
-    override fun getToastSymbol(): ItemStack? {
-        return ItemStack(CobblemonItems.CAMPFIRE_POT_RED)
     }
 
 }

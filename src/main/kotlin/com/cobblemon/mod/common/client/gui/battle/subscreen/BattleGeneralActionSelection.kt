@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.battle.subscreen
 
+import com.cobblemon.mod.common.util.displayClientMessage
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.battles.model.actor.ActorType
 import com.cobblemon.mod.common.battles.FleeAttemptActionResponse

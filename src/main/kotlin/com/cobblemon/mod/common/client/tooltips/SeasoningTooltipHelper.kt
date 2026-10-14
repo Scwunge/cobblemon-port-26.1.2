@@ -46,10 +46,10 @@ val rideBoostSeasoningHeader by lazy { lang("seasoning_ride_boosts_info_header")
 
 private fun recipeUsesProcessor(stack: ItemStack, processorType: String): Boolean {
     val level = Minecraft.getInstance().level ?: return false
-    val recipeManager = level.recipeManager
+    val recipeManager = level.recipeAccess().synchronizedRecipes
 
-    val allCookingRecipes = recipeManager.getAllRecipesFor(CobblemonRecipeTypes.COOKING_POT_COOKING) +
-            recipeManager.getAllRecipesFor(CobblemonRecipeTypes.COOKING_POT_SHAPELESS)
+    val allCookingRecipes = recipeManager.getAllOfType(CobblemonRecipeTypes.COOKING_POT_COOKING) +
+            recipeManager.getAllOfType(CobblemonRecipeTypes.COOKING_POT_SHAPELESS)
 
     return allCookingRecipes
         .any { recipe ->

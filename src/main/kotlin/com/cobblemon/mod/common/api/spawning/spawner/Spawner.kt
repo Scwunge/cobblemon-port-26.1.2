@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.api.spawning.spawner
 
+import com.cobblemon.mod.common.util.minBuildHeight
+import com.cobblemon.mod.common.util.maxBuildHeight
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.events.CobblemonEvents
 import com.cobblemon.mod.common.api.events.entity.SpawnBucketChosenEvent

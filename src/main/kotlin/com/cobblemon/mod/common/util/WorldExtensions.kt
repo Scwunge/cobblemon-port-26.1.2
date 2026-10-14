@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.util
 
+import com.cobblemon.mod.common.util.minBuildHeight
+import com.cobblemon.mod.common.util.maxBuildHeight
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Registry
 import net.minecraft.core.SectionPos

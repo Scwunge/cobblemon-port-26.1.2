@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.duck.RecipeAwareSlot;
 import com.cobblemon.mod.common.item.crafting.brewingstand.BrewingStandRecipe;
 import net.minecraft.world.inventory.BrewingStandMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.fabricmc.fabric.api.recipe.v1.sync.SynchronizedRecipes;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,10 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PotionSlotMixin implements RecipeAwareSlot {
 
 	@Unique
-	private RecipeManager cobblemon$recipeManager;
+	private SynchronizedRecipes cobblemon$recipeManager;
 
 	@Override
-	public void setRecipeManager(RecipeManager recipeManager) {
+	public void setRecipeManager(SynchronizedRecipes recipeManager) {
 		this.cobblemon$recipeManager = recipeManager;
 	}
 

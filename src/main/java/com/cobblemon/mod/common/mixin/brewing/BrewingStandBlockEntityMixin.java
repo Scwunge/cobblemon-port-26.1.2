@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.fabricmc.fabric.api.recipe.v1.sync.SynchronizedRecipes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
@@ -90,10 +90,10 @@ public class BrewingStandBlockEntityMixin {
 		}
 
 		BrewingStandInput input = new BrewingStandInput(ingredient, bottles);
-		RecipeManager recipeManager = level.getRecipeManager();
+		SynchronizedRecipes recipeManager = level.recipeAccess().getSynchronizedRecipes();
 
 		Optional<RecipeHolder<BrewingStandRecipe>> recipeHolder =
-				recipeManager.getRecipeFor(CobblemonRecipeTypes.INSTANCE.getBREWING_STAND(), input, level);
+				recipeManager.getFirstMatch(CobblemonRecipeTypes.INSTANCE.getBREWING_STAND(), input, level);
 
 		return recipeHolder.map(RecipeHolder::value).orElse(null);
 	}
@@ -107,7 +107,7 @@ public class BrewingStandBlockEntityMixin {
 
 		if (level != null) {
 
-			var rm = level.getRecipeManager();
+			var rm = level.recipeAccess().getSynchronizedRecipes();
 
 			//Input slot
 			if (slot == 3) {

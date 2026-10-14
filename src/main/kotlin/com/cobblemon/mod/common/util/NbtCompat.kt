@@ -53,3 +53,36 @@ fun parseOptionalItemStack(registries: HolderLookup.Provider, tag: CompoundTag):
         .orElse(ItemStack.EMPTY)
 
 private val LOGGER = org.slf4j.LoggerFactory.getLogger("Cobblemon/NbtCompat")
+
+/**
+ * ContainerHelper#saveAllItems from 1.21.1: an "Items" list of the non-empty stacks, each tagged with its "Slot" byte.
+ */
+fun saveAllItems(tag: CompoundTag, items: net.minecraft.core.NonNullList<ItemStack>, alwaysPutTag: Boolean, registries: HolderLookup.Provider): CompoundTag {
+    val list = net.minecraft.nbt.ListTag()
+    for (i in items.indices) {
+        val stack = items[i]
+        if (!stack.isEmpty) {
+            val entry = CompoundTag()
+            entry.putByte("Slot", i.toByte())
+            entry.merge(stack.saveOptional(registries) as CompoundTag)
+            list.add(entry)
+        }
+    }
+    if (!list.isEmpty() || alwaysPutTag) {
+        tag.put("Items", list)
+    }
+    return tag
+}
+
+fun saveAllItems(tag: CompoundTag, items: net.minecraft.core.NonNullList<ItemStack>, registries: HolderLookup.Provider) = saveAllItems(tag, items, true, registries)
+
+/** ContainerHelper#loadAllItems from 1.21.1. */
+fun loadAllItems(tag: CompoundTag, items: net.minecraft.core.NonNullList<ItemStack>, registries: HolderLookup.Provider) {
+    for (entry in tag.getListOrEmpty("Items")) {
+        val compound = entry as? CompoundTag ?: continue
+        val slot = compound.getByteOr("Slot", 0).toInt() and 255
+        if (slot in items.indices) {
+            items[slot] = parseOptionalItemStack(registries, compound)
+        }
+    }
+}

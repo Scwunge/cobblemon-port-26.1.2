@@ -19,7 +19,6 @@ import com.cobblemon.mod.common.util.writeString
 import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import net.minecraft.core.NonNullList
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
@@ -29,7 +28,13 @@ import net.minecraft.tags.TagKey
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.CraftingInput
+import net.minecraft.world.item.ItemStackTemplate
 import net.minecraft.world.item.crafting.Ingredient
+import net.minecraft.world.item.crafting.PlacementInfo
+import net.minecraft.world.item.crafting.display.RecipeDisplay
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay
+import net.minecraft.world.item.crafting.display.SlotDisplay
+import java.util.Optional
 import net.minecraft.world.item.crafting.RecipeSerializer
 import net.minecraft.world.item.crafting.ShapedRecipePattern
 import net.minecraft.world.level.Level
@@ -42,10 +47,25 @@ class CookingPotRecipe(
     override val seasoningTag: TagKey<Item>,
     override val seasoningProcessors: List<SeasoningProcessor>
 ) : CookingPotRecipeBase {
+    private var placementInfo: PlacementInfo? = null
+
     override fun getType() = CobblemonRecipeTypes.COOKING_POT_COOKING
-    override fun canCraftInDimensions(width: Int, height: Int) = true
-    override fun getSerializer() = CobblemonRecipeSerializers.COOKING_POT_COOKING
-    override fun getIngredients(): NonNullList<Ingredient> = this.pattern.ingredients()
+    override fun getSerializer(): RecipeSerializer<CookingPotRecipe> = SERIALIZER
+    fun getIngredients(): List<Optional<Ingredient>> = this.pattern.ingredients()
+
+    override fun placementInfo(): PlacementInfo {
+        return placementInfo ?: PlacementInfo.createFromOptionals(this.pattern.ingredients()).also { placementInfo = it }
+    }
+
+    override fun display(): List<RecipeDisplay> = listOf(
+        ShapedCraftingRecipeDisplay(
+            this.pattern.width(),
+            this.pattern.height(),
+            this.pattern.ingredients().map { it.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE) },
+            SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(this.result)),
+            craftingStationDisplay()
+        )
+    )
     override fun matches(input: CraftingInput, level: Level): Boolean {
         // Create a filtered CraftingInput with only slots 1-9
         val filteredItems = (0..8).mapNotNull { index ->
@@ -58,13 +78,12 @@ class CookingPotRecipe(
         return matches
     }
 
-    class Serializer : RecipeSerializer<CookingPotRecipe> {
-        companion object {
+    companion object {
             val CODEC: MapCodec<CookingPotRecipe> = RecordCodecBuilder.mapCodec { instance ->
                 instance.group(
                     ShapedRecipePattern.MAP_CODEC.forGetter { recipe -> recipe.pattern },
-                    ItemStack.STRICT_CODEC.fieldOf("result").forGetter { recipe -> recipe.result },
-                    Codec.STRING.optionalFieldOf("group", "").forGetter { recipe -> recipe.group },
+                    ItemStack.CODEC.fieldOf("result").forGetter { recipe -> recipe.result },
+                    Codec.STRING.optionalFieldOf("group", "").forGetter { recipe -> recipe.groupName },
                     CookingPotBookCategory.CODEC.fieldOf("category").orElse(CookingPotBookCategory.MISC).forGetter { recipe -> recipe.category },
                     TagKey.codec(Registries.ITEM).fieldOf("seasoningTag").orElse(CobblemonItemTags.EMPTY).forGetter { recipe -> recipe.seasoningTag },
                     createByStringCodec<SeasoningProcessor>(
@@ -100,9 +119,7 @@ class CookingPotRecipe(
                     buffer.writeString(it.type)
                 }
             }
-        }
 
-        override fun codec() = CODEC
-        override fun streamCodec() = STREAM_CODEC
+            val SERIALIZER = RecipeSerializer(CODEC, STREAM_CODEC)
     }
 }

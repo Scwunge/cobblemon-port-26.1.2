@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokemon.evolution
 
+import com.cobblemon.mod.common.util.playNotifySound
 import com.cobblemon.mod.common.Cobblemon.playerDataManager
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.fishing
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition

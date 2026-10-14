@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
+import com.cobblemon.mod.common.util.minBuildHeight
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.entity.OmniPathingEntity
 import com.cobblemon.mod.common.entity.pokemon.ai.PokemonMoveControl

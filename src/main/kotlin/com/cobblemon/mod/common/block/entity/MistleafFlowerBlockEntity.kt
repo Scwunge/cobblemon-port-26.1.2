@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.moonPhase
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.decor.MistleafFlowerBlock

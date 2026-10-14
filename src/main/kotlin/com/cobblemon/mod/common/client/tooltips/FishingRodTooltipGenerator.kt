@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.tooltips
 
+import com.cobblemon.mod.common.util.description
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.api.fishing.SpawnBaitEffects
 import com.cobblemon.mod.common.api.fishing.PokeRods

@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -246,7 +248,7 @@ class DiscShelfBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobbl
         val tag = CompoundTag()
         try {
             super.saveAdditional(output)
-            ContainerHelper.saveAllItems(tag, items, true, registries)
+            saveAllItems(tag, items, true, registries)
             tag.putInt("LastInteractedSlot", lastInteractedSlot)
         } finally {
             output.putAll(tag)
@@ -258,7 +260,7 @@ class DiscShelfBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobbl
         val registries = input.lookup()
         super.loadAdditional(input)
         items.clear()
-        ContainerHelper.loadAllItems(tag, items, registries)
+        loadAllItems(tag, items, registries)
         lastInteractedSlot = tag.getIntOr("LastInteractedSlot", 0)
     }
 

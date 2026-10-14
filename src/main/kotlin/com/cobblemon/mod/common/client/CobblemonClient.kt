@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client
 
+import com.cobblemon.mod.common.client.timer
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonBlocks

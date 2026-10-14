@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.command
 
+import com.cobblemon.mod.common.util.hasPermission
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket

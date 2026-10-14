@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
+import com.cobblemon.mod.common.util.minValue
+import com.cobblemon.mod.common.util.maxValue
 import com.cobblemon.mod.common.CobblemonMemories
 import net.minecraft.core.BlockPos
 import net.minecraft.util.valueproviders.UniformInt

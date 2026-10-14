@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -32,7 +34,7 @@ class LecternBlockEntity(blockPos: BlockPos, blockState: BlockState) : ViewerCou
         val compoundTag = CompoundTag()
         try {
             super.saveAdditional(output)
-            ContainerHelper.saveAllItems(compoundTag, inventory, true, registryLookup)
+            saveAllItems(compoundTag, inventory, true, registryLookup)
         } finally {
             output.putAll(compoundTag)
         }
@@ -42,7 +44,7 @@ class LecternBlockEntity(blockPos: BlockPos, blockState: BlockState) : ViewerCou
         val compoundTag = input.asCompoundTag()
         val registryLookup = input.lookup()
         super.loadAdditional(input)
-        ContainerHelper.loadAllItems(compoundTag, inventory, registryLookup)
+        loadAllItems(compoundTag, inventory, registryLookup)
     }
 
     override fun getUpdateTag(registryLookup: HolderLookup.Provider): CompoundTag {

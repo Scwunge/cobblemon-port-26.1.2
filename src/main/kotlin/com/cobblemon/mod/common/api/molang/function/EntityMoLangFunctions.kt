@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.molang.function
 
+import com.cobblemon.mod.common.util.blockHolder
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.MoParams
 import com.bedrockk.molang.runtime.struct.ArrayStruct

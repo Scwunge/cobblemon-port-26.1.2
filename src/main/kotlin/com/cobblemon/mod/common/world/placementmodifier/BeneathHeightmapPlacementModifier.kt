@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.world.placementmodifier
 
+import com.cobblemon.mod.common.util.minBuildHeight
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.PrimitiveCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import com.cobblemon.mod.common.client.timer
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
 

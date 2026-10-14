@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.command
 
+import com.cobblemon.mod.common.util.hasPermission
 import com.cobblemon.mod.common.api.abilities.Abilities
 import com.cobblemon.mod.common.api.item.HeldItems
 import com.cobblemon.mod.common.api.moves.Moves

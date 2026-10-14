@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.party
 
+import com.cobblemon.mod.common.client.toasts
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.text.darkGray
 import com.cobblemon.mod.common.api.text.red

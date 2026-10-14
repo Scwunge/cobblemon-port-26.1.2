@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.toast
 
+import com.cobblemon.mod.common.client.toasts
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
 import net.minecraft.client.Minecraft
 import java.util.UUID

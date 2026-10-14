@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokedex.entry
 
+import com.cobblemon.mod.common.util.description
 import com.cobblemon.mod.common.api.pokemon.Natures
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies

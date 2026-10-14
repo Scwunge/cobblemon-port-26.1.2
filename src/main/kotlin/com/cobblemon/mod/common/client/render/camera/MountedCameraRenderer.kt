@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.camera
 
+import com.cobblemon.mod.common.client.partialTickTime
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.OrientationControllable
 import com.cobblemon.mod.common.api.orientation.OrientationController

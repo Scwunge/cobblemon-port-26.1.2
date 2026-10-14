@@ -8,8 +8,8 @@
 
 package com.cobblemon.mod.common.duck;
 
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.fabricmc.fabric.api.recipe.v1.sync.SynchronizedRecipes;
 
 public interface RecipeAwareSlot {
-	void setRecipeManager(RecipeManager recipeManager);
+	void setRecipeManager(SynchronizedRecipes recipeManager);
 }

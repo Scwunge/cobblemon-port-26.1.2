@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.fossil
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.network.chat.Component

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue

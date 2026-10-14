@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import com.cobblemon.mod.common.util.blockUpdated
 import net.minecraft.world.level.redstone.Orientation
 import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.CobblemonBlocks

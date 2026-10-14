@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -41,7 +43,7 @@ class RestorationTankBlockEntity(
         val nbt = CompoundTag()
         try {
             super.saveAdditional(output)
-            ContainerHelper.saveAllItems(nbt, inv.items, registryLookup)
+            saveAllItems(nbt, inv.items, registryLookup)
         } finally {
             output.putAll(nbt)
         }
@@ -51,7 +53,7 @@ class RestorationTankBlockEntity(
         val nbt = input.asCompoundTag()
         val registryLookup = input.lookup()
         super.loadAdditional(input)
-        ContainerHelper.loadAllItems(nbt, inv.items, registryLookup)
+        loadAllItems(nbt, inv.items, registryLookup)
     }
 
     class RestorationTankInventory(val tankEntity: RestorationTankBlockEntity) : WorldlyContainer {

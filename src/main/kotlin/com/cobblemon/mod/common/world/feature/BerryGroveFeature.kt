@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.world.feature
 
+import com.cobblemon.mod.common.util.blockUpdated
 import com.cobblemon.mod.common.api.berry.BerryHelper
 import com.cobblemon.mod.common.api.tags.CobblemonBlockTags
 import com.cobblemon.mod.common.block.BerryBlock

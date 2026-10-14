@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.pokeball
 
+import com.cobblemon.mod.common.util.description
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.StringValue

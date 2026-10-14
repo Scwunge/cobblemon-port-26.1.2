@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui
 
+import com.cobblemon.mod.common.client.toasts
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.gui.blitk

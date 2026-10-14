@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.net.serverhandling.block
 
+import com.cobblemon.mod.common.util.playNotifySound
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.moves.BenchedMove

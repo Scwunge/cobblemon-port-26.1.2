@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.item.interactive
 
+import com.cobblemon.mod.common.util.playNotifySound
+import com.cobblemon.mod.common.util.displayClientMessage
 import java.util.function.Consumer
 import net.minecraft.world.item.component.TooltipDisplay
 import com.cobblemon.mod.common.Cobblemon

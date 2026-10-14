@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.ai
 
+import com.cobblemon.mod.common.util.maxBuildHeight
 import com.cobblemon.mod.common.entity.OmniPathingEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.tags.FluidTags

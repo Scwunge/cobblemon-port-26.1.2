@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.pokemon.helditem
 
+import com.cobblemon.mod.common.util.description
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonItemComponents.HELD_ITEM_EFFECT
 import com.cobblemon.mod.common.api.battles.interpreter.BattleMessage

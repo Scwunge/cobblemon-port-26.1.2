@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -161,7 +163,7 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
         try {
             super.saveAdditional(output)
             if (!trySaveLootTable(nbt)) {
-                ContainerHelper.saveAllItems(nbt, inventoryContents, registryLookup)
+                saveAllItems(nbt, inventoryContents, registryLookup)
             }
         } finally {
             output.putAll(nbt)
@@ -174,7 +176,7 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
         super.loadAdditional(input)
         inventoryContents= NonNullList.withSize(containerSize, ItemStack.EMPTY)
         if (!tryLoadLootTable(nbt)) {
-            ContainerHelper.loadAllItems(nbt, inventoryContents, registryLookup)
+            loadAllItems(nbt, inventoryContents, registryLookup)
         }
     }
 

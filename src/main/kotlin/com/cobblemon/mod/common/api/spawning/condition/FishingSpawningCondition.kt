@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning.condition
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
 import com.cobblemon.mod.common.util.itemRegistry

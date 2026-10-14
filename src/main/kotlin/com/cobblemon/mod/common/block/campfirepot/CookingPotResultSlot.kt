@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.campfirepot
 
+import com.cobblemon.mod.common.util.playNotifySound
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.CobblemonSounds
 import net.minecraft.sounds.SoundSource

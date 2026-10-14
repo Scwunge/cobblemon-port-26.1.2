@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.requests
 
+import com.cobblemon.mod.common.util.displayClientMessage
 import com.cobblemon.mod.common.api.interaction.PlayerActionRequest
 import com.cobblemon.mod.common.api.text.aqua
 import com.cobblemon.mod.common.api.text.red

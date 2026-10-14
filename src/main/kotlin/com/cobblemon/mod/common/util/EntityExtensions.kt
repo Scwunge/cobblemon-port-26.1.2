@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
+import com.cobblemon.mod.common.util.blockHolder
 import net.minecraft.world.entity.ai.Brain
 import com.google.common.collect.ImmutableMap
 import com.mojang.serialization.Dynamic

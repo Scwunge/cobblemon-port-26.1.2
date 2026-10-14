@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.pokedex.entry
 
+import com.cobblemon.mod.common.util.description
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeIdentifierCondition

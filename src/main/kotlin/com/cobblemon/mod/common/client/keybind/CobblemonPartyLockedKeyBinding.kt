@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import com.cobblemon.mod.common.util.displayClientMessage
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.yellow
 import com.cobblemon.mod.common.client.CobblemonClient

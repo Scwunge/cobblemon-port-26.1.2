@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.item.interactive
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.cobblemon.mod.common.CobblemonItemComponents
 import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.CobblemonSounds

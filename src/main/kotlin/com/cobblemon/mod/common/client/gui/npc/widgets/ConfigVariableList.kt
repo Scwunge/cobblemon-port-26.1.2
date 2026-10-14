@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.npc.widgets
 
+import com.cobblemon.mod.common.client.setFilter
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.npc.configuration.MoLangConfigVariable
 import com.cobblemon.mod.common.api.npc.configuration.MoLangConfigVariable.MoLangVariableType

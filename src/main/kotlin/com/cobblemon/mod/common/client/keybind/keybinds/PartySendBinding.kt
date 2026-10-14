@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind.keybinds
 
+import com.cobblemon.mod.common.client.timer
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonNetwork.sendToServer
 import com.cobblemon.mod.common.api.riding.RidingStyle

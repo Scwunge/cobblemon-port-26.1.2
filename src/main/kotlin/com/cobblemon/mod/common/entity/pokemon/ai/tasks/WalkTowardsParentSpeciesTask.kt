@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
+import com.cobblemon.mod.common.util.minValue
+import com.cobblemon.mod.common.util.maxValue
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.entity.AgeableMob
 import net.minecraft.world.entity.ai.behavior.EntityTracker

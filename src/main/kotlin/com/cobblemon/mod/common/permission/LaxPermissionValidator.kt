@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.permission
 
+import com.cobblemon.mod.common.util.hasPermissions
+import com.cobblemon.mod.common.util.hasPermission
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.permission.Permission
 import com.cobblemon.mod.common.api.permission.PermissionValidator

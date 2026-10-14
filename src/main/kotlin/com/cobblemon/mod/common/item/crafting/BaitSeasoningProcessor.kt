@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.item.crafting
 
+import com.cobblemon.mod.common.util.itemHolder
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.api.cooking.Seasonings
 import com.cobblemon.mod.common.api.fishing.SpawnBait

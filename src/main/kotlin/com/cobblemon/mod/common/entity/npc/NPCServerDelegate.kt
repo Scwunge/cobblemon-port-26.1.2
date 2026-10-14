@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.npc
 
+import com.cobblemon.mod.common.util.server
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.bedrockk.molang.runtime.value.MoValue

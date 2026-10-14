@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.loadAllItems
+import com.cobblemon.mod.common.util.saveAllItems
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -260,7 +262,7 @@ class TMMachineBlockEntity(pos: BlockPos, state: BlockState) :
             compound.putBoolean(REPEAT_PROCESS_TAG, repeatProcess)
             compound.putInt(BURN_PROGRESS_TAG, burnProgress)
             compound.putString(ACTIVE_MOVE_TAG, activeMove)
-            ContainerHelper.saveAllItems(compound, tmMachineInventory.items, registries)
+            saveAllItems(compound, tmMachineInventory.items, registries)
         } finally {
             output.putAll(compound)
         }
@@ -275,7 +277,7 @@ class TMMachineBlockEntity(pos: BlockPos, state: BlockState) :
         repeatProcess = compound.getBooleanOr(REPEAT_PROCESS_TAG, false)
         burnProgress = compound.getIntOr(BURN_PROGRESS_TAG, 0)
         activeMove = compound.getStringOr(ACTIVE_MOVE_TAG, "")
-        ContainerHelper.loadAllItems(compound, tmMachineInventory.items, registries)
+        loadAllItems(compound, tmMachineInventory.items, registries)
     }
 
     override fun getDisplayName(): Component = Component.translatable("block.cobblemon.tm_machine")

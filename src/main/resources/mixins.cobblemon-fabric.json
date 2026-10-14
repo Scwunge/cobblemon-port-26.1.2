@@ -8,7 +8,6 @@
     "FabricCameraMixin",
     "GameRendererMixin",
     "GuiMixin",
-    "RecipeBookCategoriesMixin",
     "pokeball.ModelLoaderMixin"
   ],
   "mixins": [
@@ -16,8 +15,6 @@
     "FabricBrewingStandMenuMixin",
     "FabricSoundEngineMixin",
     "PlayerMixin",
-    "RecipeBookSettingsMixin",
-    "RecipeBookTypeMixin",
     "ServerEntityMixin"
   ]
 }

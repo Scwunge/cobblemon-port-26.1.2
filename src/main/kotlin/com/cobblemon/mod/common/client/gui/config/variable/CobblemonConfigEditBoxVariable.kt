@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.config.variable
 
+import com.cobblemon.mod.common.client.setFilter
 import com.cobblemon.mod.common.api.text.add
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.client.gui.config.CobblemonConfigScreen.Companion.PADDING

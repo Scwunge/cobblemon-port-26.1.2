@@ -74,7 +74,7 @@ import com.cobblemon.mod.common.client.render.gui.scale
 import com.cobblemon.mod.common.client.render.gui.mulPose
 import com.cobblemon.mod.common.client.render.gui.hasShiftDown
 
-class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, title: Component) : AbstractContainerScreen<TMMachineMenu>(containerMenu, inventory, title) {
+class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, title: Component) : AbstractContainerScreen<TMMachineMenu>(containerMenu, inventory, title, WIDTH, HEIGHT) {
     companion object {
         const val HEIGHT = 226
         const val WIDTH = 191
@@ -171,9 +171,6 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
     var moveInfoTM: TechnicalMachine? = null
 
     override fun init() {
-        imageWidth = WIDTH
-        imageHeight = HEIGHT
-
         super.init()
 
         logoResource = getLogoResource(minecraft?.languageManager?.selected)
