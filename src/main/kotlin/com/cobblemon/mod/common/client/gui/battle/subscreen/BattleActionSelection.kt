@@ -37,5 +37,9 @@ abstract class BattleActionSelection(
         return super.mouseClicked(event, doubleClick)
     }
 
+    // Screens now only pass a click to the child under the mouse, and these panels draw buttons outside their declared
+    // bounds (the right-hand moves, Switch, Run), so take every click and let each panel hit-test its own buttons.
+    override fun isMouseOver(mouseX: Double, mouseY: Double) = true
+
     abstract fun mousePrimaryClicked(pMouseX: Double, pMouseY: Double): Boolean
 }
