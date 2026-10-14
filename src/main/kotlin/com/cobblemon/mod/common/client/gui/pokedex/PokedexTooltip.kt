@@ -21,6 +21,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.Identifier
 import java.util.Optional
+import org.joml.Matrix3x2fStack
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 private val tooltipEdge = cobblemonResource("textures/gui/pokedex/tooltip_edge.png")
 private val tooltipBackground = cobblemonResource("textures/gui/pokedex/tooltip_background.png")
@@ -119,7 +125,7 @@ private fun wrapTooltipLine(line: MutableComponent, maxWidth: Int): List<Mutable
 // Stretching the whole 11px image over an arbitrary height thickens the caps as more lines are added, so
 // instead the caps are drawn 1:1 and only the flat fill row is stretched to cover the remaining height
 private fun blitSlicedVertical(
-    poseStack: PoseStack,
+    poseStack: Matrix3x2fStack,
     texture: Identifier,
     x: Number,
     y: Int,

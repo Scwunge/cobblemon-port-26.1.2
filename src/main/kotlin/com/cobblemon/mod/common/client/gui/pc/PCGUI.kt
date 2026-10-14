@@ -50,6 +50,12 @@ import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import kotlin.isInitialized
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
+import com.cobblemon.mod.common.client.render.gui.hasShiftDown
+import com.cobblemon.mod.common.client.render.gui.mouseClicked
+import com.cobblemon.mod.common.client.render.gui.mouseDragged
+import com.cobblemon.mod.common.client.render.gui.keyPressed
 
 class PCGUI(
     val pc: ClientPC,
@@ -315,7 +321,7 @@ class PCGUI(
         super.init()
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         renderBackground(context, mouseX, mouseY, delta)
 
@@ -334,7 +340,7 @@ class PCGUI(
 
         // Render Model Portrait
         if (search.passes(previewPokemon)) {
-            modelWidget?.render(context, mouseX, mouseY, delta)
+            modelWidget?.extractRenderState(context, mouseX, mouseY, delta)
         }
 
         // Render Base Resource
@@ -689,7 +695,7 @@ class PCGUI(
             for (button in optionButtons) button.showAlt = hasShiftDown()
         }
 
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
 
         // Item Tooltip
         if (pokemon != null) {
@@ -698,7 +704,7 @@ class PCGUI(
             val itemY = y + 98
             if (!displayedItem.isEmpty) {
                 val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-                if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, displayedItem, mouseX, mouseY)
+                if (itemHovered) context.setTooltipForNextFrame(Minecraft.getInstance().font, displayedItem, mouseX, mouseY)
             }
         }
     }
@@ -711,10 +717,13 @@ class PCGUI(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         // Trigger child component function as they will need to check the entire screen click area
         if (::boxNameWidget.isInitialized) boxNameWidget.mouseClicked(mouseX, mouseY, button)
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, amount: Double, verticalAmount: Double): Boolean {
@@ -736,14 +745,22 @@ class PCGUI(
         return super.mouseScrolled(mouseX, mouseY, amount, verticalAmount)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         storageWidget.pastureWidget?.let { pasture ->
             if (pasture.pastureScrollList.isHovered) pasture.pastureScrollList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         val boxNameFocused = this::boxNameWidget.isInitialized && boxNameWidget.isFocused
         val filterFocused = this::filterWidget.isInitialized && filterWidget.isFocused
 
@@ -783,7 +800,7 @@ class PCGUI(
             return true
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     /**

@@ -25,6 +25,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class CategoryList(
     paneWidth: Int,
@@ -75,7 +81,7 @@ class CategoryList(
 
     inner class Category(private val category: RenderableStarterCategory, height: Int) : Entry(height) {
 
-        override fun render(
+        override fun extractRenderState(
             guiGraphics: GuiGraphicsExtractor,
             index: Int,
             x: Int,
@@ -204,7 +210,10 @@ class CategoryList(
             }
         }
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             val entryY = getRowTop(this)
             val hoveredButton = getButtonHovered(x, entryY, mouseX, mouseY)
             if (hoveredButton != -1) {

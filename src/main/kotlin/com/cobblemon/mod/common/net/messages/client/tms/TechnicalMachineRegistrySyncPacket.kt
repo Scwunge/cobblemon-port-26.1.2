@@ -33,7 +33,7 @@ class TechnicalMachineRegistrySyncPacket(tms: List<TechnicalMachine>) : DataRegi
     override val id = ID
 
     override fun encodeEntry(buffer: RegistryFriendlyByteBuf, entry: TechnicalMachine) {
-        buffer.writeResourceLocation(entry.id)
+        buffer.writeIdentifier(entry.id)
         buffer.writeUtf(entry.moveName.name)
         if (entry.recipe != null) {
             buffer.writeBoolean(true)
@@ -51,7 +51,7 @@ class TechnicalMachineRegistrySyncPacket(tms: List<TechnicalMachine>) : DataRegi
     }
 
     override fun decodeEntry(buffer: RegistryFriendlyByteBuf): TechnicalMachine {
-        val id = buffer.readResourceLocation()
+        val id = buffer.readIdentifier()
         val moveName = buffer.readUtf()
 
         val recipe = if (buffer.readBoolean()) {

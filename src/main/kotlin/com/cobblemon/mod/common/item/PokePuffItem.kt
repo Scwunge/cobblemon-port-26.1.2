@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.CobblemonItemComponents
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.api.cooking.Flavour
 import com.cobblemon.mod.common.api.cooking.PokePuffUtils
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
@@ -19,7 +20,6 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -72,28 +72,28 @@ class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
         }
     }
 
-    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResult {
         val stack = user.getItemInHand(hand)
         val isPlain = getFlavorType(stack) == "plain"
 
         return if (isPlain) {
             if (!user.foodData.needsFood()) {
-                return InteractionResultHolder.fail(stack)
+                return InteractionResult.FAIL
             }
             user.startUsingItem(hand)
-            InteractionResultHolder.consume(stack)
+            InteractionResult.CONSUME
         } else {
             if (user is ServerPlayer) {
                 super<PokemonSelectingItem>.use(user, stack, false)
             } else {
-                InteractionResultHolder.pass(stack)
+                InteractionResult.PASS
             }
         }
     }
 
-    override fun applyToPokemon(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon): InteractionResultHolder<ItemStack> {
+    override fun applyToPokemon(player: ServerPlayer, stack: ItemStack, pokemon: Pokemon): InteractionResult {
         if (!canUseOnPokemon(stack, pokemon)) {
-            return InteractionResultHolder.fail(stack)
+            return InteractionResult.FAIL
         }
 
         // Feed the Pokémon 4 fullness points
@@ -109,10 +109,10 @@ class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
                 pokemon.setFriendship(newValue)
                 pokemon.entity?.playSound(SoundEvents.PLAYER_BURP, 1F, 1F)
                 stack.consume(1, player)
-                return InteractionResultHolder.success(stack)
+                return InteractionResult.SUCCESS
             }
         }
-        return InteractionResultHolder.pass(stack)
+        return InteractionResult.PASS
     }
 
     private fun isPlainPuff(stack: ItemStack): Boolean {

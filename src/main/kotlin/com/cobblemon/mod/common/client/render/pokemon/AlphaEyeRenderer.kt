@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.pokemon
 
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.MatrixWrapper
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.toVec3d
@@ -122,7 +123,7 @@ fun renderAlphaEyeBloom(
 
         // Render bloom using concentric "rings" (its all just triangle pizza in the end)
         val rings = 5 //TODO: is this too many?
-        val consumer = bufferSource.getBuffer(RenderType.dragonRays()) // rgba flat color triangle rendering
+        val consumer = bufferSource.getBuffer(RenderTypes.dragonRays()) // rgba flat color triangle rendering
 
         for (ring in 0 until rings) {
             val t0 = ring.toFloat() / rings
@@ -186,7 +187,7 @@ fun renderEyeTrail(
 ) {
     if (positions.size < 2) return
 
-    val consumer = bufferSource.getBuffer(RenderType.lightning())
+    val consumer = bufferSource.getBuffer(RenderTypes.lightning())
     val entityPos = entity.getPosition(partialTicks)
     val matrix = poseStack.last().pose()
     val n = positions.size

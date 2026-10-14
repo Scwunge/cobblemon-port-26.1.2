@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
+import net.minecraft.client.input.MouseButtonEvent
 
 /**
  * This Button is specifically made for the Summary to change the order of the Moves
@@ -31,7 +32,12 @@ class SwapMoveButton(
     onPress: OnPress
 ): Button((pX + OFFSET_X).toInt(), (pY + OFFSET_Y).toInt(), (WIDTH * SCALE).toInt(), (HEIGHT * SCALE).toInt(), Component.empty(), onPress, DEFAULT_NARRATION), CobblemonRenderable {
 
-    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val d = event.x()
+        val e = event.y()
+        val i = event.button()
+        val f = dragX
+        val g = dragY
         return false
     }
 
@@ -45,7 +51,7 @@ class SwapMoveButton(
         private val addMoveButtonResource = cobblemonResource("textures/gui/summary/summary_move_add.png")
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val swapScreen = movesWidget.summary.sideScreen
         val selected = if (swapScreen is MoveSwapScreen) swapScreen.replacedMove?.template == move else false
         blitk(

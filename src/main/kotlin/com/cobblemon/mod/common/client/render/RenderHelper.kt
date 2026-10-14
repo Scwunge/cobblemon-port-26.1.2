@@ -9,7 +9,16 @@
 package com.cobblemon.mod.common.client.render
 
 import com.cobblemon.mod.common.api.gui.drawText
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.api.gui.drawTextJustifiedRight
+import com.cobblemon.mod.common.api.gui.legacyTextColour
+import com.cobblemon.mod.common.client.render.gui.GuiGraphicsTracker
+import com.cobblemon.mod.common.mixin.accessor.GuiGraphicsExtractorAccessor
+import com.cobblemon.mod.common.client.render.gui.graphics
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.scale
+import org.joml.Matrix3x2fStack
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.mojang.blaze3d.platform.GlStateManager
@@ -35,48 +44,18 @@ import net.minecraft.world.item.ItemDisplayContext
 import net.minecraft.world.item.ItemStack
 import kotlin.math.cos
 import kotlin.math.sin
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
-fun renderScaledGuiItemIcon(itemStack: ItemStack, x: Double, y: Double, scale: Double = 1.0, zTranslation: Float = 100.0F, matrixStack: PoseStack? = null) {
-    val itemRenderer = Minecraft.getInstance().itemRenderer
-    val textureManager = Minecraft.getInstance().textureManager
-    val model = itemRenderer.getModel(itemStack, null, null, 0)
-
-    textureManager.getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false)
-    RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS)
-    RenderSystem.enableBlend()
-    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA)
-    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F)
-    //TODO Make sure this doesnt break anything
-    val modelViewStack = matrixStack ?: PoseStack()
-    modelViewStack.pushPose()
-    modelViewStack.translate(x, y, (zTranslation + 0).toDouble())
-    modelViewStack.translate(8.0 * scale, 8.0 * scale, 0.0)
-    modelViewStack.scale(1.0F, -1.0F, 1.0F)
-    modelViewStack.scale(16.0F * scale.toFloat(), 16.0F * scale.toFloat(), 16.0F * scale.toFloat())
-    RenderSystem.applyModelViewMatrix()
-
-    val stack = matrixStack ?: PoseStack()
-    val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
-    val bl = !model.usesBlockLight()
-    if (bl) Lighting.setupForFlatItems()
-
-    itemRenderer.render(
-        itemStack,
-        ItemDisplayContext.GUI,
-        false,
-        stack,
-        immediate,
-        15728880,
-        OverlayTexture.NO_OVERLAY,
-        model
-    )
-
-    immediate.endBatch()
-    RenderSystem.enableDepthTest()
-    if (bl) Lighting.setupFor3DItems()
-
-    modelViewStack.popPose()
-    RenderSystem.applyModelViewMatrix()
+fun renderScaledGuiItemIcon(itemStack: ItemStack, x: Double, y: Double, scale: Double = 1.0, zTranslation: Float = 100.0F, matrixStack: Matrix3x2fStack? = null) {
+    // GUI items are submitted to the frame's extractor; the 16px icon is placed at (x, y) and scaled, as before.
+    val graphics = matrixStack?.graphics ?: GuiGraphicsTracker.current ?: return
+    val pose = graphics.pose()
+    pose.pushMatrix()
+    pose.translate(x.toFloat(), y.toFloat())
+    pose.scale(scale.toFloat(), scale.toFloat())
+    graphics.item(itemStack, 0, 0)
+    pose.popMatrix()
 }
 
 fun getDepletableRedGreen(
@@ -136,7 +115,7 @@ fun renderScrollingString(
     val boxWidth = maxX - minX
     if (textWidth <= boxWidth) {
         val centerX = Mth.clamp((minX + maxX) / 2, minX + textWidth / 2, maxX - textWidth / 2)
-        context.drawCenteredString(font, text, centerX, centerY, colour)
+        context.centeredText(font, text, centerX, centerY, legacyTextColour(colour))
         return
     }
 
@@ -149,7 +128,7 @@ fun renderScrollingString(
     val easedProgress = sin((Math.PI / 2) * cos(2 * Math.PI * time / period)) / 2.0 + 0.5
     val offset = Mth.lerp(easedProgress, 0.0, overflow.toDouble())
     context.enableScissor(minX, minY, maxX, maxY)
-    context.drawString(font, text, minX - offset.toInt(), centerY, colour)
+    context.text(font, text, minX - offset.toInt(), centerY, legacyTextColour(colour))
     context.disableScissor()
 }
 
@@ -193,7 +172,7 @@ fun drawScaledText(
     matrices.popPose()
     // Draw tooltip that was created with onHover and is attached to the MutableComponent
     if (isHovered) {
-        context.renderComponentHoverEffect(Minecraft.getInstance().font, text.style, pMouseX!!, pMouseY!!)
+        (context as GuiGraphicsExtractorAccessor).`cobblemon$setHoveredTextStyle`(text.style)
     }
 }
 
@@ -312,7 +291,7 @@ fun renderBeaconBeam(
     val f12 = -beamRadius
     renderPart(
         matrixStack,
-        buffer.getBuffer(RenderType.beaconBeam(textureLocation, false)),
+        buffer.getBuffer(RenderTypes.beaconBeam(textureLocation, false)),
         red,
         green,
         blue,
@@ -336,7 +315,7 @@ fun renderBeaconBeam(
     f9 = -glowRadius
     renderPart(
         matrixStack,
-        buffer.getBuffer(RenderType.beaconBeam(textureLocation, true)),
+        buffer.getBuffer(RenderTypes.beaconBeam(textureLocation, true)),
         red,
         green,
         blue,

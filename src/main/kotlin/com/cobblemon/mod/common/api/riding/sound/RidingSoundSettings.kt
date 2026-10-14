@@ -45,7 +45,7 @@ data class RideSoundSettings(
         get() = _attenuationModel ?: RideAttenuationModel.NONE
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(soundLocation)
+        buffer.writeIdentifier(soundLocation)
         buffer.writeExpression(volumeExpr)
         buffer.writeExpression(pitchExpr)
         buffer.writeBoolean(playForPassengers)
@@ -58,7 +58,7 @@ data class RideSoundSettings(
     companion object {
         fun decode(buffer: RegistryFriendlyByteBuf): RideSoundSettings {
 
-            val soundLocation = buffer.readResourceLocation()
+            val soundLocation = buffer.readIdentifier()
             val volumeExpr = buffer.readExpression()
             val pitchExpr = buffer.readExpression()
             val playForPassengers = buffer.readBoolean()

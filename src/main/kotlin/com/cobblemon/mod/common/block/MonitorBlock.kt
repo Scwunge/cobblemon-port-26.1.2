@@ -19,7 +19,6 @@ import net.minecraft.core.Direction
 import net.minecraft.util.StringRepresentable
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -85,15 +84,15 @@ class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
         player: Player,
         hand: InteractionHand,
         hit: BlockHitResult
-    ): ItemInteractionResult {
+    ): InteractionResult {
         val entity = level.getBlockEntity(pos) as? FossilMultiblockEntity
-            ?: return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION
+            ?: return InteractionResult.PASS
         val result = entity.handleUseItem(stack, state, level, pos, player, hand)
-        if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
+        if (result == InteractionResult.TRY_WITH_EMPTY_HAND) {
             return if (entity.handleUseWithoutItem(state, level, pos, player).consumesAction()) {
-                ItemInteractionResult.sidedSuccess(level.isClientSide)
+                InteractionResult.SUCCESS
             } else {
-                ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+                InteractionResult.TRY_WITH_EMPTY_HAND
             }
         }
         return result

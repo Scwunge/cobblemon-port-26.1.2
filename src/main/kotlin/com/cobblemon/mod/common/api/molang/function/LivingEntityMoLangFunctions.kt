@@ -67,7 +67,7 @@ object LivingEntityMoLangFunctions : AbstractMoLangFunctionHolder<LivingEntity>(
         functions["is_adult"] = { DoubleValue(!entity.isBaby) }
         functions["remove_effect"] = removeEffect@{ params ->
             val effectId = params.getString(0).asIdentifierDefaultingNamespace()
-            val effectHolder = BuiltInRegistries.MOB_EFFECT.getHolder(effectId).orElse(null)
+            val effectHolder = BuiltInRegistries.MOB_EFFECT.get(effectId).orElse(null)
             if (effectHolder != null) {
                 entity.removeEffect(effectHolder)
                 return@removeEffect DoubleValue.ONE
@@ -79,7 +79,7 @@ object LivingEntityMoLangFunctions : AbstractMoLangFunctionHolder<LivingEntity>(
             val amplifier = params.getIntOrNull(2) ?: 0
             val ambient = params.getBooleanOrNull(3) ?: false
             val visible = params.getBooleanOrNull(4) ?: true
-            val effectHolder = BuiltInRegistries.MOB_EFFECT.getHolder(effectId).orElse(null)
+            val effectHolder = BuiltInRegistries.MOB_EFFECT.get(effectId).orElse(null)
             if (effectHolder != null) {
                 entity.addEffect(MobEffectInstance(effectHolder, duration, amplifier, ambient, visible))
                 return@addEffect DoubleValue.ONE
@@ -87,7 +87,7 @@ object LivingEntityMoLangFunctions : AbstractMoLangFunctionHolder<LivingEntity>(
         }
         functions["has_effect"] = { params ->
             val effectId = params.getString(0).asIdentifierDefaultingNamespace()
-            val effectHolder = BuiltInRegistries.MOB_EFFECT.getHolder(effectId).orElse(null)
+            val effectHolder = BuiltInRegistries.MOB_EFFECT.get(effectId).orElse(null)
             DoubleValue(effectHolder != null && entity.hasEffect(effectHolder))
         }
         functions["heal"] = { params ->

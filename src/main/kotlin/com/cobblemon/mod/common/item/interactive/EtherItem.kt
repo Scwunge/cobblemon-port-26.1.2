@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.item.interactive
 
 import com.cobblemon.mod.common.CobblemonSounds
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.api.battles.model.PokemonBattle
 import com.cobblemon.mod.common.api.battles.model.actor.BattleActor
 import com.cobblemon.mod.common.api.item.PokemonAndMoveSelectingItem
@@ -24,8 +25,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
-import net.minecraft.world.item.ItemNameBlockItem
+import net.minecraft.world.item.BlockItem
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Block
@@ -36,9 +36,9 @@ import net.minecraft.world.level.block.Block
  * @author Hiroku
  * @since June 30th, 2023
  */
-class EtherItem(val max: Boolean, block: Block) : ItemNameBlockItem(block, Properties().apply {
+class EtherItem(val max: Boolean, block: Block) : BlockItem(block, Properties().apply {
     if (max) rarity(Rarity.UNCOMMON)
-}), PokemonAndMoveSelectingItem {
+}.useItemDescriptionPrefix()), PokemonAndMoveSelectingItem {
     override val bagItem = object : BagItem {
         override val itemName = "item.cobblemon.${ if (max) "max_ether" else "ether" }"
         override val returnItem = Items.GLASS_BOTTLE
@@ -65,10 +65,10 @@ class EtherItem(val max: Boolean, block: Block) : ItemNameBlockItem(block, Prope
         battlePokemon.entity?.playSound(CobblemonSounds.MEDICINE_LIQUID_USE, 1F, 1F)
     }
 
-    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResult {
         if (world is ServerLevel && user is ServerPlayer) {
-            return use(user, user.getItemInHand(hand)) ?: InteractionResultHolder.pass(user.getItemInHand(hand))
+            return use(user, user.getItemInHand(hand)) ?: InteractionResult.PASS
         }
-        return InteractionResultHolder.success(user.getItemInHand(hand))
+        return InteractionResult.SUCCESS
     }
 }

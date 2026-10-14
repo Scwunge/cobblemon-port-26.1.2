@@ -60,9 +60,9 @@ object LootInjector {
         BuiltInLootTables.FISHING_TREASURE
     ).apply { addAll(villageHouseBuiltInLootTables) }
 
-    private val injectionIds = injections.map {it.location()}.toSet()
+    private val injectionIds = injections.map {it.identifier()}.toSet()
 
-    private val villageInjectionIds = villageHouseBuiltInLootTables.map { it.location() }.toSet()
+    private val villageInjectionIds = villageHouseBuiltInLootTables.map { it.identifier() }.toSet()
 
     /**
      * Attempts to inject a Cobblemon injection loot table to a loot table being loaded.

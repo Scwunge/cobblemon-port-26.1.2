@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
@@ -66,8 +65,8 @@ class DiscShelfBlock(properties: Properties) : BaseEntityBlock(properties) {
     override fun useItemOn(
         stack: ItemStack, state: BlockState, level: Level, pos: BlockPos,
         player: Player, hand: InteractionHand, hit: BlockHitResult
-    ): ItemInteractionResult {
-        val entity = level.getBlockEntity(pos) as? DiscShelfBlockEntity ?: return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION
+    ): InteractionResult {
+        val entity = level.getBlockEntity(pos) as? DiscShelfBlockEntity ?: return InteractionResult.PASS
         return entity.handleUseItem(stack, state, level, pos, player, hit)
     }
 

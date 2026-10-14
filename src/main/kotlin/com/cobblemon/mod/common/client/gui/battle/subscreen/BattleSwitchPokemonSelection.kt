@@ -41,6 +41,11 @@ import net.minecraft.client.sounds.SoundManager
 import net.minecraft.resources.Identifier
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class BattleSwitchPokemonSelection(
     battleGUI: BattleGUI,
@@ -104,7 +109,7 @@ class BattleSwitchPokemonSelection(
         return Pair(slotX, slotY)
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (opacity <= 0.05F) return
 
         val matrixStack = context.pose()
@@ -144,7 +149,7 @@ class BattleSwitchPokemonSelection(
 
         tiles.forEach { it.render(context, mouseX.toDouble(), mouseY.toDouble(), delta) }
         if(!request.forceSwitch) {
-            backButton.render(context, mouseX, mouseY, delta)
+            backButton.extractRenderState(context, mouseX, mouseY, delta)
         }
     }
 

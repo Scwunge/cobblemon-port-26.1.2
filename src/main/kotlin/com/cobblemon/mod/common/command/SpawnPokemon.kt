@@ -73,7 +73,7 @@ object SpawnPokemon {
         }
         try {
             val pokemonEntity = properties.createEntity(world)
-            pokemonEntity.moveTo(pos.x, pos.y, pos.z, pokemonEntity.yRot, pokemonEntity.xRot)
+            pokemonEntity.snapTo(pos.x, pos.y, pos.z, pokemonEntity.yRot, pokemonEntity.xRot)
             pokemonEntity.entityData.set(PokemonEntity.SPAWN_DIRECTION, pokemonEntity.random.nextFloat() * 360F)
             pokemonEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(blockPos), EntitySpawnReason.COMMAND, null)
             if (!world.addFreshEntity(pokemonEntity)) {

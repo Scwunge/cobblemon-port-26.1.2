@@ -41,7 +41,7 @@ sealed interface RenderableFace {
 
 class PlayerRenderableFace(val playerId: UUID, override val isLeftSide: Boolean) : RenderableFace {
     override val struct: QueryStruct = QueryStruct(hashMapOf())
-    override fun render(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
+    override fun extractRenderState(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
         val entity = Minecraft.getInstance().level?.getPlayerByUUID(playerId) ?: return
         // All of the maths below is shamelessly stolen from InventoryScreen.drawEntity.
         // the -20 and 5 divided by 40 are for configuring the yaw and pitch tilt of the body and head respectively.
@@ -79,7 +79,7 @@ class ReferenceRenderableFace(val entity: PosableEntity, override val isLeftSide
     val state = entity.delegate as PosableState
     override val struct: QueryStruct
         get() = state.runtime.environment.query
-    override fun render(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
+    override fun extractRenderState(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
         val state = this.state
         if (state is PokemonClientDelegate) {
             state.currentAspects = state.currentEntity.pokemon.aspects
@@ -120,7 +120,7 @@ class ArtificialRenderableFace(
     override val struct: QueryStruct
         get() = state.runtime.environment.query
 
-    override fun render(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
+    override fun extractRenderState(GuiGraphicsExtractor: GuiGraphicsExtractor, partialTicks: Float) {
         val state = this.state
         state.currentAspects = aspects
         if (modelType == "pokemon") {

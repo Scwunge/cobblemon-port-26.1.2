@@ -137,7 +137,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         val posX = thrower.x - sinYaw.toDouble() * 0.3
         val posY = thrower.eyeY
         val posZ = thrower.z - cosYaw.toDouble() * 0.3
-        this.moveTo(posX, posY, posZ, throwerYaw, throwerPitch)
+        this.snapTo(posX, posY, posZ, throwerYaw, throwerPitch)
         var vec3d =
             Vec3((-sinYaw).toDouble(), Mth.clamp(-(sinPitch / cosPitch), -5.0f, 5.0f).toDouble(), (-cosYaw).toDouble())
         val m = vec3d.length()

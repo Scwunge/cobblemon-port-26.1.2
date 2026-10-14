@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.api.mulch.MulchVariant
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.BerryBlock
 import com.cobblemon.mod.common.block.entity.BerryBlockEntity
 import com.cobblemon.mod.common.client.CobblemonBakingOverrides
@@ -57,7 +58,7 @@ class BerryBlockRenderer(private val context: BlockEntityRendererProvider.Contex
 
         // RenderType.entityCutoutNoCull for shading, as shading is absent in RenderType CobblemonRenderLayers.BERRY_LAYER
         val buffer = vertexConsumers.getBuffer(
-            RenderType.entityCutoutNoCull(BERRY_SPRITE_ATLAS.textureAtlas.location())
+            RenderTypes.entityCutout(BERRY_SPRITE_ATLAS.textureAtlas.location())
         )
 
         val renderState = entity.renderState as BerryBlockEntityRenderState

@@ -21,6 +21,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class NPCEditorButton(
     var buttonX: Float,
@@ -44,7 +45,7 @@ class NPCEditorButton(
     var isWidgetActive = false
     var startHoverX = -1
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
 
         // Left border
@@ -122,9 +123,12 @@ class NPCEditorButton(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (active && isMouseOver(mouseX, mouseY)) {
-            super.mouseClicked(mouseX, mouseY, button)
+            super.mouseClicked(event, doubleClick)
         }
         return false
     }

@@ -103,12 +103,12 @@ class CobblemonConfigVariableList(
         entries.forEach { entry -> entry.add() }
     }
 
-    override fun renderWidget(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick)
+    override fun extractWidgetRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
         val hoveredVariableTooltip = this.hovered?.tooltip
         if (isMouseInsideScrollList(mouseX, mouseY) && hoveredVariableTooltip != null) {
-            guiGraphics.renderTooltip(minecraft.font, hoveredVariableTooltip.toCharSequence(minecraft), mouseX, mouseY)
+            guiGraphics.setTooltipForNextFrame(minecraft.font, hoveredVariableTooltip.toCharSequence(minecraft), mouseX, mouseY)
         }
     }
 
@@ -156,7 +156,7 @@ class CobblemonConfigVariableList(
         val category: Category,
         val configVariables: List<CobblemonConfigVariable>
     ) : CobblemonConfigVariableListEntry(parent) {
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             top: Int,

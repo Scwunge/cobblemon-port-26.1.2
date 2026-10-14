@@ -180,7 +180,7 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Simp
                 }
             }
         }
-        return InteractionResult.sidedSuccess(level.isClientSide)
+        return InteractionResult.SUCCESS
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {

@@ -51,11 +51,11 @@ class DialogueNPCInteractionConfiguration : NPCInteractConfiguration {
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(dialogue)
+        buffer.writeIdentifier(dialogue)
     }
 
     override fun decode(buffer: RegistryFriendlyByteBuf) {
-        dialogue = buffer.readResourceLocation()
+        dialogue = buffer.readIdentifier()
     }
 
     override fun writeToNBT(compoundTag: CompoundTag) {

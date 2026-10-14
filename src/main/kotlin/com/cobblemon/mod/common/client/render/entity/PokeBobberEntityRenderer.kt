@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.entity
 
 import com.cobblemon.mod.common.api.fishing.PokeRods
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
 import com.cobblemon.mod.common.entity.fishing.PokeRodFishingBobberEntity
 import com.cobblemon.mod.common.item.interactive.PokerodItem
@@ -239,7 +240,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Entit
 
     companion object {
         private val TEXTURE = cobblemonResource("textures/item/fishing/bobber_hook.png")
-        private val LAYER = RenderType.entityCutout(TEXTURE)
+        private val LAYER = RenderTypes.entityCutoutCull(TEXTURE)
 
         private fun vertex(buffer: VertexConsumer, entry: PoseStack.Pose, light: Int, x: Float, y: Float, u: Int, v: Int) {
             buffer

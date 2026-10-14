@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.cobblemon.mod.common.pokeball.PokeBall
 import com.cobblemon.mod.common.util.isServerSide
@@ -17,7 +18,6 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.item.Rarity
 import net.minecraft.world.level.Level
 import kotlin.math.cos
@@ -34,13 +34,13 @@ class PokeBallItem(
     }
 }) {
 
-    override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(world: Level, player: Player, usedHand: InteractionHand): InteractionResult {
         val itemStack = player.getItemInHand(usedHand)
         if (world.isServerSide()) {
             throwPokeBall(world, player as ServerPlayer)
         }
         itemStack.consume(1, player)
-        return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide)
+        return InteractionResult.SUCCESS
     }
 
     private fun throwPokeBall(world: Level, player: ServerPlayer) {

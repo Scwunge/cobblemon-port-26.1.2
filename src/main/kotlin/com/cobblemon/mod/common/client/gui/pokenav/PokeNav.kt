@@ -28,6 +28,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.KeyEvent
 
 class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")), CobblemonRenderable {
 
@@ -83,7 +84,10 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")), Co
      * Changed by Licious April 29th 2022
      * Cleaned up the original code see [moveSelected] for how the selection moves around.
      */
-    override fun keyPressed(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val pKeyCode = event.key()
+        val pScanCode = event.scancode()
+        val pModifiers = event.modifiers()
         if (isInventoryKeyPressed(minecraft, pKeyCode, pScanCode)) {
             Minecraft.getInstance().setScreen(null)
             return true
@@ -107,14 +111,17 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")), Co
             else -> 0 to 0
         }
         this.moveSelected(movement.first, movement.second)
-        return super.keyPressed(pKeyCode, pScanCode, pModifiers)
+        return super.keyPressed(event)
     }
 
-    override fun keyReleased(pKeyCode: Int, pScanCode: Int, pModifiers: Int): Boolean {
+    override fun keyReleased(event: KeyEvent): Boolean  {
+        val pKeyCode = event.key()
+        val pScanCode = event.scancode()
+        val pModifiers = event.modifiers()
         if ((pKeyCode == PokeNavigatorBinding.boundKey().value || pKeyCode == InputConstants.KEY_LSHIFT || pKeyCode == InputConstants.KEY_RSHIFT) && aboutToClose) {
             Minecraft.getInstance().setScreen(null) // So we only close if the Key was released
         }
-        return super.keyReleased(pKeyCode, pScanCode, pModifiers)
+        return super.keyReleased(event)
     }
 
     /**
@@ -124,7 +131,7 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")), Co
     /**
      * Rendering the background texture
      */
-    override fun render(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         renderBackground(context, pMouseX, pMouseY, pPartialTicks)
 
         // Rendering UI Background
@@ -135,7 +142,7 @@ class PokeNav : Screen(Component.translatable("cobblemon.ui.pokenav.title")), Co
             width = backgroundWidth, height = backgroundHeight
         )
 
-        super.render(context, pMouseX, pMouseY, pPartialTicks)
+        super.extractRenderState(context, pMouseX, pMouseY, pPartialTicks)
 
         /**
          * Rendering Selection

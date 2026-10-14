@@ -92,7 +92,7 @@ class HabitatSpawn {
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(species.resourceIdentifier)
+        buffer.writeIdentifier(species.resourceIdentifier)
         buffer.writeUtf(spawnablePositionType)
         buffer.writeFloat(weight)
         buffer.writeUtf(IntRangeAdapter.serialize(levelRange))
@@ -105,7 +105,7 @@ class HabitatSpawn {
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
-        species = PokemonSpecies.getByIdentifier(buffer.readResourceLocation())!!
+        species = PokemonSpecies.getByIdentifier(buffer.readIdentifier())!!
         spawnablePositionType = buffer.readUtf()
         weight = buffer.readFloat()
         levelRange = IntRangeAdapter.deserialize(buffer.readUtf())

@@ -22,6 +22,8 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
 
 abstract class TextWidget(
     pX: Int,
@@ -73,10 +75,13 @@ abstract class TextWidget(
         super.setFocused(focused)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (isFocused && !isMouseOver(mouseX, mouseY)) unfocused()
 
-        val result = super.mouseClicked(mouseX, mouseY, button)
+        val result = super.mouseClicked(event, doubleClick)
 
         if (mouseX > startPosX + Minecraft.getInstance().font.width(value.text().bold().font(CobblemonResources.DEFAULT_LARGE))) {
             moveCursorToEnd(false)
@@ -92,8 +97,11 @@ abstract class TextWidget(
         return result
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (isFocused && (keyCode == InputConstants.KEY_RETURN || keyCode == InputConstants.KEY_NUMPADENTER)) unfocused()
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 }

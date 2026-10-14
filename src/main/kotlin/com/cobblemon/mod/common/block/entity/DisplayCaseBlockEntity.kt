@@ -56,14 +56,14 @@ class DisplayCaseBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cob
         if (playerStack.isEmpty && !getStack().isEmpty) {
             if (!player.isCreative) player.setItemInHand(hand, getStack())
             setCaseStack(ItemStack.EMPTY)
-            return InteractionResult.sidedSuccess(true)
+            return InteractionResult.SUCCESS
         }
 
         // Case is empty, player's hand is not - put playerStack in the case
         if (getStack().isEmpty && !playerStack.isEmpty) {
             setCaseStack(playerStack.copy())
             playerStack.consume(1, player)
-            return InteractionResult.sidedSuccess(true)
+            return InteractionResult.SUCCESS
         }
 
         // Player has item, case has item - swap items

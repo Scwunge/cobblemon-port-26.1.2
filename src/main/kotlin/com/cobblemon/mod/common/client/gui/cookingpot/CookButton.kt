@@ -32,7 +32,7 @@ class CookButton(
         private val buttonResource = cobblemonResource("textures/gui/campfirepot/button.png")
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val closedIcon = cobblemonResource("textures/item/campfire_pots/campfire_pot_${color.suffix}.png")
         val openIcon = cobblemonResource("textures/item/campfire_pots/campfire_pot_${color.suffix}_open.png")
         blitk(

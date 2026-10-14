@@ -34,6 +34,12 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth.clamp
 import org.joml.Quaternionf
 import kotlin.math.*
+import org.joml.Matrix3x2fStack
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 /**
  * Renders the UI for scanning a Pokémon
@@ -82,7 +88,7 @@ class PokedexScannerRenderer {
         fun infoFrameResource(isLeft: Boolean, tier: Int): Identifier = cobblemonResource("textures/gui/pokedex/scan/scan_info_frame_${if (isLeft) "left" else "right"}_$tier.png")
     }
 
-    fun renderInfoFrames(graphics: GuiGraphicsExtractor, poseStack: PoseStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
+    fun renderInfoFrames(graphics: GuiGraphicsExtractor, poseStack: Matrix3x2fStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
         if (usageContext.focusIntervals > 0) {
             var infoDisplayedCounter = 0
             usageContext.availableInfoFrames.forEachIndexed {index, isLeftSide ->
@@ -245,7 +251,7 @@ class PokedexScannerRenderer {
         }
     }
 
-    fun renderScanRings(poseStack: PoseStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
+    fun renderScanRings(poseStack: Matrix3x2fStack, usageContext: PokedexUsageContext, centerX: Int, centerY: Int, opacity: Float) {
         val rotation = usageContext.usageIntervals % 360
 
         poseStack.pushPose()

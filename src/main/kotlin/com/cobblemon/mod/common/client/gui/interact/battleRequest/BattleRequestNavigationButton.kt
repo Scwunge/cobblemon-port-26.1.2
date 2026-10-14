@@ -37,7 +37,7 @@ class BattleRequestNavigationButton(
         private val backwardsButtonResource = cobblemonResource("textures/gui/interact/request/arrow_left.png")
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         if (!isActive) {
             return
         }

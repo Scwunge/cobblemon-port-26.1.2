@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.tmmachine
 
 import com.cobblemon.mod.common.CobblemonSounds
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.api.types.ElementalType
@@ -21,8 +22,8 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
-import net.minecraft.util.FastColor
 import net.minecraft.util.Mth
+import net.minecraft.client.input.MouseButtonEvent
 
 class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType?) -> (Unit)): ScrollingWidget<ScrollSlotRow>(
     width = WIDTH,
@@ -58,8 +59,8 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
             yTop = this.y
         }
 
-        context.fill(xLeft, this.y, xRight, this.bottom, FastColor.ARGB32.color(255, 75, 75, 75)) // background
-        context.fill(xLeft,yTop, xRight, yTop + yBottom, FastColor.ARGB32.color(255, 141, 141, 141)) // base
+        context.fill(xLeft, this.y, xRight, this.bottom, ARGB.color(255, 75, 75, 75)) // background
+        context.fill(xLeft,yTop, xRight, yTop + yBottom, ARGB.color(255, 141, 141, 141)) // base
     }
 
     fun renderEntry(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, index: Int, x: Int, y: Int) {
@@ -136,9 +137,12 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
             }
         }
 
-        override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {}
+        override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {}
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             var disable = false
 
             val hoverIndex = getHoveredSlotIndex(mouseX.toInt(), mouseY.toInt())

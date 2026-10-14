@@ -50,6 +50,14 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
+import com.cobblemon.mod.common.client.render.gui.mouseDragged
 
 /**
  * The screen responsible for displaying various information regarding a Pokémon team.
@@ -490,7 +498,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
     override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         schedulingTracker.update(delta / 20F)
 
         val x = (width - BASE_WIDTH) / 2
@@ -660,12 +668,12 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         matrices.translate(0.0, 0.0, 1000.0)
 
         // Render all added Widgets
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
 
         // Render Item Tooltip
         if (!displayedItem.isEmpty) {
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, displayedItem, mouseX, mouseY)
+            if (itemHovered) context.setTooltipForNextFrame(Minecraft.getInstance().font, displayedItem, mouseX, mouseY)
         }
         matrices.popPose()
     }
@@ -679,13 +687,21 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         return children().any { it.mouseScrolled(mouseX, mouseY, amount, verticalAmount) }
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (sideScreenIndex == MOVE_SWAP || sideScreenIndex == EVOLVE) sideScreen.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
         if (mainScreenIndex == MOVES) mainScreen.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         val nicknameSelected = this::nicknameEntryWidget.isInitialized && nicknameEntryWidget.isFocused
 
         if (keyCode == InputConstants.KEY_ESCAPE) {
@@ -710,7 +726,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
 
         handleProfileDebugKeys(keyCode, selectedPokemon.species.resourceIdentifier, modelWidget.state)
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     fun playSound(soundEvent: SoundEvent) {

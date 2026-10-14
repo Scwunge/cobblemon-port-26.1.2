@@ -29,6 +29,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     pX,
@@ -48,7 +53,7 @@ class SizeWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     var pokemonHeight: Float = 0F
     var weight: Float = 0F
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
 
 //        drawScaledTextJustifiedRight(

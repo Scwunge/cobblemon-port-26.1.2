@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.CobblemonItemComponents
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.api.item.PokemonSelectingItem
 import com.cobblemon.mod.common.api.riding.stats.RidingStat
@@ -20,7 +21,6 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
@@ -35,18 +35,18 @@ class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)
         return rideBoostComponent?.boosts?.isNotEmpty() == true
     }
 
-    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResult {
         val stack = user.getItemInHand(hand)
 
         return if (!hasRideBoosts(stack)) {
             // act like a drink :D
             user.startUsingItem(hand)
-            InteractionResultHolder.consume(stack)
+            InteractionResult.CONSUME
         } else {
             if (world is ServerLevel && user is ServerPlayer) {
                 return super<PokemonSelectingItem>.use(user, stack, false)
             }
-            InteractionResultHolder.pass(stack)
+            InteractionResult.PASS
         }
     }
 
@@ -87,9 +87,9 @@ class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)
         player: ServerPlayer,
         stack: ItemStack,
         pokemon: Pokemon
-    ): InteractionResultHolder<ItemStack>? {
+    ): InteractionResult? {
         if (!canUseOnPokemon(stack, pokemon)) {
-            return InteractionResultHolder.fail(stack)
+            return InteractionResult.FAIL
         }
 
         pokemon.feedPokemon(1)
@@ -99,7 +99,7 @@ class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)
 
         stack.consume(1, player)
 
-        return InteractionResultHolder.success(stack)
+        return InteractionResult.SUCCESS
     }
 
     override fun finishUsingItem(stack: ItemStack, world: Level, user: LivingEntity): ItemStack {

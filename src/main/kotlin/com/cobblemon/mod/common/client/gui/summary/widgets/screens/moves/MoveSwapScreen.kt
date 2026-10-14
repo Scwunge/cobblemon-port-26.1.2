@@ -27,6 +27,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.input.MouseButtonEvent
 
 class MoveSwapScreen(
     x: Int,
@@ -56,7 +57,7 @@ class MoveSwapScreen(
     class MoveSlot(val pane: MoveSwapScreen, val move: MoveTemplate?, val ppRaisedStages: Int, pokemon: Pokemon) : Entry<MoveSlot>() {
         override fun getNarration() = move?.displayName ?: lang("ui.moves.forget")
         val elementalType = move?.getEffectiveElementalType(pokemon) ?: ElementalTypes.NORMAL
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
@@ -213,7 +214,10 @@ class MoveSwapScreen(
 
         }
 
-        override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val d = event.x()
+            val e = event.y()
+            val i = event.button()
             if (isMouseOver(d, e)) {
                 val pokemon = pane.movesWidget.summary.selectedPokemon
                 val isParty = pokemon in CobblemonClient.storage.party

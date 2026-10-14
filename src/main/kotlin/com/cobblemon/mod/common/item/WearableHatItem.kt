@@ -9,22 +9,22 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.util.traceFirstEntityCollision
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 
 class WearableHatItem(override val name: String): CobblemonItem(Properties()), WearableItem {
-    override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResultHolder<ItemStack> {
+    override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResult {
         val hitPokemon = player.traceFirstEntityCollision(
             entityClass = PokemonEntity::class.java,
             maxDistance = player.entityInteractionRange().toFloat()
         )
         // If the player is looking at a Pokémon within range, block the ability to swap the item onto their head
-        if (player.isCrouching && hitPokemon != null && hitPokemon.isOwnedBy(player)) return InteractionResultHolder.fail(player.getItemInHand(usedHand))
+        if (player.isCrouching && hitPokemon != null && hitPokemon.isOwnedBy(player)) return InteractionResult.FAIL
 
         return this.swapStackWithEquipmentSlot(level, player, usedHand)
     }

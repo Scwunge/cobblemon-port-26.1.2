@@ -49,7 +49,7 @@ object SpawnAllPokemon {
                 LOGGER.debug(species.name)
                 val pokemonEntity = PokemonProperties.parse("species=${species.name} level=10").createEntity(context.source.level)
                 val blockPos = player.blockPosition()
-                pokemonEntity.moveTo(player.x, player.y, player.z, pokemonEntity.yRot, pokemonEntity.xRot)
+                pokemonEntity.snapTo(player.x, player.y, player.z, pokemonEntity.yRot, pokemonEntity.xRot)
                 pokemonEntity.entityData.set(PokemonEntity.SPAWN_DIRECTION, pokemonEntity.random.nextFloat() * 360F)
                 pokemonEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(blockPos), EntitySpawnReason.COMMAND, null)
                 context.source.level.addFreshEntity(pokemonEntity)

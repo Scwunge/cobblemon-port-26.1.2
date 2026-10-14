@@ -57,7 +57,7 @@ class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
         setAbility()
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!abilitiesAvailable()) return
 
         drawScaledText(
@@ -69,7 +69,7 @@ class AbilitiesWidget(x: Int, y: Int): InfoTextScrollWidget(pX = x, pY = y) {
             shadow = true
         )
 
-        super.renderWidget(context, mouseX, mouseY, delta)
+        super.extractWidgetRenderState(context, mouseX, mouseY, delta)
     }
 
     fun setAbility() {

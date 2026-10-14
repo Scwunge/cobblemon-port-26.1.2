@@ -316,7 +316,7 @@ class BattleConfigureGUI(
         }
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         ticksPassed += delta
         val battleTypeData = battleRequestMap[options[currentPage]] ?: return
         // Render background panel
@@ -437,7 +437,7 @@ class BattleConfigureGUI(
             blue = (battleTypeData.color and 0b11111111) / 255F,
         )
 
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
     }
 
     private fun getDimensions(): Pair<Int, Int> {

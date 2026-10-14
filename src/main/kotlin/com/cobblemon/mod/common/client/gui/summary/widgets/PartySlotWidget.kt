@@ -30,6 +30,13 @@ import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
+import com.cobblemon.mod.common.client.render.gui.mouseReleased
 
 class PartySlotWidget(
     pX: Number,
@@ -72,7 +79,7 @@ class PartySlotWidget(
         return 0
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
         val matrices = context.pose()
         val isDraggedSlot = partyWidget.swapEnabled && partyWidget.swapSource == index
@@ -218,7 +225,10 @@ class PartySlotWidget(
         }
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (isValidClick(pMouseX, pMouseY, pButton)) {
             if (partyWidget.swapEnabled) {
                 toggleDrag(true)
@@ -230,15 +240,23 @@ class PartySlotWidget(
                 }
             }
         }
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseReleased(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseReleased(event: MouseButtonEvent): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (partyWidget.swapEnabled) toggleDrag(false)
         return partyWidget.mouseReleased(pMouseX, pMouseY, pButton)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, f: Double, g: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val f = dragX
+        val g = dragY
         if (partyWidget.swapEnabled && partyWidget.isWithinScreen(mouseX, mouseY) && index < 0) {
             repositionSlot(mouseX, mouseY)
         } else {
@@ -247,7 +265,7 @@ class PartySlotWidget(
             partyWidget.swapSource = null
             partyWidget.draggedSlot = null
         }
-        return super.mouseDragged(mouseX, mouseY, button, f, g)
+        return super.mouseDragged(event, f, g)
     }
 
     private fun toggleDrag(boolean: Boolean) {

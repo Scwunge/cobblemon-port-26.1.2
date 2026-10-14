@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.pokeball
 
 import com.cobblemon.mod.common.client.entity.EmptyPokeBallClientDelegate
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.PosablePokeBallModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
@@ -43,7 +44,7 @@ class PokeBallRenderer(context: EntityRendererProvider.Context) : EntityRenderer
         poseStack.pushPose()
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
         poseStack.scale(0.7F, -0.7F, -0.7F)
-        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, RenderType.entityCutout(getTextureLocation(entity)), false, false)
+        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, RenderTypes.entityCutoutCull(getTextureLocation(entity)), false, false)
         state.updatePartialTicks(partialTicks)
         model.setLayerContext(buffer, state, VaryingModelRepository.getLayers(entity.pokeBall.name, state))
         this.model.setupAnim(entity, 0f, 0f, entity.tickCount + partialTicks, 0F, 0F)

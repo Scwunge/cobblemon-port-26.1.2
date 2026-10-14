@@ -229,7 +229,7 @@ fun Entity.setPositionSafely(pos: Vec3): Boolean {
 }
 
 fun Entity.isDusk(): Boolean {
-    val time = level().dayTime % 24000
+    val time = level().overworldClockTime % 24000
     return time in 12000..13000
 }
 

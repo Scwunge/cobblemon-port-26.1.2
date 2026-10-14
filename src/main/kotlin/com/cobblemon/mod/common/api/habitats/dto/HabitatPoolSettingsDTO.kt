@@ -33,7 +33,7 @@ class HabitatPoolSettingsDTO() {
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(id)
+        buffer.writeIdentifier(id)
         buffer.writeBoolean(isReference)
         if (!isReference) {
             buffer.writeUtf(name!!)
@@ -46,7 +46,7 @@ class HabitatPoolSettingsDTO() {
     fun decode(
         buffer: RegistryFriendlyByteBuf
     ) {
-        this.id = buffer.readResourceLocation()
+        this.id = buffer.readIdentifier()
         this.isReference = buffer.readBoolean()
         if (!isReference) {
             this.name = buffer.readUtf()

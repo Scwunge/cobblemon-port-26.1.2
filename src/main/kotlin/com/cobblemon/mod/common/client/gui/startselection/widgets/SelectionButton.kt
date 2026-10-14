@@ -40,7 +40,7 @@ class SelectionButton(
 
     override fun playDownSound(soundManager: SoundManager) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         blitk(
             matrixStack = matrices,

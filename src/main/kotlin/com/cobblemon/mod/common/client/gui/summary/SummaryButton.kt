@@ -22,6 +22,7 @@ import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class SummaryButton(
     var buttonX: Float,
@@ -48,12 +49,19 @@ class SummaryButton(
 
     var buttonActive = false
 
-    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double) = false
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
+        val d = event.x()
+        val e = event.y()
+        val i = event.button()
+        val f = dragX
+        val g = dragY
+        return false
+    }
 
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {
     }
 
-    public override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    public override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         if (!this.renderRequirement.invoke(this)) {
             return
         }
@@ -85,9 +93,12 @@ class SummaryButton(
         )
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (this.clickRequirement.invoke(this) && isButtonHovered(mouseX, mouseY)) {
-            super.mouseClicked(mouseX, mouseY, button)
+            super.mouseClicked(event, doubleClick)
         }
         return false
     }

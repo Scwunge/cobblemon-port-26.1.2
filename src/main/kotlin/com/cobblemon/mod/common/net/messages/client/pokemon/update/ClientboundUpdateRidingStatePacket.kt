@@ -26,7 +26,7 @@ class ClientboundUpdateRidingStatePacket(
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         if (state == null) error("Expected state to be populated for encoding")
         buffer.writeInt(entity)
-        buffer.writeResourceLocation(behaviour)
+        buffer.writeIdentifier(behaviour)
         state.encode(buffer)
     }
 
@@ -34,7 +34,7 @@ class ClientboundUpdateRidingStatePacket(
         val ID = cobblemonResource("s2c_update_ride_controller")
         fun decode(buffer: RegistryFriendlyByteBuf): ClientboundUpdateRidingStatePacket {
             val entity = buffer.readInt()
-            val behaviour = buffer.readResourceLocation()
+            val behaviour = buffer.readIdentifier()
             val state = FriendlyByteBuf(buffer.readBytes(buffer.readableBytes()))
             return ClientboundUpdateRidingStatePacket(
                 entity = entity,

@@ -21,6 +21,8 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.mouseClicked
 
 class PastureWidget(
     val storageWidget: StorageWidget,
@@ -48,7 +50,7 @@ class PastureWidget(
         parent = this
     )
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             matrixStack = context.pose(),
             texture = baseResource,
@@ -67,14 +69,17 @@ class PastureWidget(
             centered = true
         )
 
-        pastureScrollList.render(context, mouseX, mouseY, delta)
+        pastureScrollList.extractRenderState(context, mouseX, mouseY, delta)
 
-        recallButton.render(context, mouseX, mouseY, delta)
+        recallButton.extractRenderState(context, mouseX, mouseY, delta)
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (recallButton.isHovered(pMouseX, pMouseY)) recallButton.mouseClicked(pMouseX, pMouseY, pButton)
         if (pastureScrollList.isHovered(pMouseX, pMouseY)) pastureScrollList.mouseClicked(pMouseX, pMouseY, pButton)
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 }

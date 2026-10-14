@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.CobblemonBlocks
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
 import com.cobblemon.mod.common.client.CobblemonBakingOverrides
@@ -141,7 +142,7 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockE
             val texture = VaryingModelRepository.getTexture(identifier, state)
 
             if (scale > 0F) {
-                val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
+                val vertexConsumer = vertexConsumers.getBuffer(RenderTypes.entityCutoutCull(texture))
                 state.currentModel = model
                 state.setPoseToFirstSuitable()
 

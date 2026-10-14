@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
+import net.minecraft.client.input.MouseButtonEvent
 
 class ReorderMoveButton(
     val pX: Int, val pY: Int,
@@ -36,11 +37,16 @@ class ReorderMoveButton(
         private var blocked = false
     }
 
-    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val d = event.x()
+        val e = event.y()
+        val i = event.button()
+        val f = dragX
+        val g = dragY
         return false
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val offsetY = if (isUp) OFFSET_Y_UP else OFFSET_Y_DOWN
 
         blitk(
@@ -56,11 +62,15 @@ class ReorderMoveButton(
         )
     }
 
-    override fun onRelease(pMouseX: Double, pMouseY: Double) {
+    override fun onRelease(event: MouseButtonEvent) {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
         blocked = false
     }
 
-    override fun onClick(pMouseX: Double, pMouseY: Double) {
+    override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
         if (!blocked) {
             blocked = true
             onPress.onPress(this)

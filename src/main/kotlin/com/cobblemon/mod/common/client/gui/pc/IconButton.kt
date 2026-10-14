@@ -38,7 +38,7 @@ class IconButton(
     var highlighted = false
     var showAlt = false
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
 
         blitk(
             matrixStack = context.pose(),
@@ -54,7 +54,7 @@ class IconButton(
 
         if (isHovered()) {
             tooltipKey?.let {
-                context.renderTooltip(Minecraft.getInstance().font, lang(it), mouseX, mouseY)
+                context.setTooltipForNextFrame(Minecraft.getInstance().font, lang(it), mouseX, mouseY)
             }
         }
     }

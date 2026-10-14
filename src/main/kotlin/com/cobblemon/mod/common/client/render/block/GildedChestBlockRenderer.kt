@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.block.entity.GildedChestBlockEntity
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.blockentity.BlockEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
@@ -44,7 +45,7 @@ class GildedChestBlockRenderer(context: BlockEntityRendererProvider.Context) : B
         val model = VaryingModelRepository.getPoser(poserId, state) as BlockEntityModel
         model.context = context
         val texture = VaryingModelRepository.getTexture(poserId, state)
-        val vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutout(texture))
+        val vertexConsumer = vertexConsumers.getBuffer(RenderTypes.entityCutoutCull(texture))
         model.bufferProvider = vertexConsumers
         state.currentModel = model
         context.put(RenderContext.ASPECTS, aspects)

@@ -17,6 +17,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class MarkingButton(
     val buttonX: Number,
@@ -54,7 +55,9 @@ class MarkingButton(
         if (canEdit) soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
     }
 
-    override fun onClick(mouseX: Double, mouseY: Double) {
-        if (canEdit) super.onClick(mouseX, mouseY)
+    override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        if (canEdit) super.onClick(event, doubleClick)
     }
 }

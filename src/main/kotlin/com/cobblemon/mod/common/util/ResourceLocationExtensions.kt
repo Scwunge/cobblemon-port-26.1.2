@@ -53,7 +53,7 @@ fun Identifier.toAssetPath(prefix: String = "", suffix: String = ""): Identifier
  */
 fun StringReader.asIdentifierDefaultingNamespace(namespace: String = Cobblemon.MODID): Identifier {
     val start = this.cursor
-    while (this.canRead() && Identifier.isAllowedInResourceLocation(this.peek())) {
+    while (this.canRead() && Identifier.isAllowedInIdentifier(this.peek())) {
         this.skip()
     }
     val raw = this.string.substring(start, this.cursor)

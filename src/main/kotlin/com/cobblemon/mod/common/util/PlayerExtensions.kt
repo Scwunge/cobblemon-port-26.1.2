@@ -93,7 +93,7 @@ fun ServerPlayer.onLogout(handler: () -> Unit) {
  * @return If the attempt to heal was successful.
  */
 fun ServerPlayer.didSleep(): Boolean {
-    if (sleepTimer != 100 || level().dayTime.toInt() % 24000 != 0 || this.isInBattle()) {
+    if (sleepTimer != 100 || level().overworldClockTime.toInt() % 24000 != 0 || this.isInBattle()) {
         return false
     }
     party().didSleep()

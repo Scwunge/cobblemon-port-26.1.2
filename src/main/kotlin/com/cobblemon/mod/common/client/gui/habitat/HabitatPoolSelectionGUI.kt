@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.habitat
 
 import com.cobblemon.mod.common.api.habitats.HabitatPool
+import com.cobblemon.mod.common.api.gui.legacyTextColour
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.util.asTranslated
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.language.I18n
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class HabitatPoolSelectionGUI(
     private val isActivated: Boolean,
@@ -67,11 +69,11 @@ class HabitatPoolSelectionGUI(
         )
     }
 
-    override fun render(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.fill(0, 0, width, height, Color(0, 0, 0, 100).rgb)
         guiGraphics.fill(0, 0, width, headerHeight, Color(0, 0, 0, 150).rgb)
         guiGraphics.fill(0, getFooterTop(), width, height, Color(0, 0, 0, 150).rgb)
-        super.render(guiGraphics, mouseX, mouseY, partialTick)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
         guiGraphics.drawCenteredString(font, title, width / 2, 8, 0xFFFFFF)
     }
 
@@ -127,7 +129,7 @@ class HabitatPoolSelectionGUI(
             private val poolName: String,
             private val onSelect: (Identifier?) -> Unit
         ) : ObjectSelectionList.Entry<PoolEntry>() {
-            override fun render(
+            override fun extractRenderState(
                 guiGraphics: GuiGraphicsExtractor,
                 index: Int,
                 rowTop: Int,
@@ -139,10 +141,13 @@ class HabitatPoolSelectionGUI(
                 hovered: Boolean,
                 partialTick: Float
             ) {
-                guiGraphics.drawString(Minecraft.getInstance().font, poolName.asTranslated(), rowLeft + 4, rowTop + 6, 0xFFFFFF)
+                guiGraphics.text(Minecraft.getInstance().font, poolName.asTranslated(), rowLeft + 4, rowTop + 6, legacyTextColour(0xFFFFFF))
             }
 
-            override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+            override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+                val mouseX = event.x()
+                val mouseY = event.y()
+                val button = event.button()
                 if (!isMouseOver(mouseX, mouseY)) {
                     return false
                 }

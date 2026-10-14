@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class DialogueOptionWidget(
     val dialogueScreen: DialogueScreen,
@@ -31,7 +32,7 @@ class DialogueOptionWidget(
     height: Int,
     val texture: Identifier
 ) : ParentWidget(x, y, width, height, text) {
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!dialogueScreen.renderInput()) {
             return
         }
@@ -57,7 +58,10 @@ class DialogueOptionWidget(
 
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (!dialogueScreen.renderInput()) {
             return false
         }

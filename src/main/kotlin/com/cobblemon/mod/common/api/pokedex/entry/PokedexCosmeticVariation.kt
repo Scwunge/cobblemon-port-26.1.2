@@ -35,13 +35,13 @@ class PokedexCosmeticVariation {
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeString(displayName)
-        buffer.writeResourceLocation(icon)
+        buffer.writeIdentifier(icon)
         buffer.writeCollection(aspects) { _, aspect -> buffer.writeString(aspect) }
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
         displayName = buffer.readString()
-        icon = buffer.readResourceLocation()
+        icon = buffer.readIdentifier()
         aspects = buffer.readList { buffer.readString() }.toSet()
     }
 }

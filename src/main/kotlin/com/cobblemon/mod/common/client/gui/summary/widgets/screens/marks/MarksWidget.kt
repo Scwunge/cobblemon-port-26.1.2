@@ -24,6 +24,12 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class MarksWidget(
     pX: Int, pY: Int,
@@ -66,15 +72,18 @@ class MarksWidget(
         addWidget(marksScrollList)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (selectedMark !== null && isSelectedMarkHovered(mouseX.toInt(), mouseY.toInt())) {
             selectedMark = null
             Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
 
         blitk(
@@ -122,9 +131,9 @@ class MarksWidget(
             )
         }
 
-        marksScrollList.render(context, mouseX, mouseY, partialTicks)
+        marksScrollList.extractRenderState(context, mouseX, mouseY, partialTicks)
         if (hoveredMark !== null && marksScrollList.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) {
-            context.renderTooltip(Minecraft.getInstance().font, hoveredMark!!.getName(), mouseX, mouseY)
+            context.setTooltipForNextFrame(Minecraft.getInstance().font, hoveredMark!!.getName(), mouseX, mouseY)
         }
     }
 

@@ -41,6 +41,11 @@ import org.joml.Quaternionf
 import org.joml.Vector3f
 import kotlin.math.floor
 import kotlin.math.sin
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class BattleTargetSelection(
         battleGUI: BattleGUI,
@@ -323,7 +328,7 @@ class BattleTargetSelection(
         }
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
 
         // Draw Background
         blitk(
@@ -350,7 +355,7 @@ class BattleTargetSelection(
         targetTiles.forEach {
             it.render(context, mouseX, mouseY, delta)
         }
-        backButton.render(context, mouseX, mouseY, delta)
+        backButton.extractRenderState(context, mouseX, mouseY, delta)
     }
 
     override fun mousePrimaryClicked(mouseX: Double, mouseY: Double): Boolean {

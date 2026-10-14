@@ -39,7 +39,7 @@ object FishingRodTooltipGenerator : TooltipGenerator() {
         }
 
         val client = Minecraft.getInstance()
-        val itemRegistry = client.level?.registryAccess()?.registryOrThrow(Registries.ITEM)
+        val itemRegistry = client.level?.registryAccess()?.lookupOrThrow(Registries.ITEM)
         itemRegistry?.let { registry ->
             baitComponent?.stack?.item?.description
                 ?.let { // maybe this can be simplified to not use the FishingBaits to get the stack and just use PokerodItem to get the stack since we have it already

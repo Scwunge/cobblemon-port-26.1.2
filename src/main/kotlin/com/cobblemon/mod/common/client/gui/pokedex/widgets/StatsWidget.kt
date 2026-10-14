@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.cobblemon.mod.common.api.gui.blitk
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.api.pokemon.stats.Stat
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.api.riding.RidingProperties
@@ -28,7 +29,6 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
-import net.minecraft.util.FastColor
 
 class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     pX,
@@ -142,7 +142,7 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         when (selectedStatTypeIndex) {
             STAT_TYPE_BASE -> {
                 renderBaseStats(context)
@@ -262,9 +262,9 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
                 behaviourStats[stat]?.let { range ->
                     val startPosY = pY + 10 + (6F * index)
 
-                    val red = FastColor.ARGB32.red(stat.flavour.colour) / 255F
-                    val green = FastColor.ARGB32.green(stat.flavour.colour) / 255F
-                    val blue = FastColor.ARGB32.blue(stat.flavour.colour) / 255F
+                    val red = ARGB.red(stat.flavour.colour) / 255F
+                    val green = ARGB.green(stat.flavour.colour) / 255F
+                    val blue = ARGB.blue(stat.flavour.colour) / 255F
 
                     val barStart = pX + 55F
                     val baseStatWidth = (range.start / 100F) * MAX_BAR_WIDTH

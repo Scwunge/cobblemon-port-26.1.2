@@ -212,7 +212,7 @@ class FossilMultiblockStructure (
                         ), false)
                 }
             }
-            return InteractionResult.sidedSuccess(world.isClientSide)
+            return InteractionResult.SUCCESS
         }
 
         // pure client instances dont know what a valid fossil is so this is my janky workaround

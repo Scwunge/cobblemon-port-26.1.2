@@ -16,6 +16,11 @@ import java.util.UUID
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.resources.Identifier
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class NPCRenderWidget(
     val x: Int,
@@ -36,7 +41,7 @@ class NPCRenderWidget(
 
     override fun isFocused() = false
     override fun setFocused(focused: Boolean) {}
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
 
         context.enableScissor(
             x,

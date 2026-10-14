@@ -25,7 +25,7 @@ class PlayerHasAdvancementObtainMethod(val advancement: Identifier? = null) : Ob
 
         fun readFromBuffer(buffer: RegistryFriendlyByteBuf): PlayerHasAdvancementObtainMethod {
             val hasAdvancement = buffer.readBoolean()
-            val advancement = if (hasAdvancement) buffer.readResourceLocation() else null
+            val advancement = if (hasAdvancement) buffer.readIdentifier() else null
             return PlayerHasAdvancementObtainMethod(advancement)
         }
     }
@@ -41,7 +41,7 @@ class PlayerHasAdvancementObtainMethod(val advancement: Identifier? = null) : Ob
 
     override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUtf("cobblemon:advancement")
-        buffer.writeResourceLocation(advancement ?: Identifier.tryParse("minecraft:empty"))
+        buffer.writeIdentifier(advancement ?: Identifier.tryParse("minecraft:empty"))
     }
 }
 

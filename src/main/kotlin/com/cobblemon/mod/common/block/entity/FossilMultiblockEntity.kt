@@ -39,7 +39,6 @@ import net.minecraft.util.RandomSource
 import net.minecraft.world.level.ChunkPos
 import net.minecraft.world.Containers
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.Pose
@@ -178,18 +177,18 @@ open class FossilMultiblockEntity(
         pos: BlockPos,
         player: Player,
         hand: InteractionHand
-    ): ItemInteractionResult {
+    ): InteractionResult {
         val handStack = player.getItemInHand(hand)
-        if (porygonProcess != PorygonProcessType.INACTIVE) return ItemInteractionResult.FAIL
-        if (!isValidDisk(handStack) && !isPorygonItem(handStack)) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
-        if (multiblockStructure != null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+        if (porygonProcess != PorygonProcessType.INACTIVE) return InteractionResult.FAIL
+        if (!isValidDisk(handStack) && !isPorygonItem(handStack)) return InteractionResult.TRY_WITH_EMPTY_HAND
+        if (multiblockStructure != null) return InteractionResult.TRY_WITH_EMPTY_HAND
 
         if (level.isClientSide) {
             //Start Porygon process on Client Side for sounds
             if (isPorygonItem(handStack)) {
                 startPorygonProcess(handStack.copyWithCount(1), level)
             }
-            return ItemInteractionResult.SUCCESS
+            return InteractionResult.SUCCESS
         }
 
         //Porygon Item interaction
@@ -221,13 +220,13 @@ open class FossilMultiblockEntity(
 
             startPorygonProcess(newItem, level)
 
-            return ItemInteractionResult.sidedSuccess(level.isClientSide)
+            return InteractionResult.SUCCESS
         }
 
         val newDisk = handStack.copyWithCount(1)
         // In creative, prevent duplicate ejection spam when repeatedly inserting the same disk.
         if (player.isCreative && !diskStack.isEmpty && ItemStack.isSameItemSameComponents(diskStack, newDisk)) {
-            return ItemInteractionResult.sidedSuccess(level.isClientSide)
+            return InteractionResult.SUCCESS
         }
 
         val oldStack = diskStack
@@ -250,7 +249,7 @@ open class FossilMultiblockEntity(
         updateMonitorScreen()
         markUpdated(level, pos, state)
 
-        return ItemInteractionResult.sidedSuccess(level.isClientSide)
+        return InteractionResult.SUCCESS
     }
 
     fun handleUseWithoutItem(
@@ -270,7 +269,7 @@ open class FossilMultiblockEntity(
         updateMonitorScreen()
         markUpdated(level, pos, state)
 
-        return InteractionResult.sidedSuccess(level.isClientSide)
+        return InteractionResult.SUCCESS
     }
 
     fun dropDisk(level: Level, pos: BlockPos, state: BlockState) {

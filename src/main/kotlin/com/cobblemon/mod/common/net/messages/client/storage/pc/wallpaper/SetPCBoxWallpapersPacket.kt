@@ -20,10 +20,10 @@ class SetPCBoxWallpapersPacket internal constructor(val wallpapers: Set<Identifi
     companion object {
         val ID = cobblemonResource("set_pc_box_wallpapers")
         fun decode(buffer: RegistryFriendlyByteBuf): SetPCBoxWallpapersPacket =
-            SetPCBoxWallpapersPacket(buffer.readList { reader -> reader.readResourceLocation() }.toSet())
+            SetPCBoxWallpapersPacket(buffer.readList { reader -> reader.readIdentifier() }.toSet())
     }
 
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeCollection(wallpapers) { writer, value -> writer.writeResourceLocation(value) }
+        buffer.writeCollection(wallpapers) { writer, value -> writer.writeIdentifier(value) }
     }
 }

@@ -25,6 +25,7 @@ import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.WidgetTooltipHolder
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
+import net.minecraft.client.input.MouseButtonEvent
 
 class ConfigVariableList(
     val listX: Int,
@@ -70,22 +71,30 @@ class ConfigVariableList(
 
     override fun renderListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
 
-        super.renderWidget(context, mouseX, mouseY, partialTicks)
+        super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         updateScrollingState(mouseX, mouseY)
         if (scrolling) {
             focused = getEntryAtPosition(mouseX, mouseY)
             isDragging = true
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (scrolling) {
             if (mouseY < this.listY) {
                 scrollAmount = 0.0
@@ -95,7 +104,7 @@ class ConfigVariableList(
                 scrollAmount += deltaY
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
@@ -177,7 +186,7 @@ class ConfigVariableList(
             return children.filterIsInstance<NarratableEntry>()
         }
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
@@ -194,7 +203,7 @@ class ConfigVariableList(
             if (variable.type == MoLangVariableType.BOOLEAN) {
                 toggleButton.x = x
                 toggleButton.y = y + 9
-                toggleButton.render(context, mouseX, mouseY, partialTicks)
+                toggleButton.extractRenderState(context, mouseX, mouseY, partialTicks)
             } else {
                 drawScaledText(
                     context = context,
@@ -210,7 +219,7 @@ class ConfigVariableList(
 
                 editBox.x = x + 4
                 editBox.y = y + 18
-                editBox.render(context, mouseX, mouseY, partialTicks)
+                editBox.extractRenderState(context, mouseX, mouseY, partialTicks)
 
                 // Manually renders the tooltip for the edit box because disabling its border messes everything up
                 val isEditBoxHovered = mouseX >= x && mouseX <= x + SLOT_WIDTH - 1 && mouseY >= y + 15 && mouseY <= y + 15 + 14

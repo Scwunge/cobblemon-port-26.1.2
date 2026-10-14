@@ -35,6 +35,11 @@ import net.minecraft.util.FormattedCharSequence
 import net.minecraft.world.item.ItemStack
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class PartySlotButton(
     x: Int, y: Int,
@@ -62,7 +67,7 @@ class PartySlotButton(
 
     private val renderablePokemon = pokemon.asRenderablePokemon().also { it.aspects = aspects }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height && enabled
         val alpha = if (enabled) 1.0 else 0.7
         val matrices = context.pose()

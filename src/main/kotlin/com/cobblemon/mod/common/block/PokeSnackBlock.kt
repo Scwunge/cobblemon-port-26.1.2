@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.block
 
 import com.cobblemon.mod.common.CobblemonBlocks
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.block.entity.PokeSnackBlockEntity
 import com.cobblemon.mod.common.util.rotateShape
 import com.cobblemon.mod.common.util.toEquipmentSlot
@@ -25,11 +26,9 @@ import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
 import net.minecraft.tags.ItemTags
-import net.minecraft.util.FastColor
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
@@ -221,7 +220,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
         return super.useWithoutItem(state, level, pos, player, hitResult)
     }
 
-    override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
+    override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): InteractionResult {
         if (!isLure) {
             if (stack.`is`(ItemTags.CANDLES) && !hasCandle(state)) {
                 val item = stack.getItem()
@@ -232,7 +231,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
                     level.setBlockAndUpdate(pos, state.setValue(CANDLE, getIdByCandle(candle)))
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos)
                     player.awardStat(Stats.ITEM_USED.get(item))
-                    return ItemInteractionResult.SUCCESS
+                    return InteractionResult.SUCCESS
                 }
             }
 
@@ -253,10 +252,10 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
                     else stack.consume(1, player)
 
                     level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos)
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide)
+                    return InteractionResult.SUCCESS
                 } else if (stack.isEmpty() && isCandleLit(state)) {
                     extinguishCandle(player, state, level, pos)
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide)
+                    return InteractionResult.SUCCESS
                 }
             }
         }
@@ -278,9 +277,9 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
 
         if (isLure && random.nextInt(5) == 0) {
             val tint = getTint(level, pos)
-            val red = FastColor.ARGB32.red(tint) / 255F
-            val green = FastColor.ARGB32.green(tint) / 255F
-            val blue = FastColor.ARGB32.blue(tint) / 255F
+            val red = ARGB.red(tint) / 255F
+            val green = ARGB.green(tint) / 255F
+            val blue = ARGB.blue(tint) / 255F
 
             for (i in 0..<random.nextInt(1) + 1) {
                 level.addParticle(

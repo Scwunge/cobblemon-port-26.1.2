@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.client.CobblemonClient
+import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.client.pokedex.PokedexType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.util.isLookingAt
@@ -17,7 +18,6 @@ import com.cobblemon.mod.common.util.traceFirstEntityCollision
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -36,7 +36,7 @@ class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacks
         world: Level,
         player: Player,
         usedHand: InteractionHand
-    ): InteractionResultHolder<ItemStack> {
+    ): InteractionResult {
         val itemStack = player.getItemInHand(usedHand)
 
         if (player.isCrouching) {
@@ -47,17 +47,17 @@ class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacks
 
             // If the player is looking at a Pokémon within range, block Pokedex usage
             if (hitPokemon != null && hitPokemon.isOwnedBy(player)) {
-                return InteractionResultHolder.pass(itemStack)
+                return InteractionResult.PASS
             }
         }
 
         if (world.isClientSide && player is LocalPlayer) {
             CobblemonClient.pokedexUsageContext.type = type
         }
-        if (player !is ServerPlayer) return InteractionResultHolder.consume(itemStack)
+        if (player !is ServerPlayer) return InteractionResult.CONSUME
         //Disables breaking blocks and damaging entities
         player.startUsingItem(usedHand)
-        return InteractionResultHolder.fail(itemStack)
+        return InteractionResult.FAIL
     }
 
     override fun onUseTick(

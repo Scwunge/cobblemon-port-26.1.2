@@ -22,6 +22,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.util.Mth
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<InfoTextScrollWidget.TextSlot>(
     left = pX,
@@ -38,8 +43,8 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
         private val scrollBorder = cobblemonResource("textures/gui/pokedex/info_scroll_border.png")
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
-        super.renderWidget(context, mouseX, mouseY, delta)
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+        super.extractWidgetRenderState(context, mouseX, mouseY, delta)
 
         blitk(
             matrixStack = context.pose(),
@@ -109,7 +114,7 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
     }
 
     class TextSlot(val text : String) : Slot<TextSlot>() {
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,

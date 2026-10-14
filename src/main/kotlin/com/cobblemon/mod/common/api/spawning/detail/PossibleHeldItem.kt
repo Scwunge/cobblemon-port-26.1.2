@@ -24,7 +24,7 @@ class PossibleHeldItem(
     val percentage: Double = 100.0
 ) {
     fun createStack(spawnablePosition: SpawnablePosition): ItemStack? {
-        val itemRegistry = spawnablePosition.world.registryAccess().registryOrThrow(Registries.ITEM)
+        val itemRegistry = spawnablePosition.world.registryAccess().lookupOrThrow(Registries.ITEM)
         val item = if (item.startsWith("#")) {
             val tag = TagKey.create(Registries.ITEM, Identifier.parse(item.substring(1)))
 

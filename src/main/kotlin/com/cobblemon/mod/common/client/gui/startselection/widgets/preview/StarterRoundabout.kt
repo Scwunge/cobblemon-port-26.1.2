@@ -17,6 +17,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 /**
  * The current/next/previous pokemon display thingy
@@ -39,7 +45,7 @@ class StarterRoundabout(
         const val MODEL_HEIGHT = 30
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!this.visible) {
             return
         }
@@ -79,18 +85,23 @@ class StarterRoundabout(
         matrices.popPose()
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (this.clicked(pMouseX, pMouseY) && this.isValidClickButton(pButton)) {
             this.onClick(pMouseX, pMouseY)
         }
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
     override fun clicked(mouseX: Double, mouseY: Double): Boolean {
         return this.active && this.visible && this.isHovered()
     }
 
-    override fun onClick(mouseX: Double, mouseY: Double) {
+    override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
+        val mouseX = event.x()
+        val mouseY = event.y()
         this.clickAction(mouseX, mouseY)
     }
 }

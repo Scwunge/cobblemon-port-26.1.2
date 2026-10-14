@@ -22,6 +22,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class ModelWidget(
     pX: Int, pY: Int,
@@ -60,7 +66,7 @@ class ModelWidget(
 
     var shouldRender = true
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, partialTicks: Float) {
         if (!shouldRender) {
             return
         }
@@ -137,12 +143,15 @@ class ModelWidget(
         matrices.popPose()
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (this.isHovered) {
             playCry()
         }
 
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
     private fun playCry() {

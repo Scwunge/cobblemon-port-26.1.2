@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.item
 
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.VaryingModelRepository
 import com.cobblemon.mod.common.entity.PoseType
@@ -65,7 +66,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         matrices.mulPose(rotation)
         rotation.conjugate()
 
-        val renderLayer = RenderType.entityCutout(VaryingModelRepository.getTexture(species.resourceIdentifier, state))
+        val renderLayer = RenderTypes.entityCutoutCull(VaryingModelRepository.getTexture(species.resourceIdentifier, state))
         val isEnchanted = stack.get(DataComponents.ENCHANTMENTS)?.isEmpty == false
         val vertexConsumer: VertexConsumer =
             if (isEnchanted) {

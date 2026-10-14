@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.pokemon
 
 import com.cobblemon.mod.common.Cobblemon
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.OrientationControllable
 import com.cobblemon.mod.common.api.pokedex.PokedexEntryProgress
 import com.cobblemon.mod.common.client.CobblemonClient
@@ -511,7 +512,7 @@ class PokemonRenderer(
         ballContext.put(RenderContext.POSABLE_STATE, state)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
 //        model.animateModel(null, 0f, 0F, 0F)
-        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(texture), false, false)
+        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderTypes.entityCutoutCull(texture), false, false)
 //        matrixStack.scale(scale, scale, scale)
         model.render(ballContext, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
         model.green = 1f
@@ -534,7 +535,7 @@ class PokemonRenderer(
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
         matrixStack.rotateAround(Axis.YP.rotationDegrees(entity.entityData.get(SPAWN_DIRECTION)), 0.0f, 0f, 0.0f)
         matrixStack.scale(scale, scale, scale)
-        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderType.entityCutout(textureResource), false, false)
+        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderTypes.entityCutoutCull(textureResource), false, false)
         model.render(matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         matrixStack.popPose()

@@ -25,6 +25,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class WallpapersScrollingWidget(
     pX: Int, val pY: Int,
@@ -57,7 +58,7 @@ class WallpapersScrollingWidget(
 
     override fun getScrollbarPosition(): Int = x + width - 3
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             matrixStack = context.pose(),
             texture = backgroundResource,
@@ -78,7 +79,7 @@ class WallpapersScrollingWidget(
         )
 
         context.enableScissor(x, y, x + width, y + height)
-        super.renderWidget(context, mouseX, mouseY, delta)
+        super.extractWidgetRenderState(context, mouseX, mouseY, delta)
         context.disableScissor()
     }
 
@@ -103,7 +104,7 @@ class WallpapersScrollingWidget(
     }
 
     inner class WallpaperEntry(val wallpaper: Identifier, var altWallpaper: Identifier?, var isNew: Boolean) : Slot<WallpaperEntry>() {
-        override fun render(
+        override fun extractRenderState(
             guiGraphics: GuiGraphicsExtractor,
             index: Int,
             top: Int,
@@ -138,7 +139,10 @@ class WallpapersScrollingWidget(
             )
         }
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             if (this@WallpapersScrollingWidget.visible && isMouseOver(mouseX, mouseY)) {
                 val appliedWallpaper = if (Screen.hasShiftDown()) altWallpaper ?: wallpaper else wallpaper
                 RequestChangePCBoxWallpaperPacket(pcGui.pc.uuid, storageWidget.box, wallpaper, if (Screen.hasShiftDown()) altWallpaper else null).sendToServer()

@@ -24,7 +24,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Containers
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.ItemInteractionResult
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -281,14 +281,14 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
         player: Player,
         hand: InteractionHand,
         hit: BlockHitResult
-    ): ItemInteractionResult {
+    ): InteractionResult {
         if (!state.getValue(WATERLOGGED)) {
             val itemStack = player.getItemInHand(hand)
             val isGlassBottle = itemStack.`is`(Items.GLASS_BOTTLE)
             val isHoneyBottle = itemStack.`is`(Items.HONEY_BOTTLE)
 
             if (isGlassBottle && isAtMaxAge(state)) {
-                if (level.isClientSide) return ItemInteractionResult.SUCCESS
+                if (level.isClientSide) return InteractionResult.SUCCESS
                 // Decrement stack if not in creative mode
                 itemStack.consume(1, player)
 
@@ -303,9 +303,9 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS)
                 level.setBlock(pos, state.setValue(AGE, 0), UPDATE_CLIENTS)
                 level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos)
-                return ItemInteractionResult.SUCCESS
+                return InteractionResult.SUCCESS
             } else if (isHoneyBottle && !isAtMaxAge(state)) {
-                if (level.isClientSide) return ItemInteractionResult.SUCCESS
+                if (level.isClientSide) return InteractionResult.SUCCESS
 
                 // Decrement stack if not in creative mode
                 if (!player.isCreative) {
@@ -321,7 +321,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
                 level.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS)
                 level.setBlock(pos, state.setValue(AGE, 2), UPDATE_CLIENTS)
                 level.gameEvent(null, GameEvent.BLOCK_CHANGE, pos)
-                return ItemInteractionResult.SUCCESS
+                return InteractionResult.SUCCESS
             }
         }
 

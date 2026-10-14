@@ -58,6 +58,12 @@ import net.minecraft.sounds.SoundEvent
 import org.joml.Quaternionf
 import org.joml.Vector3f
 import java.io.FileNotFoundException
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val updateForm: (PokedexForm) -> (Unit)) : SoundlessWidget(
     pX,
@@ -254,7 +260,7 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
         clickAction = { switchPose(true) }
     ).apply { addWidget(this) }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val currentEntry = this.currentEntry ?: return
 
         val hasKnowledge = CobblemonClient.clientPokedexData.getKnowledgeForSpecies(currentEntry.speciesId) != PokedexEntryProgress.UNREGISTERED
@@ -403,12 +409,12 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
             }
 
             if (hasKnowledge) {
-                if (genderButton.visible) genderButton.render(context, mouseX, mouseY, delta)
+                if (genderButton.visible) genderButton.extractRenderState(context, mouseX, mouseY, delta)
 
-                shinyButton.render(context, mouseX, mouseY, delta)
+                shinyButton.extractRenderState(context, mouseX, mouseY, delta)
 
                 variationButtons.forEach {
-                    it.getWidget().render(context, mouseX, mouseY, delta)
+                    it.getWidget().extractRenderState(context, mouseX, mouseY, delta)
 
                     // Tooltip
                     if (it.isVisible() && it.getWidget().isButtonHovered(mouseX, mouseY)) {
@@ -428,8 +434,8 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
                 val showableForms = CobblemonClient.clientPokedexData.getEncounteredForms(currentEntry)
 
                 if (showableForms.size > 1 && showableForms.size > selectedFormIndex) {
-                    formLeftButton.render(context, mouseX, mouseY, delta)
-                    formRightButton.render(context, mouseX, mouseY, delta)
+                    formLeftButton.extractRenderState(context, mouseX, mouseY, delta)
+                    formRightButton.extractRenderState(context, mouseX, mouseY, delta)
 
                     val form = showableForms[selectedFormIndex]
                     val formName = if (form.displayForm.lowercase() == "normal") "" else "-${
@@ -456,7 +462,7 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
                     scale = SCALE
                 )
 
-                cryButton.render(context, mouseX, mouseY, delta)
+                cryButton.extractRenderState(context, mouseX, mouseY, delta)
 
                 // Animation
                 blitk(
@@ -469,8 +475,8 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
                     scale = SCALE
                 )
 
-                animationLeftButton.render(context, mouseX, mouseY, delta)
-                animationRightButton.render(context, mouseX, mouseY, delta)
+                animationLeftButton.extractRenderState(context, mouseX, mouseY, delta)
+                animationRightButton.extractRenderState(context, mouseX, mouseY, delta)
             } else if (renderablePokemon == null) {
                 // Render unimplemented label
                 if (!species.implemented) {
@@ -489,18 +495,24 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (suppressViewport) {
             return false
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseReleased(event: MouseButtonEvent): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (suppressViewport) {
             return false
         }
-        return super.mouseReleased(mouseX, mouseY, button)
+        return super.mouseReleased(event)
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, horizontalAmount: Double, verticalAmount: Double): Boolean {
@@ -510,11 +522,16 @@ class PokemonInfoWidget(val parent: PokedexGUI, val pX: Int, val pY: Int, val up
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (suppressViewport) {
             return false
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     override fun mouseMoved(mouseX: Double, mouseY: Double) {

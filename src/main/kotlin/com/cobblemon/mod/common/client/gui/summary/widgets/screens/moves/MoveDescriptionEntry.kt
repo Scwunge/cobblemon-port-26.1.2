@@ -19,7 +19,7 @@ class MoveDescriptionEntry(
 ) :
     ObjectSelectionList.Entry<MoveDescriptionEntry>() {
 
-    override fun render(
+    override fun extractRenderState(
         context: GuiGraphicsExtractor,
         index: Int,
         rowTop: Int,

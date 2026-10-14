@@ -73,6 +73,9 @@ import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
+import com.cobblemon.mod.common.client.render.gui.mouseDragged
 
 /**
  * Pokedex GUI
@@ -304,7 +307,7 @@ class PokedexGUI private constructor(
         CobblemonClient.clientPokedexData.getCaughtForms(selectedEntry)
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         renderBackground(context, mouseX, mouseY, delta)
 
@@ -446,7 +449,7 @@ class PokedexGUI private constructor(
             )
         }
 
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
 
         // Search type tooltip
         if (searchByTypeButton.isButtonHovered(mouseX, mouseY)) {
@@ -473,7 +476,10 @@ class PokedexGUI private constructor(
         super.onClose()
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         val canDisplayEntry = true //selectedForm?.unlockForms
 
         if (::pokemonInfoWidget.isInitialized
@@ -494,20 +500,28 @@ class PokedexGUI private constructor(
             activeDragableElement = tabInfoElement
         }
         return try {
-            super.mouseClicked(mouseX, mouseY, button)
+            super.mouseClicked(event, doubleClick)
         } catch(_: ConcurrentModificationException) {
             false
         }
     }
 
-    override fun mouseReleased(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseReleased(event: MouseButtonEvent): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (canDragRender) canDragRender = false
         if (isDragging) isDragging = false
         activeDragableElement = null
-        return super.mouseReleased(pMouseX, pMouseY, pButton)
+        return super.mouseReleased(event)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (isDragging && canDragRender && activeDragableElement == pokemonInfoWidget) {
             val dragOffsetY = (oldDragPosX - mouseX).toFloat()
             pokemonInfoWidget.rotationY = (((pokemonInfoWidget.rotationY + dragOffsetY) % 360 + 360) % 360)
@@ -516,7 +530,7 @@ class PokedexGUI private constructor(
         }
 
         oldDragPosX = mouseX
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
@@ -815,7 +829,10 @@ class PokedexGUI private constructor(
 
     override fun isPauseScreen(): Boolean = false
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (isInventoryKeyPressed(minecraft, keyCode, scanCode) && focused !is EditBox) {
             onClose()
             return true
@@ -827,7 +844,7 @@ class PokedexGUI private constructor(
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     fun playSound(soundEvent: SoundEvent) {

@@ -49,7 +49,7 @@ class MoveSlotButton(
         const val HEIGHT = 22
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, pPartialTicks: Float) {
         move?.let {
             isHovered = isMouseOver(mouseX.toDouble(), mouseY.toDouble()) && enabled
             val rgb = it.elementalType.hue.toRGB()

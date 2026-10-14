@@ -77,7 +77,7 @@ abstract class CobblemonConfigVariable(
         return normalizedLabel.contains(text, ignoreCase = true)
     }
 
-    override fun render(
+    override fun extractRenderState(
         context: GuiGraphicsExtractor,
         index: Int,
         top: Int,
@@ -105,6 +105,6 @@ abstract class CobblemonConfigVariable(
 
         resetButton.x = x + SLOT_WIDTH - RESET_SLOT_WIDTH
         resetButton.y = y + WIDGET_Y_OFFSET
-        resetButton.render(context, mouseX, mouseY, partialTick)
+        resetButton.extractRenderState(context, mouseX, mouseY, partialTick)
     }
 }

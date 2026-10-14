@@ -73,6 +73,28 @@ abstract class PlatformRegistry<R : Registry<T>, K : ResourceKey<R>, T> {
     }
 
     /**
+     * Creates a new entry in this registry, constructing it with [entry] while its registry ID is pending.
+     *
+     * Since Minecraft 1.21.2 items and blocks must know their registry ID while being constructed (their
+     * properties carry it). Entries created through this overload have that ID applied to any Item/Block properties
+     * constructed inside [entry], see [PendingRegistration].
+     *
+     * @param E The type of the entry.
+     * @param name The name of the entry, this will be an [Identifier.path].
+     * @param entry Supplies the entry being added.
+     * @return The entry created.
+     */
+    fun <E : T> create(name: String, entry: () -> E): E = this.create(cobblemonResource(name), entry)
+
+    /**
+     * Supplier variant of [create] for entries that are not in the Cobblemon namespace.
+     */
+    fun <E : T> create(resourceLocation: Identifier, entry: () -> E): E {
+        val value = PendingRegistration.with(ResourceKey.create(this.resourceKey, resourceLocation), entry)
+        return this.create(resourceLocation, value)
+    }
+
+    /**
      * Handles the registration of this registry into the platform specific one.
      *
      * @param consumer The consumer that will handle the logic for registering every entry in this registry into the platform specific one.

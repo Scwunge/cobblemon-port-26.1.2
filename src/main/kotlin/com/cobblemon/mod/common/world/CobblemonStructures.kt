@@ -35,8 +35,8 @@ object CobblemonStructures {
     val taigaHousesPoolLocation = Identifier.fromNamespaceAndPath("minecraft", "village/taiga/houses")
 
     fun registerJigsaws(server: MinecraftServer) {
-        val templatePoolRegistry = server.registryAccess().registryOrThrow(Registries.TEMPLATE_POOL)
-        val processorListRegistry = server.registryAccess().registryOrThrow(Registries.PROCESSOR_LIST)
+        val templatePoolRegistry = server.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL)
+        val processorListRegistry = server.registryAccess().lookupOrThrow(Registries.PROCESSOR_LIST)
 
         addPokecenters(templatePoolRegistry, processorListRegistry)
         //addLongPaths(templatePoolRegistry, processorListRegistry);
@@ -289,10 +289,10 @@ object CobblemonStructures {
         processorListKey: ResourceKey<StructureProcessorList>,
         shouldUseLegacySingePoolElement: Boolean = false
     ) {
-        if (processorListRegistry.getHolder(processorListKey).isEmpty) {
+        if (processorListRegistry.get(processorListKey).isEmpty) {
             return
         }
-        val processorList = processorListRegistry.getHolder(processorListKey).get()
+        val processorList = processorListRegistry.get(processorListKey).get()
         val pool = templatePoolRegistry[poolRL] as? StructurePoolAccessor ?: return
         val piece = if (shouldUseLegacySingePoolElement) {
             LegacySinglePoolElement.single(nbtPieceRL.toString(), processorList).apply(projection)

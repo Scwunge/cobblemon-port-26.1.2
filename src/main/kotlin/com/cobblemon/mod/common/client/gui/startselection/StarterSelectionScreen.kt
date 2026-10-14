@@ -44,6 +44,12 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 import java.io.FileNotFoundException
+import net.minecraft.client.input.KeyEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 /**
  * Starterselection Screen Thingy
@@ -155,7 +161,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         ))
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
@@ -326,7 +332,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         )
         matrices.popPose()
 
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
     }
 
     fun getPlatformResource(type: ElementalType): Identifier? {
@@ -359,13 +365,16 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         if (currentBallBackgroundFrame == 16) currentBallBackgroundFrame = 0
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true || SummaryBinding.matches(keyCode, scanCode)) {
             Minecraft.getInstance().setScreen(null)
             return true
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     override fun isPauseScreen() = true

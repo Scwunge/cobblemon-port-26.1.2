@@ -30,6 +30,12 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.sounds.SoundEvent
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class EvolutionSelectScreen(
     x: Int,
@@ -56,12 +62,12 @@ class EvolutionSelectScreen(
         return super.addEntry(entry)
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         if (!entriesCreated) {
             entriesCreated = true
             pokemon.evolutionProxy.client().map { EvolveSlot(pokemon, it) }.forEach { entry -> this.addEntry(entry) }
         }
-        super.renderWidget(context, mouseX, mouseY, partialTicks)
+        super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
     }
 
     class EvolveSlot(private val pokemon: Pokemon, private val evolution: EvolutionDisplay) : Entry<EvolveSlot>() {
@@ -91,7 +97,7 @@ class EvolutionSelectScreen(
 
         override fun getNarration() = evolution.species.translatedName
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
@@ -139,7 +145,7 @@ class EvolutionSelectScreen(
             ).render(context)
 
             selectButton.setPosFloat(x + 23F, y + 13F)
-            selectButton.render(context, mouseX, mouseY, partialTicks)
+            selectButton.extractRenderState(context, mouseX, mouseY, partialTicks)
 
             // Render Pokémon
             matrices.pushPose()
@@ -156,7 +162,10 @@ class EvolutionSelectScreen(
             matrices.popPose()
         }
 
-        override fun mouseClicked(d: Double, e: Double, i: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val d = event.x()
+            val e = event.y()
+            val i = event.button()
             if (selectButton.isHovered) {
                 selectButton.onPress()
                 return true

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.api.berry.Berries
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.PokeSnackBlock
 import com.cobblemon.mod.common.block.PokeSnackBlock.Companion.CANDLE
 import com.cobblemon.mod.common.block.PokeSnackBlock.Companion.getCandleById
@@ -74,7 +75,7 @@ open class PokeSnackBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context
     fun renderBerries(blockEntity: PokeSnackBlockEntity, poseStack: PoseStack, bufferSource: MultiBufferSource, packedLight: Int, packedOverlay: Int, hasCandle: Boolean) {
         // RenderType.entityCutoutNoCull for shading, as shading is absent in RenderType CobblemonRenderLayers.BERRY_LAYER
         val buffer = bufferSource.getBuffer(
-            RenderType.entityCutoutNoCull(BERRY_SPRITE_ATLAS.textureAtlas.location())
+            RenderTypes.entityCutout(BERRY_SPRITE_ATLAS.textureAtlas.location())
         )
 
         val berryIngredients = (blockEntity.ingredientComponent?.ingredientIds?.take(3) ?: listOf())

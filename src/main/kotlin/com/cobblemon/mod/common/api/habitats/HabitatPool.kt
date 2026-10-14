@@ -103,13 +103,13 @@ class HabitatPool {
     }
 
     fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(id)
+        buffer.writeIdentifier(id)
         buffer.writeUtf(name)
         buffer.writeCollection(spawns) { _, it -> it.encode(buffer) }
     }
 
     fun decode(buffer: RegistryFriendlyByteBuf) {
-        id = buffer.readResourceLocation()
+        id = buffer.readIdentifier()
         name = buffer.readUtf()
         spawns = buffer.readList { HabitatSpawn().apply { decode(buffer) } }
     }

@@ -25,7 +25,7 @@ data class SerializableMobEffectInstance(
         val showIcon: Boolean = true
 ) {
     fun toInstance(): MobEffectInstance {
-        val holder = BuiltInRegistries.MOB_EFFECT.getHolder(effect)
+        val holder = BuiltInRegistries.MOB_EFFECT.get(effect)
                 .orElseThrow { IllegalArgumentException("Unknown MobEffect: $effect") }
         return MobEffectInstance(holder, duration, amplifier, ambient, visible, showIcon)
     }

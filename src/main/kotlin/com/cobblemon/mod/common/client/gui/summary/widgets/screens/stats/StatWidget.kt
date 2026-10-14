@@ -45,6 +45,8 @@ import net.minecraft.util.Mth.ceil
 import net.minecraft.util.Mth.floor
 import net.minecraft.world.phys.Vec2
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import org.joml.Matrix3x2fStack
 
 class StatWidget(
     pX: Int, pY: Int,
@@ -241,7 +243,7 @@ class StatWidget(
         RenderSystem.enableDepthTest()
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val renderOtherStats = statOptions.get(statTabIndex) == OTHER
         val renderPentagonStats = statOptions.get(statTabIndex) == RIDE
         val matrices = context.pose()
@@ -373,7 +375,7 @@ class StatWidget(
                     )
 
                     if (pMouseX >= (x + 59) && pMouseY >= (y + 62.5) && pMouseX <= ((x + 59) + (RIDE_ICON_SIZE * SCALE)) && pMouseY <= ((y + 62.5) + (RIDE_ICON_SIZE * SCALE))) {
-                        context.renderTooltip(
+                        context.setTooltipForNextFrame(
                             Minecraft.getInstance().font,
                             lang("ui.ride_style.${selectedBehaviour.key.toString().lowercase()}.${rideStyle}")
                                 .append(" | ").append(lang("ui.ride_style.${selectedBehaviour.key.toString().lowercase()}")),
@@ -490,7 +492,10 @@ class StatWidget(
         )
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         val index = getTabIndexFromPos(pMouseX, pMouseY)
         // Only play sound here as the rest of the widget is meant to be silent
         if (index in 0 until statOptions.size && statTabIndex != index) {
@@ -503,7 +508,7 @@ class StatWidget(
             Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
         }
 
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
     private fun statValuesAsText(stats: List<Stat>, asPercent: Boolean): List<MutableComponent> {
@@ -527,7 +532,7 @@ class StatWidget(
         }
     }
 
-    private fun renderModifiedStatIcon(pPoseStack: PoseStack, stat: Stat?, increasedStat: Boolean) {
+    private fun renderModifiedStatIcon(pPoseStack: Matrix3x2fStack, stat: Stat?, increasedStat: Boolean) {
         if (stat != null) {
             var posX = x.toDouble()
             var posY = y.toDouble()

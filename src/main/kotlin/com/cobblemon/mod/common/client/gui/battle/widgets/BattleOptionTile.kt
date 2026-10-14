@@ -37,7 +37,7 @@ class BattleOptionTile(
 
     private var focused = false
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val opacity = CobblemonClient.battleOverlay.opacityRatio
         if (opacity < 0.1) {
             return

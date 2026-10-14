@@ -35,7 +35,7 @@ class CobblemonBehaviour(
     val onRemove: ExpressionLike? = null,
     val onAdd: ExpressionLike? = null,
 ) {
-    fun canBeApplied(entity: LivingEntity) = entityType?.let { entityType == entity.type.builtInRegistryHolder().unwrapKey().get().location() } != false
+    fun canBeApplied(entity: LivingEntity) = entityType?.let { entityType == entity.type.builtInRegistryHolder().unwrapKey().get().identifier() } != false
     fun configure(entity: LivingEntity, behaviourConfigurationContext: BehaviourConfigurationContext) {
         if (onAdd != null) {
             behaviourConfigurationContext.addOnAddScript(onAdd)

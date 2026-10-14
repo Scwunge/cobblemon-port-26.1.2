@@ -22,6 +22,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import org.lwjgl.glfw.GLFW
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
 
 class DialogueTextInputWidget(
     val dialogueScreen: DialogueScreen,
@@ -43,7 +45,10 @@ class DialogueTextInputWidget(
         isFocused = true
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (!dialogueScreen.renderInput()) {
             return false
         }
@@ -59,7 +64,7 @@ class DialogueTextInputWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!dialogueScreen.renderInput()) {
             return
         }
@@ -89,10 +94,13 @@ class DialogueTextInputWidget(
         )
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (keyCode == InputConstants.KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER || keyCode == GLFW.GLFW_KEY_KP_ENTER) {
             this.dialogueScreen.sendToServer(InputToDialoguePacket(dialogueScreen.dialogueDTO.dialogueInput.inputId, value.trim()))
         }
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 }

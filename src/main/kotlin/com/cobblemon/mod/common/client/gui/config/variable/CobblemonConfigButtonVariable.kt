@@ -43,7 +43,7 @@ abstract class CobblemonConfigButtonVariable(
         button.message = Component.literal(getConfigValueAsString())
     }
 
-    override fun render(
+    override fun extractRenderState(
         context: GuiGraphicsExtractor,
         index: Int,
         top: Int,
@@ -55,11 +55,11 @@ abstract class CobblemonConfigButtonVariable(
         hovering: Boolean,
         partialTick: Float
     ) {
-        super.render(context, index, top, left, width, height, mouseX, mouseY, hovering, partialTick)
+        super.extractRenderState(context, index, top, left, width, height, mouseX, mouseY, hovering, partialTick)
 
         button.x = resetButton.x - button.width - PADDING
         button.y = getY(top) + WIDGET_Y_OFFSET
-        button.render(context, mouseX, mouseY, partialTick)
+        button.extractRenderState(context, mouseX, mouseY, partialTick)
     }
 }
 

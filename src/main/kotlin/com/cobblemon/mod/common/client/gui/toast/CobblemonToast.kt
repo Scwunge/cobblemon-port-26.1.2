@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.toast
 
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
+import com.cobblemon.mod.common.api.gui.legacyTextColour
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.gui.GuiGraphicsExtractor
@@ -55,7 +56,7 @@ class CobblemonToast(
         return font.split(this.description, maxWidth)
     }
 
-    override fun render(context: GuiGraphicsExtractor, manager: ToastManager, startTime: Long): Toast.Visibility {
+    override fun extractRenderState(context: GuiGraphicsExtractor, manager: ToastManager, startTime: Long): Toast.Visibility {
         if (this.startTime == -1L) this.startTime = startTime
 
         val elapsedTime = startTime - this.startTime
@@ -72,7 +73,7 @@ class CobblemonToast(
 
         context.blitSprite(this.frameTexture, 0, 0, this.width(), this.height() + (getLines(textRenderer, maxWidth).size - 1) * 10)
 
-        context.drawString(textRenderer, this.title, 30, 7, this.title.style.color?.value ?: -1, false)
+        context.text(textRenderer, this.title, 30, 7, legacyTextColour(this.title.style.color?.value ?: -1), false)
         context.drawWordWrap(textRenderer, this.description, 30, 18, maxWidth, this.description.style.color?.value ?: -1)
 
         val iconIndex = if (localDuration != null && localDuration > 0) {

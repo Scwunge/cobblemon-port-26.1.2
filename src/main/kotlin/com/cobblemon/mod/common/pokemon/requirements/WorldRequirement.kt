@@ -26,5 +26,5 @@ class WorldRequirement : EntityQueryRequirement {
         const val ADAPTER_VARIANT = "world"
     }
     val identifier: Identifier = Identifier.parse("minecraft:the_overworld")
-    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = queriedEntity.level().dimension().location() == this.identifier
+    override fun check(pokemon: Pokemon, queriedEntity: LivingEntity) = queriedEntity.level().dimension().identifier() == this.identifier
 }

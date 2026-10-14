@@ -53,7 +53,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         this.x = left
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val asAccessor = this as EntryListWidgetAccessor
         this.focused = if (this.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) this.getEntryAtPosition(
             mouseX.toDouble(),

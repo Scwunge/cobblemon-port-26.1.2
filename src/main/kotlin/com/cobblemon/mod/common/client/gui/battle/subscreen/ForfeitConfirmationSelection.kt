@@ -74,7 +74,7 @@ class ForfeitConfirmationSelection(
         return false
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (opacity <= 0.05F) return
 
         val xPos = (Minecraft.getInstance().window.guiScaledWidth / 2) - (WIDTH / 2)
@@ -100,7 +100,7 @@ class ForfeitConfirmationSelection(
             shadow = true
         )
 
-        acceptButton.render(context, mouseX, mouseY, delta)
-        declineButton.render(context, mouseX, mouseY, delta)
+        acceptButton.extractRenderState(context, mouseX, mouseY, delta)
+        declineButton.extractRenderState(context, mouseX, mouseY, delta)
     }
 }

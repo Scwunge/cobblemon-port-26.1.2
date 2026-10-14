@@ -38,7 +38,7 @@ class MarkIcon(
         )
 
         if (showTooltip && isHovered(mouseX, mouseY)) {
-            context.renderTooltip(Minecraft.getInstance().font, mark.getName(), mouseX, mouseY)
+            context.setTooltipForNextFrame(Minecraft.getInstance().font, mark.getName(), mouseX, mouseY)
         }
     }
 

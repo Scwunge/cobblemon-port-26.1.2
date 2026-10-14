@@ -13,6 +13,7 @@ import com.cobblemon.mod.common.client.battle.SingleActionRequest
 import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.client.input.MouseButtonEvent
 
 abstract class BattleActionSelection(
     val battleGUI: BattleGUI,
@@ -26,11 +27,14 @@ abstract class BattleActionSelection(
     val opacity: Float
         get() = battleGUI.opacity
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if(pButton == InputConstants.MOUSE_BUTTON_LEFT){
             return mousePrimaryClicked(pMouseX, pMouseY)
         }
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
     abstract fun mousePrimaryClicked(pMouseX: Double, pMouseY: Double): Boolean

@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.pokedex.widgets
 
 import com.cobblemon.mod.common.api.drop.DropTable
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.api.drop.ItemDropEntry
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.client.CobblemonResources
@@ -25,9 +26,13 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.util.FastColor
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemStack
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrollingWidget.DropWidgetEntry>(
     width = PokedexGUIConstants.HALF_OVERLAY_WIDTH - 2,
@@ -76,11 +81,11 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         var yTop = scrollAmount.toInt() * (barHeight - yBottom) / this.maxScroll + yStart
         if (yTop < yStart) yTop = yStart
 
-        context.fill(xLeft + 1, yStart, xRight - 1, this.bottom, FastColor.ARGB32.color(255, 126, 231, 229)) // track
-        context.fill(xLeft, yTop, xRight, yTop + yBottom, FastColor.ARGB32.color(255, 58, 150, 182)) // bar
+        context.fill(xLeft + 1, yStart, xRight - 1, this.bottom, ARGB.color(255, 126, 231, 229)) // track
+        context.fill(xLeft, yTop, xRight, yTop + yBottom, ARGB.color(255, 58, 150, 182)) // bar
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,
@@ -102,7 +107,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
                 centered = true
             )
         } else {
-            super.renderWidget(context, mouseX, mouseY, delta)
+            super.extractWidgetRenderState(context, mouseX, mouseY, delta)
         }
     }
 
@@ -118,7 +123,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         entryHeight: Int
     ) {
         val entry =  this.getEntry(index)
-        entry.render(
+        entry.extractRenderState(
             context, index, y + 2, x, entryWidth, entryHeight, mouseX, mouseY,
             hovered == entry, delta
         )
@@ -129,7 +134,7 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
     }
 
     class DropWidgetEntry(val entry: ItemDropEntry): Slot<DropWidgetEntry>() {
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,

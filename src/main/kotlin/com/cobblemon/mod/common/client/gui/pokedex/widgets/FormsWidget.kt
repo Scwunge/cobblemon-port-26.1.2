@@ -18,6 +18,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import kotlin.math.max
+import net.minecraft.client.input.MouseButtonEvent
 
 class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit)): ScrollingWidget<FormsWidget.FormSlot>(
         left = pX,
@@ -52,7 +53,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
             private val scrollSlotResource = cobblemonResource("textures/gui/pokedex/scroll_slot_base.png")// Render Scroll Slot Background
         }
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
@@ -89,7 +90,10 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
             return Component.literal(form)
         }
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             setFormData.invoke(form)
             return true
         }

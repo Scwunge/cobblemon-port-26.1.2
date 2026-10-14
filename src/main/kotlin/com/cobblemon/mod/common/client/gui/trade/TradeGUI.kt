@@ -42,6 +42,7 @@ import net.minecraft.client.resources.sounds.SoundInstance
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.sounds.SoundEvent
 import java.util.*
+import net.minecraft.client.input.KeyEvent
 
 /**
  * Notes for Village:
@@ -259,7 +260,7 @@ class TradeGUI(
         addRenderableWidget(opposingOfferedPokemonMarkings)
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
         val matrices = context.pose()
@@ -322,11 +323,11 @@ class TradeGUI(
             context.enableScissor(backgroundX, backgroundY, backgroundX + BASE_BACKGROUND_WIDTH, backgroundY +  BASE_BACKGROUND_HEIGHT)
             offeredPokemonModel?.baseScale = scale
             offeredPokemonModel?.offsetY = scaleOffsetY
-            offeredPokemonModel?.render(context, mouseX, mouseY, delta)
+            offeredPokemonModel?.extractRenderState(context, mouseX, mouseY, delta)
 
             opposingOfferedPokemonModel?.baseScale = scale
             opposingOfferedPokemonModel?.offsetY = scaleOffsetY
-            opposingOfferedPokemonModel?.render(context, mouseX, mouseY, delta)
+            opposingOfferedPokemonModel?.extractRenderState(context, mouseX, mouseY, delta)
             context.disableScissor()
         }
 
@@ -429,25 +430,28 @@ class TradeGUI(
             shadow = true
         )
 
-        super.render(context, mouseX, mouseY, delta)
+        super.extractRenderState(context, mouseX, mouseY, delta)
 
         // Item Tooltip
         if (offeredPokemon != null && !offeredPokemon!!.heldItemNoCopy().isEmpty) {
             val itemX = x + 50
             val itemY = y + 125
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, offeredPokemon!!.heldItemNoCopy(), mouseX, mouseY)
+            if (itemHovered) context.setTooltipForNextFrame(Minecraft.getInstance().font, offeredPokemon!!.heldItemNoCopy(), mouseX, mouseY)
         }
 
         if (opposingOfferedPokemon != null && !opposingOfferedPokemon!!.heldItemNoCopy().isEmpty) {
             val itemX = x + 227
             val itemY = y + 125
             val itemHovered = mouseX.toFloat() in (itemX.toFloat()..(itemX.toFloat() + 16)) && mouseY.toFloat() in (itemY.toFloat()..(itemY.toFloat() + 16))
-            if (itemHovered) context.renderTooltip(Minecraft.getInstance().font, opposingOfferedPokemon!!.heldItemNoCopy(), mouseX, mouseY)
+            if (itemHovered) context.setTooltipForNextFrame(Minecraft.getInstance().font, opposingOfferedPokemon!!.heldItemNoCopy(), mouseX, mouseY)
         }
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
             CancelTradePacket().sendToServer()
             cancelTradeSound()
@@ -461,7 +465,7 @@ class TradeGUI(
                 cancelTradeSound()
             }
         }
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     override fun tick() {

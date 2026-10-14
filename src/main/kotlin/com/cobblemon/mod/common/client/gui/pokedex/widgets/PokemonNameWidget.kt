@@ -49,7 +49,7 @@ class PokemonNameWidget(
     var speciesName: MutableComponent = Component.translatable("")
     var speciesNumber: MutableComponent = "0000".text()
 
-    override fun renderWidget(
+    override fun extractWidgetRenderState(
         context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,

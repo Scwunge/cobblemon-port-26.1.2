@@ -31,7 +31,7 @@ class NavigationButton(
         private val backwardsButtonResource = cobblemonResource("textures/gui/pc/pc_arrow_previous.png")
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         blitk(
             matrixStack = context.pose(),
             x = x / SCALE,

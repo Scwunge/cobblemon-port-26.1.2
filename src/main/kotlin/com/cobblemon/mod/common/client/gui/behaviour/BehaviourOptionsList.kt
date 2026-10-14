@@ -108,7 +108,7 @@ class BehaviourOptionsList(
         override fun setFocused(focused: Boolean) {}
         override fun isFocused() = false
 
-        override fun render(
+        override fun extractRenderState(
             guiGraphics: GuiGraphicsExtractor,
             index: Int,
             top: Int,
@@ -127,7 +127,7 @@ class BehaviourOptionsList(
             applyButton.x = parent.left + 5 + (if (alignButtonRight) SLOT_WIDTH - (if (parent.children().size > 6) 7 else (1)) else 0)
             applyButton.y = top + 1
 
-            applyButton.render(guiGraphics, mouseX, mouseY, partialTick)
+            applyButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
             blitk(
                 matrixStack = guiGraphics.pose(),
@@ -141,7 +141,7 @@ class BehaviourOptionsList(
                 scale = 0.5F
             )
 
-            slotRow.render(guiGraphics, mouseX, mouseY, partialTick)
+            slotRow.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
             if (hovering) {
                 tooltipHolder.refreshTooltipForNextRenderPass(hovering, false, ScreenRectangle(left, top, width, height))

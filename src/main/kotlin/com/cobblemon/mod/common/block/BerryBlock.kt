@@ -220,7 +220,7 @@ class BerryBlock(private val berryIdentifier: Identifier, settings: Properties) 
             return InteractionResult.PASS
         } else if (this.isMaxAge(state)) {
             return if (harvestBerry(world, state, pos, player)) {
-                InteractionResult.sidedSuccess(world.isClientSide)
+                InteractionResult.SUCCESS
             } else {
                 InteractionResult.PASS
             }

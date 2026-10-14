@@ -56,6 +56,12 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
     pX,
@@ -200,7 +206,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         selectMove(null)
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
 
         blitk(
@@ -234,8 +240,8 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
                 centered = true
             )
 
-            formLeftButton.render(context, mouseX, mouseY, delta)
-            formRightButton.render(context, mouseX, mouseY, delta)
+            formLeftButton.extractRenderState(context, mouseX, mouseY, delta)
+            formRightButton.extractRenderState(context, mouseX, mouseY, delta)
         }
 
         blitk(
@@ -266,11 +272,11 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             shadow = true
         )
 
-        categoryUpButton.render(context, mouseX, mouseY, delta)
-        categoryDownButton.render(context, mouseX, mouseY, delta)
+        categoryUpButton.extractRenderState(context, mouseX, mouseY, delta)
+        categoryDownButton.extractRenderState(context, mouseX, mouseY, delta)
 
         sortButtons.forEachIndexed { index, button ->
-            button.render(context, mouseX, mouseY, delta)
+            button.extractRenderState(context, mouseX, mouseY, delta)
 
             if (button.isButtonHovered(mouseX, mouseY)) {
                 renderTooltip(context, lang("ui.sort.${LearnsetSort.entries[index].name.lowercase()}").bold(), mouseX, mouseY, delta, -14)
@@ -801,7 +807,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             private var lastX = 0
             private var lastY = 0
 
-            override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
                 lastX = x
                 lastY = y
 
@@ -885,7 +891,10 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
                 }
             }
 
-            override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+            override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+                val mouseX = event.x()
+                val mouseY = event.y()
+                val button = event.button()
                 val canClick = mouseX < (lastX + (HALF_OVERLAY_WIDTH - 3))
                 if (canClick) {
                     onSelect(entry)
@@ -959,7 +968,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
 
         class TextSlot(val text: String) : Slot<TextSlot>() {
-            override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
                 drawScaledText(
                     context = context,
                     text = text.text(),

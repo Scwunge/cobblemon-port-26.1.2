@@ -162,7 +162,7 @@ open class PlayerPartyStore(
                     pokemon.tickInteractionCooldown(20)
                 }
 
-                pokemon.features.filterIsInstance<TickingSpeciesFeature>().forEach { it.onSecondPassed(player.serverLevel(), pokemon, null) }
+                pokemon.features.filterIsInstance<TickingSpeciesFeature>().forEach { it.onSecondPassed(player.level(), pokemon, null) }
 
                 if (pokemon.entity?.passengers?.isNotEmpty() != true) {
                     pokemon.rideStamina += 0.1F // Recover all stamina in 10 seconds, as long as no one's on it

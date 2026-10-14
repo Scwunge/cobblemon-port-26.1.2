@@ -26,7 +26,7 @@ class InfoBlockWidget(
     private val font: Identifier,
 ) : SoundlessWidget(pX, pY, blockWidth, blockHeight, Component.literal("InfoBlockWidget")) {
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         drawScaledText(
             context = context,
             font = font,

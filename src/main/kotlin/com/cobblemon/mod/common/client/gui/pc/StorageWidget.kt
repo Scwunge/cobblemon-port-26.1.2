@@ -41,6 +41,13 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
+import com.cobblemon.mod.common.client.render.gui.mouseClicked
 
 class StorageWidget(
     pX: Int, pY: Int,
@@ -217,7 +224,7 @@ class StorageWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         // Party  Label
         if (pcGui.configuration.showParty) {
@@ -251,9 +258,9 @@ class StorageWidget(
                 )
             }
 
-            this.releaseButton.render(context, mouseX, mouseY, delta)
-            this.releaseYesButton.render(context, mouseX, mouseY, delta)
-            this.releaseNoButton.render(context, mouseX, mouseY, delta)
+            this.releaseButton.extractRenderState(context, mouseX, mouseY, delta)
+            this.releaseYesButton.extractRenderState(context, mouseX, mouseY, delta)
+            this.releaseNoButton.extractRenderState(context, mouseX, mouseY, delta)
         }
 
         val boxWallpaper = pc.boxes[box].wallpaper
@@ -305,7 +312,7 @@ class StorageWidget(
 
         if (screenLoaded) {
             this.boxSlots.forEach { slot ->
-                slot.render(context, mouseX, mouseY, delta)
+                slot.extractRenderState(context, mouseX, mouseY, delta)
                 val pokemon = slot.getPokemon()
                 if (grabbedSlot == null && slot.isHovered(mouseX, mouseY)
                     && pokemon != null && pokemon != pcGui.previewPokemon
@@ -321,7 +328,7 @@ class StorageWidget(
         // Party slots
         if (pcGui.configuration.showParty) {
             this.partySlots.forEach { slot ->
-                slot.render(context, mouseX, mouseY, delta)
+                slot.extractRenderState(context, mouseX, mouseY, delta)
                 val pokemon = slot.getPokemon()
                 if (grabbedSlot == null && slot.isHovered(mouseX, mouseY)
                     && pokemon != null && pokemon != pcGui.previewPokemon
@@ -332,14 +339,17 @@ class StorageWidget(
             }
         }
 
-        pastureWidget?.render(context, mouseX, mouseY, delta)
+        pastureWidget?.extractRenderState(context, mouseX, mouseY, delta)
         matrices.pushPose()
         matrices.translate(0.0, 0.0, 1000.0)
-        grabbedSlot?.render(context, mouseX, mouseY, delta)
+        grabbedSlot?.extractRenderState(context, mouseX, mouseY, delta)
         matrices.popPose()
     }
 
-    override fun mouseClicked(pMouseX: Double, pMouseY: Double, pButton: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val pMouseX = event.x()
+        val pMouseY = event.y()
+        val pButton = event.button()
         if (displayConfirmRelease) {
             if (releaseYesButton.isHovered(pMouseX, pMouseY)) releaseYesButton.mouseClicked(pMouseX, pMouseY, pButton)
             if (releaseNoButton.isHovered(pMouseX, pMouseY)) releaseNoButton.mouseClicked(pMouseX, pMouseY, pButton)
@@ -348,7 +358,7 @@ class StorageWidget(
         }
 
         pastureWidget?.mouseClicked(pMouseX, pMouseY, pButton)
-        return super.mouseClicked(pMouseX, pMouseY, pButton)
+        return super.mouseClicked(event, doubleClick)
     }
 
     private fun resetStorageSlots() {

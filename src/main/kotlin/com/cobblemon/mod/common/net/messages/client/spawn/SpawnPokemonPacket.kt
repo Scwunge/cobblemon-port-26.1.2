@@ -118,7 +118,7 @@ class SpawnPokemonPacket(
         buffer.writeByte(this.beamMode.toInt())
         buffer.writeEnumConstant(this.platform)
         buffer.writeNullable(this.nickname) { _, v -> buffer.writeText(v) }
-        buffer.writeNullable(this.mark) { _, v -> buffer.writeResourceLocation(v) }
+        buffer.writeNullable(this.mark) { _, v -> buffer.writeIdentifier(v) }
         buffer.writeInt(this.labelLevel)
         buffer.writeEnumConstant(this.poseType)
         buffer.writeBoolean(this.unbattlable)
@@ -212,7 +212,7 @@ class SpawnPokemonPacket(
             val beamModeEmitter = buffer.readByte()
             val platform = buffer.readEnumConstant(PlatformType::class.java)
             val nickname = buffer.readNullable { buffer.readText().copy() }
-            val mark = buffer.readNullable { buffer.readResourceLocation() }
+            val mark = buffer.readNullable { buffer.readIdentifier() }
             val labelLevel = buffer.readInt()
             val poseType = buffer.readEnumConstant(PoseType::class.java)
             val unbattlable = buffer.readBoolean()

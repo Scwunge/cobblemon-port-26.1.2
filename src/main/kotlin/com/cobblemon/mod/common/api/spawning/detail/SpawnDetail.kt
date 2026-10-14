@@ -93,7 +93,7 @@ abstract class SpawnDetail : ModDependant {
     open fun getName() = displayName?.asTranslated() ?: id.text()
 
     open fun onServerLoad(server: MinecraftServer) {
-        val biomeRegistry = server.registryAccess().registryOrThrow(Registries.BIOME)
+        val biomeRegistry = server.registryAccess().lookupOrThrow(Registries.BIOME)
         validBiomes.clear()
 
         // Calculate in advance what biomes of this world the spawn detail is valid for.

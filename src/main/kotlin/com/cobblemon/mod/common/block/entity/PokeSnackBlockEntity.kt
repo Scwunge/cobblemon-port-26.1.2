@@ -89,7 +89,7 @@ open class PokeSnackBlockEntity(pos: BlockPos, state: BlockState) :
             horizontalRadius = RADIUS,
             verticalRadius = RADIUS,
             maxPokemonPerChunk = Cobblemon.config.pokeSnackPokemonPerChunk,
-            name = "poke_snack_spawner_${server.dimension().location()}_$blockPos",
+            name = "poke_snack_spawner_${server.dimension().identifier()}_$blockPos",
             baitEffects = baitEffects
         )
 

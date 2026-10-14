@@ -19,6 +19,7 @@ import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.resources.Identifier
+import net.minecraft.client.input.MouseButtonEvent
 
 class IconButton(
     var buttonX: Float,
@@ -30,10 +31,17 @@ class IconButton(
     val silent: Boolean = false,
     val clickAction: OnPress
 ): Button(buttonX.toInt(), buttonY.toInt(), buttonWidth.toInt(), buttonHeight.toInt(), "".text(), clickAction, DEFAULT_NARRATION), CobblemonRenderable {
-    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double) = false
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
+        val d = event.x()
+        val e = event.y()
+        val i = event.button()
+        val f = dragX
+        val g = dragY
+        return false
+    }
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         resource?.let {
             blitk(
                 matrixStack = context.pose(),
@@ -49,7 +57,10 @@ class IconButton(
         }
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (active && visible && button == 0 && isMouseOver(mouseX, mouseY)) {
             playDownSound(Minecraft.getInstance().soundManager)
             onClick(mouseX, mouseY)

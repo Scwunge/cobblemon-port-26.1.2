@@ -18,12 +18,12 @@ import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.toEulerXYZDegrees
 import com.cobblemon.mod.common.util.toHex
-import com.mojang.blaze3d.platform.Lighting
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.Lightmap
-import net.minecraft.client.renderer.rendertype.RenderType
+import com.cobblemon.mod.common.client.render.gui.CobblemonModelPipState
+import com.cobblemon.mod.common.client.render.gui.GuiModelLighting
+import com.cobblemon.mod.common.client.render.gui.graphics
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import net.minecraft.util.LightCoordsUtil
+import org.joml.Matrix3x2fStack
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
@@ -41,7 +41,7 @@ enum class ProfileTransformType {
 
 fun drawProfilePokemon(
     renderablePokemon: RenderablePokemon,
-    matrixStack: PoseStack,
+    matrixStack: Matrix3x2fStack,
     rotation: Quaternionf,
     poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
@@ -77,7 +77,7 @@ fun drawProfilePokemon(
 
 fun drawProfilePokemon(
     species: Identifier,
-    matrixStack: PoseStack,
+    matrixStack: Matrix3x2fStack,
     rotation: Quaternionf,
     poseType: PoseType = PoseType.PROFILE,
     state: PosableState,
@@ -94,93 +94,93 @@ fun drawProfilePokemon(
     headPitch: Float = 0f,
     blockLight: Int = 13
 ) {
-    RenderSystem.applyModelViewMatrix()
-    matrixStack.scale(scale, scale, -scale)
+    // 3D content inside a GUI has to be drawn as a picture-in-picture element; the body below is the original
+    // immediate-mode rendering, now run against the PIP's pose stack and buffers.
+    // Rendering happens later in the frame, so don't share the caller's (mutable) rotation.
+    val rotation = Quaternionf(rotation)
+    CobblemonModelPipState.submit(matrixStack.graphics, radius = scale * 4F) { poseStack, bufferSource ->
+        poseStack.scale(scale, scale, -scale)
 
-    val sprite = VaryingModelRepository.getSprite(species, state, SpriteType.PROFILE)
+        val sprite = VaryingModelRepository.getSprite(species, state, SpriteType.PROFILE)
 
-    if (sprite == null) {
+        if (sprite == null) {
 
-        val model = VaryingModelRepository.getPoser(species, state)
-        val texture = VaryingModelRepository.getTexture(species, state)
+            val model = VaryingModelRepository.getPoser(species, state)
+            val texture = VaryingModelRepository.getTexture(species, state)
 
-        val context = RenderContext()
-        model.context = context
-        VaryingModelRepository.getTextureNoSubstitute(species, state).let { context.put(RenderContext.TEXTURE, it) }
-        val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(state.currentAspects).baseScale
-        context.put(RenderContext.SCALE, baseScale)
-        context.put(RenderContext.SPECIES, species)
-        context.put(RenderContext.ASPECTS, state.currentAspects)
-        context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
-        context.put(RenderContext.POSABLE_STATE, state)
-        context.put(RenderContext.DO_QUIRKS, doQuirks)
+            val context = RenderContext()
+            model.context = context
+            VaryingModelRepository.getTextureNoSubstitute(species, state).let { context.put(RenderContext.TEXTURE, it) }
+            val baseScale = PokemonSpecies.getByIdentifier(species)!!.getForm(state.currentAspects).baseScale
+            context.put(RenderContext.SCALE, baseScale)
+            context.put(RenderContext.SPECIES, species)
+            context.put(RenderContext.ASPECTS, state.currentAspects)
+            context.put(RenderContext.RENDER_STATE, RenderContext.RenderState.PROFILE)
+            context.put(RenderContext.POSABLE_STATE, state)
+            context.put(RenderContext.DO_QUIRKS, doQuirks)
 
-        state.currentModel = model
+            state.currentModel = model
 
-        val renderType = RenderType.entityCutout(texture)
+            val renderType = RenderTypes.entityCutoutCull(texture)
 
-        state.setPoseToFirstSuitable(poseType)
-        state.updatePartialTicks(partialTicks)
+            state.setPoseToFirstSuitable(poseType)
+            state.updatePartialTicks(partialTicks)
 
-        if (profileTransformType == ProfileTransformType.NONE) {
-            matrixStack.translate(0F, 0F, -4.0F)
-            if (applyBaseScale) {
-                matrixStack.scale(baseScale, baseScale, 1 / baseScale)
+            if (profileTransformType == ProfileTransformType.NONE) {
+                poseStack.translate(0F, 0F, -4.0F)
+                if (applyBaseScale) {
+                    poseStack.scale(baseScale, baseScale, 1 / baseScale)
+                }
+            } else {
+                var profileScale: Float
+                var profileTranslation: Vec3
+
+                when (profileTransformType) {
+                    ProfileTransformType.POKEDEX -> {
+                        profileScale = model.profilePokedexScale ?: model.profileScale
+                        profileTranslation = model.profilePokedexTranslation ?: model.profileTranslation
+                    }
+                    ProfileTransformType.SUMMARY -> {
+                        profileScale = model.profileSummaryScale ?: model.profileScale
+                        profileTranslation = model.profileSummaryTranslation ?: model.profileTranslation
+                    }
+                    else -> {
+                        profileScale = model.profileScale
+                        profileTranslation = model.profileTranslation
+                    }
+                }
+
+                poseStack.translate(
+                    profileTranslation.x,
+                    profileTranslation.y + 1.5 * profileScale,
+                    profileTranslation.z - 4.0
+                )
+                poseStack.scale(profileScale, profileScale, 1 / profileScale)
             }
+
+            poseStack.mulPose(rotation)
+
+            model.applyAnimations(null, state, 0F, 0F, 0F, headYaw, headPitch)
+
+            // The camera orientation override and shadow toggle only affected name tags/shadows, which profile
+            // renders never draw; lighting is set up per PIP render below.
+            rotation.conjugate()
+
+            val buffer = bufferSource.getBuffer(renderType)
+            val light1 = Vector3f(-1F, 1F, 1.0F)
+            val light2 = Vector3f(1.3F, -1F, 1.0F)
+            GuiModelLighting.setup(light1, light2)
+            val packedLight = LightCoordsUtil.pack(blockLight, 0)
+
+            val colour = toHex(r, g, b, a)
+            model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(species, state)) {
+                model.render(context, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
+                bufferSource.endBatch()
+            }
+            model.setDefault()
         } else {
-            var profileScale: Float
-            var profileTranslation: Vec3
-
-            when (profileTransformType) {
-                ProfileTransformType.POKEDEX -> {
-                    profileScale = model.profilePokedexScale ?: model.profileScale
-                    profileTranslation = model.profilePokedexTranslation ?: model.profileTranslation
-                }
-                ProfileTransformType.SUMMARY -> {
-                    profileScale = model.profileSummaryScale ?: model.profileScale
-                    profileTranslation = model.profileSummaryTranslation ?: model.profileTranslation
-                }
-                else -> {
-                    profileScale = model.profileScale
-                    profileTranslation = model.profileTranslation
-                }
-            }
-
-            matrixStack.translate(
-                profileTranslation.x,
-                profileTranslation.y + 1.5 * profileScale,
-                profileTranslation.z - 4.0
-            )
-            matrixStack.scale(profileScale, profileScale, 1 / profileScale)
+            renderSprite(poseStack, bufferSource, sprite)
         }
-
-        matrixStack.mulPose(rotation)
-
-        model.applyAnimations(null, state, 0F, 0F, 0F, headYaw, headPitch)
-
-        Lighting.setupForEntityInInventory()
-        val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
-        rotation.conjugate()
-        entityRenderDispatcher.overrideCameraOrientation(rotation)
-        entityRenderDispatcher.setRenderShadow(true)
-
-        val bufferSource = Minecraft.getInstance().renderBuffers().bufferSource()
-        val buffer = bufferSource.getBuffer(renderType)
-        val light1 = Vector3f(-1F, 1F, 1.0F)
-        val light2 = Vector3f(1.3F, -1F, 1.0F)
-        RenderSystem.setShaderLights(light1, light2)
-        val packedLight = Lightmap.pack(blockLight, 0)
-
-        val colour = toHex(r, g, b, a)
-        model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(species, state)) {
-            model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, colour)
-            bufferSource.endBatch()
-        }
-        model.setDefault()
-        entityRenderDispatcher.setRenderShadow(true)
-        Lighting.setupFor3DItems()
-    } else {
-        renderSprite(matrixStack, sprite)
     }
 }
 

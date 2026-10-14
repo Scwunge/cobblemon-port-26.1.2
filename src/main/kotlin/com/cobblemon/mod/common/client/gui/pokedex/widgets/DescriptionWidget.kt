@@ -23,7 +23,7 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
 
     var showPlaceholder: Boolean = true
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (showPlaceholder) {
             blitk(
                 matrixStack = context.pose(),
@@ -43,7 +43,7 @@ class DescriptionWidget(descX: Int, descY: Int): InfoTextScrollWidget(pX = descX
                 shadow = true
             )
 
-            super.renderWidget(context, mouseX, mouseY, delta)
+            super.extractWidgetRenderState(context, mouseX, mouseY, delta)
         }
     }
 }

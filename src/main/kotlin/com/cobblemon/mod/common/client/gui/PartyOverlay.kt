@@ -44,6 +44,11 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import kotlin.math.ceil
 import kotlin.math.floor
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class PartyOverlay : Gui(Minecraft.getInstance()) {
 
@@ -120,7 +125,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
         return state.second
     }
 
-    override fun render(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
         if (!canRender()) return
 
         val partialDeltaTicks = tickCounter.realtimeDeltaTicks

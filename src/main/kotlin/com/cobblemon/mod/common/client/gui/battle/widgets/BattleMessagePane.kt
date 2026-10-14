@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.util.FormattedCharSequence
+import net.minecraft.client.input.MouseButtonEvent
 
 /**
  * Pane for seeing and interacting with battle messages.
@@ -135,7 +136,7 @@ class BattleMessagePane(
         return this.x + 154
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
         blitk(
             matrixStack = context.pose(),
@@ -154,11 +155,14 @@ class BattleMessagePane(
             this.x + 5 + width,
             appropriateY + 6 + textBoxHeight
         )
-        super.renderWidget(context, mouseX, mouseY, partialTicks)
+        super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
         context.disableScissor()
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         val toggleOffsetY = if (expanded) 92 else 46
         if (mouseX > (this.x + 160) && mouseX < (this.x + 160 + EXPAND_TOGGLE_SIZE) && mouseY > (appropriateY + toggleOffsetY) && mouseY < (appropriateY + toggleOffsetY + EXPAND_TOGGLE_SIZE)) {
             expanded = !expanded
@@ -170,10 +174,15 @@ class BattleMessagePane(
             isDragging = true
         }
 
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (scrolling) {
             if (mouseY < this.y) {
                 scrollAmount = 0.0
@@ -183,7 +192,7 @@ class BattleMessagePane(
                 scrollAmount += deltaY
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
@@ -195,7 +204,7 @@ class BattleMessagePane(
 
     class BattleMessageLine(val pane: BattleMessagePane, val line: FormattedCharSequence) : Entry<BattleMessageLine>() {
         override fun getNarration() = "".text()
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,

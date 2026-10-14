@@ -78,7 +78,7 @@ class RideControlsOverlay : Gui(Minecraft.getInstance()) {
 
     var currentBehaviourKey: Identifier? = null
 
-    override fun render(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
         val minecraft = Minecraft.getInstance()
 
         // Hiding if a Screen is open and not exempt

@@ -51,6 +51,7 @@ import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.tags.TagKey
+import net.minecraft.client.input.MouseButtonEvent
 
 class EvolutionTreeWidget(
     val parent: PokedexGUI,
@@ -120,7 +121,7 @@ class EvolutionTreeWidget(
         updatePositioning()
     }
 
-    override fun renderWidget(
+    override fun extractWidgetRenderState(
         guiGraphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
@@ -135,7 +136,7 @@ class EvolutionTreeWidget(
             shadow = true
         )
 
-        expandButton.render(guiGraphics, mouseX, mouseY, partialTick)
+        expandButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
         rootTreeDrawingNode?.let {
             enableScissors(guiGraphics)
@@ -612,17 +613,16 @@ class EvolutionTreeWidget(
         return mouseX >= startX && mouseX <= endX && mouseY >= startY && mouseY <= endY
     }
 
-    override fun mouseDragged(
-        mouseX: Double,
-        mouseY: Double,
-        button: Int,
-        deltaX: Double,
-        deltaY: Double
-    ): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         panningX += deltaX
         panningY += deltaY
 
-        val bounds = treeDrawingBounds ?: return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        val bounds = treeDrawingBounds ?: return super.mouseDragged(event, deltaX, deltaY)
         val treeHeight = bounds.height.coerceAtLeast(1)
         val treeWidth = bounds.width.coerceAtLeast(1)
 
@@ -639,7 +639,7 @@ class EvolutionTreeWidget(
         panningX = panningX.coerceIn(minPanningX, maxPanningX)
         panningY = panningY.coerceIn(minPanningY, maxPanningY)
 
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     fun isHovered(mouseX: Double, mouseY: Double): Boolean {

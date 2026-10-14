@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.entity.pokemon
 
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.EntityReference
+import java.util.UUID
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
@@ -188,6 +191,11 @@ open class PokemonEntity(
     pokemon: Pokemon = Pokemon().apply { isClient = world.isClientSide },
     type: EntityType<out PokemonEntity> = CobblemonEntities.POKEMON,
 ) : ShoulderRidingEntity(type, world), PosableEntity, Shearable, Schedulable, Rideable, ScannableEntity, MoLangScriptingEntity, OmniPathingEntity {
+    /** TamableAnimal#getOwnerUUID/setOwnerUUID from 1.21.1; the owner has been stored as an EntityReference since 1.21.5. */
+    var ownerUUID: UUID?
+        get() = ownerReference?.uuid
+        set(value) { setOwnerReference(value?.let { EntityReference.of<LivingEntity>(it) }) }
+
     companion object {
         @JvmStatic val SPECIES = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.STRING)
         @JvmStatic val NICKNAME = SynchedEntityData.defineId(PokemonEntity::class.java, EntityDataSerializers.COMPONENT)
@@ -1206,12 +1214,12 @@ open class PokemonEntity(
                             // reset the flower fed state
                             pokemon.lastFlowerFed = ItemStack.EMPTY
                         }
-                        return InteractionResult.sidedSuccess(level().isClientSide)
+                        return InteractionResult.SUCCESS
                     } else {
                         val mushroomStew =
                             ItemUtils.createFilledResult(itemStack, player, Items.MUSHROOM_STEW.defaultInstance)
                         player.setItemInHand(hand, mushroomStew)
-                        return InteractionResult.sidedSuccess(level().isClientSide)
+                        return InteractionResult.SUCCESS
                     }
                 }
             }
@@ -1236,7 +1244,7 @@ open class PokemonEntity(
                     player.playSound(SoundEvents.MOOSHROOM_EAT, 1.0f, 1.0f)
                     pokemon.lastFlowerFed = itemStack.copyWithCount(1)
                     if (!player.isCreative && !level().isClientSide) itemStack.shrink(1)
-                    return InteractionResult.sidedSuccess(level().isClientSide)
+                    return InteractionResult.SUCCESS
                 }
             } else if (!player.isShiftKeyDown && StashHandler.interactMob(player, pokemon, itemStack)) {
                 return InteractionResult.SUCCESS
@@ -1258,7 +1266,7 @@ open class PokemonEntity(
                         this.pokemon.updateAspects()
                         itemStack.consume(1, player)
                     }
-                    return InteractionResult.sidedSuccess(level().isClientSide)
+                    return InteractionResult.SUCCESS
                 }
             } else if (itemStack.item.equals(Items.WATER_BUCKET) && colorFeatureType != null) {
                 if (player is ServerPlayer) {
@@ -1272,21 +1280,21 @@ open class PokemonEntity(
                         this.pokemon.updateAspects()
                     }
                 }
-                return InteractionResult.sidedSuccess(level().isClientSide)
+                return InteractionResult.SUCCESS
             } else if (itemStack.`is`(CobblemonItems.NPC_EDITOR) && (player is ServerPlayer) && player.isCreative) {
                 BehaviourEditingTracker.startEditing(player, this)
                 player.sendPacket(OpenBehaviourEditorPacket(id, (this as MoLangScriptingEntity).behaviours.toSet()))
-                return InteractionResult.sidedSuccess(level().isClientSide)
+                return InteractionResult.SUCCESS
             }
         }
 
         if (hand == InteractionHand.MAIN_HAND) {
             if (player.isShiftKeyDown && player is ServerPlayer) {
                 showInteractionWheel(player, itemStack)
-                return InteractionResult.sidedSuccess(level().isClientSide)
+                return InteractionResult.SUCCESS
             }
             else if (this.ownerUUID == player.uuid && this.attemptItemInteraction(player, player.getItemInHand(hand))) {
-                return InteractionResult.sidedSuccess(level().isClientSide)
+                return InteractionResult.SUCCESS
             }
         }
 

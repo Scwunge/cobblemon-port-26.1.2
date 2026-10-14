@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.block.entity
 
 import com.cobblemon.mod.common.CobblemonBlockEntities
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.CobblemonRecipeTypes
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.cooking.Seasonings
@@ -37,7 +38,6 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
 import net.minecraft.resources.Identifier
-import net.minecraft.util.FastColor
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.WorldlyContainer
 import net.minecraft.world.entity.item.ItemEntity
@@ -290,10 +290,10 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
             sourceAlive = { blockState.getValue(CampfireBlock.COOKING) },
             sourceVisible = { blockState.getValue(CampfireBlock.COOKING) },
             getParticleColor = {
-                val red = FastColor.ARGB32.red(bubbleColor) / 255F
-                val green = FastColor.ARGB32.green(bubbleColor) / 255F
-                val blue = FastColor.ARGB32.blue(bubbleColor) / 255F
-                val alpha = FastColor.ARGB32.alpha(bubbleColor) / 255F
+                val red = ARGB.red(bubbleColor) / 255F
+                val green = ARGB.green(bubbleColor) / 255F
+                val blue = ARGB.blue(bubbleColor) / 255F
+                val alpha = ARGB.alpha(bubbleColor) / 255F
 
                 Vector4f(red, green, blue, alpha)
             }

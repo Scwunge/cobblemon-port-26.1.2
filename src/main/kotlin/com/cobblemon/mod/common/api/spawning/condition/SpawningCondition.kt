@@ -91,7 +91,7 @@ abstract class SpawningCondition<T : SpawnablePosition> {
             return false
         } else if (spawnablePosition.skyLight > maxSkyLight.orMax() || spawnablePosition.skyLight < minSkyLight.orMin()) {
             return false
-        } else if (timeRange != null && !timeRange!!.contains((spawnablePosition.world.dayTime() % 24000).toInt())) {
+        } else if (timeRange != null && !timeRange!!.contains((spawnablePosition.world.overworldClockTime() % 24000).toInt())) {
             return false
         } else if (canSeeSky != null && canSeeSky != spawnablePosition.canSeeSky) {
             return false
@@ -99,7 +99,7 @@ abstract class SpawningCondition<T : SpawnablePosition> {
             return false
         } else if (isThundering != null && spawnablePosition.world.isThundering != isThundering!!) {
             return false
-        } else if (dimensions != null && dimensions!!.isNotEmpty() && spawnablePosition.world.dimension().location() !in dimensions!!) {
+        } else if (dimensions != null && dimensions!!.isNotEmpty() && spawnablePosition.world.dimension().identifier() !in dimensions!!) {
             return false
         } else if (markers != null && markers!!.isNotEmpty() && markers!!.none { marker -> marker in spawnablePosition.markers }) {
             return false

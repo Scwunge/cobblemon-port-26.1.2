@@ -31,7 +31,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.world.ItemInteractionResult
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
@@ -98,18 +98,18 @@ class SweetIncenseBlock(properties: Properties) : BaseEntityBlock(properties), S
             player: Player,
             hand: InteractionHand,
             hit: BlockHitResult
-    ): ItemInteractionResult {
+    ): InteractionResult {
         val heldItem = player.getItemInHand(hand)
 
         return if (!state.getValue(LIT) && (heldItem.`is`(Items.FLINT_AND_STEEL) || heldItem.`is`(Items.FIRE_CHARGE))) {
             level.setBlock(pos, state.setValue(LIT, true), 3)
             level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0f, 1.0f)
-            ItemInteractionResult.sidedSuccess(level.isClientSide)
+            InteractionResult.SUCCESS
         } else if (state.getValue(LIT)) {
             level.setBlock(pos, state.setValue(LIT, false), 3)
-            ItemInteractionResult.sidedSuccess(level.isClientSide)
+            InteractionResult.SUCCESS
         } else {
-            ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION
+            InteractionResult.TRY_WITH_EMPTY_HAND
         }
     }
 

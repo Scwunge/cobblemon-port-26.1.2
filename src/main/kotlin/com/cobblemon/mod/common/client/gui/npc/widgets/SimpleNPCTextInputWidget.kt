@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Style
 import net.minecraft.resources.Identifier
 import kotlin.math.floor
+import net.minecraft.client.input.MouseButtonEvent
 
 class SimpleNPCTextInputWidget(
     getter: () -> String,
@@ -62,8 +63,11 @@ class SimpleNPCTextInputWidget(
         super.setFocused(focused)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        val clickedState = super.mouseClicked(mouseX, mouseY, button)
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val clickedState = super.mouseClicked(event, doubleClick)
 
         if (wrap) {
             val splitLines = Minecraft.getInstance().font.splitter.splitLines(value, width - 8, Style.EMPTY)
@@ -93,7 +97,7 @@ class SimpleNPCTextInputWidget(
         return clickedState
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (texture != null) {
             blitk(
                 matrixStack = context.pose(),
@@ -144,7 +148,7 @@ class SimpleNPCTextInputWidget(
                 )
             }
         } else {
-            super.renderWidget(context, mouseX, mouseY, delta)
+            super.extractWidgetRenderState(context, mouseX, mouseY, delta)
         }
     }
 }

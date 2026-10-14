@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.gui.summary.widgets.screens.marks
 
 import com.cobblemon.mod.common.api.gui.blitk
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.api.mark.Mark
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.gui.ScrollingWidget
@@ -17,8 +18,8 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.screens.marks.MarksSc
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
-import net.minecraft.util.FastColor
 import net.minecraft.util.Mth
+import net.minecraft.client.input.MouseButtonEvent
 
 class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> (Unit), val setHoveredMark: (Mark?) -> (Unit)): ScrollingWidget<ScrollSlotRow>(
     width = WIDTH,
@@ -59,8 +60,8 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
                 yTop = this.y
             }
 
-            context.fill(xLeft, this.y, xRight, this.bottom, FastColor.ARGB32.color(255, 75, 75, 75)) // background
-            context.fill(xLeft,yTop, xRight, yTop + yBottom, FastColor.ARGB32.color(255, 141, 141, 141)) // base
+            context.fill(xLeft, this.y, xRight, this.bottom, ARGB.color(255, 75, 75, 75)) // background
+            context.fill(xLeft,yTop, xRight, yTop + yBottom, ARGB.color(255, 141, 141, 141)) // base
         }
     }
 
@@ -87,9 +88,12 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
         if (!anyHovered) setHoveredMark(null)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, dragX: Double, dragY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         // Prevent scrollbar drag if all rows are already visible
-        return if (children().size > 5) super.mouseDragged(mouseX, mouseY, button, dragX, dragY) else true
+        return if (children().size > 5) super.mouseDragged(event, dragX, dragY) else true
     }
 
     override fun mouseScrolled(mouseX: Double, mouseY: Double, scrollX: Double, scrollY: Double): Boolean {
@@ -142,7 +146,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
             return anyHovered
         }
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
@@ -155,7 +159,10 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
             tickDelta: Float
         ) {}
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             setSelectedMark.invoke()
             return true
         }

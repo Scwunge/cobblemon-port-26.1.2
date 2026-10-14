@@ -38,8 +38,8 @@ object CobblemonVillagerProfessions: PlatformRegistry<Registry<VillagerProfessio
     }
 
     private fun profession(resourceKey: ResourceKey<PoiType>, soundEvent: SoundEvent?): VillagerProfession =
-        create(resourceKey.location().path, VillagerProfession(
-            resourceKey.location().toString(),
+        create(resourceKey.identifier().path, VillagerProfession(
+            resourceKey.identifier().toString(),
             { holder: Holder<PoiType> -> holder.`is`(resourceKey) },
             { holder: Holder<PoiType> -> holder.`is`(resourceKey) },
             ImmutableSet.of(), ImmutableSet.of(), soundEvent

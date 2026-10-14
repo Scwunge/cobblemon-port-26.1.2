@@ -526,11 +526,11 @@ object CobblemonClient {
         val partialDeltaTicks = Minecraft.getInstance().timer // Checking that this even works
 //        ClientTaskTracker.update(partialDeltaTicks / 20f)
         if (battle == null) {
-            overlay.render(context, partialDeltaTicks)
+            overlay.extractRenderState(context, partialDeltaTicks)
         } else {
-            battleOverlay.render(context, partialDeltaTicks)
+            battleOverlay.extractRenderState(context, partialDeltaTicks)
         }
-        rideControlsOverlay.render(context, partialDeltaTicks)
+        rideControlsOverlay.extractRenderState(context, partialDeltaTicks)
     }
 
     @Suppress("UNCHECKED_CAST")

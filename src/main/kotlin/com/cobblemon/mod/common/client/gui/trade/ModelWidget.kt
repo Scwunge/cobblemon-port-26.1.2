@@ -17,6 +17,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class ModelWidget(
     pX: Int, pY: Int,
@@ -29,7 +34,7 @@ class ModelWidget(
     var state = FloatingState()
     private var rotVec = Vector3f(13F, rotationY, 0F)
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         matrices.pushPose()
         matrices.translate(x + width * 0.5, y.toDouble() + offsetY, 0.0)

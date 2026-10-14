@@ -13,6 +13,12 @@ import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import com.mojang.blaze3d.vertex.PoseStack
+import org.joml.Matrix3x2fStack
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 class PokeNavFillerButton(
     posX: Int, posY: Int,
     pX: Int, pY: Int,
@@ -21,12 +27,12 @@ class PokeNavFillerButton(
     pTextureWidth: Int, pTextureHeight: Int
 ): PokeNavImageButton(posX, posY, pX, pY, pWidth, pHeight, pXTexStart, pYTexStart, pYDiffText, FILLER, pTextureWidth, pTextureHeight, {}, "".text()) {
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         context.pose().pushPose()
     }
 
-    override fun applyBlitk(matrices: PoseStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun applyBlitk(matrices: Matrix3x2fStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         blitk(
             matrixStack = matrices,
             texture = FILLER,

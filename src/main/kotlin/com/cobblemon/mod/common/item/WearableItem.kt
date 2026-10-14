@@ -9,10 +9,10 @@
 package com.cobblemon.mod.common.item
 
 import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.world.InteractionResult
 import net.minecraft.resources.Identifier
 import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Equipable
@@ -50,15 +50,15 @@ interface WearableItem : Equipable {
         level: Level,
         player: Player,
         hand: InteractionHand
-    ): InteractionResultHolder<ItemStack> {
+    ): InteractionResult {
         var itemStack = player.getItemInHand(hand)
         val equipmentSlot = player.getEquipmentSlotForItem(itemStack)
 
-        if (!player.canUseSlot(equipmentSlot)) return InteractionResultHolder.pass(itemStack)
+        if (!player.canUseSlot(equipmentSlot)) return InteractionResult.PASS
 
         val slotStack = player.getItemBySlot(equipmentSlot)
 
-        if (!(!EnchantmentHelper.has(slotStack, PREVENT_ARMOR_CHANGE) || player.isCreative) || ItemStack.matches(itemStack, slotStack)) return InteractionResultHolder.fail(itemStack)
+        if (!(!EnchantmentHelper.has(slotStack, PREVENT_ARMOR_CHANGE) || player.isCreative) || ItemStack.matches(itemStack, slotStack)) return InteractionResult.FAIL
         if (!level.isClientSide()) player.awardStat(Stats.ITEM_USED.get(itemStack.item))
 
         val equipStack = itemStack.split(1)
@@ -68,6 +68,6 @@ interface WearableItem : Equipable {
         }
 
         player.setItemSlot(equipmentSlot, equipStack)
-        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide())
+        return InteractionResult.SUCCESS
     }
 }

@@ -106,13 +106,13 @@ class SentOutState() : ActivePokemonState() {
     override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         super.writeToBuffer(buffer)
         buffer.writeInt(entityId)
-        buffer.writeString(dimension.location().toString())
+        buffer.writeString(dimension.identifier().toString())
     }
 
     override fun readFromBuffer(buffer: RegistryFriendlyByteBuf): SentOutState {
         super.readFromBuffer(buffer)
         entityId = buffer.readInt()
-        dimension = ResourceKey.create(ResourceKey.createRegistryKey(dimension.location()), Identifier.parse(buffer.readString()))
+        dimension = ResourceKey.create(ResourceKey.createRegistryKey(dimension.identifier()), Identifier.parse(buffer.readString()))
         return this
     }
 

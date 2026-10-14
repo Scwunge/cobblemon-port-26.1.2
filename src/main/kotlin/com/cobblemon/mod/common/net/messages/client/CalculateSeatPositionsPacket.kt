@@ -26,7 +26,7 @@ import net.minecraft.resources.Identifier
 class CalculateSeatPositionsPacket(val speciesIdentifier: Identifier, val aspects: Set<String>, val poseType: PoseType) : NetworkPacket<CalculateSeatPositionsPacket> {
     override val id: Identifier = ID
     override fun encode(buffer: RegistryFriendlyByteBuf) {
-        buffer.writeResourceLocation(speciesIdentifier)
+        buffer.writeIdentifier(speciesIdentifier)
         buffer.writeCollection(aspects) { _, aspect -> buffer.writeString(aspect) }
         buffer.writeString(poseType.name)
     }
@@ -36,7 +36,7 @@ class CalculateSeatPositionsPacket(val speciesIdentifier: Identifier, val aspect
 
         fun decode(buffer: RegistryFriendlyByteBuf): CalculateSeatPositionsPacket {
             return CalculateSeatPositionsPacket(
-                buffer.readResourceLocation(),
+                buffer.readIdentifier(),
                 buffer.readList { _ -> buffer.readString() }.toSet(),
                 PoseType.valueOf(buffer.readString().uppercase()),
             )

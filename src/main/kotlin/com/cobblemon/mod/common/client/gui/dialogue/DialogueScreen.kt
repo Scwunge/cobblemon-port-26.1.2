@@ -46,6 +46,7 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvent
+import net.minecraft.client.input.KeyEvent
 
 class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTranslated()), CobblemonRenderable {
     val speakers = dialogueDTO.speakers?.mapNotNull { (key, value) ->
@@ -141,7 +142,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         )
     }
 
-    override fun renderBackground(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {}
+    override fun extractBackground(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {}
 
     override fun renderBlurredBackground(delta: Float) {}
 
@@ -249,7 +250,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
 
     fun renderInput() = gibber?.graduallyShowText != true || gibberDone
 
-    override fun render(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val gibber = gibber
         if (gibber != null) {
             playGibberSpeak(
@@ -262,7 +263,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         if (renderInput()) {
             dialogueTimerWidget.ratio = if (remainingSeconds <= 0) -1F else remainingSeconds / dialogueDTO.dialogueInput.deadline
         }
-        super.render(guiGraphics, mouseX, mouseY, delta)
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta)
         expressionsToRun.forEach { runtime.resolve(it) }
         expressionsToRun = emptyList()
     }
@@ -287,13 +288,16 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         EscapeDialoguePacket().sendToServer()
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         if (isInventoryKeyPressed(minecraft, keyCode, scanCode) && focused !is EditBox) {
             onClose()
             return true
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
     fun playGibberSpeak(delta: Float, text: String, gibber: DialogueGibberDTO) {

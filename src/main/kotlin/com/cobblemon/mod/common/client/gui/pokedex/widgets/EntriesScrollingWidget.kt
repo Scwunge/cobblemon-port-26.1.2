@@ -34,6 +34,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
+import net.minecraft.client.input.MouseButtonEvent
 
 class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (PokedexEntry) -> (Unit)): ScrollingWidget<PokemonScrollSlotRow>(
     width = PokedexGUIConstants.HALF_OVERLAY_WIDTH,
@@ -114,7 +115,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         val entry =  this.getEntry(index)
         entry.x = x
         entry.y = y
-        entry.render(
+        entry.extractRenderState(
             context, index, y, x, entryWidth, entryHeight, mouseX, mouseY,
             focused == entry, delta
         )
@@ -136,7 +137,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         var x: Int = 0
         var y: Int = 0
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
@@ -187,7 +188,10 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
             }
         }
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val button = event.button()
             val hoverIndex = getHoveredSlotIndex(mouseX.toInt(), mouseY.toInt())
             if (hoverIndex > -1 && hoverIndex < dexDataList.size) {
                 setPokedexEntry.invoke(dexDataList[hoverIndex])

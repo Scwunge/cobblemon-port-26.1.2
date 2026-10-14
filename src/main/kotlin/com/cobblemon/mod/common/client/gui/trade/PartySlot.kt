@@ -25,6 +25,11 @@ import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 open class PartySlot(
     x: Int, y: Int,
@@ -47,7 +52,7 @@ open class PartySlot(
     override fun playDownSound(soundManager: SoundManager) {
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         if (!isOpposing && isHovered(mouseX, mouseY)) {
             blitk(

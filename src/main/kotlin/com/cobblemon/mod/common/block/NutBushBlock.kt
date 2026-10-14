@@ -18,7 +18,6 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.util.RandomSource
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
-import net.minecraft.world.ItemInteractionResult
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -84,9 +83,9 @@ class NutBushBlock(properties: Properties) : VegetationBlock(properties), Boneme
         player: Player,
         hand: InteractionHand,
         hitResult: BlockHitResult
-    ): ItemInteractionResult {
+    ): InteractionResult {
         return if (isValidBonemealTarget(level, pos, state) && stack.`is`(Items.BONE_MEAL))
-            ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION
+            InteractionResult.PASS
         else super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }
 
@@ -105,7 +104,7 @@ class NutBushBlock(properties: Properties) : VegetationBlock(properties), Boneme
             val blockstate = state.setValue(AGE, 1)
             level.setBlock(pos, blockstate, UPDATE_CLIENTS)
             level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, blockstate))
-            return InteractionResult.sidedSuccess(level.isClientSide)
+            return InteractionResult.SUCCESS
         } else {
             return super.useWithoutItem(state, level, pos, player, hitResult)
         }

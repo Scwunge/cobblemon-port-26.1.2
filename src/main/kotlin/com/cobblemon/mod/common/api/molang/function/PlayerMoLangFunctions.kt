@@ -94,7 +94,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                     is StringValue -> {
                         val id = Identifier.parse(value.value)
                         val item =
-                            player.registryAccess().registryOrThrow(Registries.ITEM).get(id)
+                            player.registryAccess().lookupOrThrow(Registries.ITEM).get(id)
                                 ?: return@setInvSlot DoubleValue.ZERO
                         ItemStack(item)
                     }
@@ -124,7 +124,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                     is StringValue -> {
                         val id = Identifier.parse(value.value)
                         val item =
-                            player.registryAccess().registryOrThrow(Registries.ITEM).get(id)
+                            player.registryAccess().lookupOrThrow(Registries.ITEM).get(id)
                                 ?: return@giveItem DoubleValue.ZERO
                         ItemStack(item)
                     }

@@ -35,6 +35,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class PasturePokemonScrollList(
     val listX: Int,
@@ -85,7 +91,7 @@ class PasturePokemonScrollList(
     public override fun removeEntry(entry: PastureSlot) = super.removeEntry(entry)
     override fun renderSelection(context: GuiGraphicsExtractor, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
 
         context.pose().pushPose()
@@ -99,7 +105,7 @@ class PasturePokemonScrollList(
 
 
         context.pose().popPose()
-        super.renderWidget(context, mouseX, mouseY, partialTicks)
+        super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
 
         context.disableScissor()
 
@@ -125,16 +131,24 @@ class PasturePokemonScrollList(
         )
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         updateScrollingState(mouseX, mouseY)
         if (scrolling) {
             focused = getEntryAtPosition(mouseX, mouseY)
             isDragging = true
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (scrolling && scrollbarVisible() && mouseX >= scrollbarPosition) {
             if (mouseY < this.listY) {
                 scrollAmount = 0.0
@@ -144,7 +158,7 @@ class PasturePokemonScrollList(
                 scrollAmount += deltaY
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
@@ -196,7 +210,7 @@ class PasturePokemonScrollList(
 
         override fun getNarration() = pokemon.displayName
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
@@ -281,15 +295,18 @@ class PasturePokemonScrollList(
             if (canUnpasture()) {
                 if (canDefend() == true) {
                     conflictButton.setPos(x + 44, y + 3)
-                    conflictButton.render(context, mouseX, mouseY, partialTicks)
+                    conflictButton.extractRenderState(context, mouseX, mouseY, partialTicks)
                 }
 
                 moveButton.setPos(x + 2, y + 11)
-                moveButton.render(context, mouseX, mouseY, partialTicks)
+                moveButton.extractRenderState(context, mouseX, mouseY, partialTicks)
             }
         }
 
-        override fun mouseClicked(mouseX: Double, mouseY: Double, delta: Int): Boolean {
+        override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+            val mouseX = event.x()
+            val mouseY = event.y()
+            val delta = event.button()
             if (canUnpasture()) {
                 if (canDefend() == true && conflictButton.isHovered(mouseX, mouseY)) {
                     conflictButton.onPress()

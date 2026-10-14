@@ -26,6 +26,11 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import org.joml.Quaternionf
 import org.joml.Vector3f
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class TMPartySlotWidget(
         pX: Number,
@@ -74,7 +79,7 @@ class TMPartySlotWidget(
         else -> null
     }
 
-    override fun renderWidget(context: net.minecraft.client.gui.GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: net.minecraft.client.gui.GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         state.currentAspects = pokemon?.aspects ?: emptySet()
         val matrices = context.pose()
 

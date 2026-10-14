@@ -37,7 +37,7 @@ class SummaryTab(
 
     private var isActive = false
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val matrices = context.pose()
         if (isActive) {
             blitk(
@@ -63,7 +63,7 @@ class SummaryTab(
         }
 
         if (label !== null && isMouseOver(pMouseX.toDouble(), pMouseY.toDouble())) {
-            context.renderTooltip(Minecraft.getInstance().font, label, pMouseX, pMouseY)
+            context.setTooltipForNextFrame(Minecraft.getInstance().font, label, pMouseX, pMouseY)
         }
     }
 

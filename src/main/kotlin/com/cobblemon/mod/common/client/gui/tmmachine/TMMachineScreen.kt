@@ -64,6 +64,15 @@ import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import kotlin.math.ceil
+import net.minecraft.client.input.MouseButtonEvent
+import net.minecraft.client.input.KeyEvent
+import org.joml.Matrix3x2fStack
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
+import com.cobblemon.mod.common.client.render.gui.hasShiftDown
 
 class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, title: Component) : AbstractContainerScreen<TMMachineMenu>(containerMenu, inventory, title) {
     companion object {
@@ -535,7 +544,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         }
     }
 
-    fun renderDiscTypeOverlay(poseStack: PoseStack, isDiscRotating: Boolean, alpha: Float = 1F) {
+    fun renderDiscTypeOverlay(poseStack: Matrix3x2fStack, isDiscRotating: Boolean, alpha: Float = 1F) {
         menu.currentlySelectedTM?.let {
             val primaryRgb = it.moveName.elementalType.primaryColor.toRGB()
             val secondaryRgb = it.moveName.elementalType.secondaryColor.toRGB()
@@ -620,7 +629,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         }
     }
 
-    fun renderDisc(poseStack: PoseStack, isDiscRotating: Boolean, baseAlpha: Float = 1F, overlayAlpha: Float = 1F) {
+    fun renderDisc(poseStack: Matrix3x2fStack, isDiscRotating: Boolean, baseAlpha: Float = 1F, overlayAlpha: Float = 1F) {
         blitk(
             matrixStack = poseStack,
             texture = discBase,
@@ -794,7 +803,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
                     mouseX >= itemX && mouseX < itemX + 16 &&
                     mouseY >= itemY && mouseY < itemY + 16
                 ) {
-                    context.renderTooltip(Minecraft.getInstance().font, itemStack, mouseX, mouseY)
+                    context.setTooltipForNextFrame(Minecraft.getInstance().font, itemStack, mouseX, mouseY)
                 }
             }
         }
@@ -1111,10 +1120,13 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         super.mouseMoved(mouseX, mouseY)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         ticksElapsed = 0
         if (resetScreenSaver()) return false
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
     override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ContainerInput) {
@@ -1129,7 +1141,10 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY)
     }
 
-    override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
+    override fun keyPressed(event: KeyEvent): Boolean  {
+        val keyCode = event.key()
+        val scanCode = event.scancode()
+        val modifiers = event.modifiers()
         ticksElapsed = 0
         if (resetScreenSaver()) return false
         val searchFocused = this::moveSearchWidget.isInitialized && moveSearchWidget.isFocused
@@ -1153,14 +1168,14 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
             }
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers)
+        return super.keyPressed(event)
     }
 
-    override fun renderBackground(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {}
+    override fun extractBackground(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {}
 
     override fun renderBg(guiGraphics: GuiGraphicsExtractor, partialTick: Float, mouseX: Int, mouseY: Int) {}
 
-    override fun render(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.renderTransparentBackground(graphics)
 
         val matrices = graphics.pose()
@@ -1225,7 +1240,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
             }
         }
 
-        super.render(graphics, mouseX, mouseY, delta)
+        super.extractRenderState(graphics, mouseX, mouseY, delta)
 
         if (mode == TM_BURN_MODE && ::selectedMoveButton.isInitialized) {
             selectedMoveButton.showOverlayBar = !selectedMoveButton.isHovered
@@ -1258,7 +1273,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
 
         renderMoveInfo(graphics, mouseX, mouseY)
 
-        this.renderTooltip(graphics, mouseX, mouseY)
+        this.setTooltipForNextFrame(graphics, mouseX, mouseY)
 
         renderHeldMoveInfoTooltip(graphics, mouseX, mouseY)
     }
@@ -1340,7 +1355,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         }
 
         class TextSlot(val text: String) : Slot<TextSlot>() {
-            override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
                 drawScaledText(
                     context = context,
                     text = text.text(),

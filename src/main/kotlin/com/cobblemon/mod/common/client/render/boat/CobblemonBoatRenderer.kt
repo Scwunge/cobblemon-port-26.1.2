@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.boat
 
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
+import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.model.object.boat.BoatModel
@@ -58,7 +59,7 @@ class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val has
         val vertexConsumer = vertexConsumers.getBuffer(entityModel.renderType(identifier))
         entityModel.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
         if (!entity.isUnderWater) {
-            val vertexConsumer2 = vertexConsumers.getBuffer(RenderType.waterMask())
+            val vertexConsumer2 = vertexConsumers.getBuffer(RenderTypes.waterMask())
             entityModel.waterPatch().render(matrices, vertexConsumer2, light, OverlayTexture.NO_OVERLAY)
         }
         matrices.popPose()

@@ -40,7 +40,7 @@ object StashHandler {
     }
 
     fun handleItem(pokemon: Pokemon, item: Item): Boolean {
-        val itemIdentifier: Identifier = item.builtInRegistryHolder().key().location()
+        val itemIdentifier: Identifier = item.builtInRegistryHolder().key().identifier()
         val speciesFeatureProviders = SpeciesFeatures.getFeaturesFor(pokemon.species)
         val relevantSpeciesFeatureProviders: List<IntSpeciesFeatureProvider> = speciesFeatureProviders.filter {
             it is IntSpeciesFeatureProvider && it.itemPoints.keys.contains(itemIdentifier)

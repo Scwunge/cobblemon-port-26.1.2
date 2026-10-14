@@ -26,6 +26,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Component
+import net.minecraft.client.input.MouseButtonEvent
 
 class SearchWidget(
     val posX: Number,
@@ -54,12 +55,15 @@ class SearchWidget(
         super.setFocused(focused)
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (mouseX.toInt() in x..(x + width) && mouseY.toInt() in y..(y + height)) isFocused = true
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
 
         blitk(

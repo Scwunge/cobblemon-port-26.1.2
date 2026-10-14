@@ -120,7 +120,7 @@ class PartySelectGUI(
         super.init()
     }
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val x = (width - WIDTH) / 2
         val y = (height - HEIGHT) / 2
 
@@ -154,7 +154,7 @@ class PartySelectGUI(
         )
 
         // Render all added Widgets
-        super.render(context, mouseX, mouseY, partialTicks)
+        super.extractRenderState(context, mouseX, mouseY, partialTicks)
     }
 
     private fun onPress(pokemon: PartySelectPokemonDTO) {

@@ -24,6 +24,7 @@ import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
+import net.minecraft.client.input.MouseButtonEvent
 
 /**
  * UI element for showing the lines of dialogue text.
@@ -131,7 +132,7 @@ class DialogueBox(
         return this.y + this.height - 2
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val gibber = dialogueScreen.gibber
         correctSize()
         blitk(
@@ -144,7 +145,7 @@ class DialogueBox(
             textureWidth = frameWidth + DialoguePortraitWidget.DIALOGUE_ARROW_WIDTH + SCROLL_BAR_WIDTH + SCROLL_TRACK_WIDTH
         )
         TextClipping.doWithMaxCharacters(if (gibber?.graduallyShowText == true && !dialogueScreen.gibberDone) dialogueScreen.gibberIndex else -1) {
-            super.renderWidget(context, mouseX, mouseY, partialTicks)
+            super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
         }
     }
 
@@ -158,7 +159,10 @@ class DialogueBox(
         )
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         // TODO change this coordinate check to just be "anywhere the scroll bar isn't"
         if (!dialogueScreen.waitingForServerUpdate &&
             mouseX > this.x && mouseX < this.scrollbarPosition &&
@@ -178,7 +182,7 @@ class DialogueBox(
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
     class DialogueLine(val line: FormattedCharSequence, val lineColor: Int) : Entry<DialogueLine>() {
@@ -197,7 +201,7 @@ class DialogueBox(
             tickDelta: Float
         ) {}
 
-        override fun render(
+        override fun extractRenderState(
             context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,

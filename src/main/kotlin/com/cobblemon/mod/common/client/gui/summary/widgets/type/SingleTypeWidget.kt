@@ -13,6 +13,11 @@ import com.cobblemon.mod.common.api.types.ElementalType
 import com.cobblemon.mod.common.client.render.drawScaledText
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 class SingleTypeWidget(
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
@@ -20,7 +25,7 @@ class SingleTypeWidget(
     private val renderText: Boolean = true
 ) : TypeWidget(pX, pY, pWidth, pHeight, Component.literal("SingleTypeWidget - ${type.name}")) {
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val matrices = context.pose()
         matrices.pushPose()
         matrices.translate(0.35, 0.0, 0.0)

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.client.input.MouseButtonEvent
 
 class MoveDescriptionScrollList(
     private val listX: Int,
@@ -38,7 +39,7 @@ class MoveDescriptionScrollList(
         return x + width - 3
     }
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, f: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, f: Float) {
         isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
         context.enableScissor(
             x,
@@ -46,18 +47,26 @@ class MoveDescriptionScrollList(
             x + width,
             y + height
         )
-        super.renderWidget(context, pMouseX, pMouseY, f)
+        super.extractWidgetRenderState(context, pMouseX, pMouseY, f)
         context.disableScissor()
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         updateScrollingState(mouseX, mouseY)
         if (scrolling) isDragging = true
 
         return isDragging
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (scrolling) {
             if (mouseY < y) {
                 scrollAmount = 0.0
@@ -67,7 +76,7 @@ class MoveDescriptionScrollList(
                 scrollAmount += deltaY
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}

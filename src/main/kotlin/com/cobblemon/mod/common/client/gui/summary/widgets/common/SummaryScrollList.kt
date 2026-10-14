@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.client.input.MouseButtonEvent
 
 abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
     val listX: Int,
@@ -58,7 +59,7 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
 
     override fun renderListBackground(context: GuiGraphicsExtractor) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
         correctSize()
 
@@ -76,7 +77,7 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
             x + width,
             y + height
         )
-        super.renderWidget(context, mouseX, mouseY, partialTicks)
+        super.extractWidgetRenderState(context, mouseX, mouseY, partialTicks)
         context.disableScissor()
 
         // Scroll Overlay
@@ -103,16 +104,24 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
 
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         updateScrollingState(mouseX, mouseY)
         if (scrolling) {
             focused = getEntryAtPosition(mouseX, mouseY)
             isDragging = true
         }
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
-    override fun mouseDragged(mouseX: Double, mouseY: Double, button: Int, deltaX: Double, deltaY: Double): Boolean {
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        val deltaX = dragX
+        val deltaY = dragY
         if (scrolling) {
             if (mouseY < listY) {
                 setScrollAmount(0.0)
@@ -122,7 +131,7 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
                 setScrollAmount(scrollAmount + deltaY)
             }
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+        return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {

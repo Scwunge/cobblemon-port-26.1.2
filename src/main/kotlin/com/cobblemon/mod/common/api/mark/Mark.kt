@@ -40,8 +40,8 @@ class Mark(
                 buffer.readString(),
                 buffer.readNullable { buffer.readString() },
                 buffer.readNullable { buffer.readString() },
-                buffer.readResourceLocation(),
-                buffer.readNullable { buffer.readList { buffer.readResourceLocation() } },
+                buffer.readIdentifier(),
+                buffer.readNullable { buffer.readList { buffer.readIdentifier() } },
                 buffer.readNullable { buffer.readString() },
                 buffer.readFloat(),
                 buffer.readNullable { buffer.readInt() },
@@ -82,8 +82,8 @@ class Mark(
         buffer.writeString(description)
         buffer.writeNullable(title) { _, v -> buffer.writeString(v) }
         buffer.writeNullable(titleColour) { _, v -> buffer.writeString(v) }
-        buffer.writeResourceLocation(texture)
-        buffer.writeNullable(replace) { _, v -> buffer.writeCollection(v) { _, resource -> buffer.writeResourceLocation(resource) } }
+        buffer.writeIdentifier(texture)
+        buffer.writeNullable(replace) { _, v -> buffer.writeCollection(v) { _, resource -> buffer.writeIdentifier(resource) } }
         buffer.writeNullable(group) { _, v -> buffer.writeString(v) }
         buffer.writeFloat(chance)
         buffer.writeNullable(indexNumber) { _, v -> buffer.writeInt(v) }

@@ -18,6 +18,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
+import net.minecraft.client.input.MouseButtonEvent
 
 class StartButton(
     var buttonX: Float,
@@ -41,10 +42,17 @@ class StartButton(
     var processing = false
     var shouldRepeat = false
 
-    override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double) = false
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
+        val d = event.x()
+        val e = event.y()
+        val i = event.button()
+        val f = dragX
+        val g = dragY
+        return false
+    }
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val resource = if (disabled) baseDisabled
             else (if (processing) baseStop else base)
 
@@ -69,16 +77,22 @@ class StartButton(
         )
     }
 
-    /*override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    /*override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+    val mouseX = event.x()
+    val mouseY = event.y()
+    val button = event.button()
         if (active && visible && !disabled && isMouseOver(mouseX, mouseY)) {
-            super.mouseClicked(mouseX, mouseY, button)
+            super.mouseClicked(event, doubleClick)
         }
         return false
     }*/
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
         if (!active || !visible || disabled) return false
-        return super.mouseClicked(mouseX, mouseY, button)
+        return super.mouseClicked(event, doubleClick)
     }
 
     override fun playDownSound(soundManager: SoundManager) {

@@ -56,12 +56,12 @@ object WorldMoLangFunctions : AbstractMoLangFunctionHolder<Holder<Level>>() {
             val timeOfDay =
                 TimeRange.timeRanges[params.getString(0).lowercase()]
                     ?: return@isTimeOfDay DoubleValue.ZERO
-            val time = world.dayTime % 24000
+            val time = world.overworldClockTime % 24000
 
             DoubleValue(timeOfDay.contains(time.toInt()))
         }
         functions["game_time"] = { DoubleValue(world.gameTime.toDouble()) }
-        functions["time_of_day"] = { DoubleValue((world.dayTime % 24000).toDouble()) }
+        functions["time_of_day"] = { DoubleValue((world.overworldClockTime % 24000).toDouble()) }
         functions["server"] = { server()?.asMoLangValue() ?: DoubleValue.ZERO }
         functions["is_raining_at"] = { params ->
             val x = params.getInt(0)
@@ -186,7 +186,7 @@ object WorldMoLangFunctions : AbstractMoLangFunctionHolder<Holder<Level>>() {
             if (!Level.isInSpawnableBounds(pos)) return@spawnPokemon DoubleValue.ZERO
 
             val pokemon = props.createEntity(world)
-            pokemon.moveTo(pos, pokemon.yRot, pokemon.xRot)
+            pokemon.snapTo(pos, pokemon.yRot, pokemon.xRot)
 
             if (world.addFreshEntity(pokemon)) return@spawnPokemon pokemon.struct
 
@@ -205,7 +205,7 @@ object WorldMoLangFunctions : AbstractMoLangFunctionHolder<Holder<Level>>() {
             if (npcClass == null) return@spawnNpc DoubleValue.ZERO
 
             val npc = NPCEntity(world)
-            npc.moveTo(x, y, z, npc.yRot, npc.xRot)
+            npc.snapTo(x, y, z, npc.yRot, npc.xRot)
             npc.npc = npcClass
             npc.initialize(level)
 

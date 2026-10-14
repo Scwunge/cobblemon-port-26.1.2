@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.spawning.position
 
+import com.cobblemon.mod.common.util.moonPhase
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMoLangValue
@@ -91,10 +92,10 @@ abstract class SpawnablePosition {
     /** A list of markers that can be used to identify this spawnable position for arbitrary conditions. */
     val markers = mutableSetOf<String>()
 
-    val biomeRegistry: Registry<Biome> by lazy { world.registryAccess().registryOrThrow(Registries.BIOME) }
-    val blockRegistry: Registry<Block> by lazy { world.registryAccess().registryOrThrow(Registries.BLOCK) }
-    val fluidRegistry: Registry<Fluid> by lazy { world.registryAccess().registryOrThrow(Registries.FLUID) }
-    val enchantmentRegistry: Registry<Enchantment> by lazy { world.registryAccess().registryOrThrow(Registries.ENCHANTMENT) }
+    val biomeRegistry: Registry<Biome> by lazy { world.registryAccess().lookupOrThrow(Registries.BIOME) }
+    val blockRegistry: Registry<Block> by lazy { world.registryAccess().lookupOrThrow(Registries.BLOCK) }
+    val fluidRegistry: Registry<Fluid> by lazy { world.registryAccess().lookupOrThrow(Registries.FLUID) }
+    val enchantmentRegistry: Registry<Enchantment> by lazy { world.registryAccess().lookupOrThrow(Registries.ENCHANTMENT) }
 
     val biomeName: Identifier
         get() = this.biomeRegistry.getKey(biome)!!
@@ -112,7 +113,7 @@ abstract class SpawnablePosition {
         val structures = mutableSetOf<Holder<Structure>>()
 
         fun loadStructures(structureAccess: StructureManager, pos: BlockPos) {
-            val registry = structureAccess.registryAccess().registryOrThrow(Registries.STRUCTURE)
+            val registry = structureAccess.registryAccess().lookupOrThrow(Registries.STRUCTURE)
             structureAccess.startsForStructure(ChunkPos(pos)) { structure ->
                 val entry = registry.wrapAsHolder(structure)
                 structures.add(entry)

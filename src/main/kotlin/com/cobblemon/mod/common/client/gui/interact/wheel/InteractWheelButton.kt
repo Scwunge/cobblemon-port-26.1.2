@@ -20,6 +20,7 @@ import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import org.joml.Vector3f
+import net.minecraft.client.input.MouseButtonEvent
 
 class InteractWheelButton(
     private val iconResource: Identifier?,
@@ -63,7 +64,7 @@ class InteractWheelButton(
     private var passedTicks = 0F
     private val blinkInterval = 35
 
-    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         passedTicks += delta
 
@@ -81,7 +82,7 @@ class InteractWheelButton(
 
         if(isEnabled && isHovered(mouseX.toFloat(), mouseY.toFloat())){
             tooltipText?.let {
-                context.renderTooltip(Minecraft.getInstance().font, Component.translatable(it), mouseX, mouseY)
+                context.setTooltipForNextFrame(Minecraft.getInstance().font, Component.translatable(it), mouseX, mouseY)
             }
         }
 
@@ -161,8 +162,11 @@ class InteractWheelButton(
         return canHover(mouseX.toDouble(), mouseY.toDouble()) && mouseX in xMin..xMax && mouseY in yMin..yMax
     }
 
-    override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-        return if (isHovered(mouseX.toFloat(), mouseY.toFloat())) super.mouseClicked(mouseX, mouseY, button) else false
+    override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
+        val mouseX = event.x()
+        val mouseY = event.y()
+        val button = event.button()
+        return if (isHovered(mouseX.toFloat(), mouseY.toFloat())) super.mouseClicked(event, doubleClick) else false
     }
 
     override fun getTooltip(): Tooltip? {

@@ -98,7 +98,7 @@ object BucketPrecalculation : SpawningPrecalculation<String> {
  */
 object BiomePrecalculation : SpawningPrecalculation<Identifier> {
     override fun select(detail: SpawnDetail) = detail.validBiomes
-    override fun select(bucket: String, spawnablePosition: SpawnablePosition) = spawnablePosition.biomeHolder.unwrapKey().map { it.location() }.orElse(null)
+    override fun select(bucket: String, spawnablePosition: SpawnablePosition) = spawnablePosition.biomeHolder.unwrapKey().map { it.identifier() }.orElse(null)
 }
 
 /**

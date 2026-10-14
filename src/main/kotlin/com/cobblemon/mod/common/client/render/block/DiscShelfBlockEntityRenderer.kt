@@ -9,6 +9,8 @@
 package com.cobblemon.mod.common.client.render.block
 
 import com.cobblemon.mod.common.CobblemonItemComponents
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.block.entity.DiscShelfBlockEntity
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.util.cobblemonResource
@@ -24,7 +26,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.resources.Identifier
-import net.minecraft.util.FastColor
 import net.minecraft.world.item.ItemStack
 import net.minecraft.client.renderer.block.BlockAndTintGetter
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
@@ -144,15 +145,15 @@ class DiscShelfBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) :
             tint: Boolean,
             useTextRenderType: Boolean
     ) {
-        val renderType = if (useTextRenderType) RenderType.text(texture) else RenderType.entityCutout(texture)
+        val renderType = if (useTextRenderType) RenderTypes.text(texture) else RenderTypes.entityCutoutCull(texture)
         val consumer: VertexConsumer = buffer.getBuffer(renderType)
         val matrix: Matrix4f = poseStack.last().pose()
 
         val (rBase, gBase, bBase, a) = if (tint) {
             listOf(
-                    FastColor.ARGB32.red(color) / 255f,
-                    FastColor.ARGB32.green(color) / 255f,
-                    FastColor.ARGB32.blue(color) / 255f,
+                    ARGB.red(color) / 255f,
+                    ARGB.green(color) / 255f,
+                    ARGB.blue(color) / 255f,
                     1.0f
             )
         } else listOf(1f, 1f, 1f, 1f)

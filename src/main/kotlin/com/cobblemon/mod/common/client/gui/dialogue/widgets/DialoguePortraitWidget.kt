@@ -16,6 +16,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
 import kotlin.math.ceil
+import com.cobblemon.mod.common.client.render.gui.pushPose
+import com.cobblemon.mod.common.client.render.gui.popPose
+import com.cobblemon.mod.common.client.render.gui.translate
+import com.cobblemon.mod.common.client.render.gui.scale
+import com.cobblemon.mod.common.client.render.gui.mulPose
 
 class DialoguePortraitWidget(
     val dialogueScreen: DialogueScreen,
@@ -33,7 +38,7 @@ class DialoguePortraitWidget(
     }
     override fun setFocused(focused: Boolean) {}
     override fun isFocused() = false
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val face = dialogueScreen.dialogueDTO.currentPageDTO.speaker?.let { dialogueScreen.speakers[it] }?.face ?: return
         val startX = if (face.isLeftSide) (x + 1) else (x + DialogueScreen.BOX_WIDTH + DialogueScreen.PORTRAIT_WIDTH - 1)
         blitk(

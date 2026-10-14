@@ -33,7 +33,7 @@ class DialogueTimerWidget(
 
     var ratio = 1F
 
-    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!dialogueScreen.renderInput()) {
             return
         }

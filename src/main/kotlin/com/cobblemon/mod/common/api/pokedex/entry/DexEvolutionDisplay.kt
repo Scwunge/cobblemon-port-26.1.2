@@ -94,7 +94,7 @@ fun getToolTipHeaderIcon(tradeEvolution: TradeEvolution): CobblemonDexEvolutionR
 
 fun resolveRequirementData(requirement: Requirement): DexEvolutionRequirementDisplay? {
     val icon = requirement.pokedexIcon?.let {
-        RegistryAccessResolver.getAccess().registryOrThrow(Registries.ITEM).get(it)
+        RegistryAccessResolver.getAccess().lookupOrThrow(Registries.ITEM).get(it)
     }
 
     val tooltip = requirement.pokedexTooltip?.let {

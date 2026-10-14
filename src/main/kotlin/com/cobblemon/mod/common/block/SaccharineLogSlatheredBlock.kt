@@ -18,7 +18,7 @@ import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.ItemInteractionResult
+import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -70,7 +70,7 @@ class SaccharineLogSlatheredBlock(properties: Properties) : HorizontalDirectiona
 
     override fun codec() = CODEC
 
-    override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): ItemInteractionResult {
+    override fun useItemOn(stack: ItemStack, state: BlockState, level: Level, pos: BlockPos, player: Player, hand: InteractionHand, hitResult: BlockHitResult): InteractionResult {
         val itemStack = player.getItemInHand(hand)
         val waterBottle = PotionContents.createItemStack(Items.POTION, Potions.WATER).item
         val blockFace = hitResult.direction
@@ -85,7 +85,7 @@ class SaccharineLogSlatheredBlock(properties: Properties) : HorizontalDirectiona
             }
 
             spawnParticlesAtBlockFace(ParticleTypes.SPLASH, level, pos, blockFace, 40)
-            return ItemInteractionResult.SUCCESS
+            return InteractionResult.SUCCESS
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult)
     }

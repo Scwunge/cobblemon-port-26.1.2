@@ -21,6 +21,7 @@ import net.minecraft.client.gui.components.Button
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.resources.Identifier
+import org.joml.Matrix3x2fStack
 
 open class PokeNavImageButton(
     val posX: Int, val posY: Int,
@@ -34,7 +35,7 @@ open class PokeNavImageButton(
     // TODO: Make lang key per button
 ): Button(pX, pY, pWidth, pHeight, "cobblemon.ui.pokenav.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION), CobblemonRenderable {
 
-    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         // Render Button Image
         this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         // Draw Text
@@ -63,7 +64,7 @@ open class PokeNavImageButton(
         }
     }
 
-    protected open fun applyBlitk(pPoseStack: PoseStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    protected open fun applyBlitk(pPoseStack: Matrix3x2fStack, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         blitk(
             matrixStack = pPoseStack,
             texture = resourceLocation,

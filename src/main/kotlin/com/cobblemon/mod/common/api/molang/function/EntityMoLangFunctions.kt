@@ -111,7 +111,7 @@ object EntityMoLangFunctions : AbstractMoLangFunctionHolder<Entity>() {
                     entity
                         .level()
                         .registryAccess()
-                        .registryOrThrow(Registries.DAMAGE_TYPE)
+                        .lookupOrThrow(Registries.DAMAGE_TYPE)
                         .getHolder(DamageTypes.GENERIC)
                         .get(),
                 )

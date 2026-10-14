@@ -53,7 +53,7 @@ class OpenPCPacket : NetworkPacket<OpenPCPacket> {
     override fun encode(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUUID(storeID)
         buffer.writeNullable(box) { buf, value -> buf.writeInt(value)}
-        buffer.writeCollection(unseenWallpapers) { _, it -> buffer.writeResourceLocation(it) }
+        buffer.writeCollection(unseenWallpapers) { _, it -> buffer.writeIdentifier(it) }
         buffer.writeBoolean(silent)
     }
 
@@ -62,7 +62,7 @@ class OpenPCPacket : NetworkPacket<OpenPCPacket> {
         fun decode(buffer: RegistryFriendlyByteBuf) = OpenPCPacket(
             buffer.readUUID(),
             buffer.readNullable { it.readInt() },
-            buffer.readList { buffer.readResourceLocation() }.toSet(),
+            buffer.readList { buffer.readIdentifier() }.toSet(),
             buffer.readBoolean()
         )
     }

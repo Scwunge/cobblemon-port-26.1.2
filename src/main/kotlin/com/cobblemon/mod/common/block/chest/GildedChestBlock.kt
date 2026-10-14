@@ -160,7 +160,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         entity.entityData.set(PokemonEntity.SPAWN_DIRECTION, yaw)
         val offsetDir = state.getValue(HorizontalDirectionalBlock.FACING)
         val vec = pos.toVec3d().add(offsetDir.stepX * 0.1 + 0.5, 0.0, offsetDir.stepZ * 0.1 + 0.5)
-        entity.moveTo(vec.x, vec.y, vec.z, yaw, entity.xRot)
+        entity.snapTo(vec.x, vec.y, vec.z, yaw, entity.xRot)
         world.addFreshEntity(entity)
 
         world.removeBlock(pos, false)
