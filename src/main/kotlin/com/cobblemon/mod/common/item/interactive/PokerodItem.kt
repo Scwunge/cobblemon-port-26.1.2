@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.enchantmentRegistry
 import com.cobblemon.mod.common.util.playSoundServer
 import com.cobblemon.mod.common.util.toEquipmentSlot
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
@@ -43,7 +43,7 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.gameevent.GameEvent
 import net.minecraft.world.phys.Vec3
 
-class PokerodItem(val pokeRodId: ResourceLocation, settings: Properties) : FishingRodItem(settings) {
+class PokerodItem(val pokeRodId: Identifier, settings: Properties) : FishingRodItem(settings) {
 
     companion object {
         fun getBaitStackOnRod(stack: ItemStack): ItemStack {

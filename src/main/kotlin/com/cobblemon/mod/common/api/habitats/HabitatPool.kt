@@ -18,7 +18,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 /**
  * A pool of [HabitatSpawn]s. This is filled with [HabitatSpawn]s. The pool is responsible for converting
@@ -30,7 +30,7 @@ import net.minecraft.resources.ResourceLocation
 class HabitatPool {
     companion object {
         fun default() = HabitatPool().apply {
-            id = ResourceLocation("cobblemon", "custom__default_pool")
+            id = Identifier("cobblemon", "custom__default_pool")
             name = "Custom"
         }
 
@@ -74,7 +74,7 @@ class HabitatPool {
         }
     }
 
-    lateinit var id: ResourceLocation
+    lateinit var id: Identifier
     var name: String = ""
     var spawns: List<HabitatSpawn> = listOf()
 

@@ -41,7 +41,7 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.toAssetPath
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Renderable
 import net.minecraft.client.gui.components.events.GuiEventListener
@@ -488,9 +488,9 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         }
     }
 
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         schedulingTracker.update(delta / 20F)
 
         val x = (width - BASE_WIDTH) / 2

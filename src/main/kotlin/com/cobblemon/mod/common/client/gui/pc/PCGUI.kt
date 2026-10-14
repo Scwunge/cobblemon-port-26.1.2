@@ -43,20 +43,20 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.toAssetPath
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.sounds.SoundEvent
 import kotlin.isInitialized
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class PCGUI(
     val pc: ClientPC,
     val party: ClientParty,
     val configuration: PCGUIConfiguration,
     val openOnBox: Int = CobblemonClient.lastPcBoxViewed,
-    val unseenWallpapers: MutableSet<ResourceLocation> = mutableSetOf(),
+    val unseenWallpapers: MutableSet<Identifier> = mutableSetOf(),
     val silent: Boolean = false
 ) : Screen(Component.translatable("cobblemon.ui.pc.title")), CobblemonRenderable {
 
@@ -131,7 +131,7 @@ class PCGUI(
 
     override fun renderBlurredBackground(delta: Float) {}
 
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun init() {
         val x = (width - BASE_WIDTH) / 2
@@ -315,7 +315,7 @@ class PCGUI(
         super.init()
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         renderBackground(context, mouseX, mouseY, delta)
 

@@ -17,7 +17,7 @@ import com.cobblemon.mod.common.util.Merger
 import com.cobblemon.mod.common.util.math.orMax
 import com.cobblemon.mod.common.util.math.orMin
 import com.mojang.datafixers.util.Either
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.levelgen.WorldgenRandom
@@ -39,7 +39,7 @@ abstract class SpawningCondition<T : SpawnablePosition> {
         }
     }
 
-    var dimensions: MutableList<ResourceLocation>? = null
+    var dimensions: MutableList<Identifier>? = null
     /** This gets checked in a precalculation but still needs to be checked for things like rarity multipliers. */
     var biomes: MutableSet<RegistryLikeCondition<Biome>>? = null
     var moonPhase: MoonPhaseRange? = null
@@ -57,7 +57,7 @@ abstract class SpawningCondition<T : SpawnablePosition> {
     var isRaining: Boolean? = null
     var isThundering: Boolean? = null
     var timeRange: TimeRange? = null
-    var structures: MutableList<Either<ResourceLocation, TagKey<Structure>>>? = null
+    var structures: MutableList<Either<Identifier, TagKey<Structure>>>? = null
     var isSlimeChunk: Boolean? = null
     var markers: MutableList<String>? = null
     var isPokeSnack: Boolean? = null

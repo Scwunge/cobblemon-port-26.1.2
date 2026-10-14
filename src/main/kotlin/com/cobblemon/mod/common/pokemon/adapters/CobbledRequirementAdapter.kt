@@ -20,9 +20,9 @@ import com.cobblemon.mod.common.util.readString
 import com.cobblemon.mod.common.util.writeString
 import com.google.common.collect.HashBiMap
 import com.google.gson.*
-import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.LowerCaseEnumTypeAdapterFactory
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
@@ -75,7 +75,7 @@ object CobblemonRequirementAdapter : RequirementAdapter {
 
     val gson: Gson by lazy {
         GsonBuilder()
-            .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+            .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
             .registerTypeAdapter(PokemonProperties::class.java, pokemonPropertiesShortAdapter)
             .registerTypeAdapter(ItemPredicate::class.java, LegacyItemConditionWrapperAdapter())
             .registerTypeAdapter(Requirement::class.java, CobblemonRequirementAdapter)
@@ -98,7 +98,7 @@ object CobblemonRequirementAdapter : RequirementAdapter {
         val requirement = context.deserialize<Requirement>(json, type.java)
 
         obj.get(POKEDEX_ICON)?.takeIf { !it.isJsonNull }
-            ?.let { context.deserialize<ResourceLocation>(it, ResourceLocation::class.java) }
+            ?.let { context.deserialize<Identifier>(it, Identifier::class.java) }
             ?.let { Requirement.pokedexIconOverrides[requirement] = it }
         obj.get(POKEDEX_TOOLTIP)?.takeIf { !it.isJsonNull }?.asString
             ?.let { Requirement.pokedexTooltipOverrides[requirement] = it }
@@ -110,7 +110,7 @@ object CobblemonRequirementAdapter : RequirementAdapter {
         val json = context.serialize(requirement, requirement::class.java).asJsonObject
         val variant = getVariant(requirement)
         json.addProperty(VARIANT, variant)
-        Requirement.pokedexIconOverrides[requirement]?.let { json.add(POKEDEX_ICON, context.serialize(it, ResourceLocation::class.java)) }
+        Requirement.pokedexIconOverrides[requirement]?.let { json.add(POKEDEX_ICON, context.serialize(it, Identifier::class.java)) }
         Requirement.pokedexTooltipOverrides[requirement]?.let { json.addProperty(POKEDEX_TOOLTIP, it) }
         return json
     }

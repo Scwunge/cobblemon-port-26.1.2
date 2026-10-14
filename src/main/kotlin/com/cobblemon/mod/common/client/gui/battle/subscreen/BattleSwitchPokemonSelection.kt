@@ -33,12 +33,12 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.cobblemon.mod.common.util.toAssetPath
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -104,7 +104,7 @@ class BattleSwitchPokemonSelection(
         return Pair(slotX, slotY)
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (opacity <= 0.05F) return
 
         val matrixStack = context.pose()
@@ -192,7 +192,7 @@ class BattleSwitchPokemonSelection(
 
         fun isHovered(mouseX: Double, mouseY: Double) = mouseX in x..(x + SELECT_WIDTH) && mouseY in (y..(y + SELECT_HEIGHT))
 
-        fun render(context: GuiGraphics, mouseX: Double, mouseY: Double, deltaTicks: Float) {
+        fun render(context: GuiGraphicsExtractor, mouseX: Double, mouseY: Double, deltaTicks: Float) {
             state.currentAspects = pokemon.aspects
             val matrixStack = context.pose()
             val healthRatioSplits = showdownPokemon.condition.split(" ")[0].split("/")

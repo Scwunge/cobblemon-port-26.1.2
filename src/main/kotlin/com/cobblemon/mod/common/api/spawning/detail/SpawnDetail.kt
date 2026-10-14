@@ -26,7 +26,7 @@ import com.cobblemon.mod.common.util.asArrayValue
 import com.cobblemon.mod.common.util.asTranslated
 import com.google.gson.annotations.SerializedName
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 
 /**
@@ -71,7 +71,7 @@ abstract class SpawnDetail : ModDependant {
      * is possible. It is used as part of the [com.cobblemon.mod.common.api.spawning.condition.BiomePrecalculation].
      */
     @Transient
-    val validBiomes = mutableSetOf<ResourceLocation>()
+    val validBiomes = mutableSetOf<Identifier>()
 
     @Transient
     val struct: QueryStruct = queryStructOf(

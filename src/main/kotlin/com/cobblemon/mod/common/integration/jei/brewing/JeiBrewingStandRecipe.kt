@@ -10,12 +10,12 @@ package com.cobblemon.mod.common.integration.jei.brewing
 
 import com.cobblemon.mod.common.item.crafting.brewingstand.BrewingStandRecipe
 import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 
 class JeiBrewingStandRecipe(
     private val recipe: BrewingStandRecipe,
-    private val id: ResourceLocation
+    private val id: Identifier
 ) : IJeiBrewingRecipe {
 
     override fun getPotionInputs(): List<ItemStack> {
@@ -34,7 +34,7 @@ class JeiBrewingStandRecipe(
         return 1
     }
 
-    override fun getUid(): ResourceLocation {
+    override fun getUid(): Identifier {
         return id
     }
 }

@@ -15,7 +15,7 @@ import net.minecraft.core.HolderLookup
 import java.io.BufferedReader
 import java.io.File
 import java.util.concurrent.ExecutionException
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.packs.PackType
 import net.minecraft.server.packs.resources.ResourceManager
 
@@ -50,7 +50,7 @@ interface ServerJsonDataRegistry<T> : DataRegistry {
 
     fun reload(manager: ResourceManager, registry: HolderLookup.Provider) {
         val gson = setupParser(registry)
-        val data = hashMapOf<ResourceLocation, T>()
+        val data = hashMapOf<Identifier, T>()
         manager.listResources(resourcePath) { path -> path.endsWith(JSON_EXTENSION) }.forEach { (identifier, resource) ->
             if (identifier.namespace == "pixelmon") {
                 return@forEach
@@ -58,7 +58,7 @@ interface ServerJsonDataRegistry<T> : DataRegistry {
 
             resource.open().use { stream ->
                 stream.bufferedReader().use { reader ->
-                    val resolvedIdentifier = ResourceLocation.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
+                    val resolvedIdentifier = Identifier.fromNamespaceAndPath(identifier.namespace, File(identifier.path).nameWithoutExtension)
                     data[resolvedIdentifier] = parse(reader, resolvedIdentifier, gson)
                 }
             }
@@ -67,7 +67,7 @@ interface ServerJsonDataRegistry<T> : DataRegistry {
         reload(data, registry)
     }
 
-    fun parse(reader: BufferedReader, identifier: ResourceLocation, gson: Gson): T {
+    fun parse(reader: BufferedReader, identifier: Identifier, gson: Gson): T {
         return try {
             gson.fromJson(reader, typeToken.type)
         } catch (exception: Exception) {
@@ -85,7 +85,7 @@ interface ServerJsonDataRegistry<T> : DataRegistry {
      *
      * @param data A map of the data associating an instance to the respective identifier from the [ResourceManager].
      */
-    fun reload(data: Map<ResourceLocation, T>, registry: HolderLookup.Provider)
+    fun reload(data: Map<Identifier, T>, registry: HolderLookup.Provider)
 
     companion object {
         const val JSON_EXTENSION = ".json"

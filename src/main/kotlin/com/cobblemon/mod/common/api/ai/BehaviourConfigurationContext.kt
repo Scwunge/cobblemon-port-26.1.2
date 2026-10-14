@@ -26,7 +26,7 @@ import com.cobblemon.mod.common.util.resolve
 import com.cobblemon.mod.common.util.withQueryValue
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Dynamic
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.behavior.BehaviorControl
 import net.minecraft.world.entity.ai.memory.MemoryModuleType
@@ -37,7 +37,7 @@ import net.minecraft.world.entity.schedule.Schedule
 class BehaviourConfigurationContext {
     val runtime = MoLangRuntime().setup()
 
-    var appliedBehaviours: Set<ResourceLocation> = setOf()
+    var appliedBehaviours: Set<Identifier> = setOf()
 
     var defaultActivity = Activity.IDLE
     var coreActivities = setOf(Activity.CORE)

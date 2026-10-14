@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.client.gui.TypeIcon
 import com.cobblemon.mod.common.client.gui.tmmachine.TypesScrollingWidget.ScrollSlotRow
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
@@ -46,7 +46,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
 
     override fun getScrollbarPosition(): Int = rowLeft + width - 3
 
-    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
         val xRight = xLeft + 3
         val barHeight = this.bottom - this.y
@@ -62,7 +62,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
         context.fill(xLeft,yTop, xRight, yTop + yBottom, FastColor.ARGB32.color(255, 141, 141, 141)) // base
     }
 
-    fun renderEntry(context: GuiGraphics, mouseX: Int, mouseY: Int, index: Int, x: Int, y: Int) {
+    fun renderEntry(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, index: Int, x: Int, y: Int) {
         val entry =  this.getEntry(index)
         entry.x = x
         entry.y = y
@@ -71,7 +71,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
 
     override fun getEntry(index: Int): ScrollSlotRow = children()[index] as ScrollSlotRow
 
-    override fun renderListItems(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderListItems(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val rowX = rowLeft
 
         for (index in 0 until this.itemCount) {
@@ -102,7 +102,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
         var disabled: Boolean = false
         var disabledExclusions: Set<ElementalType?> = setOf(null)
 
-        fun renderRow(context: GuiGraphics, y: Int, x: Int, mouseX: Int, mouseY: Int) {
+        fun renderRow(context: GuiGraphicsExtractor, y: Int, x: Int, mouseX: Int, mouseY: Int) {
             types.forEachIndexed { index, type ->
                 val matrices = context.pose()
 
@@ -136,7 +136,7 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
             }
         }
 
-        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {}
+        override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {}
 
         override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
             var disable = false

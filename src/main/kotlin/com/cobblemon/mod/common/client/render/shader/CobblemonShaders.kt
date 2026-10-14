@@ -11,17 +11,17 @@ package com.cobblemon.mod.common.client.render.shader
 import com.cobblemon.mod.common.util.ShaderRegistryData
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import net.minecraft.client.renderer.ShaderInstance
+import com.mojang.blaze3d.opengl.GlProgram
 import net.minecraft.server.packs.resources.ResourceProvider
 import java.util.function.Consumer
 
 object CobblemonShaders {
-    val SHADERS_TO_REGISTER = mutableListOf<Pair<(ResourceProvider) -> ShaderRegistryData, Consumer<ShaderInstance>>>()
-    lateinit var PARTICLE_BLEND: ShaderInstance
+    val SHADERS_TO_REGISTER = mutableListOf<Pair<(ResourceProvider) -> ShaderRegistryData, Consumer<GlProgram>>>()
+    lateinit var PARTICLE_BLEND: GlProgram
     // This is Material.ALPHA. Weird internal name for "alphatest" shader.
-    lateinit var PARTICLE_CUTOUT: ShaderInstance
+    lateinit var PARTICLE_CUTOUT: GlProgram
 
-    private fun registerShader(shader: (ResourceProvider) -> ShaderRegistryData, callback: Consumer<ShaderInstance>){
+    private fun registerShader(shader: (ResourceProvider) -> ShaderRegistryData, callback: Consumer<GlProgram>){
         SHADERS_TO_REGISTER.add(Pair(shader, callback))
     }
     fun init(){

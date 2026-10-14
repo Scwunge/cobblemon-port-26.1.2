@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.client.gui.npc.widgets.ConfigVariableList.Config
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.Tooltip
@@ -68,9 +68,9 @@ class ConfigVariableList(
     public override fun addEntry(entry: ConfigVariable) = super.addEntry(entry)
     public override fun removeEntry(entry: ConfigVariable) = super.removeEntry(entry)
 
-    override fun renderListSeparators(guiGraphics: GuiGraphics) {}
+    override fun renderListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
 
         super.renderWidget(context, mouseX, mouseY, partialTicks)
@@ -105,7 +105,7 @@ class ConfigVariableList(
                 && mouseY < bottom
     }
 
-    override fun renderListBackground(context: GuiGraphics) {}
+    override fun renderListBackground(context: GuiGraphicsExtractor) {}
 
     private fun correctSize() {
         setRectangle(WIDTH, HEIGHT, listX, (listY - 4))
@@ -178,7 +178,7 @@ class ConfigVariableList(
         }
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

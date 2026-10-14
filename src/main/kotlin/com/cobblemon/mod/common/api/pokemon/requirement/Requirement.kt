@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.pokemon.requirement
 import com.cobblemon.mod.common.api.pokemon.evolution.ContextEvolution
 import com.cobblemon.mod.common.api.pokemon.evolution.Evolution
 import com.cobblemon.mod.common.pokemon.Pokemon
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import java.util.WeakHashMap
 
 /**
@@ -34,11 +34,11 @@ fun interface Requirement {
      */
     fun check(pokemon: Pokemon): Boolean
 
-    val pokedexIcon: ResourceLocation? get() = pokedexIconOverrides[this]
+    val pokedexIcon: Identifier? get() = pokedexIconOverrides[this]
     val pokedexTooltip: String? get() = pokedexTooltipOverrides[this]
 
     companion object {
-        val pokedexIconOverrides = WeakHashMap<Requirement, ResourceLocation>()
+        val pokedexIconOverrides = WeakHashMap<Requirement, Identifier>()
         val pokedexTooltipOverrides = WeakHashMap<Requirement, String>()
     }
 }

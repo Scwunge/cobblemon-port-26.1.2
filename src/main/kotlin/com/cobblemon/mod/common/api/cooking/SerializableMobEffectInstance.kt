@@ -12,12 +12,12 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 
 data class SerializableMobEffectInstance(
-        val effect: ResourceLocation,
+        val effect: Identifier,
         val duration: Int,
         val amplifier: Int = 0,
         val ambient: Boolean = false,
@@ -33,7 +33,7 @@ data class SerializableMobEffectInstance(
     companion object {
         val CODEC: Codec<SerializableMobEffectInstance> = RecordCodecBuilder.create { builder ->
             builder.group(
-                    ResourceLocation.CODEC.fieldOf("effect").forGetter { it.effect },
+                    Identifier.CODEC.fieldOf("effect").forGetter { it.effect },
                     Codec.INT.fieldOf("duration").forGetter { it.duration },
                     Codec.INT.fieldOf("amplifier").forGetter { it.amplifier },
                     Codec.BOOL.optionalFieldOf("ambient", false).forGetter { it.ambient },

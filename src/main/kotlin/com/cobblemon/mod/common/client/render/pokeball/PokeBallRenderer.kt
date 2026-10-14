@@ -16,17 +16,17 @@ import com.cobblemon.mod.common.entity.pokeball.EmptyPokeBallEntity
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class PokeBallRenderer(context: EntityRendererProvider.Context) : EntityRenderer<EmptyPokeBallEntity>(context) {
     val model = PosablePokeBallModel()
 
-    override fun getTextureLocation(pEntity: EmptyPokeBallEntity): ResourceLocation {
+    override fun getTextureLocation(pEntity: EmptyPokeBallEntity): Identifier {
         return VaryingModelRepository.getTexture(pEntity.pokeBall.name, pEntity.delegate as EmptyPokeBallClientDelegate)
     }
 

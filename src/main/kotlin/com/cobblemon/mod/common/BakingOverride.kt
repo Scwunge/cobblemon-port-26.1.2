@@ -9,21 +9,21 @@
 package com.cobblemon.mod.common
 
 import net.minecraft.client.Minecraft
-import net.minecraft.client.resources.model.BakedModel
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel
 import net.minecraft.client.resources.model.ModelResourceLocation
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 /**
  * Contains information for forcing a model to be baked
  *
  * @param modelLocation The location of the model
- * @param modelIdentifier The identifier that the BakedModel will be registered to
+ * @param modelIdentifier The identifier that the BlockStateModel will be registered to
  */
 data class BakingOverride(
-    val modelLocation: ResourceLocation,
+    val modelLocation: Identifier,
     val modelIdentifier: ModelResourceLocation
 ) {
-    fun getModel(): BakedModel {
+    fun getModel(): BlockStateModel {
         return Minecraft.getInstance().modelManager.getModel(modelIdentifier)
     }
 }

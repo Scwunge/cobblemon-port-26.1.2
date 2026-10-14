@@ -13,11 +13,11 @@ import com.cobblemon.mod.common.api.riding.behaviour.RidingBehaviourState
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class ClientboundUpdateRidingStatePacket(
     val entity: Int,
-    val behaviour: ResourceLocation,
+    val behaviour: Identifier,
     val state: RidingBehaviourState? = null,
     val data: FriendlyByteBuf? = null
 ) : NetworkPacket<ClientboundUpdateRidingStatePacket> {

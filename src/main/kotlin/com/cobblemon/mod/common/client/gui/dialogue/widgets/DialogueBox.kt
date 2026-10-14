@@ -18,10 +18,10 @@ import com.cobblemon.mod.common.net.messages.client.dialogue.dto.DialogueInputDT
 import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 
@@ -37,7 +37,7 @@ class DialogueBox(
     val listY: Int = 0,
     val frameWidth: Int,
     height: Int,
-    val background: ResourceLocation?,
+    val background: Identifier?,
     messages: MutableList<MutableComponent>,
     textColor: String?
 ): ScrollingWidget<DialogueBox.DialogueLine>(
@@ -71,7 +71,7 @@ class DialogueBox(
         if (maxPosition > (height - 2)) addEntry(DialogueLine(FormattedCharSequence.EMPTY, lineColor))
     }
 
-    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
         val yStart = y + 2
 
@@ -131,7 +131,7 @@ class DialogueBox(
         return this.y + this.height - 2
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val gibber = dialogueScreen.gibber
         correctSize()
         blitk(
@@ -148,7 +148,7 @@ class DialogueBox(
         }
     }
 
-    override fun enableScissor(context: GuiGraphics) {
+    override fun enableScissor(context: GuiGraphicsExtractor) {
         val textBoxHeight = height
         context.enableScissor(
             this.x,
@@ -185,7 +185,7 @@ class DialogueBox(
         override fun getNarration() = "".text()
 
         override fun renderBack(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
             x: Int,
@@ -198,7 +198,7 @@ class DialogueBox(
         ) {}
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

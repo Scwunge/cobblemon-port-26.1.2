@@ -19,11 +19,11 @@ import com.cobblemon.mod.common.net.messages.server.pokemon.update.SetNicknamePa
 import com.cobblemon.mod.common.net.serverhandling.pokemon.update.SetNicknameHandler.MAX_NAME_LENGTH
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.mojang.blaze3d.platform.InputConstants
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.resources.language.I18n
 import net.minecraft.network.chat.Component
 
@@ -92,7 +92,7 @@ class NicknameEntryWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val showCursor = isFocused && ((Util.getMillis() - this.focusedTime) / 300L % 2L == 0L)
         val name = "${value}${if ((cursorPosition == value.length) && showCursor) "_" else ""}".text().bold()
         drawScaledText(

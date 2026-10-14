@@ -35,12 +35,12 @@ import java.util.UUID
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.toasts.AdvancementToast
 import net.minecraft.client.gui.components.toasts.Toast
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -120,7 +120,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
         return state.second
     }
 
-    override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
+    override fun render(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
         if (!canRender()) return
 
         val partialDeltaTicks = tickCounter.realtimeDeltaTicks

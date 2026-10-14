@@ -39,7 +39,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -259,7 +259,7 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
         if (level().isClientSide) {
             CompoundTag pokemonTag = shoulderTag.getCompound(DataKeys.POKEMON);
             if (pokemonTag.isEmpty()) return null;
-            Species species = PokemonSpecies.getByIdentifier(ResourceLocation.parse(pokemonTag.getString(DataKeys.POKEMON_SPECIES_IDENTIFIER)));
+            Species species = PokemonSpecies.getByIdentifier(Identifier.parse(pokemonTag.getString(DataKeys.POKEMON_SPECIES_IDENTIFIER)));
             if (species == null) return null;
             String formId = pokemonTag.getString(DataKeys.POKEMON_FORM_ID);
             FormData form = species.getStandardForm();

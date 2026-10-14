@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.gui.ScrollingWidget
 import com.cobblemon.mod.common.client.gui.common.MarkIcon
 import com.cobblemon.mod.common.client.gui.summary.widgets.screens.marks.MarksScrollingWidget.ScrollSlotRow
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 import net.minecraft.util.Mth
@@ -44,7 +44,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
 
     override fun getScrollbarPosition(): Int = rowLeft + width - 3
 
-    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         // Do not render scrollbar if all rows are already visible
         if (children().size > 5) {
             val xLeft = this.scrollbarPosition
@@ -64,7 +64,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
         }
     }
 
-    fun renderEntry(context: GuiGraphics, mouseX: Int, mouseY: Int, index: Int, x: Int, y: Int): Boolean {
+    fun renderEntry(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, index: Int, x: Int, y: Int): Boolean {
         val entry =  this.getEntry(index)
         entry.x = x
         entry.y = y
@@ -73,7 +73,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
 
     override fun getEntry(index: Int): ScrollSlotRow = children()[index] as ScrollSlotRow
 
-    override fun renderListItems(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderListItems(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val rowX = rowLeft
 
         var anyHovered = false
@@ -110,7 +110,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
         var x: Int = 0
         var y: Int = 0
 
-        fun renderRow(context: GuiGraphics, y: Int, x: Int, mouseX: Int, mouseY: Int): Boolean {
+        fun renderRow(context: GuiGraphicsExtractor, y: Int, x: Int, mouseX: Int, mouseY: Int): Boolean {
             var anyHovered = false
             val horizontalSpacing = if (isScrollVisible()) SLOT_SPACING else (SLOT_SPACING + 1)
             markList.forEachIndexed { index, mark ->
@@ -143,7 +143,7 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
         }
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
             x: Int,

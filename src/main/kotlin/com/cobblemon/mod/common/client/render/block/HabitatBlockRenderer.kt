@@ -26,11 +26,11 @@ import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.level.block.state.BlockState
 
@@ -55,7 +55,7 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEnti
 
     private data class CachedDisplayPokemon(
         val level: ClientLevel,
-        val speciesId: ResourceLocation,
+        val speciesId: Identifier,
         val pokemonEntity: PokemonEntity
     )
 
@@ -162,7 +162,7 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEnti
         emitSpawnerParticles(level, posKey, habitatEntity.blockPos.x, habitatEntity.blockPos.y, habitatEntity.blockPos.z)
     }
 
-    private fun getOrCreateDisplayPokemon(level: ClientLevel, posKey: Long, speciesId: ResourceLocation): PokemonEntity? {
+    private fun getOrCreateDisplayPokemon(level: ClientLevel, posKey: Long, speciesId: Identifier): PokemonEntity? {
         val cached = cachedDisplayPokemon[posKey]
         if (cached != null && cached.level === level && cached.speciesId == speciesId) {
             return cached.pokemonEntity

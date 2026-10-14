@@ -34,7 +34,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import org.joml.Quaternionf
@@ -151,7 +151,7 @@ class BattleTargetSelection(
             ArrowDirection.DOWN -> Pair(this.x + TARGET_WIDTH / 2 - 4F, this.y - 7)
         }
 
-        fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             val passedSeconds = CobblemonClient.battleOverlay.passedSeconds // This syncs the role throbbers
             val selectConditionOpacity = targetSelection.opacity * if (!selectable) 0.5F else 1F
             val matrices = context.pose()
@@ -323,7 +323,7 @@ class BattleTargetSelection(
         }
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
 
         // Draw Background
         blitk(

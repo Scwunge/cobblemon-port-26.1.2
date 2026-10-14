@@ -20,7 +20,7 @@ import com.mojang.serialization.Dynamic
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.Brain
@@ -36,7 +36,7 @@ import net.minecraft.world.entity.ai.sensing.SensorType
  */
 interface MoLangScriptingEntity {
     var behavioursAreCustom: Boolean
-    val behaviours: MutableList<ResourceLocation>
+    val behaviours: MutableList<Identifier>
     val registeredVariables: MutableList<MoLangConfigVariable>
     /** Configuration properties that are managed and reset prior to entity behaviour initialization. */
     var config: VariableStruct
@@ -89,7 +89,7 @@ interface MoLangScriptingEntity {
     fun loadScriptingFromNBT(nbt: CompoundTag) {
         behavioursAreCustom = nbt.getBoolean(DataKeys.SCRIPTED_BEHAVIOURS_ARE_CUSTOM)
         behaviours.clear()
-        behaviours.addAll(nbt.getList(DataKeys.SCRIPTED_BEHAVIOURS, ListTag.TAG_STRING.toInt()).map { ResourceLocation.parse(it.asString) })
+        behaviours.addAll(nbt.getList(DataKeys.SCRIPTED_BEHAVIOURS, ListTag.TAG_STRING.toInt()).map { Identifier.parse(it.asString) })
         val dataKey = if (nbt.contains(DataKeys.SCRIPTED_DATA)) DataKeys.SCRIPTED_DATA else "Data" // migrate old use of "Data"
         data = MoLangFunctions.readMoValueFromNBT(nbt.getCompound(dataKey)) as VariableStruct
         val configKey = if (nbt.contains(DataKeys.SCRIPTED_CONFIG)) DataKeys.SCRIPTED_CONFIG else "Config" // migrate old use of "Config"
@@ -102,7 +102,7 @@ interface MoLangScriptingEntity {
         struct.addFunction("has_variable") { params -> DoubleValue(registeredVariables.any { it.variableName == params.getString(0) }) }
     }
 
-    fun updateBehaviours(behaviours: Collection<ResourceLocation>) {
+    fun updateBehaviours(behaviours: Collection<Identifier>) {
         val removingBehaviours = this@MoLangScriptingEntity.behaviours.filterNot(behaviours::contains).mapNotNull(CobblemonBehaviours.behaviours::get)
         removingBehaviours.forEach { behaviour ->
             behaviour.onRemove(this as LivingEntity)

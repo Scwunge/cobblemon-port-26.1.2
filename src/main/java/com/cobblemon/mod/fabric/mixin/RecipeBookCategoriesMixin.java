@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.CobblemonRecipeBookTypes;
 import com.cobblemon.mod.common.CobblemonRecipeCategories;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

@@ -23,7 +23,7 @@ import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.Tag
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.entity.Entity
@@ -47,7 +47,7 @@ fun Entity.makeEmptyBrainDynamic() = Dynamic(
 
 fun Entity.effectiveName() = this.displayName ?: this.name
 
-fun LivingEntity.hasMemory(memoryIdentifier: ResourceLocation): Boolean {
+fun LivingEntity.hasMemory(memoryIdentifier: Identifier): Boolean {
     val registry = BuiltInRegistries.MEMORY_MODULE_TYPE
     val memoryType = registry.get(memoryIdentifier)
     return brain.checkMemory(memoryType, MemoryStatus.VALUE_PRESENT)
@@ -75,7 +75,7 @@ fun LivingEntity.jitterDropItem(itemEntity: ItemEntity) {
     )
 }
 
-fun LivingEntity.isDoingActivity(activityIdentifier: ResourceLocation): Boolean {
+fun LivingEntity.isDoingActivity(activityIdentifier: Identifier): Boolean {
     val registry = BuiltInRegistries.ACTIVITY
     val activity = registry.get(activityIdentifier) ?: return false
     return brain.isActive(activity)

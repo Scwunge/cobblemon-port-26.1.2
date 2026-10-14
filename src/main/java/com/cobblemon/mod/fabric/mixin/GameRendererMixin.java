@@ -14,7 +14,7 @@ import com.mojang.blaze3d.shaders.Program;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.impl.client.rendering.FabricShaderProgram;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.ShaderInstance;
+import com.mojang.blaze3d.opengl.GlProgram;
 import net.minecraft.server.packs.resources.ResourceProvider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,7 +31,7 @@ public class GameRendererMixin {
 
 
     @Inject(method = "reloadShaders", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void lodestone$registerShaders(ResourceProvider factory, CallbackInfo ci, List<Program> list, List<Pair<ShaderInstance, Consumer<ShaderInstance>>> list2) throws IOException {
+    private void lodestone$registerShaders(ResourceProvider factory, CallbackInfo ci, List<Program> list, List<Pair<GlProgram, Consumer<GlProgram>>> list2) throws IOException {
         CobblemonShaders.INSTANCE.init();
         CobblemonShaders.INSTANCE.getSHADERS_TO_REGISTER().forEach((pair) -> {
             ShaderRegistryData data = pair.getFirst().invoke(factory);

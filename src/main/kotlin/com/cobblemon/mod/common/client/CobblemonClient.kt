@@ -75,18 +75,18 @@ import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.util.isLookingAt
 import net.minecraft.client.Minecraft
 import net.minecraft.client.color.block.BlockColor
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.model.BoatModel
+import net.minecraft.client.model.object.boat.BoatModel
 import net.minecraft.client.model.ChestBoatModel
-import net.minecraft.client.model.PlayerModel
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.model.player.PlayerModel
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer
 import net.minecraft.client.renderer.blockentity.SignRenderer
 import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
-import net.minecraft.client.resources.PlayerSkin
+import net.minecraft.world.entity.player.PlayerSkin
 import net.minecraft.server.packs.resources.ResourceManager
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.player.Player
@@ -522,7 +522,7 @@ object CobblemonClient {
         this.createBoatModelLayers()
     }
 
-    fun beforeChatRender(context: GuiGraphics, partialDeltaTicks: Float) {
+    fun beforeChatRender(context: GuiGraphicsExtractor, partialDeltaTicks: Float) {
         val partialDeltaTicks = Minecraft.getInstance().timer // Checking that this even works
 //        ClientTaskTracker.update(partialDeltaTicks / 20f)
         if (battle == null) {

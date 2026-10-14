@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.util.FormattedCharSequence
 
@@ -85,7 +85,7 @@ class BattleMessagePane(
         return super.getRowLeft() + 4
     }
 
-    override fun renderSelection(guiGraphics: GuiGraphics, top: Int, width: Int, height: Int, outerColor: Int, innerColor: Int) {
+    override fun renderSelection(guiGraphics: GuiGraphicsExtractor, top: Int, width: Int, height: Int, outerColor: Int, innerColor: Int) {
         blitk(
             matrixStack = guiGraphics.pose(),
             texture = battleMessageHighlight,
@@ -135,7 +135,7 @@ class BattleMessagePane(
         return this.x + 154
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
         blitk(
             matrixStack = context.pose(),
@@ -196,7 +196,7 @@ class BattleMessagePane(
     class BattleMessageLine(val pane: BattleMessagePane, val line: FormattedCharSequence) : Entry<BattleMessageLine>() {
         override fun getNarration() = "".text()
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

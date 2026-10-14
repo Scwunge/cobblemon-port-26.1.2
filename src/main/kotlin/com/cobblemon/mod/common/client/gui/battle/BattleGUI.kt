@@ -27,7 +27,7 @@ import com.cobblemon.mod.common.net.messages.server.battle.RemoveSpectatorPacket
 import com.cobblemon.mod.common.util.battleLang
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 
 class BattleGUI : Screen(battleLang("gui.title")), CobblemonRenderable {
@@ -85,7 +85,7 @@ class BattleGUI : Screen(battleLang("gui.title")), CobblemonRenderable {
         }
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(context, mouseX, mouseY, delta)
 
         opacity = CobblemonClient.battleOverlay.opacityRatio.toFloat()
@@ -146,7 +146,7 @@ class BattleGUI : Screen(battleLang("gui.title")), CobblemonRenderable {
         queuedActions.clear()
     }
 
-    override fun renderBackground(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderBackground(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
 
     }
 

@@ -37,7 +37,7 @@ import net.minecraft.nbt.Tag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResult
@@ -69,10 +69,10 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
     var levelRange: IntRange = 1..Cobblemon.config.maxPokemonLevel
     var modifiers: PokemonProperties = PokemonProperties()
     var pool: HabitatPool = HabitatPool.default()
-    var mimicId: ResourceLocation = BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
+    var mimicId: Identifier = BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
     val mimickedState: BlockState
         get() = BuiltInRegistries.BLOCK.get(mimicId).defaultBlockState() ?: Blocks.STONE.defaultBlockState()
-    var displaySpeciesIds: List<ResourceLocation> = emptyList()
+    var displaySpeciesIds: List<Identifier> = emptyList()
 
     // This is cached here so that it doesn't have to be regenerated every time the block is triggered, updated when settings change.
     var spawnDetails: List<SpawnDetail> = listOf()
@@ -187,11 +187,11 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
     override fun loadAdditional(tag: CompoundTag, registryLookup: HolderLookup.Provider) {
         super.loadAdditional(tag, registryLookup)
         tag.getString(DataKeys.HABITAT_MIMIC).let {
-            mimicId = ResourceLocation.tryParse(it) ?: BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
+            mimicId = Identifier.tryParse(it) ?: BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
         }
         displaySpeciesIds = if (tag.contains(DISPLAY_SPECIES_KEY, Tag.TAG_LIST.toInt())) {
             tag.getList(DISPLAY_SPECIES_KEY, Tag.TAG_STRING.toInt())
-                .mapNotNull { speciesTag -> ResourceLocation.tryParse(speciesTag.asString) }
+                .mapNotNull { speciesTag -> Identifier.tryParse(speciesTag.asString) }
                 .distinct()
         } else {
             emptyList()

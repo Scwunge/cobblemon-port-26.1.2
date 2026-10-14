@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.gui.pokedex.PokedexGUIConstants
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.pokemon.FormData
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import kotlin.math.max
 
@@ -53,7 +53,7 @@ class FormsWidget (val pX: Int, val pY: Int, val setFormData : (String) -> (Unit
         }
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
             x: Int,

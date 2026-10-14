@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.net.messages.server.npc.SaveNPCPacket
 import com.cobblemon.mod.common.util.asTranslated
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.world.entity.LivingEntity
 
@@ -101,11 +101,11 @@ class NPCEditorScreen(
 
     override fun renderBlurredBackground(delta: Float) {}
 
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun isPauseScreen() = false
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             matrixStack = context.pose(),
             texture = baseResource,

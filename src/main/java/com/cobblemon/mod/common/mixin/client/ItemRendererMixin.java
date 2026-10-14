@@ -21,9 +21,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -49,30 +49,30 @@ public abstract class ItemRendererMixin {
 
     @Shadow @Final private ItemModelShaper itemModelShaper;
 
-    @Shadow public abstract void render(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model);
+    @Shadow public abstract void render(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BlockStateModel model);
 
     @Inject(
-        method = "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
+        method = "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BlockStateModel;)V",
         at = @At("HEAD"),
         cancellable = true
     )
-    private void cobblemon$overrideItemModel(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource multiBufferSource, int light, int overlay, BakedModel model, CallbackInfo ci) {
+    private void cobblemon$overrideItemModel(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource multiBufferSource, int light, int overlay, BlockStateModel model, CallbackInfo ci) {
         boolean shouldBe2d = renderMode == ItemDisplayContext.GUI || renderMode == ItemDisplayContext.FIXED || stack.getItem() == CobblemonItems.TECHNICAL_MACHINE;
-        ResourceLocation resourceLocation = null;
+        Identifier resourceLocation = null;
         if (shouldBe2d) {
             if (stack.getItem() instanceof PokeBallItem pokeBallItem) resourceLocation = pokeBallItem.getPokeBall().getModel2d();
             else if (stack.getItem() instanceof PokedexItem pokedexItem) resourceLocation = pokedexItem.getType().getItemSpritePath();
             else if (stack.getItem() == CobblemonItems.TECHNICAL_MACHINE) {
                 TMMoveComponent component = stack.get(CobblemonItemComponents.TM_MOVE);
                 if (component != null) {
-                    resourceLocation = new ResourceLocation(Cobblemon.MODID, "tm/" + component.getMove().getElementalType().showdownId() + "_tm");
+                    resourceLocation = new Identifier(Cobblemon.MODID, "tm/" + component.getMove().getElementalType().showdownId() + "_tm");
                 }
             }
         }
         if (renderMode != ItemDisplayContext.HEAD && stack.getItem() instanceof WearableItem wearableItem) resourceLocation = wearableItem.getModel2d();
 
         if (resourceLocation != null) {
-            BakedModel replacementModel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(resourceLocation, "inventory"));
+            BlockStateModel replacementModel = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(resourceLocation, "inventory"));
             if (!cobblemon$isSameModel(model, replacementModel)) {
                 ci.cancel();
                 render(stack, renderMode, leftHanded, matrices, multiBufferSource, light, overlay, replacementModel);
@@ -81,8 +81,8 @@ public abstract class ItemRendererMixin {
     }
 
     @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
-    private void cobblemon$getItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BakedModel> cir) {
-        ResourceLocation resourceLocation = null;
+    private void cobblemon$getItemModel(ItemStack stack, Level world, LivingEntity entity, int seed, CallbackInfoReturnable<BlockStateModel> cir) {
+        Identifier resourceLocation = null;
         if (stack.getItem() instanceof PokeBallItem pokeBallItem) resourceLocation = pokeBallItem.getPokeBall().getModel3d();
         else if (stack.getItem() instanceof PokedexItem pokedexItem) {
             boolean isScanModel = entity instanceof Player && entity.getUseItem() == stack && entity.isUsingItem();
@@ -92,9 +92,9 @@ public abstract class ItemRendererMixin {
         else if (stack.getItem() instanceof WearableItem wearableItem) resourceLocation = wearableItem.getModel3d();
 
         if (resourceLocation != null) {
-            BakedModel model = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(resourceLocation, MODEL_PATH));
+            BlockStateModel model = this.itemModelShaper.getModelManager().getModel(new ModelResourceLocation(resourceLocation, MODEL_PATH));
             ClientLevel clientWorld = world instanceof ClientLevel ? (ClientLevel) world : null;
-            BakedModel overriddenModel = model.getOverrides().resolve(model, stack, clientWorld, entity, seed);
+            BlockStateModel overriddenModel = model.getOverrides().resolve(model, stack, clientWorld, entity, seed);
             cir.setReturnValue(overriddenModel == null ? this.itemModelShaper.getModelManager().getMissingModel() : overriddenModel);
         }
     }
@@ -102,7 +102,7 @@ public abstract class ItemRendererMixin {
     // this method aims to cover an issue with modernfixes and it's "dynamic resource" causing the usual .equals check to always fail, resulting in a StackOverflow
     // this falls back to comparing the model contents (e.g. location of the texture, width and height)
     @Unique
-    private static boolean cobblemon$isSameModel(BakedModel original, BakedModel replacement) {
+    private static boolean cobblemon$isSameModel(BlockStateModel original, BlockStateModel replacement) {
         return original.equals(replacement) ||
                        (original.getParticleIcon().contents().name().equals(replacement.getParticleIcon().contents().name()) &&
                                 original.getParticleIcon().contents().width() == replacement.getParticleIcon().contents().width() &&

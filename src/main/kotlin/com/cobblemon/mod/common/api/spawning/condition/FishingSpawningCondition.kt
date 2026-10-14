@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.api.spawning.condition
 import com.cobblemon.mod.common.api.conditional.RegistryLikeCondition
 import com.cobblemon.mod.common.api.spawning.position.FishingSpawnablePosition
 import com.cobblemon.mod.common.util.itemRegistry
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
@@ -30,8 +30,8 @@ class FishingSpawningCondition: SpawningCondition<FishingSpawnablePosition>() {
     var neededNearbyBlocks: MutableList<RegistryLikeCondition<Block>>? = null
     var minLureLevel: Int? = null
     var maxLureLevel: Int? = null
-    var bait: ResourceLocation? = null
-    var rodType: ResourceLocation? = null
+    var bait: Identifier? = null
+    var rodType: Identifier? = null
 
     override fun fits(spawnablePosition: FishingSpawnablePosition): Boolean {
         if (!super.fits(spawnablePosition)) {

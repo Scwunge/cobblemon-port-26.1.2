@@ -11,23 +11,23 @@ package com.cobblemon.mod.common.client.render.boat
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.model.BoatModel
+import net.minecraft.client.model.object.boat.BoatModel
 import net.minecraft.client.model.ChestBoatModel
 import net.minecraft.client.model.geom.ModelLayerLocation
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.entity.EntityRenderer
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import org.joml.Quaternionf
 
 class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : EntityRenderer<CobblemonBoatEntity>(ctx) {
 
-    private val boatModels = hashMapOf<CobblemonBoatType, Pair<ResourceLocation, BoatModel>>()
+    private val boatModels = hashMapOf<CobblemonBoatType, Pair<Identifier, BoatModel>>()
 
     init {
         this.shadowRadius = 0.8F
@@ -36,7 +36,7 @@ class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val has
         }
     }
 
-    override fun getTextureLocation(entity: CobblemonBoatEntity): ResourceLocation = this.boatModels[entity.boatType]!!.first
+    override fun getTextureLocation(entity: CobblemonBoatEntity): Identifier = this.boatModels[entity.boatType]!!.first
 
     override fun render(entity: CobblemonBoatEntity, yaw: Float, tickDelta: Float, matrices: PoseStack, vertexConsumers: MultiBufferSource, light: Int) {
         matrices.pushPose()
@@ -67,7 +67,7 @@ class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val has
 
     companion object {
 
-        private fun generateTextureIdentifier(type: CobblemonBoatType, hasChest: Boolean): ResourceLocation {
+        private fun generateTextureIdentifier(type: CobblemonBoatType, hasChest: Boolean): Identifier {
             val boatSubPath = if (hasChest) "chest_boat" else "boat"
             val path = "textures/entity/$boatSubPath/${type.name.lowercase()}.png"
             return cobblemonResource(path)

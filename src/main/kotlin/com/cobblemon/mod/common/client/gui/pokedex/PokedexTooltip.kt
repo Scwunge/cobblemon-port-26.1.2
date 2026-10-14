@@ -15,11 +15,11 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import java.util.Optional
 
 private val tooltipEdge = cobblemonResource("textures/gui/pokedex/tooltip_edge.png")
@@ -29,7 +29,7 @@ private const val TOOLTIP_SLICE_SIZE = 11
 private const val TOOLTIP_MAX_TEXT_WIDTH = 160
 
 fun renderTooltip(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: MutableComponent,
     posX: Int,
     posY: Int,
@@ -47,7 +47,7 @@ fun renderTooltip(
 }
 
 fun renderTooltip(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: List<MutableComponent>,
     posX: Int,
     posY: Int,
@@ -120,7 +120,7 @@ private fun wrapTooltipLine(line: MutableComponent, maxWidth: Int): List<Mutable
 // instead the caps are drawn 1:1 and only the flat fill row is stretched to cover the remaining height
 private fun blitSlicedVertical(
     poseStack: PoseStack,
-    texture: ResourceLocation,
+    texture: Identifier,
     x: Number,
     y: Int,
     width: Number,

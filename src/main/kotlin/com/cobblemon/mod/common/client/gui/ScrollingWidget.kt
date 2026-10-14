@@ -11,10 +11,10 @@ package com.cobblemon.mod.common.client.gui
 import com.cobblemon.mod.common.mixin.accessor.EntryListWidgetAccessor
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.util.Mth
 
@@ -32,9 +32,9 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     top, // Top
     slotHeight // Slot Height
 ), CobblemonRenderable {
-    override fun renderListBackground(guiGraphics: GuiGraphics) {}
-    override fun renderSelection(context: GuiGraphics, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
-    override fun renderDecorations(context: GuiGraphics, mouseX: Int, mouseY: Int) {}
+    override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}
+    override fun renderSelection(context: GuiGraphicsExtractor, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
+    override fun renderDecorations(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {}
 
 
     init {
@@ -53,7 +53,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         this.x = left
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val asAccessor = this as EntryListWidgetAccessor
         this.focused = if (this.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) this.getEntryAtPosition(
             mouseX.toDouble(),
@@ -99,7 +99,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         RenderSystem.disableBlend()
     }
 
-    open fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float){
+    open fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float){
         val xLeft = this.scrollbarPosition
         val xRight = xLeft + scrollBarWidth
 
@@ -117,7 +117,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         context.fill(xLeft ,k1, xRight - 1, k1 + j2 - 1, -4144960)
     }
 
-    open fun renderHorizontalShadows(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float){
+    open fun renderHorizontalShadows(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float){
         context.setColor(0.25f, 0.25f, 0.25f, 1.0f)
         context.blit(
             Screen.MENU_BACKGROUND,
@@ -150,7 +150,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         )
     }
 
-    override fun renderListItems(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderListItems(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val i = this.rowLeft
         val j = this.rowWidth
         val k = this.itemHeight
@@ -166,7 +166,7 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     }
 
     override fun renderItem(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         delta: Float,

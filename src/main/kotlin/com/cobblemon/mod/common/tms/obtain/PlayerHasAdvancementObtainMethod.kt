@@ -12,12 +12,12 @@ import com.cobblemon.mod.common.api.tms.ObtainMethod
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 /**
  * An [ObtainMethod] that triggers when the player has an advancement.
  */
-class PlayerHasAdvancementObtainMethod(val advancement: ResourceLocation? = null) : ObtainMethod {
+class PlayerHasAdvancementObtainMethod(val advancement: Identifier? = null) : ObtainMethod {
 
     // todo we can leave this here in case we want to use it later.... or addons?
     companion object {
@@ -41,7 +41,7 @@ class PlayerHasAdvancementObtainMethod(val advancement: ResourceLocation? = null
 
     override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUtf("cobblemon:advancement")
-        buffer.writeResourceLocation(advancement ?: ResourceLocation.tryParse("minecraft:empty"))
+        buffer.writeResourceLocation(advancement ?: Identifier.tryParse("minecraft:empty"))
     }
 }
 

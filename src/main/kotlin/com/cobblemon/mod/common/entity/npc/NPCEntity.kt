@@ -74,7 +74,7 @@ import net.minecraft.network.protocol.game.DebugPackets
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -184,13 +184,13 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Posabl
             entityData.set(HITBOX_EYES_HEIGHT, comparison.eyeHeight)
         }
 
-    var resourceIdentifier: ResourceLocation
+    var resourceIdentifier: Identifier
         get() = entityData.get(RESOURCE_IDENTIFIER)
         private set(value) {
             entityData.set(RESOURCE_IDENTIFIER, value)
         }
 
-    var forcedResourceIdentifier: ResourceLocation? = null
+    var forcedResourceIdentifier: Identifier? = null
         set(value) {
             field = value
             if (value != null) {
@@ -240,7 +240,7 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Posabl
     var interaction: NPCInteractConfiguration? = null
 
     override var behavioursAreCustom = false
-    override val behaviours = mutableListOf<ResourceLocation>()
+    override val behaviours = mutableListOf<Identifier>()
     override val registeredVariables: MutableList<MoLangConfigVariable> = mutableListOf()
     override var data = VariableStruct()
     override var config = VariableStruct()
@@ -495,9 +495,9 @@ class NPCEntity(world: Level) : AgeableMob(CobblemonEntities.NPC, world), Posabl
     }
 
     override fun load(nbt: CompoundTag) {
-        npc = NPCClasses.getByIdentifier(ResourceLocation.parse(nbt.getString(DataKeys.NPC_CLASS))) ?: NPCClasses.classes.first()
+        npc = NPCClasses.getByIdentifier(Identifier.parse(nbt.getString(DataKeys.NPC_CLASS))) ?: NPCClasses.classes.first()
         forcedResourceIdentifier = if (nbt.contains(DataKeys.NPC_FORCED_RESOURCE_IDENTIFIER)) {
-            ResourceLocation.parse(nbt.getString(DataKeys.NPC_FORCED_RESOURCE_IDENTIFIER))
+            Identifier.parse(nbt.getString(DataKeys.NPC_FORCED_RESOURCE_IDENTIFIER))
         } else {
             null
         }

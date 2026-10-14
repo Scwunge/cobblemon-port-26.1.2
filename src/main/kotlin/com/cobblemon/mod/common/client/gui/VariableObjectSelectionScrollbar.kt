@@ -10,17 +10,17 @@ package com.cobblemon.mod.common.client.gui
 
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.CommonComponents
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class VariableObjectSelectionScrollbar(var parent: VariableObjectSelectionList, x: Int, y: Int, width: Int, height: Int): AbstractWidget(x, y, width, height, CommonComponents.EMPTY) {
     companion object {
-        private val scrollerResource: ResourceLocation = ResourceLocation("minecraft", "textures/gui/sprites/widget/scroller.png")
-        private val scrollerBackgroundResource: ResourceLocation = ResourceLocation("minecraft", "textures/gui/sprites/widget/scroller_background.png")
+        private val scrollerResource: Identifier = Identifier("minecraft", "textures/gui/sprites/widget/scroller.png")
+        private val scrollerBackgroundResource: Identifier = Identifier("minecraft", "textures/gui/sprites/widget/scroller_background.png")
 
         private const val SCROLLER_HEIGHT = 32
     }
@@ -30,7 +30,7 @@ class VariableObjectSelectionScrollbar(var parent: VariableObjectSelectionList, 
 
     fun scrollbarVisible(): Boolean = parent.getMaxScroll() > 0
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun renderWidget(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         if (scrollbarVisible()) {
             val scrollPosition = (parent.scrollAmount / parent.getMaxScroll()) * (height - SCROLLER_HEIGHT)
 

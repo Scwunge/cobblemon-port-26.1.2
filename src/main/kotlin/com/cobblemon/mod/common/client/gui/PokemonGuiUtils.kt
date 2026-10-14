@@ -22,10 +22,10 @@ import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.LightTexture
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.Lightmap
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3
 import org.joml.Quaternionf
@@ -76,7 +76,7 @@ fun drawProfilePokemon(
 )
 
 fun drawProfilePokemon(
-    species: ResourceLocation,
+    species: Identifier,
     matrixStack: PoseStack,
     rotation: Quaternionf,
     poseType: PoseType = PoseType.PROFILE,
@@ -169,7 +169,7 @@ fun drawProfilePokemon(
         val light1 = Vector3f(-1F, 1F, 1.0F)
         val light2 = Vector3f(1.3F, -1F, 1.0F)
         RenderSystem.setShaderLights(light1, light2)
-        val packedLight = LightTexture.pack(blockLight, 0)
+        val packedLight = Lightmap.pack(blockLight, 0)
 
         val colour = toHex(r, g, b, a)
         model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(species, state)) {

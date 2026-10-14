@@ -26,9 +26,9 @@ import com.cobblemon.mod.common.util.isPokemonEntity
 import com.mojang.blaze3d.vertex.PoseStack
 import java.util.UUID
 import net.minecraft.client.Minecraft
-import net.minecraft.client.model.PlayerModel
+import net.minecraft.client.model.player.PlayerModel
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.client.renderer.entity.RenderLayerParent
 import net.minecraft.client.renderer.entity.layers.RenderLayer
@@ -37,7 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.Tag
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ArmorItem
@@ -298,7 +298,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                     }, { null })
             }
             val species =
-                PokemonSpecies.getByIdentifier(ResourceLocation.parse(shoulderNbt.getString(DataKeys.SHOULDER_SPECIES)))
+                PokemonSpecies.getByIdentifier(Identifier.parse(shoulderNbt.getString(DataKeys.SHOULDER_SPECIES)))
                     ?: return null
             val formName = shoulderNbt.getString(DataKeys.SHOULDER_FORM)
             val form = species.forms.firstOrNull { it.name == formName } ?: species.standardForm

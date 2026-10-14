@@ -20,7 +20,7 @@ import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.RegistryOps
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.LivingEntity
@@ -41,7 +41,7 @@ open class ItemDropEntry : DropEntry {
     open var quantityRange: IntRange? = null
     override var maxSelectableTimes = 1
     open val dropMethod: ItemDropMethod? = null
-    open var item = ResourceLocation.parse("minecraft:fish")
+    open var item = Identifier.parse("minecraft:fish")
     open val components: JsonElement? = null
 
     override fun drop(entity: LivingEntity?, world: ServerLevel, pos: Vec3, player: ServerPlayer?) {

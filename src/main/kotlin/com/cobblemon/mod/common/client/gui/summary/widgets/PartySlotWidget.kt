@@ -25,9 +25,9 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import com.cobblemon.mod.common.util.toAssetPath
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -53,7 +53,7 @@ class PartySlotWidget(
         val genderIconFemale = cobblemonResource("textures/gui/party/party_gender_female.png")
     }
 
-    private fun getSlotTexture(pokemon: Pokemon?): ResourceLocation {
+    private fun getSlotTexture(pokemon: Pokemon?): Identifier {
         if (pokemon != null) {
             if (pokemon.isFainted()) return slotFaintedResource
             return slotResource
@@ -72,7 +72,7 @@ class PartySlotWidget(
         return 0
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
         val matrices = context.pose()
         val isDraggedSlot = partyWidget.swapEnabled && partyWidget.swapSource == index

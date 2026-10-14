@@ -22,15 +22,15 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.storage.ChunkStorage;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ChunkStorage.class)
+@Mixin(SimpleRegionStorage.class)
 public class ChunkStorageMixin {
     //Modifies the NBT returned by the vanilla upgradeChunkTag to also incorporate cobblemon fixup stuff
     @ModifyExpressionValue(
@@ -55,12 +55,12 @@ public class ChunkStorageMixin {
     )
     private void cobblemon$doChunkFixOnCurrentVersion(
         ResourceKey<Level> levelKey,
-        Supplier<DimensionDataStorage> storage,
+        Supplier<SavedDataStorage> storage,
         CompoundTag chunkData,
         Optional<ResourceKey<MapCodec<? extends ChunkGenerator>>> chunkGeneratorKey,
         CallbackInfoReturnable<CompoundTag> cir
     ) {
-        if (ChunkStorage.getVersion(chunkData) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()) {
+        if (SimpleRegionStorage.getVersion(chunkData) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()) {
             return;
         }
         int curVersion = chunkData.contains(VERSION_KEY) ? chunkData.getInt(VERSION_KEY) : 0;

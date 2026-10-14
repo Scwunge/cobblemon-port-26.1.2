@@ -18,17 +18,17 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Font
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.texture.TextureAtlas
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FormattedCharSequence
 import net.minecraft.util.Mth
 import net.minecraft.world.item.ItemDisplayContext
@@ -104,7 +104,7 @@ fun getDepletableRedGreen(
 }
 
 fun drawScrollingText(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     font: Font,
     text: Component,
     minX: Int,
@@ -121,7 +121,7 @@ fun drawScrollingText(
 
 /** Copied from [net.minecraft.client.gui.components.AbstractWidget.renderScrollingString] **/
 fun renderScrollingString(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     font: Font,
     text: Component,
     minX: Int,
@@ -154,8 +154,8 @@ fun renderScrollingString(
 }
 
 fun drawScaledText(
-    context: GuiGraphics,
-    font: ResourceLocation? = null,
+    context: GuiGraphicsExtractor,
+    font: Identifier? = null,
     text: MutableComponent,
     x: Number,
     y: Number,
@@ -198,7 +198,7 @@ fun drawScaledText(
 }
 
 fun drawScaledText(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: FormattedCharSequence,
     x: Number,
     y: Number,
@@ -228,8 +228,8 @@ fun drawScaledText(
 }
 
 fun drawScaledTextJustifiedRight(
-    context: GuiGraphics,
-    font: ResourceLocation? = null,
+    context: GuiGraphicsExtractor,
+    font: Identifier? = null,
     text: MutableComponent,
     x: Number,
     y: Number,
@@ -261,7 +261,7 @@ fun drawScaledTextJustifiedRight(
 }
 
 fun drawScaledTextJustifiedRight(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: MutableComponent,
     x: Number,
     y: Number,
@@ -291,7 +291,7 @@ fun drawScaledTextJustifiedRight(
 fun renderBeaconBeam(
     matrixStack: PoseStack,
     buffer: MultiBufferSource,
-    textureLocation: ResourceLocation = CobblemonResources.PHASE_BEAM,
+    textureLocation: Identifier = CobblemonResources.PHASE_BEAM,
     partialTicks: Float,
     totalLevelTime: Long,
     yOffset: Float = 0F,

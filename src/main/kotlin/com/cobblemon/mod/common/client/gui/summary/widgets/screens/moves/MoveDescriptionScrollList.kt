@@ -10,7 +10,7 @@ package com.cobblemon.mod.common.client.gui.summary.widgets.screens.moves
 
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -38,7 +38,7 @@ class MoveDescriptionScrollList(
         return x + width - 3
     }
 
-    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, f: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, f: Float) {
         isHovered = pMouseX >= x && pMouseY >= y && pMouseX < x + width && pMouseY < y + height
         context.enableScissor(
             x,
@@ -70,7 +70,7 @@ class MoveDescriptionScrollList(
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
     }
 
-    override fun renderListBackground(guiGraphics: GuiGraphics) {}
+    override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
         scrolling = mouseX >= getScrollbarPosition().toDouble()

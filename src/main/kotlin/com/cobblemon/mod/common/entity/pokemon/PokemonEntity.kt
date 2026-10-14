@@ -132,7 +132,7 @@ import net.minecraft.network.protocol.game.DebugPackets
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.network.syncher.EntityDataSerializers
 import net.minecraft.network.syncher.SynchedEntityData
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -156,7 +156,7 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus
 import net.minecraft.world.entity.ai.sensing.Sensor
 import net.minecraft.world.entity.ai.sensing.SensorType
 import net.minecraft.world.entity.animal.Animal
-import net.minecraft.world.entity.animal.ShoulderRidingEntity
+import net.minecraft.world.entity.animal.parrot.ShoulderRidingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.vehicle.DismountHelper
 import net.minecraft.world.item.DyeItem
@@ -397,7 +397,7 @@ open class PokemonEntity(
     val exposedBall: PokeBall get() = this.effects.mockEffect?.exposedBall ?: this.pokemon.caughtBall
 
     override var behavioursAreCustom = false
-    override val behaviours = mutableListOf<ResourceLocation>()
+    override val behaviours = mutableListOf<Identifier>()
     override val registeredVariables = mutableListOf<MoLangConfigVariable>()
     override var config = VariableStruct()
     override var data = VariableStruct()
@@ -1419,7 +1419,7 @@ open class PokemonEntity(
 
     override fun playAmbientSound() {
         if (!this.isSilent || this.busyLocks.filterIsInstance<EmptyPokeBallEntity>().isEmpty()) {
-            val sound = ResourceLocation.fromNamespaceAndPath(
+            val sound = Identifier.fromNamespaceAndPath(
                 this.pokemon.species.resourceIdentifier.namespace,
                 "pokemon.${this.pokemon.showdownId()}.ambient"
             )

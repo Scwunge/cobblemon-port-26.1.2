@@ -67,7 +67,7 @@ import net.minecraft.util.Mth
 import net.minecraft.util.Mth.PI
 import net.minecraft.world.entity.*
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.BlockHitResult

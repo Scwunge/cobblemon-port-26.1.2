@@ -49,12 +49,12 @@ import com.cobblemon.mod.common.util.lang
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 
 class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
@@ -200,7 +200,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         selectMove(null)
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
 
         blitk(
@@ -308,7 +308,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         return false
     }
 
-    private fun renderDataSection(context: GuiGraphics) {
+    private fun renderDataSection(context: GuiGraphicsExtractor) {
         val move = selectedEntry?.move
         val showMoveInfo = selectedEntry?.isDiscovered == true
 
@@ -571,9 +571,9 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
     }
 
-    private fun buildEvolutionMoveLevelIndex(form: FormData): Map<ResourceLocation, Map<String, Int>> {
+    private fun buildEvolutionMoveLevelIndex(form: FormData): Map<Identifier, Map<String, Int>> {
         val evolutionForms = collectEvolutionForms(form)
-        val levelsBySpecies = mutableMapOf<ResourceLocation, MutableMap<String, Int>>()
+        val levelsBySpecies = mutableMapOf<Identifier, MutableMap<String, Int>>()
 
         for (evolutionForm in evolutionForms) {
             val speciesId = evolutionForm.species.resourceIdentifier
@@ -727,7 +727,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         val level: Int? = null,
         val tmLocked: Boolean = false,
         val isDiscovered: Boolean = true,
-        val tmId: ResourceLocation? = null,
+        val tmId: Identifier? = null,
         val tmUnlocked: Boolean = false
     )
 
@@ -760,7 +760,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             return left + HALF_OVERLAY_WIDTH - SCROLL_BAR_WIDTH
         }
 
-        override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             val xLeft = this.scrollbarPosition
             val yMargin = 2
             val yStart = y + yMargin
@@ -801,7 +801,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             private var lastX = 0
             private var lastY = 0
 
-            override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
                 lastX = x
                 lastY = y
 
@@ -921,7 +921,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             scrollAmount = 0.0
         }
 
-        override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+        override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             val xLeft = this.scrollbarPosition
             val yMargin = 1
             val yStart = y + yMargin
@@ -959,7 +959,7 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
 
         class TextSlot(val text: String) : Slot<TextSlot>() {
-            override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
                 drawScaledText(
                     context = context,
                     text = text.text(),

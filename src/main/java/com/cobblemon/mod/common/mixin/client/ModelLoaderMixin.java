@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,11 +32,11 @@ import java.util.Map;
 
 @Mixin(ModelBakery.class)
 public abstract class ModelLoaderMixin {
-    @Shadow abstract UnbakedModel getModel(ResourceLocation resourceLocation);
+    @Shadow abstract UnbakedModel getModel(Identifier resourceLocation);
 
     @Shadow protected abstract void registerModel(ModelResourceLocation modelId, UnbakedModel unbakedModel);
 
-    @Shadow protected abstract void loadItemModelAndDependencies(ResourceLocation resourceLocation);
+    @Shadow protected abstract void loadItemModelAndDependencies(Identifier resourceLocation);
 
     @Unique
     List<String> dynamicFolders = Arrays.asList("egg", "tm");
@@ -51,8 +51,8 @@ public abstract class ModelLoaderMixin {
     )
     public void loadCustomItemModels(BlockColors blockColors,
                                      ProfilerFiller profiler,
-                                     Map<ResourceLocation, BlockModel> jsonUnbakedModels,
-                                     Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStates,
+                                     Map<Identifier, BlockModel> jsonUnbakedModels,
+                                     Map<Identifier, List<BlockStateModelLoader.LoadedJson>> blockStates,
                                      CallbackInfo ci
     ) {
         /*
@@ -70,9 +70,9 @@ public abstract class ModelLoaderMixin {
          */
 
         dynamicFolders.forEach(folder -> {
-            Map<ResourceLocation, Resource> map = Minecraft.getInstance().getResourceManager().listResources("models/item/" + folder, (t) -> true);
+            Map<Identifier, Resource> map = Minecraft.getInstance().getResourceManager().listResources("models/item/" + folder, (t) -> true);
             map.forEach((key, value) -> {
-                ResourceLocation resourceLocation = new ResourceLocation(key.getNamespace(), key.getPath().replace("models/item/", "").replace(".json", ""));
+                Identifier resourceLocation = new Identifier(key.getNamespace(), key.getPath().replace("models/item/", "").replace(".json", ""));
                 this.loadItemModelAndDependencies(resourceLocation);
             });
         });
@@ -84,8 +84,8 @@ public abstract class ModelLoaderMixin {
     )
     public void init(BlockColors blockColors,
                      ProfilerFiller profiler,
-                     Map<ResourceLocation, BlockModel> jsonUnbakedModels,
-                     Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStates,
+                     Map<Identifier, BlockModel> jsonUnbakedModels,
+                     Map<Identifier, List<BlockStateModelLoader.LoadedJson>> blockStates,
                      CallbackInfo ci) {
         CobblemonBakingOverrides.INSTANCE.getModels().forEach(bakingOverride -> {
             var unbakedModel = this.getModel(bakingOverride.getModelLocation());

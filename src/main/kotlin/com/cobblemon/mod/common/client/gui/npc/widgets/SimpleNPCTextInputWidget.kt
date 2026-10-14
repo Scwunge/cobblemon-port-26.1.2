@@ -12,19 +12,19 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.drawScaledText
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Style
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import kotlin.math.floor
 
 class SimpleNPCTextInputWidget(
     getter: () -> String,
-    val texture: ResourceLocation? = null,
+    val texture: Identifier? = null,
     private val setter: (String) -> Unit,
     posX: Int,
     posY: Int,
@@ -93,7 +93,7 @@ class SimpleNPCTextInputWidget(
         return clickedState
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (texture != null) {
             blitk(
                 matrixStack = context.pose(),

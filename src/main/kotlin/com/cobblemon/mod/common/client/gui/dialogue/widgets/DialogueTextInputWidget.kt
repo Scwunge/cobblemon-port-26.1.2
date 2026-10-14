@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.net.messages.server.dialogue.InputToDialoguePack
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import org.lwjgl.glfw.GLFW
@@ -59,7 +59,7 @@ class DialogueTextInputWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (!dialogueScreen.renderInput()) {
             return
         }

@@ -41,7 +41,7 @@ import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.valueproviders.UniformInt
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
@@ -293,7 +293,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val TYPE_GEM_CORE = this.create("deepslate_crystal_core", TypeGemCoreBlock(BlockBehaviour.Properties.of().strength(4.0F, 10.0F).requiresCorrectToolForDrops().mapColor(MapColor.DEEPSLATE)))
 
-    private val typeGemBlocks = mutableMapOf<ResourceLocation, Block>()
+    private val typeGemBlocks = mutableMapOf<Identifier, Block>()
 
     @JvmField
     val TYPE_GEM_BLOCK_NORMAL = typeGemBlock("normal_gem_block", MapColor.QUARTZ)
@@ -332,7 +332,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val TYPE_GEM_BLOCK_FAIRY = typeGemBlock("fairy_gem_block", MapColor.COLOR_PINK)
 
-    private val typeGemClusters = mutableMapOf<ResourceLocation, TypeGemClusterBlock>()
+    private val typeGemClusters = mutableMapOf<Identifier, TypeGemClusterBlock>()
 
     @JvmField
     val TYPE_GEM_CLUSTER_NORMAL = typeGemCluster("normal_gem_cluster", TYPE_GEM_BLOCK_NORMAL, cobblemonResource("normal_gem"), MapColor.QUARTZ)
@@ -959,7 +959,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
             stage, height, xzOffset, nextStage))
     }
 
-    private val berries = mutableMapOf<ResourceLocation, BerryBlock>()
+    private val berries = mutableMapOf<Identifier, BerryBlock>()
 
     @JvmField
     val AGUAV_BERRY = this.berryBlock("aguav")
@@ -1333,7 +1333,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
 
     fun typeGemBlocks() = typeGemBlocks.toMap()
 
-    private fun typeGemCluster(name: String, gemBlock: Block, dropItemId: ResourceLocation, mapColor: MapColor): Block {
+    private fun typeGemCluster(name: String, gemBlock: Block, dropItemId: Identifier, mapColor: MapColor): Block {
         val gemClusterBlock = this.create(name, TypeGemClusterBlock(BlockBehaviour.Properties.of().mapColor(mapColor).strength(2.0F, 3.0F).sound(CobblemonSounds.TYPE_GEM_CLUSTER_SOUNDS).pushReaction(PushReaction.DESTROY), gemBlock, dropItemId))
 
         TypeGemClusterBlock.gemToClusterMap[gemBlock] = gemClusterBlock

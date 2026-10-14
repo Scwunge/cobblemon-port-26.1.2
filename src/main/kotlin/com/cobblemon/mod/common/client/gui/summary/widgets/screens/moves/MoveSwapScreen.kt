@@ -26,7 +26,7 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class MoveSwapScreen(
     x: Int,
@@ -57,7 +57,7 @@ class MoveSwapScreen(
         override fun getNarration() = move?.displayName ?: lang("ui.moves.forget")
         val elementalType = move?.getEffectiveElementalType(pokemon) ?: ElementalTypes.NORMAL
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

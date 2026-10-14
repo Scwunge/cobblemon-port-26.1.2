@@ -18,9 +18,9 @@ import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexMultiConsumer
-import net.minecraft.client.renderer.LightTexture
+import net.minecraft.client.renderer.Lightmap
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.item.ItemDisplayContext
@@ -79,7 +79,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
 
         matrices.pushPose()
         val packedLight = if (mode == ItemDisplayContext.GUI) {
-            LightTexture.pack(13, 13)
+            Lightmap.pack(13, 13)
         } else {
             light
         }

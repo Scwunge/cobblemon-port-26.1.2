@@ -48,7 +48,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtOps
 import net.minecraft.nbt.NbtUtils
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
@@ -680,7 +680,7 @@ class FossilMultiblockStructure (
             result.tankConnectorDirection = Direction.byName(nbt.getString(DataKeys.CONNECTOR_DIRECTION))
 
             if (nbt.contains(DataKeys.INSERTED_FOSSIL)) {
-                val id = ResourceLocation.parse(nbt.getString(DataKeys.INSERTED_FOSSIL))
+                val id = Identifier.parse(nbt.getString(DataKeys.INSERTED_FOSSIL))
                 val fossil = Fossils.getByIdentifier(id)
 
                 if (fossil != null) {

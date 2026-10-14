@@ -29,7 +29,7 @@ import java.util.UUID
 import net.minecraft.core.RegistryAccess
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 const val REFORGED_POKEMON_PER_BOX = 30
 class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
@@ -103,8 +103,8 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         Abilities.get(nbt.getString("Ability"))?.let { template ->
             result.updateAbility(template.create(forced = result.form.abilities.none { it.template == template }))
         }
-        result.nature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("Nature")].name.lowercase())) ?: Natures.getRandomNature()
-        result.mintedNature = Natures.getNature(ResourceLocation.parse(ReforgedNatures.entries[nbt.getInt("MintNature")].name.lowercase()))
+        result.nature = Natures.getNature(Identifier.parse(ReforgedNatures.entries[nbt.getInt("Nature")].name.lowercase())) ?: Natures.getRandomNature()
+        result.mintedNature = Natures.getNature(Identifier.parse(ReforgedNatures.entries[nbt.getInt("MintNature")].name.lowercase()))
         result.currentHealth = nbt.getInt("Health")
 
         // Stats
@@ -145,7 +145,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         // result.nickname = this.find(nbt, "Nickname", NbtCompound::getString)
 
         val ball = this.find(nbt, "CaughtBall", CompoundTag::getString)
-        result.caughtBall = if(ball != null) PokeBalls.getPokeBall(ResourceLocation.parse(ball)) ?: PokeBalls.POKE_BALL else PokeBalls.POKE_BALL
+        result.caughtBall = if(ball != null) PokeBalls.getPokeBall(Identifier.parse(ball)) ?: PokeBalls.POKE_BALL else PokeBalls.POKE_BALL
 
         return result
     }

@@ -32,7 +32,7 @@ import com.cobblemon.mod.common.trade.TradeManager
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.nbt.StringTag
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -75,7 +75,7 @@ fun ServerPlayer.openDialogue(activeDialogue: ActiveDialogue) {
     DialogueManager.startDialogue(activeDialogue)
 }
 fun ServerPlayer.extraData(key: String) = Cobblemon.playerDataManager.getGenericData(this).extraData[key]
-fun ServerPlayer.hasKeyItem(key: ResourceLocation) = Cobblemon.playerDataManager.getGenericData(this).keyItems.contains(key)
+fun ServerPlayer.hasKeyItem(key: Identifier) = Cobblemon.playerDataManager.getGenericData(this).keyItems.contains(key)
 fun UUID.getPlayer() = server()?.playerList?.getPlayer(this)
 
 fun ServerPlayer.requestWallpapers() {

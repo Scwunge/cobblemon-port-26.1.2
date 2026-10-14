@@ -29,7 +29,7 @@ import net.minecraft.network.Utf8String
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
 import net.minecraft.network.codec.StreamEncoder
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityDimensions
 import net.minecraft.world.item.ItemStack
@@ -166,13 +166,13 @@ fun <K, V> ByteBuf.readMap(keyReader: (ByteBuf) -> K, valueReader: (ByteBuf) -> 
 }
 
 
-fun ByteBuf.readIdentifier(): ResourceLocation {
+fun ByteBuf.readIdentifier(): Identifier {
     val str = this.readString()
     //If this is null we should be using writeNullable anyway
-    return ResourceLocation.tryParse(str)!!
+    return Identifier.tryParse(str)!!
 }
 
-fun ByteBuf.writeIdentifier(id: ResourceLocation) {
+fun ByteBuf.writeIdentifier(id: Identifier) {
     writeString(id.toString())
 }
 

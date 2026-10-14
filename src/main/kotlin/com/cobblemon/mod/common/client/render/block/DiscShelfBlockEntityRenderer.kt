@@ -18,15 +18,15 @@ import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.level.BlockAndTintGetter
+import net.minecraft.client.renderer.block.BlockAndTintGetter
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import org.joml.Matrix4f
 
@@ -136,7 +136,7 @@ class DiscShelfBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) :
     private fun renderSlotQuad(
             poseStack: PoseStack,
             buffer: MultiBufferSource,
-            texture: ResourceLocation,
+            texture: Identifier,
             color: Int,
             light: Int,
             width: Float,
@@ -172,7 +172,7 @@ class DiscShelfBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) :
                 .setUv1(0, 0).setUv2(light and 0xFFFF, light shr 16).setNormal(0f, 0f, -1f)
     }
 
-    private fun getItemTexture(itemStack: ItemStack): ResourceLocation {
+    private fun getItemTexture(itemStack: ItemStack): Identifier {
         val id = BuiltInRegistries.ITEM.getKey(itemStack.item)
         val resource = cobblemonResource("textures/block/disc_shelf/${id.path}.png")
 

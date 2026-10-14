@@ -16,14 +16,14 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.mojang.serialization.JsonOps
-import net.minecraft.advancements.critereon.ItemCustomDataPredicate
-import net.minecraft.advancements.critereon.ItemPredicate
-import net.minecraft.advancements.critereon.ItemSubPredicates
-import net.minecraft.advancements.critereon.NbtPredicate
+import net.minecraft.core.component.predicates.CustomDataPredicate
+import net.minecraft.advancements.criterion.ItemPredicate
+import net.minecraft.core.component.predicates.DataComponentPredicates
+import net.minecraft.advancements.criterion.NbtPredicate
 import net.minecraft.core.HolderLookup
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import java.lang.reflect.Type
 
@@ -48,9 +48,9 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
             if (jObject.size() == 2 && jObject.has(LEGACY_ITEM) && jObject.has(LEGACY_NBT)) {
                 val builder = this.createBuilderForItem(jObject.get(LEGACY_ITEM).asString)
                 val nbtPredicate = NbtPredicate.CODEC.decode(JsonOps.INSTANCE, jObject.get(LEGACY_NBT)).result().get().first
-                val itemCustomDataPredicate = ItemCustomDataPredicate(nbtPredicate)
+                val itemCustomDataPredicate = CustomDataPredicate(nbtPredicate)
                 return builder
-                    .withSubPredicate(ItemSubPredicates.CUSTOM_DATA, itemCustomDataPredicate)
+                    .withSubPredicate(DataComponentPredicates.CUSTOM_DATA, itemCustomDataPredicate)
                     .build()
             }
         }
@@ -64,7 +64,7 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
     private fun createBuilderForItem(raw: String): ItemPredicate.Builder {
         val isTag = raw.startsWith(TAG_PREFIX)
         val builder = ItemPredicate.Builder.item()
-        return ResourceLocation.read(if (isTag) raw.substring(1) else raw)
+        return Identifier.read(if (isTag) raw.substring(1) else raw)
             .mapOrElse(
                 { id ->
                     if (isTag) {

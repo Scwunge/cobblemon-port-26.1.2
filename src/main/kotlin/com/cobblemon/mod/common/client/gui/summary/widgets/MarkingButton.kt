@@ -12,18 +12,18 @@ import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class MarkingButton(
     val buttonX: Number,
     val buttonY: Number,
     var buttonState: Int,
     var canEdit: Boolean = true,
-    private val resource: ResourceLocation,
+    private val resource: Identifier,
     val clickAction: OnPress
 ): Button(buttonX.toInt(), buttonY.toInt(), (SIZE / 2), (SIZE / 2), "".text(), clickAction, DEFAULT_NARRATION), CobblemonRenderable {
 
@@ -32,7 +32,7 @@ class MarkingButton(
         const val SCALE = 0.5F
     }
 
-    fun renderButton(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    fun renderButton(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
 
         blitk(

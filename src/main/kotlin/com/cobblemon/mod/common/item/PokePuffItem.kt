@@ -24,7 +24,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.UseAnim
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
 class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
@@ -124,9 +124,9 @@ class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
         return this.favouriteFlavour == this.dislikedFlavour
     }
 
-    override fun getUseAnimation(stack: ItemStack): UseAnim {
+    override fun getUseAnimation(stack: ItemStack): ItemUseAnimation {
         val isPlain = isPlainPuff(stack)
-        return if (isPlain) UseAnim.EAT else UseAnim.NONE
+        return if (isPlain) ItemUseAnimation.EAT else ItemUseAnimation.NONE
     }
 
     override fun getUseDuration(stack: ItemStack, entity: LivingEntity): Int {

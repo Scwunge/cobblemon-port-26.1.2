@@ -13,15 +13,15 @@ import com.cobblemon.mod.common.api.gui.drawProfile
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import java.util.UUID
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.events.GuiEventListener
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class NPCRenderWidget(
     val x: Int,
     val y: Int,
     val entityId: UUID,
-    var identifier: ResourceLocation,
+    var identifier: Identifier,
     val aspects: MutableSet<String>
 ) : CobblemonRenderable, GuiEventListener {
     val state = FloatingState().also {
@@ -36,7 +36,7 @@ class NPCRenderWidget(
 
     override fun isFocused() = false
     override fun setFocused(focused: Boolean) {}
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
 
         context.enableScissor(
             x,

@@ -138,7 +138,7 @@ import kotlin.reflect.jvm.javaField
 import net.minecraft.client.Minecraft
 import net.minecraft.commands.synchronization.SingletonArgumentInfo
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.entity.player.Player
@@ -180,7 +180,7 @@ object Cobblemon {
     var permissionValidator: PermissionValidator by Delegates.observable(LaxPermissionValidator().also { it.initialize() }) { _, _, newValue -> newValue.initialize() }
     var statProvider: StatProvider = CobblemonStatProvider
     var seasonResolver: SeasonResolver = TagSeasonResolver
-    var wallpapers = mutableMapOf<UUID, Set<ResourceLocation>>()
+    var wallpapers = mutableMapOf<UUID, Set<Identifier>>()
 
     val serverPlayerStructs = mutableMapOf<UUID, ObjectValue<Player>>()
 

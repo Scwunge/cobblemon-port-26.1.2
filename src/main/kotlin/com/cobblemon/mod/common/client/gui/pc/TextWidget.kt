@@ -14,12 +14,12 @@ import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.mojang.blaze3d.platform.InputConstants
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
@@ -50,7 +50,7 @@ abstract class TextWidget(
         else (if(string.isEmpty()) placeholder else string.text())
     }
 
-    fun renderCursor(context: GuiGraphics, text: MutableComponent) {
+    fun renderCursor(context: GuiGraphicsExtractor, text: MutableComponent) {
         if (showCursor && !value.isEmpty() && cursorPosition != value.length) {
             val startToCursorWidth = Minecraft.getInstance().font.width((text.getString(cursorPosition).text().bold()).font(CobblemonResources.DEFAULT_LARGE))
             context.fill(

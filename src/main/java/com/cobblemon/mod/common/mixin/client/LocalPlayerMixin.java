@@ -30,7 +30,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.player.Input;
+import net.minecraft.client.player.ClientInput;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -65,7 +65,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements O
     @Shadow
     private float jumpRidingScale;
 
-    @Shadow public Input input;
+    @Shadow public ClientInput input;
 
     @Shadow private int autoJumpTime;
 
@@ -113,7 +113,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements O
         if (Minecraft.getInstance().player != (Object)this) return;
         if (!(this.getVehicle() instanceof PokemonEntity pokemonEntity)) return;
 
-        // Gather driver Input
+        // Gather driver ClientInput
         float vertInput = this.jumping ? 1.0f : (((Player)this).isShiftKeyDown() ? -1.0f : 0.0f);
         Vector3f driverInput = new Vector3f(Math.signum(this.xxa), vertInput, Math.signum(this.zza));
 

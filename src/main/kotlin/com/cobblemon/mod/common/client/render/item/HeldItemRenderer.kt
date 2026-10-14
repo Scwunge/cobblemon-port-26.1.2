@@ -19,7 +19,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.LightTexture
+import net.minecraft.client.renderer.Lightmap
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -48,7 +48,7 @@ class HeldItemRenderer {
         state: PosableState,
         poseStack: PoseStack,
         buffer: MultiBufferSource,
-        light: Int = LightTexture.pack(11, 7),
+        light: Int = Lightmap.pack(11, 7),
         frontLight: Boolean = false,
         entity: LivingEntity? = null
     ) {

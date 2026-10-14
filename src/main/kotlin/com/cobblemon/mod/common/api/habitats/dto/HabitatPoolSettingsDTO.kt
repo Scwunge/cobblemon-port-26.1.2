@@ -13,10 +13,10 @@ import com.cobblemon.mod.common.api.habitats.HabitatPool
 import com.cobblemon.mod.common.api.habitats.HabitatPools
 import com.cobblemon.mod.common.api.habitats.HabitatSpawn
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class HabitatPoolSettingsDTO() {
-    lateinit var id: ResourceLocation
+    lateinit var id: Identifier
     var isReference = false
 
     // Below properties are only there when it's not a reference, otherwise the handler will have to look them up from the id

@@ -23,7 +23,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 import net.minecraft.world.item.Item
@@ -40,13 +40,13 @@ object CobblemonCosmeticItems : JsonDataRegistry<CosmeticItemAssignment> {
         .setPrettyPrinting()
         .registerTypeAdapter(PokemonProperties::class.java, PokemonPropertiesAdapter(saveLong = false))
         .registerTypeAdapter(TypeToken.getParameterized(RegistryLikeCondition::class.java, Item::class.java).type, ItemLikeConditionAdapter)
-        .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+        .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
         .create()
 
     @JvmField
     val cosmeticItems = mutableListOf<CosmeticItemAssignment>()
 
-    override fun reload(data: Map<ResourceLocation, CosmeticItemAssignment>) {
+    override fun reload(data: Map<Identifier, CosmeticItemAssignment>) {
         cosmeticItems.clear()
         data.entries.forEach { (id, value) -> value.id = id }
         cosmeticItems.addAll(data.values)

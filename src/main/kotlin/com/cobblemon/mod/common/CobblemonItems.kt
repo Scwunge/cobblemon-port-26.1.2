@@ -48,7 +48,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.LivingEntity
@@ -527,7 +527,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     @JvmField val MAGENTA_PLAQUE = blockItem("magenta_plaque", CobblemonBlocks.MAGENTA_PLAQUE)
     @JvmField val PINK_PLAQUE = blockItem("pink_plaque", CobblemonBlocks.PINK_PLAQUE)
 
-    private val berries = mutableMapOf<ResourceLocation, BerryItem>()
+    private val berries = mutableMapOf<Identifier, BerryItem>()
     // Plants
     @JvmField val CHERI_BERRY = berryItem("cheri", StatusCuringBerryItem(CobblemonBlocks.CHERI_BERRY, Statuses.PARALYSIS))
     @JvmField val CHESTO_BERRY = berryItem("chesto", StatusCuringBerryItem(CobblemonBlocks.CHESTO_BERRY, Statuses.SLEEP))
@@ -1598,7 +1598,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
 
     private fun candyItem(name: String, rarity: Rarity = Rarity.COMMON, calculator: CandyItem.Calculator): CandyItem  = this.create(name, CandyItem(rarity, calculator))
 
-    private fun pokerodItem(pokeRodId: ResourceLocation, rarity: Rarity = Rarity.COMMON): PokerodItem {
+    private fun pokerodItem(pokeRodId: Identifier, rarity: Rarity = Rarity.COMMON): PokerodItem {
         val settings = Item.Properties().stacksTo(1).durability(256).rarity(rarity)
         val item = create(pokeRodId.path, PokerodItem(pokeRodId, settings))
         pokeRods.add(item)

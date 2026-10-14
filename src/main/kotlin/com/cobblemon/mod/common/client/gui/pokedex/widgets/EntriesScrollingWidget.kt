@@ -30,7 +30,7 @@ import com.cobblemon.mod.common.pokemon.Gender
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.util.Mth
@@ -67,7 +67,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         return pX + width - SCROLL_BAR_WIDTH
     }
 
-    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
         val yMargin = 3
         val yStart = y + yMargin
@@ -101,7 +101,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
     }
 
     override fun renderItem(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         delta: Float,
@@ -137,7 +137,7 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         var y: Int = 0
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
             x: Int,

@@ -70,7 +70,7 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.resources.ResourceKey
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.TagKey
@@ -324,12 +324,12 @@ object MoLangFunctions {
             )
         value.functions["is_in"] =
             Function put@{ params: MoParams ->
-                val tag = TagKey.create(key, ResourceLocation.parse(params.getString(0).replace("#", "")))
+                val tag = TagKey.create(key, Identifier.parse(params.getString(0).replace("#", "")))
                 return@put DoubleValue(if (value.obj.`is`(tag)) 1.0 else 0.0)
             }
         value.functions["is_of"] =
             Function put@{ params: MoParams ->
-                val identifier = ResourceLocation.parse(params.getString(0))
+                val identifier = Identifier.parse(params.getString(0))
                 return@put DoubleValue(if (value.obj.`is`(identifier)) 1.0 else 0.0)
             }
         return value
@@ -489,5 +489,5 @@ object MoLangFunctions {
 }
 
 // TODO: this one is unused. Should we move it to [MoLangFunctions] object?
-fun Either<ResourceLocation, ExpressionLike>.runScript(runtime: MoLangRuntime) =
+fun Either<Identifier, ExpressionLike>.runScript(runtime: MoLangRuntime) =
     map({ CobblemonScripts.run(it, runtime) }, { it.resolve(runtime) })

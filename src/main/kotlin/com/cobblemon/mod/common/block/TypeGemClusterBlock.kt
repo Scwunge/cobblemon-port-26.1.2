@@ -16,7 +16,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
 import net.minecraft.util.StringRepresentable
@@ -45,7 +45,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 class TypeGemClusterBlock(
     settings: Properties,
     val nextStage: Block,
-    val dropItemId: ResourceLocation
+    val dropItemId: Identifier
 ) : DirectionalBlock(settings.pushReaction(PushReaction.DESTROY)) {
 
     companion object {
@@ -53,7 +53,7 @@ class TypeGemClusterBlock(
             instance.group(
                 propertiesCodec(),
                 Block.CODEC.fieldOf("nextStage").forGetter { it.nextStage },
-                ResourceLocation.CODEC.fieldOf("dropItem").forGetter { it.dropItemId }
+                Identifier.CODEC.fieldOf("dropItem").forGetter { it.dropItemId }
             ).apply(instance) { settings, nextStage, dropItemId ->
                 TypeGemClusterBlock(settings, nextStage, dropItemId).also {
                     gemToClusterMap[nextStage] = it

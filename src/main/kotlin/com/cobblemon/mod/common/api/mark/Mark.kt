@@ -13,18 +13,18 @@ import com.cobblemon.mod.common.util.*
 import com.google.gson.annotations.SerializedName
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.StringRepresentable
 
 class Mark(
-    identifier: ResourceLocation,
+    identifier: Identifier,
     val name: String,
     val description: String,
     val title: String?,
     @SerializedName(value = "titleColor", alternate = ["titleColour"])
     val titleColour: String?,
-    val texture: ResourceLocation,
-    val replace: List<ResourceLocation>?,
+    val texture: Identifier,
+    val replace: List<Identifier>?,
     val group: String?,
     val chance: Float = 0F,
     val indexNumber: Int?,
@@ -52,7 +52,7 @@ class Mark(
     }
 
     @Transient
-    var identifier: ResourceLocation = identifier
+    var identifier: Identifier = identifier
         internal set
 
     override fun getSerializedName(): String = identifier.toString()

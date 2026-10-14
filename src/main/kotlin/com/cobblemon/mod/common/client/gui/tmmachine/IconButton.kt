@@ -13,19 +13,19 @@ import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.text.text
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class IconButton(
     var buttonX: Float,
     var buttonY: Float,
     val buttonWidth: Number,
     val buttonHeight: Number,
-    var resource: ResourceLocation? = null,
+    var resource: Identifier? = null,
     val scale: Float = 0.5F,
     val silent: Boolean = false,
     val clickAction: OnPress
@@ -33,7 +33,7 @@ class IconButton(
     override fun mouseDragged(d: Double, e: Double, i: Int, f: Double, g: Double) = false
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         resource?.let {
             blitk(
                 matrixStack = context.pose(),

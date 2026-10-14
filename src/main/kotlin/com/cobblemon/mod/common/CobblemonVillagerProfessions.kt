@@ -17,7 +17,7 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.ResourceKey
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.world.entity.ai.village.poi.PoiType
-import net.minecraft.world.entity.npc.VillagerProfession
+import net.minecraft.world.entity.npc.villager.VillagerProfession
 
 object CobblemonVillagerProfessions: PlatformRegistry<Registry<VillagerProfession>, ResourceKey<Registry<VillagerProfession>>, VillagerProfession>() {
     override val registry: Registry<VillagerProfession> = BuiltInRegistries.VILLAGER_PROFESSION

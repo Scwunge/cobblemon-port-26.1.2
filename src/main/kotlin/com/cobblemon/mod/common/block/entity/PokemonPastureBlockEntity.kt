@@ -39,7 +39,7 @@ import net.minecraft.core.Vec3i
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.NbtUtils
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.tags.FluidTags
@@ -343,7 +343,7 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
 
     private fun isPlayerViewing(player: ServerPlayer): Boolean {
         val pastureLink = PastureLinkManager.getLinkByPlayer(player)
-        return pastureLink != null && pastureLink.pos == blockPos && pastureLink.dimension == ResourceLocation.tryParse(
+        return pastureLink != null && pastureLink.pos == blockPos && pastureLink.dimension == Identifier.tryParse(
             player.level().dimensionTypeRegistration().registeredName // todo (techdaan): confirm this is good
         )
     }

@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import com.cobblemon.mod.common.client.render.item.HeldItemRenderer
 import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -60,7 +60,7 @@ class ModelWidget(
 
     var shouldRender = true
 
-    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, partialTicks: Float) {
         if (!shouldRender) {
             return
         }
@@ -68,7 +68,7 @@ class ModelWidget(
         renderPKM(context, partialTicks, pMouseX, pMouseY)
     }
 
-    private fun renderPKM(context: GuiGraphics, partialTicks: Float, mouseX: Int, mouseY: Int) {
+    private fun renderPKM(context: GuiGraphicsExtractor, partialTicks: Float, mouseX: Int, mouseY: Int) {
         val matrices = context.pose()
         matrices.pushPose()
 

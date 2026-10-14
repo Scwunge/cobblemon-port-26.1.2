@@ -31,7 +31,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -83,9 +83,9 @@ class PasturePokemonScrollList(
 
     public override fun addEntry(entry: PastureSlot) = super.addEntry(entry)
     public override fun removeEntry(entry: PastureSlot) = super.removeEntry(entry)
-    override fun renderSelection(context: GuiGraphics, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
+    override fun renderSelection(context: GuiGraphicsExtractor, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
 
         context.pose().pushPose()
@@ -154,7 +154,7 @@ class PasturePokemonScrollList(
                 && mouseY < bottom
     }
 
-    override fun renderListBackground(context: GuiGraphics) {}
+    override fun renderListBackground(context: GuiGraphicsExtractor) {}
 
     private fun correctSize() {
         setRectangle(WIDTH, HEIGHT, listX, (listY - 4))
@@ -197,7 +197,7 @@ class PasturePokemonScrollList(
         override fun getNarration() = pokemon.displayName
 
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             rowTop: Int,
             rowLeft: Int,

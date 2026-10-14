@@ -43,7 +43,7 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
@@ -70,8 +70,8 @@ open class PCStore(
     protected var lockedSize = false
     val backupStore = BottomlessStore(UUID(0L, 0L))
     val observingUUIDs = mutableSetOf(uuid)
-    val unlockedWallpapers = mutableSetOf<ResourceLocation>()
-    val unseenWallpapers = mutableSetOf<ResourceLocation>()
+    val unlockedWallpapers = mutableSetOf<Identifier>()
+    val unseenWallpapers = mutableSetOf<Identifier>()
 
     override fun iterator() = boxes.asSequence().flatten().iterator()
     override fun getObservingPlayers() = observingUUIDs.mapNotNull { it.getPlayer() }
@@ -184,10 +184,10 @@ open class PCStore(
         removeDuplicates()
 
         if (nbt.contains(DataKeys.STORE_UNLOCKED_WALLPAPERS)) {
-            unlockedWallpapers.addAll(nbt.getList(DataKeys.STORE_UNLOCKED_WALLPAPERS, Tag.TAG_STRING.toInt()).map { ResourceLocation.parse(it.asString) })
+            unlockedWallpapers.addAll(nbt.getList(DataKeys.STORE_UNLOCKED_WALLPAPERS, Tag.TAG_STRING.toInt()).map { Identifier.parse(it.asString) })
         }
         if (nbt.contains(DataKeys.STORE_UNSEEN_WALLPAPERS)) {
-            unseenWallpapers.addAll(nbt.getList(DataKeys.STORE_UNSEEN_WALLPAPERS, Tag.TAG_STRING.toInt()).map { ResourceLocation.parse(it.asString) })
+            unseenWallpapers.addAll(nbt.getList(DataKeys.STORE_UNSEEN_WALLPAPERS, Tag.TAG_STRING.toInt()).map { Identifier.parse(it.asString) })
         }
         return this
     }
@@ -214,8 +214,8 @@ open class PCStore(
             json.add(DataKeys.STORE_BOX + index, box.saveToJSON(JsonObject(), registryAccess))
         }
         json.add(DataKeys.STORE_BACKUP, backupStore.saveToJSON(JsonObject(), registryAccess))
-        json.add(DataKeys.STORE_UNLOCKED_WALLPAPERS, unlockedWallpapers.map(ResourceLocation::toString).toJsonArray())
-        json.add(DataKeys.STORE_UNSEEN_WALLPAPERS, unseenWallpapers.map(ResourceLocation::toString).toJsonArray())
+        json.add(DataKeys.STORE_UNLOCKED_WALLPAPERS, unlockedWallpapers.map(Identifier::toString).toJsonArray())
+        json.add(DataKeys.STORE_UNSEEN_WALLPAPERS, unseenWallpapers.map(Identifier::toString).toJsonArray())
         return json
     }
 
@@ -234,10 +234,10 @@ open class PCStore(
         removeDuplicates()
 
         if (json.has(DataKeys.STORE_UNLOCKED_WALLPAPERS)) {
-            unlockedWallpapers.addAll(json.getAsJsonArray(DataKeys.STORE_UNLOCKED_WALLPAPERS).map { ResourceLocation.parse(it.asString) })
+            unlockedWallpapers.addAll(json.getAsJsonArray(DataKeys.STORE_UNLOCKED_WALLPAPERS).map { Identifier.parse(it.asString) })
         }
         if (json.has(DataKeys.STORE_UNSEEN_WALLPAPERS)) {
-            unseenWallpapers.addAll(json.getAsJsonArray(DataKeys.STORE_UNSEEN_WALLPAPERS).map { ResourceLocation.parse(it.asString) })
+            unseenWallpapers.addAll(json.getAsJsonArray(DataKeys.STORE_UNSEEN_WALLPAPERS).map { Identifier.parse(it.asString) })
         }
 
         return this
@@ -308,7 +308,7 @@ open class PCStore(
         }
     }
 
-    fun markWallpapersSeen(textures: Set<ResourceLocation>) {
+    fun markWallpapersSeen(textures: Set<Identifier>) {
         // This first step cleans out any that were unseen but were removed from the datapack side before they were seen.
         val currentlyUnseen = unseenWallpapers.mapNotNull { CobblemonUnlockableWallpapers.unlockableWallpapers[it] }
 
@@ -318,7 +318,7 @@ open class PCStore(
         pcChangeObservable.emit(Unit)
     }
 
-    fun unlockWallpaper(wallpaper: ResourceLocation, playSound: Boolean = true): Boolean {
+    fun unlockWallpaper(wallpaper: Identifier, playSound: Boolean = true): Boolean {
         val unlockableWallpaper = CobblemonUnlockableWallpapers.unlockableWallpapers[wallpaper]
         var succeeded = false
         if (unlockableWallpaper != null && unlockableWallpaper.enabled) {

@@ -20,7 +20,7 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import java.util.*
 
@@ -32,14 +32,14 @@ internal data class PokemonP3(
     val heldItemVisible: Optional<Boolean>,
     val canDropHeldItem: Optional<Boolean>,
     val cosmeticItem: ItemStack,
-    val activeMark: Optional<ResourceLocation>,
-    val marks: Set<ResourceLocation>,
-    val potentialMarks: Set<ResourceLocation>,
+    val activeMark: Optional<Identifier>,
+    val marks: Set<Identifier>,
+    val potentialMarks: Set<Identifier>,
     val markings: List<Int>,
     val rideBoosts: Map<String, Float>,
     val rideStamina: Float,
     val currentFullness: Int,
-    val interactionCooldowns: Map<ResourceLocation, Int>,
+    val interactionCooldowns: Map<Identifier, Int>,
     val isAlpha: Boolean
 ) : Partial<Pokemon> {
 
@@ -78,14 +78,14 @@ internal data class PokemonP3(
                 Codec.BOOL.optionalFieldOf(DataKeys.HELD_ITEM_VISIBLE).forGetter(PokemonP3::heldItemVisible),
                 Codec.BOOL.optionalFieldOf(DataKeys.HELD_ITEM_AI_DROPPABLE).forGetter(PokemonP3::canDropHeldItem),
                 ItemStack.CODEC.optionalFieldOf(DataKeys.POKEMON_COSMETIC_ITEM).forGetter { Optional.ofNullable(it.cosmeticItem.takeIf { !it.isEmpty }) },
-                ResourceLocation.CODEC.optionalFieldOf(DataKeys.POKEMON_ACTIVE_MARK).forGetter(PokemonP3::activeMark),
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf(DataKeys.POKEMON_MARKS, emptyList()).forGetter { it.marks.toMutableList() },
-                Codec.list(ResourceLocation.CODEC).optionalFieldOf(DataKeys.POKEMON_POTENTIAL_MARKS, emptyList()).forGetter { it.potentialMarks.toMutableList() },
+                Identifier.CODEC.optionalFieldOf(DataKeys.POKEMON_ACTIVE_MARK).forGetter(PokemonP3::activeMark),
+                Codec.list(Identifier.CODEC).optionalFieldOf(DataKeys.POKEMON_MARKS, emptyList()).forGetter { it.marks.toMutableList() },
+                Codec.list(Identifier.CODEC).optionalFieldOf(DataKeys.POKEMON_POTENTIAL_MARKS, emptyList()).forGetter { it.potentialMarks.toMutableList() },
                 Codec.list(Codec.INT).optionalFieldOf(DataKeys.POKEMON_MARKINGS, listOf(0, 0, 0, 0, 0, 0)).forGetter(PokemonP3::markings),
                 Codec.unboundedMap(Codec.STRING, Codec.FLOAT).optionalFieldOf(DataKeys.POKEMON_RIDE_BOOSTS, emptyMap<String, Float>()).forGetter(PokemonP3::rideBoosts),
                 Codec.FLOAT.optionalFieldOf(DataKeys.POKEMON_RIDE_STAMINA, 1F).forGetter(PokemonP3::rideStamina),
                 Codec.intRange(0, 100).optionalFieldOf(DataKeys.POKEMON_FULLNESS, 0).forGetter(PokemonP3::currentFullness),
-                Codec.unboundedMap(ResourceLocation.CODEC, Codec.INT).optionalFieldOf(DataKeys.POKEMON_INTERACTION_COOLDOWN, emptyMap<ResourceLocation, Int>()).forGetter(PokemonP3::interactionCooldowns),
+                Codec.unboundedMap(Identifier.CODEC, Codec.INT).optionalFieldOf(DataKeys.POKEMON_INTERACTION_COOLDOWN, emptyMap<Identifier, Int>()).forGetter(PokemonP3::interactionCooldowns),
                 Codec.BOOL.optionalFieldOf(DataKeys.POKEMON_ALPHA, false).forGetter(PokemonP3::isAlpha)
             ).apply(instance) {
               originalTrainerType,

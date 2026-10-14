@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
-import net.minecraft.client.resources.model.BakedModel
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel
 import net.minecraft.core.Direction
 import net.minecraft.util.FastColor
 import net.minecraft.world.item.ItemDisplayContext
@@ -94,7 +94,7 @@ class CampfireBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : Bl
             .setValue(CampfirePotBlock.OPEN, isLidOpen)
             .setValue(FACING, Direction.fromYRot(yRot.toDouble()))
             .setValue(CampfirePotBlock.OCCUPIED, (!blockEntity.getSeasonings().isEmpty() || !blockEntity.getIngredients().isEmpty()))
-        val bakedModel: BakedModel = blockRenderer.getBlockModel(state)
+        val bakedModel: BlockStateModel = blockRenderer.getBlockModel(state)
 
         val red = FastColor.ARGB32.red(blockEntity.brothColor) / 255F
         val green = FastColor.ARGB32.green(blockEntity.brothColor) / 255F

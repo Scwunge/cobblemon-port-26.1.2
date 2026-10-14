@@ -17,13 +17,13 @@ import com.cobblemon.mod.common.client.gui.battle.BattleGUI
 import com.cobblemon.mod.common.client.gui.battle.widgets.BattleOptionTile
 import com.cobblemon.mod.common.util.battleLang
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.narration.NarrationElementOutput
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class BattleGeneralActionSelection(
     battleGUI: BattleGUI,
@@ -78,7 +78,7 @@ class BattleGeneralActionSelection(
         }
     }
 
-    private fun addOption(rank: Int, text: MutableComponent, texture: ResourceLocation, onClick: () -> Unit) {
+    private fun addOption(rank: Int, text: MutableComponent, texture: Identifier, onClick: () -> Unit) {
         val startY = Minecraft.getInstance().window.guiScaledHeight - BattleGUI.OPTION_VERTICAL_OFFSET
         val x = if (rank % 2 == 0) BattleGUI.OPTION_ROOT_X else BattleGUI.OPTION_ROOT_X + BattleGUI.OPTION_HORIZONTAL_SPACING + BattleOptionTile.OPTION_WIDTH
         val y = if (rank > 1) startY + BattleOptionTile.OPTION_HEIGHT + BattleGUI.OPTION_HORIZONTAL_SPACING else startY
@@ -94,7 +94,7 @@ class BattleGeneralActionSelection(
         )
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if(lastAnwseredRequest != null) {
             backButton.render(context, mouseX, mouseY, delta)
         }

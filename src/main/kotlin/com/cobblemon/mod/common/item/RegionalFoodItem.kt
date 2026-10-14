@@ -20,7 +20,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.UseAnim
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
 class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelectingItem {
@@ -63,7 +63,7 @@ class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelect
         return InteractionResultHolder.fail(stack)
     }
 
-    override fun getUseAnimation(stack: ItemStack): UseAnim = UseAnim.EAT
+    override fun getUseAnimation(stack: ItemStack): ItemUseAnimation = ItemUseAnimation.EAT
 
     override fun getUseDuration(stack: ItemStack, entity: LivingEntity): Int = 32
 

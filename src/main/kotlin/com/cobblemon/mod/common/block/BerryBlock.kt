@@ -23,7 +23,7 @@ import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -58,7 +58,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class BerryBlock(private val berryIdentifier: ResourceLocation, settings: Properties) : BaseEntityBlock(settings), BonemealableBlock, Mulchable, ShearableBlock {
+class BerryBlock(private val berryIdentifier: Identifier, settings: Properties) : BaseEntityBlock(settings), BonemealableBlock, Mulchable, ShearableBlock {
 
     private val lookupDirections = setOf(Direction.NORTH, Direction.EAST, Direction.WEST, Direction.SOUTH)
 
@@ -282,7 +282,7 @@ class BerryBlock(private val berryIdentifier: ResourceLocation, settings: Proper
 
     companion object {
         val CODEC: MapCodec<BerryBlock> = RecordCodecBuilder.mapCodec { it.group(
-            ResourceLocation.CODEC.fieldOf("berry").forGetter(BerryBlock::berryIdentifier),
+            Identifier.CODEC.fieldOf("berry").forGetter(BerryBlock::berryIdentifier),
             propertiesCodec()
         ).apply(it, ::BerryBlock) }
 

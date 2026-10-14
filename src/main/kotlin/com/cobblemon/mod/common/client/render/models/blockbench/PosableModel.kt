@@ -49,13 +49,13 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.math.Axis
-import net.minecraft.Util
+import net.minecraft.util.Util
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.RenderStateShard
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.DynamicTexture
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemDisplayContext
@@ -531,7 +531,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
     }
 
     /** Makes a [RenderType] in a jank way. Mostly works so that's cool. */
-    fun getLayer(texture: ResourceLocation, emissive: Boolean, translucent: Boolean, translucentCull: Boolean): RenderType {
+    fun getLayer(texture: Identifier, emissive: Boolean, translucent: Boolean, translucentCull: Boolean): RenderType {
         return if (!emissive && !translucent) {
             RenderType.entityCutout(texture)
         } else if (!emissive && !translucentCull) {
@@ -541,7 +541,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         }
     }
 
-    fun getScrollingLayer(texture: ResourceLocation, scrolling: ScrollingTextureSettings, layer: ModelLayer): RenderType {
+    fun getScrollingLayer(texture: Identifier, scrolling: ScrollingTextureSettings, layer: ModelLayer): RenderType {
         val gameTime = Util.getMillis().toFloat() / 1000f
         val offsetU = (gameTime * scrolling.speedU) % 1.0f
         val offsetV = (gameTime * scrolling.speedV) % 1.0f

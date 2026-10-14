@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.util.readIdentifier
 import com.cobblemon.mod.common.util.writeIdentifier
 import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 /**
  * Notifies a player that they must open the PC GUI for the given PC store ID. This is assuming
@@ -33,12 +33,12 @@ import net.minecraft.resources.ResourceLocation
 class OpenPCPacket : NetworkPacket<OpenPCPacket> {
     val storeID: UUID
     val box: Int?
-    val unseenWallpapers: Set<ResourceLocation>
+    val unseenWallpapers: Set<Identifier>
     val silent: Boolean
 
     @JvmOverloads
     @Deprecated("Use the constructor with the PCStore object instead, this will become private in a future title update", level = DeprecationLevel.WARNING)
-    constructor(storeID: UUID, box: Int? = null, unseenWallpapers: Set<ResourceLocation> = emptySet(), silent: Boolean? = false) {
+    constructor(storeID: UUID, box: Int? = null, unseenWallpapers: Set<Identifier> = emptySet(), silent: Boolean? = false) {
         this.storeID = storeID
         this.box = box
         this.unseenWallpapers = unseenWallpapers

@@ -25,7 +25,7 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.mojang.blaze3d.systems.RenderSystem
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ImageButton
 import net.minecraft.client.gui.components.StateSwitchingButton
 import net.minecraft.client.gui.components.Tooltip
@@ -34,9 +34,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.inventory.ClickType
+import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.RecipeBookMenu
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.crafting.CraftingInput
@@ -61,12 +61,12 @@ class CookingPotScreen(
         const val COOK_PROGRESS_WIDTH = 22
 
         private val BACKGROUND = cobblemonResource("textures/gui/campfirepot/campfire_pot.png")
-        val COOK_PROGRESS_SPRITE: ResourceLocation = cobblemonResource("textures/gui/campfirepot/cook_progress.png")
+        val COOK_PROGRESS_SPRITE: Identifier = cobblemonResource("textures/gui/campfirepot/cook_progress.png")
         private val FILTER_BUTTON_SPRITES = WidgetSprites(
-            ResourceLocation.withDefaultNamespace("recipe_book/campfire_pot_filter_enabled"),
-            ResourceLocation.withDefaultNamespace("recipe_book/campfire_pot_filter_disabled"),
-            ResourceLocation.withDefaultNamespace("recipe_book/campfire_pot_filter_enabled_highlighted"),
-            ResourceLocation.withDefaultNamespace("recipe_book/campfire_pot_filter_disabled_highlighted")
+            Identifier.withDefaultNamespace("recipe_book/campfire_pot_filter_enabled"),
+            Identifier.withDefaultNamespace("recipe_book/campfire_pot_filter_disabled"),
+            Identifier.withDefaultNamespace("recipe_book/campfire_pot_filter_enabled_highlighted"),
+            Identifier.withDefaultNamespace("recipe_book/campfire_pot_filter_disabled_highlighted")
         )
     }
 
@@ -129,12 +129,12 @@ class CookingPotScreen(
         addRenderableWidget(cookButton)
     }
 
-    override fun renderLabels(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int) {
+    override fun renderLabels(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false)
     }
 
     override fun renderBg(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         partialTick: Float,
         mouseX: Int,
         mouseY: Int
@@ -159,7 +159,7 @@ class CookingPotScreen(
     }
 
     override fun render(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         partialTicks: Float
@@ -200,7 +200,7 @@ class CookingPotScreen(
         this.recipeBookComponent.renderTooltip(context, this.leftPos, this.topPos, mouseX, mouseY)
     }
 
-    override fun renderSlot(guiGraphics: GuiGraphics, slot: Slot) {
+    override fun renderSlot(guiGraphics: GuiGraphicsExtractor, slot: Slot) {
         if (slot is SeasoningSlot && ((!menu.carried.isEmpty && !slot.mayPlace(menu.carried)) || (slot.hasItem() && !slot.mayPlace(slot.item))) ) {
             val x = slot.x
             val y = slot.y
@@ -249,7 +249,7 @@ class CookingPotScreen(
     }
 
     override fun renderTooltip(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int
     ) {
@@ -279,7 +279,7 @@ class CookingPotScreen(
     }
 
     // Java nullability with kotlin is my greatest enemy, it'll complain but this works
-    override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ClickType) {
+    override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ContainerInput) {
         super.slotClicked(slot, slotId, mouseButton, type)
         recipeBookComponent.slotClicked(slot)
     }

@@ -22,7 +22,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
@@ -243,7 +243,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         return state.rotate(mirror.getRotation(state.getValue(HORIZONTAL_FACING) as Direction))
     }
 
-    enum class Type(val poserId: ResourceLocation) : StringRepresentable {
+    enum class Type(val poserId: Identifier) : StringRepresentable {
         RED(cobblemonResource("gilded_chest")),
         BLUE(cobblemonResource("blue_gilded_chest")),
         GREEN(cobblemonResource("green_gilded_chest")),

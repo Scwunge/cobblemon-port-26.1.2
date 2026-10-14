@@ -28,18 +28,18 @@ import io.netty.buffer.ByteBuf
 import java.util.UUID
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class NPCConfigurationDTO : Encodable, Decodable {
     var npcUUID: UUID = UUID.randomUUID()
     var npcName: MutableComponent = "".text()
-    var npcClass: ResourceLocation = cobblemonResource("default")
-    var resourceIdentifier: ResourceLocation = npcClass
+    var npcClass: Identifier = cobblemonResource("default")
+    var resourceIdentifier: Identifier = npcClass
     var battle: NPCBattleConfiguration? = null
     var interactionInherited: Boolean = false
     var interaction: NPCInteractConfiguration? = null
     var aspects: MutableSet<String> = mutableSetOf()
-    var behaviours: MutableSet<ResourceLocation> = mutableSetOf()
+    var behaviours: MutableSet<Identifier> = mutableSetOf()
     var registeredVariables: MutableList<MoLangConfigVariable> = mutableListOf()
     var variables: MutableMap<String, String> = mutableMapOf()
 

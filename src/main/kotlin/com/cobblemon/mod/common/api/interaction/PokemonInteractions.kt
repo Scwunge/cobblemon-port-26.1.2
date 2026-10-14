@@ -25,9 +25,9 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import net.minecraft.advancements.critereon.ItemPredicate
+import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.core.HolderLookup
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
 import net.minecraft.util.LowerCaseEnumTypeAdapterFactory
@@ -42,7 +42,7 @@ object PokemonInteractions : ServerJsonDataRegistry<PokemonInteractionSet> {
     override val type = PackType.SERVER_DATA
     override fun setupParser(registry: HolderLookup.Provider): Gson {
         return GsonBuilder()
-            .registerTypeAdapter(ResourceLocation::class.java, IdentifierAdapter)
+            .registerTypeAdapter(Identifier::class.java, IdentifierAdapter)
             .registerTypeAdapter(PokemonProperties::class.java, pokemonPropertiesShortAdapter)
             .registerTypeAdapter(ItemPredicate::class.java, LegacyItemConditionWrapperAdapter(registry))
             .registerTypeAdapter(Requirement::class.java, CobblemonRequirementAdapter)
@@ -69,7 +69,7 @@ object PokemonInteractions : ServerJsonDataRegistry<PokemonInteractionSet> {
         PokemonInteractionsSyncPacket(interactions).sendToPlayer(player)
     }
 
-    override fun reload(data: Map<ResourceLocation, PokemonInteractionSet>, registry: HolderLookup.Provider) {
+    override fun reload(data: Map<Identifier, PokemonInteractionSet>, registry: HolderLookup.Provider) {
         interactions.clear()
         val split = data.entries
             .partition {

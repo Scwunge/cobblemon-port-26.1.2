@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
 import net.minecraft.network.chat.MutableComponent
 
@@ -56,9 +56,9 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
         return x + width - 3
     }
 
-    override fun renderListBackground(context: GuiGraphics) {}
+    override fun renderListBackground(context: GuiGraphicsExtractor) {}
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
         correctSize()
 

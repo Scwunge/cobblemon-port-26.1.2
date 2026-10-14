@@ -25,7 +25,7 @@ import com.cobblemon.mod.common.util.rotateShape
 import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.util.StringRepresentable
@@ -287,7 +287,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
                 )
             )
 
-            PastureLinkManager.createLink(player.uuid, PastureLink(linkId, pcId, ResourceLocation.tryParse(world.dimensionTypeRegistration().registeredName)!!, getBasePosition(state, pos), perms))
+            PastureLinkManager.createLink(player.uuid, PastureLink(linkId, pcId, Identifier.tryParse(world.dimensionTypeRegistration().registeredName)!!, getBasePosition(state, pos), perms))
 
             world.playSoundServer(
                 position = pos.bottomCenter,

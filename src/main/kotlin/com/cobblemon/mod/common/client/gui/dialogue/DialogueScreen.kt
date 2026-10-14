@@ -40,7 +40,7 @@ import com.cobblemon.mod.common.util.nextBetween
 import com.cobblemon.mod.common.util.resolve
 import kotlin.random.Random
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
@@ -141,7 +141,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
         )
     }
 
-    override fun renderBackground(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {}
+    override fun renderBackground(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {}
 
     override fun renderBlurredBackground(delta: Float) {}
 
@@ -249,7 +249,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
 
     fun renderInput() = gibber?.graduallyShowText != true || gibberDone
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val gibber = gibber
         if (gibber != null) {
             playGibberSpeak(

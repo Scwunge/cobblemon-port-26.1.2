@@ -15,14 +15,14 @@ import com.cobblemon.mod.common.client.gui.behaviour.BehaviourOptionsList.Behavi
 import com.cobblemon.mod.common.client.gui.npc.NPCEditorButton
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.WidgetTooltipHolder
 import net.minecraft.client.gui.components.events.GuiEventListener
 import net.minecraft.client.gui.narration.NarratableEntry
 import net.minecraft.client.gui.navigation.ScreenRectangle
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.LivingEntity
 
 class BehaviourOptionsList(
@@ -30,7 +30,7 @@ class BehaviourOptionsList(
     val left: Int,
     val top: Int,
     val entity: LivingEntity,
-    val appliedPresets: MutableSet<ResourceLocation>,
+    val appliedPresets: MutableSet<Identifier>,
     val addingMenu: Boolean // Whether this is the list for the un-added presets
 ) : ContainerObjectSelectionList<BehaviourOptionSlot>(
     Minecraft.getInstance(),
@@ -51,24 +51,24 @@ class BehaviourOptionsList(
         }
     }
 
-    override fun renderListBackground(context: GuiGraphics) {}
+    override fun renderListBackground(context: GuiGraphicsExtractor) {}
 
-    override fun renderListSeparators(guiGraphics: GuiGraphics) {}
+    override fun renderListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
     override fun getScrollbarPosition() = left + width - 6
 
-    fun removeEntry(entry: ResourceLocation) {
+    fun removeEntry(entry: Identifier) {
         children().find { it.resourceLocation == entry }?.let { removeEntry(it) }
         // Resize scrollbar to avoid visual issues upon removal
         setScrollAmount(if (children().size < 7) 0.0 else getScrollAmount())
     }
 
-    fun addEntry(entry: ResourceLocation, alignButtonRight: Boolean) {
+    fun addEntry(entry: Identifier, alignButtonRight: Boolean) {
         val behaviour = CobblemonBehaviours.behaviours[entry] ?: return
         addEntry(BehaviourOptionSlot(this, entry, behaviour, alignButtonRight))
     }
 
-    class BehaviourOptionSlot(val parent: BehaviourOptionsList, val resourceLocation: ResourceLocation, val behaviour: CobblemonBehaviour, val alignButtonRight: Boolean = true) : Entry<BehaviourOptionSlot>() {
+    class BehaviourOptionSlot(val parent: BehaviourOptionsList, val resourceLocation: Identifier, val behaviour: CobblemonBehaviour, val alignButtonRight: Boolean = true) : Entry<BehaviourOptionSlot>() {
         companion object {
             val SLOT_WIDTH = 140
             val BUTTON_WIDTH = 16
@@ -109,7 +109,7 @@ class BehaviourOptionsList(
         override fun isFocused() = false
 
         override fun render(
-            guiGraphics: GuiGraphics,
+            guiGraphics: GuiGraphicsExtractor,
             index: Int,
             top: Int,
             left: Int,

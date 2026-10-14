@@ -49,7 +49,7 @@ import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.util.tmList
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.stats.Stats
@@ -92,7 +92,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                     }
 
                     is StringValue -> {
-                        val id = ResourceLocation.parse(value.value)
+                        val id = Identifier.parse(value.value)
                         val item =
                             player.registryAccess().registryOrThrow(Registries.ITEM).get(id)
                                 ?: return@setInvSlot DoubleValue.ZERO
@@ -122,7 +122,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                     }
 
                     is StringValue -> {
-                        val id = ResourceLocation.parse(value.value)
+                        val id = Identifier.parse(value.value)
                         val item =
                             player.registryAccess().registryOrThrow(Registries.ITEM).get(id)
                                 ?: return@giveItem DoubleValue.ZERO
@@ -330,7 +330,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                 }
                 functions["pokedex"] = { player.pokedex().struct }
                 functions["has_advancement"] = hasAdvancement@{ params ->
-                    val requiredAdvancement = ResourceLocation.parse(params.getString(0))
+                    val requiredAdvancement = Identifier.parse(params.getString(0))
                     player.advancements.progress.forEach { (holder, progress) ->
                         if (holder.id == requiredAdvancement && progress.isDone) {
                             return@hasAdvancement DoubleValue.ONE
@@ -410,7 +410,7 @@ object PlayerMoLangFunctions : AbstractMoLangFunctionHolder<Player>() {
                 functions["get_custom_stat"] = getCustomStat@{ params ->
                     val statName = params.getString(0)
 
-                    val resourceLocation = ResourceLocation.tryParse(statName) ?: return@getCustomStat DoubleValue.ZERO
+                    val resourceLocation = Identifier.tryParse(statName) ?: return@getCustomStat DoubleValue.ZERO
                     val statResourceLocation =
                         BuiltInRegistries.CUSTOM_STAT.get(resourceLocation) ?: return@getCustomStat DoubleValue.ZERO
 

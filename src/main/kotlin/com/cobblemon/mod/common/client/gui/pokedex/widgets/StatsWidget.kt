@@ -26,7 +26,7 @@ import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.client.render.drawScaledTextJustifiedRight
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FastColor
 
@@ -142,7 +142,7 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
     }
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         when (selectedStatTypeIndex) {
             STAT_TYPE_BASE -> {
                 renderBaseStats(context)
@@ -153,7 +153,7 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
     }
 
-    private fun renderBaseStats(context: GuiGraphics) {
+    private fun renderBaseStats(context: GuiGraphicsExtractor) {
         if (baseStats == null) return
 
         drawScaledText(
@@ -207,7 +207,7 @@ class StatsWidget(val pX: Int, val pY: Int) : SoundlessWidget(
         }
     }
 
-    private fun renderRideStats(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    private fun renderRideStats(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         rideProperties?.behaviours?.let { behaviours ->
             val selectedBehaviour = behaviours.entries.toList()[selectedRideBehavioursIndex]
             val behaviourStats = selectedBehaviour.value.stats

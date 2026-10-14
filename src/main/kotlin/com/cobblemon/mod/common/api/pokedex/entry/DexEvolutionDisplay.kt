@@ -32,7 +32,7 @@ import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
@@ -41,10 +41,10 @@ import net.minecraft.world.level.levelgen.structure.Structure
 import kotlin.jvm.optionals.getOrNull
 
 data class DexEvolutionDisplay(
-    val fromSpecies: ResourceLocation,
+    val fromSpecies: Identifier,
     val fromForm: String,
     val fromAspects: Set<String>,
-    val toSpecies: ResourceLocation,
+    val toSpecies: Identifier,
     val toForm: String,
     val toAspects: Set<String>,
     val requirements: List<DexEvolutionRequirementDisplay>,
@@ -157,7 +157,7 @@ fun buildBattleCriticalHitsRequirement(battleCriticalHitsRequirement: BattleCrit
     return CobblemonDexEvolutionRequirementDisplay(icon, tooltip)
 }
 
-private fun tagDisplayName(registry: String, id: ResourceLocation): MutableComponent {
+private fun tagDisplayName(registry: String, id: Identifier): MutableComponent {
     return Component.translatableWithFallback("tag.$registry.${id.namespace}.${id.path.replace('/', '.')}", prettifyPath(id.path))
 }
 

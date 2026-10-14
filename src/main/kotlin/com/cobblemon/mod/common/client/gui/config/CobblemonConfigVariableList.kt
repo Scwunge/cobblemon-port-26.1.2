@@ -25,7 +25,7 @@ import com.cobblemon.mod.common.config.CobblemonConfigField.CobblemonConfigSide.
 import com.cobblemon.mod.common.util.asTranslated
 import net.minecraft.SharedConstants
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ContainerObjectSelectionList
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.client.gui.components.events.GuiEventListener
@@ -103,7 +103,7 @@ class CobblemonConfigVariableList(
         entries.forEach { entry -> entry.add() }
     }
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun renderWidget(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick)
 
         val hoveredVariableTooltip = this.hovered?.tooltip
@@ -157,7 +157,7 @@ class CobblemonConfigVariableList(
         val configVariables: List<CobblemonConfigVariable>
     ) : CobblemonConfigVariableListEntry(parent) {
         override fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             index: Int,
             top: Int,
             left: Int,

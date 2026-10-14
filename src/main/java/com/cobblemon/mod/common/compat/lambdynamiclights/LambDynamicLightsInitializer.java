@@ -13,16 +13,16 @@ import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 public class LambDynamicLightsInitializer implements DynamicLightsInitializer {
     public static final EntityLuminance.Type POKEMON_LUMINANCE = EntityLuminance.Type.registerSimple(
-            ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "pokemon"),
+            Identifier.fromNamespaceAndPath(Cobblemon.MODID, "pokemon"),
             PokemonLuminance.INSTANCE
     );
     public static final EntityLuminance.Type PLAYER_LUMINANCE = EntityLuminance.Type.registerSimple(
-            ResourceLocation.fromNamespaceAndPath(Cobblemon.MODID, "shoulder"),
+            Identifier.fromNamespaceAndPath(Cobblemon.MODID, "shoulder"),
             PlayerLuminance.INSTANCE
     );
 

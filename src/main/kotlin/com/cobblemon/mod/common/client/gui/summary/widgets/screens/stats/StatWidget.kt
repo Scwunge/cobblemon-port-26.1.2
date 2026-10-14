@@ -37,7 +37,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
@@ -241,7 +241,7 @@ class StatWidget(
         RenderSystem.enableDepthTest()
     }
 
-    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val renderOtherStats = statOptions.get(statTabIndex) == OTHER
         val renderPentagonStats = statOptions.get(statTabIndex) == RIDE
         val matrices = context.pose()
@@ -563,7 +563,7 @@ class StatWidget(
         return WHITE
     }
 
-    private fun renderPolygonLabels(context: GuiGraphics, labels: List<MutableComponent>, verticesOffset: List<Pair<Double, Double>>, offsetY: Double = 0.0, labelColours: List<Int>? = null, enableColour: Boolean = false) {
+    private fun renderPolygonLabels(context: GuiGraphicsExtractor, labels: List<MutableComponent>, verticesOffset: List<Pair<Double, Double>>, offsetY: Double = 0.0, labelColours: List<Int>? = null, enableColour: Boolean = false) {
         if (labels.size != verticesOffset.size) return
 
         labels.forEachIndexed { index, label ->

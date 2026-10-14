@@ -25,10 +25,10 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.math.toRGB
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FastColor
 import net.minecraft.util.Mth
 
@@ -48,7 +48,7 @@ class MovesScrollingWidget(val pX: Int, val pY: Int, tmList: SettableObservable<
         val searchBar = cobblemonResource("textures/gui/tmmachine/search_bar.png")
     }
 
-    var highlightedMoveId: ResourceLocation? = null
+    var highlightedMoveId: Identifier? = null
 
     init {
         tmList.subscribeIncludingCurrent { tmList ->
@@ -56,7 +56,7 @@ class MovesScrollingWidget(val pX: Int, val pY: Int, tmList: SettableObservable<
         }
     }
 
-    fun setSlotHighlighted(id: ResourceLocation?) {
+    fun setSlotHighlighted(id: Identifier?) {
         highlightedMoveId = id
         for (child in children()) {
             if (child is ScrollSlot) {
@@ -78,7 +78,7 @@ class MovesScrollingWidget(val pX: Int, val pY: Int, tmList: SettableObservable<
 
     override fun getScrollbarPosition(): Int = rowLeft + width - 3
 
-    override fun renderWidget(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
             matrixStack = context.pose(),
             texture = searchBar,
@@ -90,7 +90,7 @@ class MovesScrollingWidget(val pX: Int, val pY: Int, tmList: SettableObservable<
         super.renderWidget(context, mouseX, mouseY, delta)
     }
 
-    override fun renderScrollbar(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
         val xRight = xLeft + 3
 
@@ -115,7 +115,7 @@ class MovesScrollingWidget(val pX: Int, val pY: Int, tmList: SettableObservable<
         var highlighted = false
         var disabled = false
 
-        override fun render(context: GuiGraphics, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+        override fun render(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             posX = x
             posY = y
             val moveTemplate = tm.moveName

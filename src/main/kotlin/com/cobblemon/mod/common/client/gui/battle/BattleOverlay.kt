@@ -49,10 +49,10 @@ import kotlin.math.floor
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.ChatScreen
-import net.minecraft.client.renderer.LightTexture
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.Lightmap
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.MutableComponent
 import net.minecraft.util.Mth.ceil
@@ -113,7 +113,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
     var hidePortraits = false
     override val schedulingTracker = SchedulingTracker()
 
-    override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
+    override fun render(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
         val tickDelta = tickCounter.realtimeDeltaTicks.takeIf { !Minecraft.getInstance()!!.isPaused } ?: 0F
         schedulingTracker.update(tickDelta / 20F)
         passedSeconds += tickDelta / 20
@@ -162,7 +162,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         }
     }
 
-    fun drawTile(context: GuiGraphics, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, dexState: PokedexEntryProgress, hasCommand: Boolean = false, isHovered: Boolean = false, isCompact: Boolean = false) {
+    fun drawTile(context: GuiGraphicsExtractor, tickDelta: Float, activeBattlePokemon: ActiveClientBattlePokemon, left: Boolean, rank: Int, dexState: PokedexEntryProgress, hasCommand: Boolean = false, isHovered: Boolean = false, isCompact: Boolean = false) {
         val mc = Minecraft.getInstance()
 
         val battlePokemon = activeBattlePokemon.battlePokemon ?: return
@@ -222,7 +222,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
     }
 
     fun drawBattleTile(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         x: Float,
         y: Float,
         partialTicks: Float,
@@ -518,7 +518,7 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
 
         val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
         val buffer = immediate.getBuffer(renderType)
-        val packedLight = LightTexture.pack(11, 7)
+        val packedLight = Lightmap.pack(11, 7)
         model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         immediate.endBatch()

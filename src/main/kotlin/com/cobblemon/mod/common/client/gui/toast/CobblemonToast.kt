@@ -11,12 +11,12 @@ package com.cobblemon.mod.common.client.gui.toast
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.toasts.Toast
-import net.minecraft.client.gui.components.toasts.ToastComponent
+import net.minecraft.client.gui.components.toasts.ToastManager
 import net.minecraft.world.item.ItemStack
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import java.util.*
 import kotlin.math.min
@@ -29,7 +29,7 @@ class CobblemonToast(
     var icons: List<ItemStack>,
     var title: Component,
     var description: Component,
-    var frameTexture: ResourceLocation,
+    var frameTexture: Identifier,
     var progress: Float,
     var progressColor: Int,
     var durationMs: Long? = null
@@ -55,7 +55,7 @@ class CobblemonToast(
         return font.split(this.description, maxWidth)
     }
 
-    override fun render(context: GuiGraphics, manager: ToastComponent, startTime: Long): Toast.Visibility {
+    override fun render(context: GuiGraphicsExtractor, manager: ToastManager, startTime: Long): Toast.Visibility {
         if (this.startTime == -1L) this.startTime = startTime
 
         val elapsedTime = startTime - this.startTime

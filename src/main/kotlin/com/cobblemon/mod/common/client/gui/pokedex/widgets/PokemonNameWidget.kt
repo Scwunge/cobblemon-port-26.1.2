@@ -24,7 +24,7 @@ import com.cobblemon.mod.common.client.gui.summary.widgets.SoundlessWidget
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
 
@@ -50,7 +50,7 @@ class PokemonNameWidget(
     var speciesNumber: MutableComponent = "0000".text()
 
     override fun renderWidget(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         partialTick: Float

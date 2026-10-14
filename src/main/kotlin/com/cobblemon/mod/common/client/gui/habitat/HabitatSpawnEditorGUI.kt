@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.lang
 import java.awt.Color
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
@@ -275,7 +275,7 @@ class HabitatSpawnEditorGUI(
         return true
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun render(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         guiGraphics.fill(0, 0, width, height, Color(0, 0, 0, 100).rgb)
         guiGraphics.fill(0, 0, width, headerHeight, Color(0, 0, 0, 150).rgb)
         guiGraphics.fill(0, getFooterTop(), width, height, Color(0, 0, 0, 150).rgb)

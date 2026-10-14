@@ -23,7 +23,7 @@ import com.cobblemon.mod.common.util.asExpression
 import com.cobblemon.mod.common.util.getString
 import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.resolve
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.screens.Screen
@@ -71,7 +71,7 @@ class RideSettingsEditorGUI(val parentScreen: Screen, val vehicle: PokemonEntity
 
     }
 
-    override fun render(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
+    override fun render(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         // Make the background blank and transparent?
         guiGraphics.fill(0, 0, width, height, Color(0, 0, 0, 100).rgb)
 

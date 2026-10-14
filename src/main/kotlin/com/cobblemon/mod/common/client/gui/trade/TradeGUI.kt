@@ -35,7 +35,7 @@ import com.cobblemon.mod.common.util.lang
 import com.cobblemon.mod.common.util.toAssetPath
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.client.resources.sounds.SoundInstance
@@ -259,7 +259,7 @@ class TradeGUI(
         addRenderableWidget(opposingOfferedPokemonMarkings)
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2
         val matrices = context.pose()
@@ -513,7 +513,7 @@ class TradeGUI(
 
     override fun renderBlurredBackground(delta: Float) {}
 
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
     private fun setOfferedPokemon(pokemon: Pokemon?, isOpposing: Boolean = false) {
         protectiveTicks = 20
@@ -560,7 +560,7 @@ class TradeGUI(
         if (tradeSoundInstance !== null) Minecraft.getInstance().soundManager.stop(tradeSoundInstance)
     }
 
-    private fun renderPokemonInfo(pokemon: Pokemon?, isOpposing: Boolean, context: GuiGraphics, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+    private fun renderPokemonInfo(pokemon: Pokemon?, isOpposing: Boolean, context: GuiGraphicsExtractor, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         if (pokemon != null) {
             val matrices = context.pose()
             // Level
@@ -832,7 +832,7 @@ class TradeGUI(
         }
     }
 
-    private fun renderInfoLabels(context: GuiGraphics, x: Int, y: Int) {
+    private fun renderInfoLabels(context: GuiGraphicsExtractor, x: Int, y: Int) {
         drawScaledText(
             context = context,
             font = CobblemonResources.DEFAULT_LARGE,

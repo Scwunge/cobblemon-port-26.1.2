@@ -20,7 +20,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType
 import com.mojang.brigadier.context.CommandContext
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
-import net.minecraft.world.entity.MobSpawnType
+import net.minecraft.world.entity.EntitySpawnReason
 
 object SpawnAllPokemon {
     fun register(dispatcher: CommandDispatcher<CommandSourceStack>) {
@@ -51,7 +51,7 @@ object SpawnAllPokemon {
                 val blockPos = player.blockPosition()
                 pokemonEntity.moveTo(player.x, player.y, player.z, pokemonEntity.yRot, pokemonEntity.xRot)
                 pokemonEntity.entityData.set(PokemonEntity.SPAWN_DIRECTION, pokemonEntity.random.nextFloat() * 360F)
-                pokemonEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(blockPos), MobSpawnType.COMMAND, null)
+                pokemonEntity.finalizeSpawn(world, world.getCurrentDifficultyAt(blockPos), EntitySpawnReason.COMMAND, null)
                 context.source.level.addFreshEntity(pokemonEntity)
             }
         }

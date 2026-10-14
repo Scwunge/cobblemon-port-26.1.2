@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.api.spawning.position.SpawnablePosition
 import net.minecraft.core.component.DataComponentMap
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.core.registries.Registries
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -26,7 +26,7 @@ class PossibleHeldItem(
     fun createStack(spawnablePosition: SpawnablePosition): ItemStack? {
         val itemRegistry = spawnablePosition.world.registryAccess().registryOrThrow(Registries.ITEM)
         val item = if (item.startsWith("#")) {
-            val tag = TagKey.create(Registries.ITEM, ResourceLocation.parse(item.substring(1)))
+            val tag = TagKey.create(Registries.ITEM, Identifier.parse(item.substring(1)))
 
             val opt = itemRegistry.getTag(tag)
             if (opt.isPresent && opt.get().size() > 0) {
@@ -37,7 +37,7 @@ class PossibleHeldItem(
                 null
             }
         } else {
-            itemRegistry.get(ResourceLocation.parse(item))?.takeIf { it != Items.AIR }
+            itemRegistry.get(Identifier.parse(item))?.takeIf { it != Items.AIR }
         } ?: return run {
             LOGGER.error("Unable to find matching spawn held item for ID: $item")
             null

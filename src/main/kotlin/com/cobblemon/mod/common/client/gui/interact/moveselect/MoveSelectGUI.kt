@@ -18,7 +18,7 @@ import com.cobblemon.mod.common.net.messages.server.callback.move.MoveSelectCanc
 import com.cobblemon.mod.common.net.messages.server.callback.move.MoveSelectedPacket
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.network.chat.Component
@@ -99,7 +99,7 @@ class MoveSelectGUI(
         super.init()
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val x = (width - WIDTH) / 2
         val y = (height - HEIGHT) / 2
 
@@ -137,7 +137,7 @@ class MoveSelectGUI(
 
     override fun renderBlurredBackground(delta: Float) {}
 
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
     fun playSound(soundEvent: SoundEvent) {
         Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))

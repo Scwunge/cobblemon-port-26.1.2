@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.config.constraint.IntConstraint
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.gui.components.EditBox.DEFAULT_TEXT_COLOR
 import net.minecraft.client.gui.components.Tooltip
@@ -56,7 +56,7 @@ abstract class CobblemonConfigEditBoxVariable(
     }
 
     override fun render(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         index: Int,
         top: Int,
         left: Int,

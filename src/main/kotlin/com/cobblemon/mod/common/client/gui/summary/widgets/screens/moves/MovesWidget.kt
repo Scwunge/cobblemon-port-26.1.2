@@ -22,7 +22,7 @@ import com.cobblemon.mod.common.util.lang
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 
 class MovesWidget(
@@ -77,7 +77,7 @@ class MovesWidget(
     )
 
 
-    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val matrices = context.pose()
 
         blitk(

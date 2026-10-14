@@ -36,7 +36,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FastColor
 import net.minecraft.world.ContainerHelper
 import net.minecraft.world.WorldlyContainer
@@ -133,7 +133,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
                     campfireBlockEntity.particleEntityHandler(
                         position = position,
                         level = level,
-                        particle = ResourceLocation("cobblemon", "broth_bubbles")
+                        particle = Identifier("cobblemon", "broth_bubbles")
                     )
                 }
 
@@ -237,7 +237,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
     private var cookingProgress: Int = 0
     private var cookingTotalTime: Int = COOKING_TOTAL_TIME
     private var items: NonNullList<ItemStack> = NonNullList.withSize(ITEMS_SIZE, ItemStack.EMPTY)
-    private val recipesUsed: Object2IntOpenHashMap<ResourceLocation> = Object2IntOpenHashMap()
+    private val recipesUsed: Object2IntOpenHashMap<Identifier> = Object2IntOpenHashMap()
     private val quickCheck: RecipeManager.CachedCheck<CraftingInput, *> =
         RecipeManager.createCheck(CobblemonRecipeTypes.COOKING_POT_COOKING)
     private var potComponent: PotComponent? = null
@@ -274,7 +274,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
         }
     }
 
-    fun particleEntityHandler(position: Vec3, level: Level, particle: ResourceLocation): ParticleStorm {
+    fun particleEntityHandler(position: Vec3, level: Level, particle: Identifier): ParticleStorm {
         val wrapper = MatrixWrapper()
         val matrix = PoseStack()
         wrapper.updateMatrix(matrix.last().pose())

@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.animal.bee.Bee;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 
-@Mixin(targets = "net.minecraft.world.entity.animal.Bee$BeeGrowCropGoal")
+@Mixin(targets = "net.minecraft.world.entity.animal.bee.Bee$BeeGrowCropGoal")
 public abstract class BeeEntityMixin {
 
     @Shadow(aliases = {"this$0", "field_20373"}) @Final private Bee bee;

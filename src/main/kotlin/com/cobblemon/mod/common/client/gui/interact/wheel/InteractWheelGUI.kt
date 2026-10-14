@@ -13,7 +13,7 @@ import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.isInventoryKeyPressed
 import com.google.common.collect.Multimap
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import kotlin.math.max
@@ -36,7 +36,7 @@ class InteractWheelGUI(private val options: Multimap<Orientation, InteractWheelO
     private var maxPage = 1
     private var currentPage = 0
     override fun renderBlurredBackground(delta: Float) { }
-    override fun renderMenuBackground(context: GuiGraphics) {}
+    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun init() {
         calculateMaxPage()
@@ -113,7 +113,7 @@ class InteractWheelGUI(private val options: Multimap<Orientation, InteractWheelO
         )
     }
 
-    override fun render(context: GuiGraphics, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val (x, y) = getBasePosition()
         blitk(
             matrixStack = context.pose(),

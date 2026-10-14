@@ -22,13 +22,13 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.UseAnim
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 
 class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacksTo(1)) {
 
-    override fun getUseAnimation(itemStack: ItemStack): UseAnim? = UseAnim.TOOT_HORN
+    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation? = ItemUseAnimation.TOOT_HORN
 
     override fun getUseDuration(stack: ItemStack, user: LivingEntity): Int = 72000
 

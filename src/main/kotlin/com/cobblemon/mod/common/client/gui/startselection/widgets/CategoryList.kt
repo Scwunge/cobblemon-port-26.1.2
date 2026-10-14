@@ -21,7 +21,7 @@ import com.cobblemon.mod.common.config.starter.RenderableStarterCategory
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import org.joml.Quaternionf
 import org.joml.Vector3f
@@ -76,7 +76,7 @@ class CategoryList(
     inner class Category(private val category: RenderableStarterCategory, height: Int) : Entry(height) {
 
         override fun render(
-            guiGraphics: GuiGraphics,
+            guiGraphics: GuiGraphicsExtractor,
             index: Int,
             x: Int,
             y: Int,

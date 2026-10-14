@@ -45,7 +45,7 @@ import com.cobblemon.mod.common.util.asIdentifierDefaultingNamespace
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.core.registries.Registries
 import net.minecraft.locale.Language
 import net.minecraft.network.chat.Component
@@ -121,7 +121,7 @@ class EvolutionTreeWidget(
     }
 
     override fun renderWidget(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
         partialTick: Float,
@@ -276,7 +276,7 @@ class EvolutionTreeWidget(
     }
 
     private fun renderTreeDrawingNode(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         treeDrawingNode: TreeDrawingNode<EvolutionNode>,
         mouseX: Int,
         mouseY: Int,
@@ -445,7 +445,7 @@ class EvolutionTreeWidget(
     }
 
     private fun drawEvolutionInfo(
-        guiGraphics: GuiGraphics,
+        guiGraphics: GuiGraphicsExtractor,
         renderDataAlternatives: List<DexEvolutionDisplay>,
         lineStartX: Int,
         lineEndX: Int,
@@ -646,7 +646,7 @@ class EvolutionTreeWidget(
         return mouseX.toInt() in x..(x + width) && mouseY.toInt() in y..(y + height)
     }
 
-    fun enableScissors(guiGraphics: GuiGraphics) {
+    fun enableScissors(guiGraphics: GuiGraphicsExtractor) {
         guiGraphics.enableScissor(x + 1, y, x + width - 1, y + height)
     }
 

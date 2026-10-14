@@ -16,7 +16,7 @@ import com.cobblemon.mod.common.client.gui.config.CobblemonConfigVariableList
 
 import com.cobblemon.mod.common.config.CobblemonConfig
 import com.cobblemon.mod.common.util.lang
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.components.Tooltip
 import net.minecraft.network.chat.CommonComponents
@@ -44,7 +44,7 @@ abstract class CobblemonConfigButtonVariable(
     }
 
     override fun render(
-        context: GuiGraphics,
+        context: GuiGraphicsExtractor,
         index: Int,
         top: Int,
         left: Int,

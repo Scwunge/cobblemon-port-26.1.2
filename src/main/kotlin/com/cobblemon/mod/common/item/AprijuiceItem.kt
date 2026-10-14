@@ -24,7 +24,7 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.UseAnim
+import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
 class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)), PokemonSelectingItem {
@@ -111,8 +111,8 @@ class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)
         return super.finishUsingItem(stack, world, user)
     }
 
-    override fun getUseAnimation(stack: ItemStack): UseAnim {
-        return if (hasRideBoosts(stack)) UseAnim.NONE else UseAnim.DRINK
+    override fun getUseAnimation(stack: ItemStack): ItemUseAnimation {
+        return if (hasRideBoosts(stack)) ItemUseAnimation.NONE else ItemUseAnimation.DRINK
     }
 
     override fun getUseDuration(stack: ItemStack, entity: LivingEntity): Int {

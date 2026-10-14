@@ -27,7 +27,7 @@ import com.cobblemon.mod.common.util.*
 import com.cobblemon.mod.common.util.math.geometry.toRadians
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.RegistryFriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.util.SmoothDouble
 import net.minecraft.world.entity.LivingEntity
@@ -46,7 +46,7 @@ class BirdBehaviour : RidingBehaviour<BirdSettings, BirdState> {
         private const val GLIDE_EXIT_SPEED = 0.13
     }
 
-    override val key: ResourceLocation = KEY
+    override val key: Identifier = KEY
 
     override fun getRidingStyle(settings: BirdSettings, state: BirdState): RidingStyle {
         return RidingStyle.AIR

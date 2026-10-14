@@ -1,0 +1,63 @@
+[versions]
+kotlin = "2.4.21"
+loom = "1.18.4"
+
+fabric-loader = "0.19.5"
+fabric-api = "0.155.3+26.1.2"
+fabric-kotlin = "1.14.2+kotlin.2.4.21"
+fabric-permissions-api = "0.7.0"
+mod-menu = "18.0.2"
+lambDynamicLights = "4.11.2+26.1.2"
+jei = "29.2.0.21"
+
+molang = "1.1.20"
+
+graal = "22.3.0"
+icu4j = "71.1"
+
+mongo = "4.10.2"
+
+junit = "5.11.4"
+mockito = "5.14.2"
+mockk = "1.13.14"
+classgraph = "4.8.179"
+
+[libraries]
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+
+molang = { group = "local.com.bedrockk", name = "molang", version.ref = "molang" }
+
+graal-core = { group = "org.graalvm.js", name = "js", version.ref = "graal" }
+graal-sdk = { group = "org.graalvm.sdk", name = "graal-sdk", version.ref = "graal" }
+graal-regex = { group = "org.graalvm.regex", name = "regex", version.ref = "graal" }
+graal-truffle = { group = "org.graalvm.truffle", name = "truffle-api", version.ref = "graal" }
+icu4j = { group = "com.ibm.icu", name = "icu4j", version.ref = "icu4j" }
+
+fabric-loader = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric-loader" }
+fabric-api = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric-api" }
+fabric-kotlin = { group = "net.fabricmc", name = "fabric-language-kotlin", version.ref = "fabric-kotlin" }
+fabric-permissions = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric-permissions-api" }
+mod-menu = { group = "com.terraformersmc", name = "modmenu", version.ref = "mod-menu" }
+lambDynamicLights = { group = "dev.lambdaurora.lambdynamiclights", name = "lambdynamiclights-api", version.ref = "lambDynamicLights" }
+jei-common-api = { group = "mezz.jei", name = "jei-26.1-common-api", version.ref = "jei" }
+jei-fabric = { group = "mezz.jei", name = "jei-26.1-fabric", version.ref = "jei" }
+
+mongo-driver-core = { group = "org.mongodb", name = "mongodb-driver-core", version.ref = "mongo" }
+mongo-driver-sync = { group = "org.mongodb", name = "mongodb-driver-sync", version.ref = "mongo" }
+
+junit-fabric = { group = "net.fabricmc", name = "fabric-loader-junit", version.ref = "fabric-loader" }
+junit-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junit" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mock-kotlin = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+classgraph = { group = "io.github.classgraph", name = "classgraph", version.ref = "classgraph" }
+
+[bundles]
+kotlin = ["kotlin-stdlib", "kotlin-reflect"]
+graal = ["graal-core", "graal-sdk", "graal-regex", "graal-truffle", "icu4j"]
+mongo = ["mongo-driver-core", "mongo-driver-sync"]
+unitTesting = ["junit-fabric", "junit-params", "mockito-core", "mock-kotlin", "classgraph"]
+
+[plugins]
+loom = { id = "net.fabricmc.fabric-loom", version.ref = "loom" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

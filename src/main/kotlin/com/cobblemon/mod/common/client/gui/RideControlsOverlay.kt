@@ -26,12 +26,12 @@ import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.Gui
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.ChatScreen
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.player.Input
+import net.minecraft.client.player.ClientInput
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import kotlin.math.max
 
@@ -76,9 +76,9 @@ class RideControlsOverlay : Gui(Minecraft.getInstance()) {
     var mouseMovedUp: Boolean? = null
     var mouseMovedRight: Boolean? = null
 
-    var currentBehaviourKey: ResourceLocation? = null
+    var currentBehaviourKey: Identifier? = null
 
-    override fun render(context: GuiGraphics, tickCounter: DeltaTracker) {
+    override fun render(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
         val minecraft = Minecraft.getInstance()
 
         // Hiding if a Screen is open and not exempt
@@ -101,7 +101,7 @@ class RideControlsOverlay : Gui(Minecraft.getInstance()) {
         }
     }
 
-    private fun renderControls(minecraft: Minecraft, context: GuiGraphics, tickCounter: DeltaTracker, riddenEntity: PokemonEntity) {
+    private fun renderControls(minecraft: Minecraft, context: GuiGraphicsExtractor, tickCounter: DeltaTracker, riddenEntity: PokemonEntity) {
         // Update max duration if user has changed config
         val configDuration = Cobblemon.config.displayControlSeconds  * BASELINE_FPS
         if (controlsMaxDurationFrames != configDuration) {
@@ -258,7 +258,7 @@ class RideControlsOverlay : Gui(Minecraft.getInstance()) {
         if (mouseMovedUp == null) mouseOffsetY = 0F
     }
 
-    private fun renderMouseControls(context: GuiGraphics, centered: Boolean, showHorizontal: Boolean, showVertical: Boolean, posX: Int, posY: Int, opacity: Float) {
+    private fun renderMouseControls(context: GuiGraphicsExtractor, centered: Boolean, showHorizontal: Boolean, showVertical: Boolean, posX: Int, posY: Int, opacity: Float) {
         if (showVertical || showHorizontal) {
             calculateMousePosition()
 
@@ -338,7 +338,7 @@ class RideControlsOverlay : Gui(Minecraft.getInstance()) {
         }
     }
 
-    private fun renderKeyControls(context: GuiGraphics, centered: Boolean, showMovement: Boolean, disableHorizontal: Boolean, showJump: Boolean, showSneak: Boolean, input: Input?, posX: Int, posY: Int, opacity: Float) {
+    private fun renderKeyControls(context: GuiGraphicsExtractor, centered: Boolean, showMovement: Boolean, disableHorizontal: Boolean, showJump: Boolean, showSneak: Boolean, input: ClientInput?, posX: Int, posY: Int, opacity: Float) {
         val offsetX = if (centered) 43.5 else 0.0
 
         if (showMovement) {

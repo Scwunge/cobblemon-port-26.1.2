@@ -45,7 +45,7 @@ import com.cobblemon.mod.common.util.resolve
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
@@ -107,7 +107,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
         super.onSyncedDataUpdated(data)
         if (this::currentEntity.isInitialized) {
             if (data == PokemonEntity.SPECIES) {
-                val identifier = ResourceLocation.parse(currentEntity.entityData.get(PokemonEntity.SPECIES))
+                val identifier = Identifier.parse(currentEntity.entityData.get(PokemonEntity.SPECIES))
                 currentPose = null
                 currentEntity.pokemon.species = PokemonSpecies.getByIdentifier(identifier)!! // TODO exception handling
                 // force a model update - handles edge case where the PosableState's tracked PosableModel isn't updated until the LivingEntityRenderer render is run

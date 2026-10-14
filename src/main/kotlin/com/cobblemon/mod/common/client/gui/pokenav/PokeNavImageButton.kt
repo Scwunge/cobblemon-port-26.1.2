@@ -15,26 +15,26 @@ import com.cobblemon.mod.common.client.CobblemonResources
 import com.cobblemon.mod.common.client.gui.CobblemonRenderable
 import com.cobblemon.mod.common.client.render.drawScaledText
 import com.cobblemon.mod.common.util.asTranslated
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.sounds.SoundManager
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 open class PokeNavImageButton(
     val posX: Int, val posY: Int,
     pX: Int, pY: Int,
     pWidth: Int, pHeight: Int,
     pXTexStart: Int, pYTexStart: Int, pYDiffText: Int,
-    private val resourceLocation: ResourceLocation, pTextureWidth: Int, pTextureHeight: Int,
+    private val resourceLocation: Identifier, pTextureWidth: Int, pTextureHeight: Int,
     onPress: OnPress,
     private val text: MutableComponent,
     private val canClick: () -> Boolean = { true }
     // TODO: Make lang key per button
 ): Button(pX, pY, pWidth, pHeight, "cobblemon.ui.pokenav.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION), CobblemonRenderable {
 
-    override fun renderWidget(context: GuiGraphics, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun renderWidget(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         // Render Button Image
         this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         // Draw Text

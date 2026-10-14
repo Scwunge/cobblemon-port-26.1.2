@@ -20,7 +20,7 @@ import com.cobblemon.mod.common.pokemon.RenderablePokemon
 import com.cobblemon.mod.common.pokemon.Species
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import org.joml.Quaternionf
 import org.joml.Vector3f
 
@@ -33,7 +33,7 @@ abstract class PokemonSlotWidget {
         private val unimplementedIcon = cobblemonResource("textures/gui/pokedex/pokedex_slot_unimplemented.png")
 
         fun render(
-            context: GuiGraphics,
+            context: GuiGraphicsExtractor,
             x: Int,
             y: Int,
             isHovered: Boolean,

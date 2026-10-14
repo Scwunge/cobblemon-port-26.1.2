@@ -20,7 +20,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import net.minecraft.world.entity.ai.sensing.Sensor
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.level.GameRules
+import net.minecraft.world.level.gamerules.GameRules
 
 class PokemonItemSensor(
     private val width: Double = 16.0, // TODO: Can we configure sensors dynamically? // Nope. Could be done with a config struct option but it's a bit crass.

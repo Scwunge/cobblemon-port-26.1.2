@@ -26,14 +26,14 @@ import com.mojang.blaze3d.vertex.Tesselator
 import com.mojang.blaze3d.vertex.VertexFormat
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.GameRenderer
-import net.minecraft.client.renderer.LightTexture
-import net.minecraft.client.renderer.RenderType
+import net.minecraft.client.renderer.Lightmap
+import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.util.FormattedCharSequence
 import org.joml.Matrix4f
 import org.joml.Vector3f
@@ -41,7 +41,7 @@ import org.joml.Vector3f
 @JvmOverloads
 fun blitk(
     matrixStack: PoseStack,
-    texture: ResourceLocation? = null,
+    texture: Identifier? = null,
     x: Number,
     y: Number,
     height: Number = 0,
@@ -101,8 +101,8 @@ fun drawRectangle(
 
 @JvmOverloads
 fun drawCenteredText(
-    context: GuiGraphics,
-    font: ResourceLocation? = null,
+    context: GuiGraphicsExtractor,
+    font: Identifier? = null,
     text: Component,
     x: Number,
     y: Number,
@@ -116,8 +116,8 @@ fun drawCenteredText(
 
 @JvmOverloads
 fun drawText(
-    context: GuiGraphics,
-    font: ResourceLocation? = null,
+    context: GuiGraphicsExtractor,
+    font: Identifier? = null,
     text: MutableComponent,
     x: Number,
     y: Number,
@@ -148,8 +148,8 @@ fun drawText(
 
 @JvmOverloads
 fun drawTextJustifiedRight(
-    context: GuiGraphics,
-    font: ResourceLocation? = null,
+    context: GuiGraphicsExtractor,
+    font: Identifier? = null,
     text: MutableComponent,
     x: Number,
     y: Number,
@@ -163,7 +163,7 @@ fun drawTextJustifiedRight(
 
 @JvmOverloads
 fun drawText(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: FormattedCharSequence,
     x: Number,
     y: Number,
@@ -182,13 +182,13 @@ fun drawText(
 
 @JvmOverloads
 fun drawString(
-    context: GuiGraphics,
+    context: GuiGraphicsExtractor,
     text: String,
     x: Number,
     y: Number,
     colour: Int,
     shadow: Boolean = true,
-    font: ResourceLocation? = null
+    font: Identifier? = null
 ) {
     val comp = Component.literal(text).also {
         font?.run {
@@ -201,7 +201,7 @@ fun drawString(
 
 @JvmOverloads
 fun drawPosablePortrait(
-    identifier: ResourceLocation,
+    identifier: Identifier,
     matrixStack: PoseStack,
     scale: Float = 13F,
     contextScale: Float = 1F,
@@ -268,7 +268,7 @@ fun drawPosablePortrait(
 
         val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
         val buffer = immediate.getBuffer(renderType)
-        val packedLight = LightTexture.pack(11, 7)
+        val packedLight = Lightmap.pack(11, 7)
 
         val colour = toHex(r, g, b, a)
         model.withLayerContext(immediate, state, VaryingModelRepository.getLayers(identifier, state)) {
@@ -287,7 +287,7 @@ fun drawPosablePortrait(
 }
 
 fun drawProfile(
-    resourceIdentifier: ResourceLocation,
+    resourceIdentifier: Identifier,
     matrixStack: PoseStack,
     state: PosableState,
     partialTicks: Float,
@@ -337,7 +337,7 @@ fun drawProfile(
         val light1 = Vector3f(-1F, 1F, 1.0F)
         val light2 = Vector3f(1.3F, -1F, 1.0F)
         RenderSystem.setShaderLights(light1, light2)
-        val packedLight = LightTexture.pack(11, 7)
+        val packedLight = Lightmap.pack(11, 7)
 
         model.withLayerContext(bufferSource, state, VaryingModelRepository.getLayers(resourceIdentifier, state)) {
             model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
@@ -351,7 +351,7 @@ fun drawProfile(
     }
 }
 
-fun renderSprite(matrixStack: PoseStack, sprite: ResourceLocation) {
+fun renderSprite(matrixStack: PoseStack, sprite: Identifier) {
     val matrix: PoseStack.Pose = matrixStack.last()
     matrix.pose().translate(-1f, 0f, 0f)
 

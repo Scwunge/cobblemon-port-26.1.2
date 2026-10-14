@@ -20,7 +20,7 @@ import com.cobblemon.mod.common.util.*
 import com.google.gson.annotations.SerializedName
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.FriendlyByteBuf
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.InteractionHand
@@ -58,7 +58,7 @@ data class PokemonInteraction(
     // Not put as a necessary constructor parameter because then there isn't a default constructor
     // and that means Gson just gives null for everything in the constructor and falls back to the JSON
     // properties - completely ignoring the default values above.
-    lateinit var grouping: ResourceLocation
+    lateinit var grouping: Identifier
 
     fun encode(buffer: FriendlyByteBuf) {
         buffer.writeResourceLocation(grouping)
@@ -94,7 +94,7 @@ interface InteractionEffect {
     fun applyEffect(pokemon: PokemonEntity, player: ServerPlayer)
 }
 
-class DropItemEffect(val item: ResourceLocation, val amount: IntRange?) : InteractionEffect {
+class DropItemEffect(val item: Identifier, val amount: IntRange?) : InteractionEffect {
     override fun applyEffect(
         pokemon: PokemonEntity,
         player: ServerPlayer
@@ -118,7 +118,7 @@ class DropItemEffect(val item: ResourceLocation, val amount: IntRange?) : Intera
     }
 }
 
-class GiveItemEffect(val item: ResourceLocation, val amount: IntRange?) : InteractionEffect {
+class GiveItemEffect(val item: Identifier, val amount: IntRange?) : InteractionEffect {
     override fun applyEffect(
         pokemon: PokemonEntity,
         player: ServerPlayer
@@ -139,7 +139,7 @@ class GiveItemEffect(val item: ResourceLocation, val amount: IntRange?) : Intera
 }
 
 class PlaySoundEffect(
-    val sound: ResourceLocation,
+    val sound: Identifier,
     val soundSource: SoundSource?,
     @SerializedName("playAround") private val _playAround: Boolean?,
     @SerializedName("distance") private val _distance: Double?,

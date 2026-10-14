@@ -29,7 +29,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.level.Level
 
 sealed class PokemonState {
@@ -51,7 +51,7 @@ sealed class PokemonState {
     val name: String
         get() = states.entries.find { it.value == this::class.java }!!.key
 
-    open fun getIcon(pokemon: Pokemon): ResourceLocation? = null
+    open fun getIcon(pokemon: Pokemon): Identifier? = null
 
     open fun writeToNBT(nbt: CompoundTag): CompoundTag? {
         nbt.putString(DataKeys.POKEMON_STATE_TYPE, name)
@@ -93,7 +93,7 @@ class SentOutState() : ActivePokemonState() {
         this.dimension = entity.level().dimension()
     }
 
-    override fun getIcon(pokemon: Pokemon): ResourceLocation {
+    override fun getIcon(pokemon: Pokemon): Identifier {
         val isBeingRidden = (pokemon.entity?.countPlayerPassengers() ?: 0) > 0
         val icon = if (isBeingRidden) "mounted" else "released"
 
@@ -112,7 +112,7 @@ class SentOutState() : ActivePokemonState() {
     override fun readFromBuffer(buffer: RegistryFriendlyByteBuf): SentOutState {
         super.readFromBuffer(buffer)
         entityId = buffer.readInt()
-        dimension = ResourceKey.create(ResourceKey.createRegistryKey(dimension.location()), ResourceLocation.parse(buffer.readString()))
+        dimension = ResourceKey.create(ResourceKey.createRegistryKey(dimension.location()), Identifier.parse(buffer.readString()))
         return this
     }
 
@@ -139,7 +139,7 @@ class ShoulderedState() : ActivePokemonState() {
 
     override val entity: PokemonEntity? = null
 
-    override fun getIcon(pokemon: Pokemon): ResourceLocation {
+    override fun getIcon(pokemon: Pokemon): Identifier {
         val suffix = if (isLeftShoulder) "left" else "right"
         return cobblemonResource("textures/gui/party/party_icon_shoulder_$suffix.png")
     }

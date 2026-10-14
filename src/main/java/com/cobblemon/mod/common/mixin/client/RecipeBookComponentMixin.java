@@ -11,7 +11,7 @@ package com.cobblemon.mod.common.mixin.client;
 import com.cobblemon.mod.common.CobblemonRecipeCategories;
 import net.minecraft.client.ClientRecipeBook;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.RecipeBookCategories;
+import net.minecraft.world.item.crafting.RecipeBookCategories;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookPage;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookTabButton;
