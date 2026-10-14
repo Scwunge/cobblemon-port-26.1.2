@@ -222,14 +222,4 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings), Leg
     override fun getRenderShape(blockState: BlockState): RenderShape {
         return RenderShape.MODEL
     }
-
-    override fun appendHoverText(stack: ItemStack, context: TooltipContext, display: TooltipDisplay, tooltipAdder: Consumer<Component>, options: TooltipFlag) {
-        val tooltip = mutableListOf<Component>()
-        try {
-            tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip1".asTranslated().gray())
-            tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip2".asTranslated().gray())
-        } finally {
-            tooltip.forEach(tooltipAdder::accept)
-        }
-    }
 }

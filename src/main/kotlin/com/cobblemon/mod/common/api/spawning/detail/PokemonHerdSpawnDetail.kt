@@ -142,7 +142,7 @@ class PokemonHerdSpawnDetail : SpawnDetail() {
 
         val heldItem = herdable.heldItem?.let { heldItemId ->
             val item = spawnablePosition.world.registryAccess().lookupOrThrow(Registries.ITEM).getValue(heldItemId)
-            if (item == Items.AIR) {
+            if (item == null || item == Items.AIR) {
                 LOGGER.error("Unable to find matching herd held item for ID: $heldItemId")
                 null
             } else {

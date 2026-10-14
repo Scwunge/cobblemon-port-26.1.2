@@ -93,9 +93,9 @@ class TerrainPlantBlock(properties: Properties) : TallFlowerBlock(properties), E
         level: Level,
         state: BlockState,
         blockEntityType: BlockEntityType<T>
-    ): BlockEntityTicker<T?>? {
+    ): BlockEntityTicker<T>? {
         return if (level.isClientSide) null else BaseEntityBlock.createTickerHelper(blockEntityType as BlockEntityType<*>,
-            CobblemonBlockEntities.TERRAIN_PLANT, TerrainPlantBlockEntity::serverTick) as BlockEntityTicker<T?>?
+            CobblemonBlockEntities.TERRAIN_PLANT, TerrainPlantBlockEntity::serverTick) as BlockEntityTicker<T>?
     }
 
     companion object {

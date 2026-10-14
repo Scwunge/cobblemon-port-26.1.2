@@ -33,7 +33,6 @@ import net.minecraft.world.entity.ai.behavior.BehaviorControl
 import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import net.minecraft.world.entity.ai.sensing.SensorType
 import net.minecraft.world.entity.schedule.Activity
-import net.minecraft.world.entity.schedule.Schedule
 
 class BehaviourConfigurationContext {
     val runtime = MoLangRuntime().setup()
@@ -43,7 +42,6 @@ class BehaviourConfigurationContext {
     var defaultActivity = Activity.IDLE
     var coreActivities = setOf(Activity.CORE)
     val activities = mutableListOf<ActivityConfigurationContext>()
-    val schedule = Schedule.EMPTY
     val memories = mutableSetOf<MemoryModuleType<*>>()
     val sensors = mutableSetOf<SensorType<*>>()
 
@@ -95,7 +93,7 @@ class BehaviourConfigurationContext {
         activities.forEach { it.apply(entity) }
         brain.setCoreActivities(coreActivities)
         brain.setDefaultActivity(defaultActivity)
-        brain.schedule = schedule
+        // No schedule is set: since 1.21.11 a brain without one idles, which is what Schedule.EMPTY did.
         brain.setActiveActivityIfPossible(defaultActivity)
     }
 

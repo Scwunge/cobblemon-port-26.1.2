@@ -462,7 +462,7 @@ open class PokemonProperties {
             when (type) {
                 OriginalTrainerType.PLAYER -> {
                     when (ot.length) {
-                        in 3..16 -> server()?.profileCache?.get(ot)?.get()?.id // OT is a Username
+                        in 3..16 -> server()?.services()?.nameToIdCache()?.get(ot)?.orElse(null)?.id() // OT is a Username
                         36 -> UUID.fromString(ot) // OT is a UUID
                         else -> null // OT is invalid
                     }?.let { uuid -> pokemon.setOriginalTrainer(uuid) }
@@ -685,7 +685,7 @@ open class PokemonProperties {
         shiny?.let { nbt.putBoolean(DataKeys.POKEMON_SHINY, it) }
         gender?.let { nbt.putString(DataKeys.POKEMON_GENDER, it.name) }
         species?.let { nbt.putString(DataKeys.POKEMON_SPECIES_TEXT, it) }
-        nickname?.let { nbt.putString(DataKeys.POKEMON_NICKNAME, Component.Serializer.toJson(it, registryLookup)) }
+        nickname?.let { nbt.putString(DataKeys.POKEMON_NICKNAME, com.cobblemon.mod.common.util.ComponentJson.toJson(it, registryLookup)) }
         form?.let { nbt.putString(DataKeys.POKEMON_FORM_ID, it) }
         friendship?.let { nbt.putInt(DataKeys.POKEMON_FRIENDSHIP, it) }
         fullness?.let { nbt.putInt(DataKeys.POKEMON_FULLNESS, it) }
@@ -721,7 +721,7 @@ open class PokemonProperties {
         shiny = if (tag.contains(DataKeys.POKEMON_SHINY)) tag.getBooleanOr(DataKeys.POKEMON_SHINY, false) else null
         gender = if (tag.contains(DataKeys.POKEMON_GENDER)) Gender.valueOf(tag.getStringOr(DataKeys.POKEMON_GENDER, "")) else null
         species = if (tag.contains(DataKeys.POKEMON_SPECIES_TEXT)) tag.getStringOr(DataKeys.POKEMON_SPECIES_TEXT, "") else null
-        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) Component.Serializer.fromJson(tag.getStringOr(DataKeys.POKEMON_NICKNAME, ""), registryLookup) else null
+        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) com.cobblemon.mod.common.util.ComponentJson.fromJson(tag.getStringOr(DataKeys.POKEMON_NICKNAME, ""), registryLookup) else null
         form = if (tag.contains(DataKeys.POKEMON_FORM_ID)) tag.getStringOr(DataKeys.POKEMON_FORM_ID, "") else null
         friendship = if (tag.contains(DataKeys.POKEMON_FRIENDSHIP)) tag.getIntOr(DataKeys.POKEMON_FRIENDSHIP, 0) else null
         fullness = if (tag.contains(DataKeys.POKEMON_FULLNESS)) tag.getIntOr(DataKeys.POKEMON_FULLNESS, 0) else null

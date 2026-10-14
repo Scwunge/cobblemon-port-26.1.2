@@ -100,6 +100,6 @@ private fun crossedTarget(previous: Float, current: Float, target: Float): Boole
     (previous - target) * (current - target) < 0f
 
 private fun spawnLayerParticle(level: ServerLevel, pos: Vec3, layer: DistanceFieldLayer) {
-    val particle = DustParticleOptions(layer.color, layer.particleSize)
+    val particle = DustParticleOptions(net.minecraft.util.ARGB.colorFromFloat(1F, layer.color.x, layer.color.y, layer.color.z), layer.particleSize)
     level.sendParticles(particle, pos.x, pos.y, pos.z, 1, 0.0, 0.0, 0.0, 0.0)
 }

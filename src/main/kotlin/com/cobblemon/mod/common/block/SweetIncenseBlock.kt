@@ -58,10 +58,6 @@ class SweetIncenseBlock(properties: Properties) : BaseEntityBlock(properties), S
         builder.add(LIT, WATERLOGGED)
     }
 
-    override fun getLightBlock(state: BlockState): Int {
-        return super.getLightBlock(state)
-    }
-
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {
         return this.defaultBlockState()
                 .setValue(LIT, false)

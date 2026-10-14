@@ -344,7 +344,7 @@ class TMMachineBlockEntity(pos: BlockPos, state: BlockState) :
         level?.blockEntityChanged(worldPosition)
 
         // Mark the chunk containing this block entity as dirty, ensuring it is saved
-        level?.getChunkAt(worldPosition)?.isUnsaved = true
+        level?.getChunkAt(worldPosition)?.markUnsaved()
 
         // Update Neighbours
         level?.updateNeighborsAt(blockPos, currentState.block)

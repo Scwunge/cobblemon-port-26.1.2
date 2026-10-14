@@ -82,7 +82,7 @@ class Toast(
     /**
      * Used internally to track this toast on the client.
      */
-    internal val uuid: UUID = Mth.createInsecureUUID()
+    internal val uuid: UUID = Mth.createInsecureUUID(net.minecraft.util.RandomSource.createThreadSafe())
 
     /**
      * The listeners to this toast.

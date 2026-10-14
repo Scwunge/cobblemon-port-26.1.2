@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.ai.config.task
 
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.ai.BehaviourConfigurationContext
 import com.cobblemon.mod.common.api.ai.CobblemonWanderControl
@@ -35,6 +36,7 @@ class PokemonWanderControlTaskConfig : SingleTaskConfig {
         behaviourConfigurationContext.addMemories(CobblemonMemories.WANDER_CONTROL)
 
         return object : OneShot<LivingEntity>() {
+            override fun getRequiredMemories(): Set<MemoryModuleType<*>> = emptySet()
             override fun trigger(serverLevel: ServerLevel, livingEntity: LivingEntity, l: Long): Boolean {
                 if (entity !is PokemonEntity) {
                     return false

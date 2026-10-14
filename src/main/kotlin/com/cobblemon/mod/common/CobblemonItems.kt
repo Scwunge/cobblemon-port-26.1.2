@@ -458,7 +458,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     @JvmField
     val DAMAGED_MONITOR = blockItem("damaged_monitor", CobblemonBlocks.DAMAGED_MONITOR)
     @JvmField
-    val HEALING_MACHINE = blockItem("healing_machine", CobblemonBlocks.HEALING_MACHINE, Rarity.UNCOMMON)
+    val HEALING_MACHINE = create("healing_machine", { HealingMachineItem(CobblemonBlocks.HEALING_MACHINE, Item.Properties().rarity(Rarity.UNCOMMON).overrideDescription(CobblemonBlocks.HEALING_MACHINE.descriptionId)) })
     @JvmField
     val PC = blockItem("pc", CobblemonBlocks.PC)
     @JvmField
@@ -1293,14 +1293,15 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     val TYPE_GEM_BLOCK_FAIRY = blockItem("fairy_gem_block", CobblemonBlocks.TYPE_GEM_BLOCK_FAIRY)
 
     @JvmField
-    val POKEROD_SMITHING_TEMPLATE = create("pokerod_smithing_template", { SmithingTemplateItem(
+    val POKEROD_SMITHING_TEMPLATE = create("pokerod_smithing_template", { PokerodSmithingTemplateItem(
         Component.translatable("item.minecraft.fishing_rod").blue(),
         Component.translatable("item.cobblemon.smithing_template.pokerod.ingredients").blue(),
         Component.translatable("upgrade.cobblemon.pokerod").gray(),
         Component.translatable("item.cobblemon.smithing_template.pokerod.base_slot_description"),
         Component.translatable("item.cobblemon.smithing_template.pokerod.additions_slot_description"),
         listOf(cobblemonResource("item/empty_slot_fishing_rod")),
-        listOf(cobblemonResource("item/empty_slot_pokeball"))
+        listOf(cobblemonResource("item/empty_slot_pokeball")),
+        Item.Properties()
     ) })
 
     @JvmField
@@ -1405,7 +1406,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
 
     @JvmField
     val AUTOMATON_ARMOR_TRIM_SMITHING_TEMPLATE: SmithingTemplateItem = this.create(
-        "automaton_armor_trim_smithing_template", { SmithingTemplateItem.createArmorTrimTemplate(CobblemonArmorTrims.AUTOMATON) })
+        "automaton_armor_trim_smithing_template", { SmithingTemplateItem.createArmorTrimTemplate(Item.Properties()) })
 
     val pokeRods = mutableListOf<PokerodItem>()
     @JvmField
@@ -1755,7 +1756,7 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     }
 
     private fun compostableHeldItem(name: String, remappedName: String? = null, increaseLevelChance: Float = .65f): CobblemonItem {
-        val createdItem = heldItem(name, { remappedName })
+        val createdItem = heldItem(name, remappedName)
         compostable(createdItem, increaseLevelChance)
         return createdItem
     }

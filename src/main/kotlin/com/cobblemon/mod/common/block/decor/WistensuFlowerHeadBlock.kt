@@ -62,7 +62,7 @@ class WistensuFlowerHeadBlock(properties: Properties) : GrowingPlantHeadBlock(pr
     }
 
     override fun updateShape(state: BlockState, level: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
-        val updateState = wisternUpdateShape(state, direction, neighborState, level, pos, neighborPos, this)
+        val updateState = wisternUpdateShape(state, direction, neighborState, level, scheduledTickAccess, pos, neighborPos, this)
         if (updateState != null) return updateState
 
         if (direction == Direction.DOWN &&

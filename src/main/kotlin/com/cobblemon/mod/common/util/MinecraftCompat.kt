@@ -55,6 +55,10 @@ val Item.description: Component
 val Entity.server: MinecraftServer?
     get() = level().server
 
+/** ServerPlayer#server, which became private in 1.21.9. */
+val net.minecraft.server.level.ServerPlayer.server: MinecraftServer
+    get() = level().server
+
 /** The exclusive upper build limit (Level#getMaxBuildHeight before 1.21.2). */
 val LevelHeightAccessor.maxBuildHeight: Int
     get() = maxY + 1
@@ -120,3 +124,42 @@ val ItemStack.eatingSound: net.minecraft.sounds.SoundEvent
         if (consumable != null && consumable.animation() == net.minecraft.world.item.ItemUseAnimation.EAT) return consumable.sound().value()
         return net.minecraft.sounds.SoundEvents.GENERIC_EAT.value()
     }
+
+/** EntityType#is(TagKey) before 1.21.2. */
+fun net.minecraft.world.entity.EntityType<*>.`is`(tag: net.minecraft.tags.TagKey<net.minecraft.world.entity.EntityType<*>>): Boolean =
+    builtInRegistryHolder().`is`(tag)
+
+/** Entity#sendSystemMessage before 1.21.9: a no-op for everything but players. */
+fun Entity.sendSystemMessage(message: Component) {
+    if (this is Player) this.sendSystemMessage(message)
+}
+
+/** Level#getSharedSpawnPos before 1.21.9. */
+val Level.sharedSpawnPos: BlockPos
+    get() = respawnData.globalPos().pos()
+
+/** Entity#getCommandSenderWorld before 1.21.9. */
+val Entity.commandSenderWorld: Level
+    get() = level()
+
+/** FriendlyByteBuf#writeVec3 / readVec3 before 1.21.2: three doubles. */
+fun net.minecraft.network.FriendlyByteBuf.writeVec3(vec: net.minecraft.world.phys.Vec3) {
+    writeDouble(vec.x)
+    writeDouble(vec.y)
+    writeDouble(vec.z)
+}
+
+fun net.minecraft.network.FriendlyByteBuf.readVec3() = net.minecraft.world.phys.Vec3(readDouble(), readDouble(), readDouble())
+
+/** Component.Serializer#toJson / fromJson before 1.21.5: a component as a JSON string, with registry access. */
+object ComponentJson {
+    fun toJson(component: Component, registries: net.minecraft.core.HolderLookup.Provider): String =
+        com.google.gson.Gson().toJson(
+            net.minecraft.network.chat.ComponentSerialization.CODEC.encodeStart(registries.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE), component).getOrThrow()
+        )
+
+    fun fromJson(json: String, registries: net.minecraft.core.HolderLookup.Provider): Component? {
+        val element = com.google.gson.JsonParser.parseString(json) ?: return null
+        return net.minecraft.network.chat.ComponentSerialization.CODEC.parse(registries.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE), element).getOrThrow()
+    }
+}

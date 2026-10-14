@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.storage.party
 
+import com.cobblemon.mod.common.util.getUUID
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.advancement.CobblemonCriteria
 import com.cobblemon.mod.common.api.events.CobblemonEvents

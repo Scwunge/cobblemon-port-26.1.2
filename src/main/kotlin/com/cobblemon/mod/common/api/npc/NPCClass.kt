@@ -111,13 +111,14 @@ class NPCClass {
         hitbox = if (fixed) EntityDimensions.fixed(length, width) else EntityDimensions.scalable(length, width)
         battleConfiguration = NPCBattleConfiguration()
         battleConfiguration.decode(buffer)
-        interaction = buffer.readNullable {
+        interaction = if (buffer.readBoolean()) {
             val type = buffer.readString()
-            val configType = NPCInteractConfiguration.types[type] ?: return@readNullable null
-            val instance = configType.clazz.getConstructor().newInstance()
-            instance.decode(buffer)
-            instance
-        }
+            NPCInteractConfiguration.types[type]?.let { configType ->
+                val instance = configType.clazz.getConstructor().newInstance()
+                instance.decode(buffer)
+                instance
+            }
+        } else null
         val variationSize = buffer.readSizedInt(IntSize.U_BYTE)
         for (i in 0 until variationSize) {
             val key = buffer.readString()

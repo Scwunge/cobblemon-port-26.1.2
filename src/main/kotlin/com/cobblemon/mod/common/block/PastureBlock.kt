@@ -194,7 +194,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         builder.add(WATERLOGGED)
     }
 
-    fun checkBreakEntity(world: LevelAccessor, state: BlockState, pos: BlockPos) {
+    fun checkBreakEntity(world: net.minecraft.world.level.LevelReader, state: BlockState, pos: BlockPos) {
         if (state.getValue(PART) == PasturePart.TOP) {
             return
         }
@@ -222,7 +222,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
 
     override fun onExplosionHit(
         state: BlockState,
-        level: Level,
+        level: ServerLevel,
         pos: BlockPos,
         explosion: Explosion,
         dropConsumer: BiConsumer<ItemStack, BlockPos>
@@ -239,7 +239,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         return createTickerHelper(type, CobblemonBlockEntities.PASTURE, PokemonPastureBlockEntity.TICKER::tick)
     }
 
-    override fun setPlacedBy(world: Level, pos: BlockPos, state: BlockState, placer: LivingEntity, itemStack: ItemStack) {
+    override fun setPlacedBy(world: Level, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
         world.setBlock(
             pos.above(),
             state

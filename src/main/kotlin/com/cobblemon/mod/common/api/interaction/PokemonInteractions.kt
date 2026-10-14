@@ -30,7 +30,7 @@ import net.minecraft.core.HolderLookup
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.server.packs.PackType
-import net.minecraft.util.LowerCaseEnumTypeAdapterFactory
+import com.cobblemon.mod.common.util.adapters.LowerCaseEnumTypeAdapterFactory
 import net.minecraft.world.item.Item
 import net.minecraft.world.level.biome.Biome
 import net.minecraft.world.level.block.Block

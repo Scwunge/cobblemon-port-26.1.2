@@ -59,7 +59,7 @@ object ItemStackMoLangFunctions : AbstractMoLangFunctionHolder<Pair<ItemStack, R
             val minLevel = params.getIntOrNull(1) ?: 1
             val enchantmentRegistry = registryAccess.lookupOrThrow(Registries.ENCHANTMENT)
             val holder =
-                enchantmentRegistry.getHolder(enchantmentId).orElse(null) ?: return@hasEnchantment DoubleValue.ZERO
+                enchantmentRegistry.get(enchantmentId).orElse(null) ?: return@hasEnchantment DoubleValue.ZERO
             val level = EnchantmentHelper.getItemEnchantmentLevel(holder, stack)
             DoubleValue(level >= minLevel)
         }

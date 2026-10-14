@@ -341,7 +341,7 @@ open class PokeSnackBlockEntity(pos: BlockPos, state: BlockState) :
         return saveWithoutMetadata(registryLookup)
     }
 
-    override fun getUpdatePacket(): Packet<ClientGamePacketListener?>? {
+    override fun getUpdatePacket(): Packet<ClientGamePacketListener>? {
         return ClientboundBlockEntityDataPacket.create(this)
     }
 }

@@ -104,8 +104,9 @@ class SaccharineLogSlatheredBlock(properties: Properties) : HorizontalDirectiona
         val facingDirection = state.getValue(FACING)
         val targetPos = pos.relative(facingDirection)
 
-        if (neighborPos == targetPos) {
-            val fluidState = level.getFluidState(neighborPos)
+        // Neighbour updates no longer say which neighbour changed (1.21.2), so check the faced block on every update
+        run {
+            val fluidState = level.getFluidState(targetPos)
             // Revert log to non-honey block if touching fluid
             if (fluidState.amount > 3) {
                 val newState = CobblemonBlocks.SACCHARINE_LOG.defaultBlockState()

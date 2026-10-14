@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.decor
 
+import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.CobblemonBlocks
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -59,9 +60,9 @@ interface WistensuFlowerBlock {
         }
     }
 
-    fun wisternUpdateShape(state: BlockState, direction: Direction, neighborState: BlockState, level: LevelAccessor, pos: BlockPos, neighborPos: BlockPos, block: Block): BlockState? {
+    fun wisternUpdateShape(state: BlockState, direction: Direction, neighborState: BlockState, level: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, neighborPos: BlockPos, block: Block): BlockState? {
         if (!wisternCanSurvive(state, level, pos)) {
-            level.scheduleTick(pos, block, 1)
+            scheduledTickAccess.scheduleTick(pos, block, 1)
         }
 
         if (direction == Direction.UP &&

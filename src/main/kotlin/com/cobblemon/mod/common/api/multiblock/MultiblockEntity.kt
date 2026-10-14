@@ -48,9 +48,7 @@ abstract class MultiblockEntity(
     }
 
     override fun getUpdateTag(registryLookup: HolderLookup.Provider): CompoundTag {
-        val result = CompoundTag()
-        saveAdditional(result, registryLookup)
-        return result
+        return saveCustomOnly(registryLookup)
     }
 
     override fun saveAdditional(output: ValueOutput) {
@@ -63,8 +61,8 @@ abstract class MultiblockEntity(
             if (multiblockStructure != null && multiblockStructure!!.controllerBlockPos == blockPos) {
                 nbt.put(DataKeys.MULTIBLOCK_STORAGE, multiblockStructure!!.writeToNbt(registryLookup))
             }
-            else if (masterBlockPos != null) {
-                nbt.put(DataKeys.CONTROLLER_BLOCK, writeBlockPos(masterBlockPos))
+            else masterBlockPos?.let {
+                nbt.put(DataKeys.CONTROLLER_BLOCK, writeBlockPos(it))
             }
         } finally {
             output.putAll(nbt)

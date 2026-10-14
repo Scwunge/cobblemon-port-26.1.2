@@ -13,7 +13,15 @@ import net.minecraft.world.item.crafting.Ingredient
 /**
  * Represents the ingredients necessary to craft a [TechnicalMachine] in the [TMBlock]
  */
-data class TechnicalMachineRecipe(
-    val ingredient: Ingredient,
+class TechnicalMachineRecipe(
+    ingredient: () -> Ingredient,
     val count: Int
-)
+) {
+    constructor(ingredient: Ingredient, count: Int) : this({ ingredient }, count)
+
+    /**
+     * Resolved on first use: since 1.21.2 a tag ingredient needs the tag's holder set, and item tags are only bound
+     * after the data reload that loads TMs.
+     */
+    val ingredient: Ingredient by lazy(ingredient)
+}

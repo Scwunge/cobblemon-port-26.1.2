@@ -40,5 +40,6 @@ class WrapperLivingEntityTask<T : LivingEntity>(val task: BehaviorControl<T>, va
     }
 
     override fun getStatus() = task.status
+    override fun getRequiredMemories() = task.requiredMemories
     override fun doStop(level: ServerLevel, entity: LivingEntity, gameTime: Long) = task.doStop(level, entity as T, gameTime)
 }

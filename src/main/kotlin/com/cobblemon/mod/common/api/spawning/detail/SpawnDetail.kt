@@ -97,8 +97,8 @@ abstract class SpawnDetail : ModDependant {
         validBiomes.clear()
 
         // Calculate in advance what biomes of this world the spawn detail is valid for.
-        biomeRegistry.holders().forEach { holder ->
-            val key = holder.unwrapKey().orElse(null) ?: return@forEach
+        biomeRegistry.listElements().forEach { holder ->
+            val key = holder.key()
             if (conditions.isEmpty() || conditions.any { it.biomes == null || it.biomes!!.isEmpty() || it.biomes!!.any { it.fits(holder) } }) {
                 if (anticonditions.isEmpty() || anticonditions.none { it.biomes != null && it.biomes!!.any { it.fits(holder) } }) {
                     if (compositeCondition?.isBiomeValid(holder) != false) {

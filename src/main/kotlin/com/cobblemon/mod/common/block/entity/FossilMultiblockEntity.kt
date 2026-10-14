@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.parseOptionalItemStack
 import com.cobblemon.mod.common.util.asCompoundTag
 import net.minecraft.world.level.storage.ValueInput
 import com.cobblemon.mod.common.util.blockEntityRegistries
@@ -107,8 +108,9 @@ open class FossilMultiblockEntity(
             }
         }
         get() {
+            val masterBlockPos = masterBlockPos
             if(masterBlockPos != null && masterBlockPos != blockPos) {
-                val chunkPos = ChunkPos(masterBlockPos)
+                val chunkPos = ChunkPos.containing(masterBlockPos)
                 if (level?.chunkSource?.hasChunk(chunkPos.x, chunkPos.z) == true) {
                     val entity: FossilMultiblockEntity? = level?.getBlockEntity(masterBlockPos) as? FossilMultiblockEntity?
                     field = entity?.multiblockStructure
@@ -135,7 +137,8 @@ open class FossilMultiblockEntity(
                 else -> null
             }
 
-            if (itemToDrop != null) {
+            val level = level
+            if (itemToDrop != null && level != null) {
                 Containers.dropItemStack(level, worldPosition.x.toDouble(), worldPosition.y.toDouble(), worldPosition.z.toDouble(), ItemStack(itemToDrop))
             }
         }
@@ -164,7 +167,7 @@ open class FossilMultiblockEntity(
             null
         }
         diskStack = if (nbt.contains(DataKeys.MONITOR_DISK)) {
-            ItemStack.parse(registryLookup, nbt.get(DataKeys.MONITOR_DISK)).orElse(ItemStack.EMPTY)
+            parseOptionalItemStack(registryLookup, nbt.getCompoundOrEmpty(DataKeys.MONITOR_DISK))
         } else {
             ItemStack.EMPTY
         }
@@ -650,7 +653,7 @@ open class FossilMultiblockEntity(
 
         val spawnPos = findSafeSpawnPos(world, entity, blockPos, spawnDirection) ?: return
 
-        entity.moveTo(
+        entity.snapTo(
             spawnPos.x + 0.5,
             spawnPos.y.toDouble(),
             spawnPos.z +0.5

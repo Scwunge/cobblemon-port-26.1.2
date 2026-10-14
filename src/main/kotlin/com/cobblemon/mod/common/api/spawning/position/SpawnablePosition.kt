@@ -114,7 +114,7 @@ abstract class SpawnablePosition {
 
         fun loadStructures(structureAccess: StructureManager, pos: BlockPos) {
             val registry = structureAccess.registryAccess().lookupOrThrow(Registries.STRUCTURE)
-            structureAccess.startsForStructure(ChunkPos(pos)) { structure ->
+            structureAccess.startsForStructure(ChunkPos.containing(pos)) { structure ->
                 val entry = registry.wrapAsHolder(structure)
                 structures.add(entry)
                 foundIdentifiers.add(entry.unwrapKey().get().identifier())

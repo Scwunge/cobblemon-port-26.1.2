@@ -184,7 +184,7 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
             val f = 0.25F * direction.stepX.toFloat()
             val g = 0.25F * direction.stepZ.toFloat()
 
-            val itemEntity = ItemEntity(level, blockPos.x.toDouble() + 0.5 + f.toDouble(), (blockPos.y + 1).toDouble(), blockPos.z.toDouble() + 0.5 + g.toDouble(), potItem)
+            val itemEntity = ItemEntity(level, blockPos.x.toDouble() + 0.5 + f.toDouble(), (blockPos.y + 1).toDouble(), blockPos.z.toDouble() + 0.5 + g.toDouble(), potItem ?: ItemStack.EMPTY)
             itemEntity.setDefaultPickUpDelay()
             level.addFreshEntity(itemEntity)
         }
@@ -235,8 +235,8 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
         level: Level,
         state: BlockState,
         blockEntityType: BlockEntityType<T>
-    ): BlockEntityTicker<T?>? {
-        return createCookingPotTicker(level, blockEntityType as BlockEntityType<*>, CobblemonBlockEntities.CAMPFIRE) as BlockEntityTicker<T?>?
+    ): BlockEntityTicker<T>? {
+        return createCookingPotTicker(level, blockEntityType as BlockEntityType<*>, CobblemonBlockEntities.CAMPFIRE) as BlockEntityTicker<T>?
     }
 
     @Nullable

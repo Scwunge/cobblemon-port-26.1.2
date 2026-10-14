@@ -27,16 +27,10 @@ data class TechnicalMachineRecipeDTO(
         get() = _count ?: 1
 
     fun toTechnicalMachineRecipe(): TechnicalMachineRecipe {
-        val ingredient = when {
-            item != null ->
-                Ingredient.of(
-                    BuiltInRegistries.ITEM.getValue(item)
-                )
+        val ingredient: () -> Ingredient = when {
+            item != null -> Ingredient.of(BuiltInRegistries.ITEM.getValue(item)).let { ingredient -> { ingredient } }
 
-            tag != null ->
-                Ingredient.of(
-                    TagKey.create(Registries.ITEM, tag)
-                )
+            tag != null -> TagKey.create(Registries.ITEM, tag).let { key -> { Ingredient.of(BuiltInRegistries.ITEM.getOrThrow(key)) } }
 
             else ->
                 error("Recipe entry must define either 'item' or 'tag'")

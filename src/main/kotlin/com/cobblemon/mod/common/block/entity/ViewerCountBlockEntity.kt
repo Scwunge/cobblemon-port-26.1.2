@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.entity.EntityTypeTest
 import net.minecraft.world.phys.AABB
 
-open class ViewerCountBlockEntity(type: BlockEntityType<*>?, blockPos: BlockPos, blockState: BlockState) : BlockEntity(type, blockPos, blockState) {
+open class ViewerCountBlockEntity(type: BlockEntityType<*>, blockPos: BlockPos, blockState: BlockState) : BlockEntity(type, blockPos, blockState) {
 
     companion object {
         internal val TICKER = BlockEntityTicker<ViewerCountBlockEntity> { world, _, _, blockEntity ->

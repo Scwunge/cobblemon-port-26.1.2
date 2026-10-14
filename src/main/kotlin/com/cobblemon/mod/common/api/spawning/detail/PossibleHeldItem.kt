@@ -28,7 +28,7 @@ class PossibleHeldItem(
         val item = if (item.startsWith("#")) {
             val tag = TagKey.create(Registries.ITEM, Identifier.parse(item.substring(1)))
 
-            val opt = itemRegistry.getTag(tag)
+            val opt = itemRegistry.get(tag)
             if (opt.isPresent && opt.get().size() > 0) {
                 val entryList = opt.get()
                 entryList.getRandomElement(spawnablePosition.world.random).get().value()

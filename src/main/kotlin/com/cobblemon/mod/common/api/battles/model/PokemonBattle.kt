@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.battles.model
 
+import com.cobblemon.mod.common.util.sendSystemMessage
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue

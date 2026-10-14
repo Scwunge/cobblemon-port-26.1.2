@@ -89,7 +89,7 @@ object WorldMoLangFunctions : AbstractMoLangFunctionHolder<Holder<Level>>() {
 
                 else -> {
                     val biome = world.getBiome(blockPos).value() as Biome
-                    DoubleValue(biome.getPrecipitationAt(blockPos) == Biome.Precipitation.SNOW)
+                    DoubleValue(biome.getPrecipitationAt(blockPos, world.seaLevel) == Biome.Precipitation.SNOW)
                 }
             }
         }

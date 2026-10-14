@@ -318,8 +318,8 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
         fun consumeItem(slot: Int) {
             val itemInSlot = getItem(slot)
             if (!itemInSlot.isEmpty) {
-                if (itemInSlot.item.hasCraftingRemainingItem()) {
-                    remainderItems[itemInSlot.item.craftingRemainingItem!!] = (remainderItems[itemInSlot.item.craftingRemainingItem!!] ?: 0) + 1
+                itemInSlot.item.craftingRemainder?.item()?.value()?.let { remainder ->
+                    remainderItems[remainder] = (remainderItems[remainder] ?: 0) + 1
                 }
                 itemInSlot.shrink(1)
                 if (itemInSlot.count <= 0) setItem(slot, ItemStack.EMPTY)
@@ -390,7 +390,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
 
     override fun setRecipeUsed(recipe: RecipeHolder<*>?) {
         if (recipe != null) {
-            val resourceLocation = recipe.id()
+            val resourceLocation = recipe.id().identifier()
             this.recipesUsed.addTo(resourceLocation, 1)
         }
     }

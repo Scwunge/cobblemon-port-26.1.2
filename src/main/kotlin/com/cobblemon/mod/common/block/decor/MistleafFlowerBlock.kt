@@ -71,9 +71,9 @@ class MistleafFlowerBlock(lightLevel: (BlockState) -> Int) :
         level: Level,
         state: BlockState,
         blockEntityType: BlockEntityType<T>
-    ): BlockEntityTicker<T?>? {
+    ): BlockEntityTicker<T>? {
         return if (level.isClientSide) null else BaseEntityBlock.createTickerHelper(blockEntityType as BlockEntityType<*>,
-            CobblemonBlockEntities.MISTLEAF_FLOWER, MistleafFlowerBlockEntity::serverTick) as BlockEntityTicker<T?>?
+            CobblemonBlockEntities.MISTLEAF_FLOWER, MistleafFlowerBlockEntity::serverTick) as BlockEntityTicker<T>?
     }
 
     companion object {

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.ai
 
+import com.cobblemon.mod.common.util.commandSenderWorld
 import net.minecraft.world.Difficulty
 import com.cobblemon.mod.common.CobblemonMemories
 import net.minecraft.world.entity.LivingEntity

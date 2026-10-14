@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.ai.config.task
 
+import net.minecraft.world.entity.ai.memory.MemoryModuleType
 import com.cobblemon.mod.common.api.ai.BehaviourConfigurationContext
 import com.cobblemon.mod.common.api.molang.ExpressionLike
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMostSpecificMoLangValue
@@ -32,6 +33,7 @@ class ActivityChangeTaskConfig : SingleTaskConfig {
         behaviourConfigurationContext: BehaviourConfigurationContext
     ): BehaviorControl<in LivingEntity> {
         return object : OneShot<LivingEntity>() {
+            override fun getRequiredMemories(): Set<MemoryModuleType<*>> = emptySet()
             override fun trigger(serverLevel: ServerLevel, livingEntity: LivingEntity, l: Long): Boolean {
                 mainThreadRuntime.withQueryValue("entity", livingEntity.asMostSpecificMoLangValue())
                 if (condition.resolveBoolean(mainThreadRuntime)) {

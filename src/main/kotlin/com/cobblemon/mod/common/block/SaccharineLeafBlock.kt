@@ -54,8 +54,14 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), BonemealableBlock {
+// Leaves have no falling leaf particles in 1.21.1, so the chance is 0 and spawning them does nothing.
+class SaccharineLeafBlock(settings: Properties) : LeavesBlock(0F, settings), BonemealableBlock {
+    override fun codec(): com.mojang.serialization.MapCodec<out LeavesBlock> = CODEC
+
+    override fun spawnFallingLeavesParticle(level: Level, pos: BlockPos, random: RandomSource) {}
+
     companion object {
+        val CODEC: com.mojang.serialization.MapCodec<SaccharineLeafBlock> = simpleCodec(::SaccharineLeafBlock)
         val AGE: IntegerProperty = BlockStateProperties.AGE_2
         val DISTANCE: IntegerProperty = BlockStateProperties.DISTANCE
         val PERSISTENT: BooleanProperty = BlockStateProperties.PERSISTENT

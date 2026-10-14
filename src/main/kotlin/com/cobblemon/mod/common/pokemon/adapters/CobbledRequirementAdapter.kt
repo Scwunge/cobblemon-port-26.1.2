@@ -23,7 +23,7 @@ import com.google.gson.*
 import net.minecraft.advancements.criterion.ItemPredicate
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.resources.Identifier
-import net.minecraft.util.LowerCaseEnumTypeAdapterFactory
+import com.cobblemon.mod.common.util.adapters.LowerCaseEnumTypeAdapterFactory
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
