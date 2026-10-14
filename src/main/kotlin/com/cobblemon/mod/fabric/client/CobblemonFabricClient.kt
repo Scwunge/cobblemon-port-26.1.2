@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.fabric.client
 
+import com.cobblemon.mod.common.client.render.gui.CobblemonModelPipRenderer
 import com.cobblemon.mod.common.api.snowstorm.ParticleMaterials
 
 import com.cobblemon.mod.common.CobblemonItems
@@ -51,6 +52,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
@@ -160,6 +162,8 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
         }
 
         CobblemonModelPredicateRegistry.registerPredicates()
+        // 3D models inside GUIs (party, PC, Pokedex, summary, starter selection) are drawn as picture-in-picture elements.
+        PictureInPictureRendererRegistry.register { CobblemonModelPipRenderer(it.minecraft().renderBuffers().bufferSource()) }
     }
 
     override fun registerLayer(modelLayer: ModelLayerLocation, supplier: Supplier<LayerDefinition>) {
