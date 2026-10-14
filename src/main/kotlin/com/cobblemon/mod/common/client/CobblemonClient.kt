@@ -19,7 +19,6 @@ import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonClientImplementation
 import com.cobblemon.mod.common.CobblemonEntities
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonMenuType
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.scheduling.ClientTaskTracker
@@ -49,8 +48,6 @@ import com.cobblemon.mod.common.client.render.color.PonigiriItemColorProvider
 import com.cobblemon.mod.common.client.render.color.SinisterTeaItemColorProvider
 import com.cobblemon.mod.common.client.render.entity.PokeBobberEntityRenderer
 import com.cobblemon.mod.common.client.render.generic.GenericBedrockRenderer
-import com.cobblemon.mod.common.client.render.item.CobblemonBuiltinItemRendererRegistry
-import com.cobblemon.mod.common.client.render.item.PokemonItemRenderer
 import com.cobblemon.mod.common.client.render.layer.PlayerRecallBallRenderer
 import com.cobblemon.mod.common.client.render.layer.PokemonOnShoulderRenderer
 import com.cobblemon.mod.common.client.render.models.blockbench.bedrock.animation.BedrockAnimationRepository
@@ -160,9 +157,6 @@ object CobblemonClient {
         }
         this.registerTooltipManagers()
         this.registerMenuScreens()
-
-        LOGGER.info("Registering custom BuiltinItemRenderers")
-        CobblemonBuiltinItemRendererRegistry.register(CobblemonItems.POKEMON_MODEL, PokemonItemRenderer())
 
         PlatformEvents.CLIENT_ITEM_TOOLTIP.subscribe { event ->
             val stack = event.stack
