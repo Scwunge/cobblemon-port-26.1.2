@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.item
 
+import net.minecraft.client.Minecraft
+import net.minecraft.util.LightCoordsUtil
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
@@ -52,7 +54,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         val transformations = positions[mode]!!
 
         if (mode == ItemDisplayContext.GUI) {
-            Lighting.setupForFlatItems()
+            Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_FLAT)
         }
 
         matrices.scale(transformations.scale.x, transformations.scale.y, transformations.scale.z)
@@ -71,7 +73,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         val vertexConsumer: VertexConsumer =
             if (isEnchanted) {
                 VertexMultiConsumer.create(
-                    vertexConsumers.getBuffer(RenderType.entityGlintDirect()),
+                    vertexConsumers.getBuffer(RenderTypes.entityGlint()),
                     vertexConsumers.getBuffer(renderLayer),
                 )
             } else {
@@ -80,7 +82,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
 
         matrices.pushPose()
         val packedLight = if (mode == ItemDisplayContext.GUI) {
-            Lightmap.pack(13, 13)
+            LightCoordsUtil.pack(13, 13)
         } else {
             light
         }
@@ -101,7 +103,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         matrices.popPose()
 
         if (mode == ItemDisplayContext.GUI) {
-            Lighting.setupFor3DItems()
+            Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_3D)
         }
     }
 

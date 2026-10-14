@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import net.minecraft.core.component.DataComponents
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.ModAPI
@@ -20,7 +22,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
-import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.core.Direction
 import net.minecraft.world.item.*
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
@@ -47,10 +48,13 @@ class LecternBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : Leg
 
             if (blockEntity.getItemStack().item is PokedexItem) {
                 val resourceLocation = (blockEntity.getItemStack().item as PokedexItem).type.getItemModelPath(if (blockEntity.hasViewer()) "flat" else "flat_off")
-                val model = Minecraft.getInstance().itemRenderer.itemModelShaper.getModelManager().getModel(ModelResourceLocation(resourceLocation, MODEL_PATH))
-                Minecraft.getInstance().itemRenderer.render(blockEntity.getItemStack(), ItemDisplayContext.GROUND, false, poseStack, multiBufferSource, light, overlay, model)
+                // Item models are chosen through item model definitions since 1.21.4; each Pokedex model has one named
+                // after it (assets/cobblemon/items/pokedex_<type>_model_flat.json etc.).
+                val stack = blockEntity.getItemStack().copy()
+                stack.set(DataComponents.ITEM_MODEL, resourceLocation.withPath(resourceLocation.path.removePrefix("item/")))
+                LegacyItemRendering.renderStatic(stack, ItemDisplayContext.GROUND, light, overlay, poseStack, multiBufferSource, blockEntity.level, 0)
             } else {
-                Minecraft.getInstance().itemRenderer.renderStatic(blockEntity.getItemStack(), ItemDisplayContext.GROUND, light, overlay, poseStack, multiBufferSource, blockEntity.level, 0)
+                LegacyItemRendering.renderStatic(blockEntity.getItemStack(), ItemDisplayContext.GROUND, light, overlay, poseStack, multiBufferSource, blockEntity.level, 0)
             }
 
             poseStack.popPose()

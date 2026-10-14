@@ -17,7 +17,6 @@ import com.mojang.blaze3d.vertex.PoseStack
 import java.util.UUID
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.util.Mth
 import net.minecraft.world.phys.Vec3

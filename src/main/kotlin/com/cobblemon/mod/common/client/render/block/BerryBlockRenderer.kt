@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.putBulkData
+import com.cobblemon.mod.common.client.render.legacy.getQuads
 import com.cobblemon.mod.common.api.mulch.MulchVariant
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.BerryBlock
@@ -46,7 +48,7 @@ class BerryBlockRenderer(private val context: BlockEntityRendererProvider.Contex
 
     override fun shouldRender(blockEntity: BerryBlockEntity, pos: Vec3): Boolean {
         return super.shouldRender(blockEntity, pos)
-                && Minecraft.getInstance().levelRenderer.cullingFrustum.isVisible(AABB.ofSize(pos, 2.0, 4.0, 2.0))
+                && Minecraft.getInstance().gameRenderer.mainCamera.cullFrustum.isVisible(AABB.ofSize(pos, 2.0, 4.0, 2.0))
     }
 
     override fun render(entity: BerryBlockEntity, tickDelta: Float, matrices: PoseStack, vertexConsumers: MultiBufferSource, light: Int, overlay: Int) {
@@ -93,7 +95,7 @@ class BerryBlockRenderer(private val context: BlockEntityRendererProvider.Contex
     ) {
         matrices.pushPose()
         //Mulch is rendered on a different layer than the actual berries so
-        val mulchBuf = vertexConsumers.getBuffer(RenderType.cutout())
+        val mulchBuf = vertexConsumers.getBuffer(RenderTypes.cutoutMovingBlock())
         val model = mulchModels[entity.mulchVariant]
         model?.let {
             it.getModel().getQuads(entity.blockState, null, entity.level?.random).forEach { quad ->

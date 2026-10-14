@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.FossilAnalyzerBlockEntity
 import com.cobblemon.mod.common.block.multiblock.FossilMultiblockStructure
@@ -59,7 +60,7 @@ class FossilAnalyzerRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyB
             matrices.mulPose(Axis.XP.rotationDegrees(90F))
             matrices.scale(0.7F, 0.7F, 0.7F)
 
-            Minecraft.getInstance().itemRenderer.renderStatic(fossilStack, ItemDisplayContext.NONE, light, overlay, matrices, vertexConsumers, entity.level, 0)
+            LegacyItemRendering.renderStatic(fossilStack, ItemDisplayContext.NONE, light, overlay, matrices, vertexConsumers, entity.level, 0)
 
             matrices.popPose()
         }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
@@ -77,7 +78,7 @@ class DisplayCaseRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBloc
         matrices.mulPose(Axis.YP.rotationDegrees(-yRot))
         matrices.mulPose(Axis.YP.rotationDegrees(posType.rotY))
 
-        Minecraft.getInstance().itemRenderer.renderStatic(
+        LegacyItemRendering.renderStatic(
             stack,
             ItemDisplayContext.GROUND,
             light,
@@ -167,7 +168,8 @@ class DisplayCaseRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBloc
             //stack.item == CobblemonItems.POKEMON_MODEL -> PositioningType.ITEM_MODEL
             stack.item == Items.SHIELD -> PositioningType.SHIELD
             stack.item == Items.DECORATED_POT -> PositioningType.MOB_HEAD
-            Minecraft.getInstance().itemRenderer.getModel(stack, world, null, 0).isGui3d -> PositioningType.BLOCK_MODEL
+            // "gui_light: side" item models (block items) are what used to report isGui3d.
+            LegacyItemRendering.resolve(stack, ItemDisplayContext.GUI, world, null, 0).usesBlockLight() -> PositioningType.BLOCK_MODEL
             else -> PositioningType.ITEM_MODEL
         }
     }

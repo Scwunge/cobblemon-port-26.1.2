@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.putBulkData
+import com.cobblemon.mod.common.client.render.legacy.getQuads
 import com.cobblemon.mod.common.CobblemonBlocks
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.entity.RestorationTankBlockEntity
@@ -60,7 +62,7 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : Legacy
             else -> {}
         }
 
-        val cutoutBuffer = vertexConsumers.getBuffer(RenderType.cutout())
+        val cutoutBuffer = vertexConsumers.getBuffer(RenderTypes.cutoutMovingBlock())
         if (connectionDir != null) {
             matrices.pushPose()
             CONNECTOR_MODEL.getQuads(entity.blockState, null, entity.level?.random).forEach { quad ->
@@ -78,7 +80,7 @@ class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : Legacy
         }
 
         matrices.pushPose()
-        val transparentBuffer = vertexConsumers.getBuffer(RenderType.translucent())
+        val transparentBuffer = vertexConsumers.getBuffer(RenderTypes.translucentMovingBlock())
 
         val fluidModel = if (struct.isRunning()) FLUID_MODELS[8]
         else if (struct.hasCreatedPokemon) FLUID_MODELS[7]

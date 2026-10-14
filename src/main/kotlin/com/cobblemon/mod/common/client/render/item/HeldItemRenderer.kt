@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.item
 
+import net.minecraft.util.LightCoordsUtil
+import com.cobblemon.mod.common.client.render.gui.GuiModelLighting
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags.WEARABLE_FACE_ITEMS
 import com.cobblemon.mod.common.api.tags.CobblemonItemTags.WEARABLE_HAT_ITEMS
@@ -21,7 +24,6 @@ import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.Lightmap
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemDisplayContext
@@ -29,7 +31,6 @@ import net.minecraft.world.item.ItemStack
 import org.joml.Vector3f
 
 class HeldItemRenderer {
-    private val itemRenderer: ItemRenderer = Minecraft.getInstance().itemRenderer
     private var displayContext: ItemDisplayContext = ItemDisplayContext.FIXED
 
     companion object {
@@ -48,7 +49,7 @@ class HeldItemRenderer {
         state: PosableState,
         poseStack: PoseStack,
         buffer: MultiBufferSource,
-        light: Int = Lightmap.pack(11, 7),
+        light: Int = LightCoordsUtil.pack(11, 7),
         frontLight: Boolean = false,
         entity: LivingEntity? = null
     ) {
@@ -73,7 +74,6 @@ class HeldItemRenderer {
         if (item.isEmpty || !state.locatorStates.containsKey(targetLocator)) return
 
         poseStack.pushPose()
-        RenderSystem.applyModelViewMatrix()
 
         displayContext = state.currentModel?.getLocatorDisplayContext(targetLocator)?:
             if ((item.`is`(WEARABLE_FACE_ITEMS) && targetLocator==ITEM_FACE) || (item.`is`(WEARABLE_HAT_ITEMS) && targetLocator== ITEM_HAT)) ItemDisplayContext.HEAD
@@ -115,10 +115,11 @@ class HeldItemRenderer {
 
         //Render front lighting for UI Models
         if (frontLight) {
-            RenderSystem.setShaderLights(Vector3f(0F,0F,1F), Vector3f(0F,0F,1F))
+            GuiModelLighting.setup(Vector3f(0F,0F,1F), Vector3f(0F,0F,1F))
         }
 
-        itemRenderer.renderStatic(entity, item, displayContext, isLeft, poseStack, buffer, null, light, OverlayTexture.NO_OVERLAY, seed)
+        // The left hand is part of the display context since 1.21.4.
+        LegacyItemRendering.renderStatic(entity, item, displayContext, poseStack, buffer, entity?.level(), light, OverlayTexture.NO_OVERLAY, seed)
 
         poseStack.popPose()
     }

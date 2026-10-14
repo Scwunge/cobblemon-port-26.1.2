@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.battle
 
+import net.minecraft.util.LightCoordsUtil
 import com.cobblemon.mod.common.Cobblemon
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.api.gui.blitk
@@ -525,14 +526,14 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
 
         val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
         val buffer = immediate.getBuffer(renderType)
-        val packedLight = Lightmap.pack(11, 7)
+        val packedLight = LightCoordsUtil.pack(11, 7)
         model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         immediate.endBatch()
 
         matrixStack.popPose()
 
-        Lighting.setupFor3DItems()
+        Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_3D)
     }
 
     fun onLogout() {

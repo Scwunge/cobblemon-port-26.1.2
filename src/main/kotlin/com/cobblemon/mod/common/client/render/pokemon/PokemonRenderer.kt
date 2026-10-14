@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.pokemon
 
+import net.minecraft.util.LightCoordsUtil
 import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
 import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
 import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
@@ -56,7 +57,6 @@ import net.minecraft.client.renderer.Lightmap
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.entity.EntityRendererProvider
-import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.entity.MobRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.network.chat.Component
@@ -446,7 +446,7 @@ class PokemonRenderer(
             val entityHeight = entity.boundingBox.ysize + 0.5f
             matrices.pushPose()
             matrices.translate(0.0, entityHeight, 0.0)
-            matrices.mulPose(this.entityRenderDispatcher.cameraOrientation())
+            matrices.mulPose(cameraOrientation())
             matrices.translate(0.0, 0.0 + (offsetScale / 2), -(scale + offsetScale))
             matrices.scale((0.025 * sizeScale).toFloat(), (-0.025 * sizeScale).toFloat(), (1 * sizeScale).toFloat())
             val matrix4f = matrices.last().pose()
@@ -463,7 +463,7 @@ class PokemonRenderer(
             }
             var h = (-this.font.width(label) / 2).toFloat()
             val y = 0F
-            val packedLight = Lightmap.pack(15, 15)
+            val packedLight = LightCoordsUtil.pack(15, 15)
             this.font.drawInBatch(label, h, y, 0x20FFFFFF, false, matrix4f, vertexConsumers, DisplayMode.SEE_THROUGH, opacity, packedLight)
             this.font.drawInBatch(label, h, y, -1, false, matrix4f, vertexConsumers, DisplayMode.NORMAL, 0, packedLight)
 
@@ -519,7 +519,7 @@ class PokemonRenderer(
         ballContext.put(RenderContext.POSABLE_STATE, state)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
 //        model.animateModel(null, 0f, 0F, 0F)
-        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderTypes.entityCutoutCull(texture), false, false)
+        val buffer = buff.getBuffer(RenderTypes.entityCutoutCull(texture))
 //        matrixStack.scale(scale, scale, scale)
         model.render(ballContext, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
         model.green = 1f
@@ -542,7 +542,7 @@ class PokemonRenderer(
         matrixStack.mulPose(Axis.ZP.rotationDegrees(180f))
         matrixStack.rotateAround(Axis.YP.rotationDegrees(entity.entityData.get(SPAWN_DIRECTION)), 0.0f, 0f, 0.0f)
         matrixStack.scale(scale, scale, scale)
-        val buffer = ItemRenderer.getFoilBufferDirect(buff, RenderTypes.entityCutoutCull(textureResource), false, false)
+        val buffer = buff.getBuffer(RenderTypes.entityCutoutCull(textureResource))
         model.render(matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
         matrixStack.popPose()

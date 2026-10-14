@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.renderModel
+import com.cobblemon.mod.common.client.render.legacy.blockModelOf
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.block.campfirepot.CampfireBlock
 import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.block.campfirepot.CampfirePotBlock
@@ -17,7 +20,6 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.MultiBufferSource
 import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
@@ -89,20 +91,19 @@ class CampfireBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : Le
         poseStack.pushPose()
         poseStack.translate(0.0, 0.4375, 0.0)
 
-        val blockRenderer = Minecraft.getInstance().blockRenderer
         val state = campfirePotItem.block.defaultBlockState()
             .setValue(CampfirePotBlock.OPEN, isLidOpen)
             .setValue(FACING, Direction.fromYRot(yRot.toDouble()))
             .setValue(CampfirePotBlock.OCCUPIED, (!blockEntity.getSeasonings().isEmpty() || !blockEntity.getIngredients().isEmpty()))
-        val bakedModel: BlockStateModel = blockRenderer.getBlockModel(state)
+        val bakedModel: BlockStateModel = blockModelOf(state)
 
         val red = ARGB.red(blockEntity.brothColor) / 255F
         val green = ARGB.green(blockEntity.brothColor) / 255F
         val blue = ARGB.blue(blockEntity.brothColor) / 255F
 
-        blockRenderer.modelRenderer.renderModel(
+        renderModel(
             poseStack.last(),
-            multiBufferSource.getBuffer(ItemBlockRenderTypes.getRenderType(state, false)),
+            multiBufferSource,
             state,
             bakedModel,
             red,
@@ -150,7 +151,7 @@ class CampfireBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : Le
             poseStack.pushPose()
             poseStack.mulPose(Axis.XP.rotationDegrees(22.5F))
 
-            Minecraft.getInstance().itemRenderer.renderStatic(
+            LegacyItemRendering.renderStatic(
                 seasoning,
                 ItemDisplayContext.GROUND,
                 light,
