@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator
 
 class CobblemonFabricDataGenerator : DataGeneratorEntrypoint {
-    override fun onInitializeDataGenerator(generator: FabricDataGenerator?) {
+    override fun onInitializeDataGenerator(generator: FabricDataGenerator) {
         if (generator == null) {
             Cobblemon.LOGGER.error("Fabric Data Generator couldn't initialize")
             return

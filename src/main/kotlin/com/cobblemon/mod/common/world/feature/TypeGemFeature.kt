@@ -22,7 +22,7 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext
 import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration
 
 class TypeGemFeature : Feature<BlockStateConfiguration>(BlockStateConfiguration.CODEC) {
-    override fun place(context: FeaturePlaceContext<BlockStateConfiguration?>): Boolean {
+    override fun place(context: FeaturePlaceContext<BlockStateConfiguration>): Boolean {
         val worldGenLevel = context.level()
         val random = context.random()
         val origin = context.origin()

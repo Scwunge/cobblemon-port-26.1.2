@@ -35,7 +35,6 @@ import net.minecraft.world.level.block.Mirror
 import net.minecraft.world.level.block.Rotation
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
-import net.minecraft.world.level.block.state.properties.DirectionProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.material.PushReaction
@@ -63,7 +62,7 @@ class TypeGemClusterBlock(
         }
         val gemToClusterMap: MutableMap<Block, TypeGemClusterBlock> = mutableMapOf()
 
-        val FACING: DirectionProperty = DirectionalBlock.FACING
+        val FACING: EnumProperty<Direction> = DirectionalBlock.FACING
         val STAGE: IntegerProperty = IntegerProperty.create("stage", 0, 3)
         val GROWTH_TYPE: EnumProperty<GrowthType> = EnumProperty.create("growth_type", GrowthType::class.java)
 

@@ -110,6 +110,13 @@ class RecordingVertexConsumer : VertexConsumer {
         return this
     }
 
+    val isEmpty: Boolean
+        get() = count == 0
+
+    fun clear() {
+        count = 0
+    }
+
     fun replay(consumer: VertexConsumer) {
         for (index in 0 until count) {
             val f = index * FLOATS

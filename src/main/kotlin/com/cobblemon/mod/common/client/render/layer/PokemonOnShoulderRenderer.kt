@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common.client.render.layer
 
+import net.minecraft.util.profiling.Profiler
+import net.minecraft.client.renderer.entity.state.AvatarRenderState
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyPlayerRenderLayer
 import com.cobblemon.mod.common.client.timer
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.util.parseOptionalItemStack
@@ -47,8 +51,8 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 
-class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent<T, PlayerModel<T>>) :
-    RenderLayer<T, PlayerModel<T>>(renderLayerParent) {
+class PokemonOnShoulderRenderer(renderLayerParent: RenderLayerParent<AvatarRenderState, PlayerModel>) :
+    LegacyPlayerRenderLayer(renderLayerParent) {
 
     val context = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
@@ -65,7 +69,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
         matrixStack: PoseStack,
         buffer: MultiBufferSource,
         packedLight: Int,
-        livingEntity: T,
+        player: Player,
         limbSwing: Float,
         limbSwingAmount: Float,
         partialTicks: Float,
@@ -80,7 +84,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
             matrixStack,
             buffer,
             packedLight,
-            livingEntity,
+            player,
             limbSwing,
             limbSwingAmount,
             realPartialTicks,
@@ -93,7 +97,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
             matrixStack,
             buffer,
             packedLight,
-            livingEntity,
+            player,
             limbSwing,
             limbSwingAmount,
             realPartialTicks,
@@ -140,7 +144,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
         matrixStack: PoseStack,
         buffer: MultiBufferSource,
         packedLight: Int,
-        livingEntity: T,
+        livingEntity: Player,
         limbSwing: Float,
         limbSwingAmount: Float,
         partialTicks: Float,
@@ -151,7 +155,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
     ) {
         val compoundTag = if (pLeftShoulder) livingEntity.shoulderEntityLeft else livingEntity.shoulderEntityRight
         if (compoundTag.isPokemonEntity()) {
-            livingEntity.level().profiler.push("shoulder_render_".plus(if (pLeftShoulder) "left" else "right"))
+            Profiler.get().push("shoulder_render_".plus(if (pLeftShoulder) "left" else "right"))
             val cache = playerCache.getOrPut(livingEntity.uuid) { ShoulderCache() }
             val shoulderData = shoulderDataFrom(compoundTag)
             if (pLeftShoulder) cache.lastKnownLeft = shoulderData else cache.lastKnownRight = shoulderData
@@ -210,7 +214,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                     )
                 )
             )
-            val i = LivingEntityRenderer.getOverlayCoords(livingEntity, 0.0f)
+            val i = LegacyLivingEntityRenderer.getOverlayCoords(livingEntity, 0.0f)
 
             model.applyAnimations(
                 entity = null,
@@ -240,7 +244,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
 
             model.setDefault()
             matrixStack.popPose()
-            livingEntity.level().profiler.pop()
+            Profiler.get().pop()
         } else {
             val entry = playerCache.getOrPut(livingEntity.uuid) { ShoulderCache() }
             if (pLeftShoulder) entry.lastKnownLeft = null else entry.lastKnownRight = null

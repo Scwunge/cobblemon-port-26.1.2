@@ -33,15 +33,7 @@ import java.util.Map;
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
 
-    @Shadow private Map<PlayerSkin.Model, EntityRenderer<? extends Player>> playerRenderers;
-
-    @Inject(
-        method = "onResourceManagerReload",
-        at = @At(value = "TAIL")
-    )
-    public void resourceManagerReloadHook(ResourceManager resourceManager, CallbackInfo ci) {
-        CobblemonClient.INSTANCE.onAddLayer(this.playerRenderers);
-    }
+    // Cobblemon's player layers are added through Fabric's LivingEntityRenderLayerRegistrationCallback since 26.1.
 
     @Inject(
         method = "renderHitbox(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/entity/Entity;FFFF)V",

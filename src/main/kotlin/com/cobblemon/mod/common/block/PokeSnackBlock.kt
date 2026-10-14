@@ -139,7 +139,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
         PrimitiveCodec.BOOL.fieldOf("isLure").forGetter { it.isLure }
     ).apply(it, ::PokeSnackBlock) }
 
-    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block?, BlockState?>) {
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING, BITES, CANDLE, BlockStateProperties.LIT)
     }
 

@@ -309,7 +309,7 @@ class OmniPathNodeMaker : NodeEvaluator() {
         ) pos.y.toDouble() + 0.5 else WalkNodeEvaluator.getFloorLevel(blockGetter, pos)
     }
 
-    override fun getNeighbors(successors: Array<Node?>, node: Node): Int {
+    override fun getNeighbors(successors: Array<Node>, node: Node): Int {
         var i = 0
         val map = Maps.newEnumMap<Direction, Node?>(Direction::class.java)
         val upperMap = Maps.newEnumMap<Direction, Node?>(Direction::class.java)

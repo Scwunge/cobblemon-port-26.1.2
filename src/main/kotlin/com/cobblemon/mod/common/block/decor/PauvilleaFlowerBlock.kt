@@ -91,15 +91,15 @@ class PauvilleaFlowerBlock(properties: Properties?) : DirectionalBlock(propertie
         val CEILING = Shapes.box(0.075, 0.0, 0.075, 0.925, 1.0, 0.925)
     }
 
-    override fun isValidBonemealTarget(level: LevelReader?, pos: BlockPos?, state: BlockState?): Boolean {
+    override fun isValidBonemealTarget(level: LevelReader, pos: BlockPos, state: BlockState): Boolean {
         return true
     }
 
-    override fun isBonemealSuccess(level: Level?, random: RandomSource?, pos: BlockPos?, state: BlockState?): Boolean {
+    override fun isBonemealSuccess(level: Level, random: RandomSource, pos: BlockPos, state: BlockState): Boolean {
         return true
     }
 
-    override fun performBonemeal(level: ServerLevel, random: RandomSource?, pos: BlockPos, state: BlockState?) {
+    override fun performBonemeal(level: ServerLevel, random: RandomSource, pos: BlockPos, state: BlockState) {
         popResource(level, pos, ItemStack(this))
     }
 }

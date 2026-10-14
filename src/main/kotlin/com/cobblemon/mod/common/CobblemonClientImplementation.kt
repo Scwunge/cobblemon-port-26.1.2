@@ -9,8 +9,8 @@
 package com.cobblemon.mod.common
 
 import java.util.function.Supplier
-import net.minecraft.client.color.block.BlockColor
-import net.minecraft.client.color.item.ItemColor
+import com.cobblemon.mod.common.client.render.color.BlockColor
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.model.geom.builders.LayerDefinition
 import net.minecraft.client.particle.ParticleProvider
@@ -34,13 +34,9 @@ interface CobblemonClientImplementation {
         factory: (SpriteSet) -> ParticleProvider<T>
     )
 
-    fun registerBlockRenderType(layer: RenderType, vararg blocks: Block)
-
-    fun registerItemColors(provider: ItemColor, vararg items: Item)
-
     fun registerBlockColors(provider: BlockColor, vararg blocks: Block)
 
-    fun <T : BlockEntity> registerBlockEntityRenderer(type: BlockEntityType<out T>, factory: BlockEntityRendererProvider<T>)
+    fun <T : BlockEntity, S : BlockEntityRenderState> registerBlockEntityRenderer(type: BlockEntityType<out T>, factory: BlockEntityRendererProvider<T, S>)
 
     fun <T : Entity> registerEntityRenderer(type: EntityType<out T>, factory: EntityRendererProvider<T>)
 }

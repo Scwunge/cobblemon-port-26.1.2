@@ -8,22 +8,20 @@
 
 package com.cobblemon.mod.common
 
+import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel
-import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.resources.Identifier
 
 /**
- * Contains information for forcing a model to be baked
+ * A model that is baked on its own (not as part of a block state or item) so renderers can draw it directly.
  *
- * @param modelLocation The location of the model
- * @param modelIdentifier The identifier that the BlockStateModel will be registered to
+ * Such models were registered under a ModelResourceLocation before 1.21.4; they are Fabric extra models now.
  */
-data class BakingOverride(
-    val modelLocation: Identifier,
-    val modelIdentifier: ModelResourceLocation
-) {
+data class BakingOverride(val modelLocation: Identifier) {
+    val key: ExtraModelKey<BlockStateModel> = ExtraModelKey.create { modelLocation.toString() }
+
     fun getModel(): BlockStateModel {
-        return Minecraft.getInstance().modelManager.getModel(modelIdentifier)
+        return Minecraft.getInstance().modelManager.getModel(key) ?: error("Model $modelLocation was not baked")
     }
 }

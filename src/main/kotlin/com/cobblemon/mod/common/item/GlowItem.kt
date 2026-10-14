@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.SignText
 
 class GlowItem(block: Block, settings: Properties) : BlockItem(block, settings.useItemDescriptionPrefix()), SignApplicator {
 
-    override fun tryApplyToSign(level: Level, sign: SignBlockEntity, isFront: Boolean, player: Player?): Boolean {
+    override fun tryApplyToSign(level: Level, sign: SignBlockEntity, isFront: Boolean, player: Player): Boolean {
         if (sign.updateText({ signText: SignText? -> signText!!.setHasGlowingText(true) }, isFront)) {
             level.playSound(
                 null as Player?,

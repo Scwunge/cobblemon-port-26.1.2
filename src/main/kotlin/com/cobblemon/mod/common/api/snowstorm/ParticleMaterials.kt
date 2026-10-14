@@ -8,71 +8,96 @@
 
 package com.cobblemon.mod.common.api.snowstorm
 
-import com.mojang.blaze3d.platform.GlStateManager
-import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.BufferBuilder
-import com.mojang.blaze3d.vertex.DefaultVertexFormat
-import com.mojang.blaze3d.vertex.Tesselator
-import com.mojang.blaze3d.vertex.VertexFormat
+import com.cobblemon.mod.common.client.render.legacy.RecordingVertexConsumer
+import com.cobblemon.mod.common.util.cobblemonResource
+import com.mojang.blaze3d.pipeline.BlendFunction
+import com.mojang.blaze3d.pipeline.ColorTargetState
+import com.mojang.blaze3d.pipeline.RenderPipeline
+import com.mojang.blaze3d.platform.DestFactor
+import com.mojang.blaze3d.platform.SourceFactor
+import com.mojang.blaze3d.vertex.PoseStack
+import net.fabricmc.fabric.api.client.particle.v1.ParticleGroupRegistry
+import net.minecraft.client.Camera
+import net.minecraft.client.particle.ParticleEngine
+import net.minecraft.client.particle.ParticleGroup
 import net.minecraft.client.particle.ParticleRenderType
-import net.minecraft.client.renderer.GameRenderer
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.culling.Frustum
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.state.level.CameraRenderState
+import net.minecraft.client.renderer.state.level.ParticleGroupRenderState
 import net.minecraft.client.renderer.texture.TextureAtlas
-import net.minecraft.client.renderer.texture.TextureManager
 
+/**
+ * The render types of Snowstorm particles, one per Bedrock particle material.
+ *
+ * In 1.21.1 each material was a ParticleRenderType that set up the particle shader with its own blending and culling.
+ * Particles are now drawn from extracted render states, so each material gets a pipeline with that same state and a
+ * particle group that collects its particles' quads and submits them.
+ */
 object ParticleMaterials {
-    val ALPHA = object : ParticleRenderType {
-        override fun begin(tessellator: Tesselator, textureManager: TextureManager): BufferBuilder {
-            RenderSystem.enableBlend()
-            RenderSystem.enableCull()
-            RenderSystem.depthMask(true)
-            RenderSystem.setShader { GameRenderer.getParticleShader() }
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA)
-            return tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
-        }
+    val ALPHA = Material("alpha", BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA), cull = true)
+    val ADD = Material("add", BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE), cull = false)
+    val BLEND = Material("blend", BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA), cull = false)
+    val OPAQUE = Material("opaque", BlendFunction(SourceFactor.SRC_COLOR, DestFactor.ZERO), cull = true)
 
-        override fun toString() = "ALPHA"
+    val ALL = listOf(ALPHA, OPAQUE, BLEND, ADD)
+
+    /** Registers the particle groups of the materials, rendered after vanilla's particles in the order of [ALL]. */
+    fun register() {
+        var previous: ParticleRenderType = ParticleRenderType.SINGLE_QUADS
+        for (material in ALL) {
+            ParticleGroupRegistry.register(material.renderType) { engine -> Group(engine, material) }
+            ParticleGroupRegistry.registerOrdering(previous, material.renderType)
+            previous = material.renderType
+        }
     }
 
-    val ADD = object : ParticleRenderType {
-        override fun begin(tessellator: Tesselator, textureManager: TextureManager): BufferBuilder {
-            RenderSystem.enableBlend()
-            RenderSystem.disableCull()
-            RenderSystem.depthMask(true)
-            RenderSystem.setShader { GameRenderer.getParticleShader() }
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE)
-            return tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
-        }
+    class Material(name: String, blendFunction: BlendFunction, cull: Boolean) {
+        val renderType = ParticleRenderType(cobblemonResource("snowstorm_$name").toString())
 
-        override fun toString() = "ADD"
+        val pipeline: RenderPipeline = RenderPipeline.builder(RenderPipelines.PARTICLE_SNIPPET)
+            .withLocation(cobblemonResource("pipeline/snowstorm_$name"))
+            .withColorTargetState(ColorTargetState(blendFunction))
+            .withCull(cull)
+            .build()
+
+        val geometryType: RenderType = RenderType.create(
+            "cobblemon_snowstorm_$name",
+            RenderSetup.builder(pipeline)
+                .withTexture("Sampler0", TextureAtlas.LOCATION_PARTICLES)
+                .useLightmap()
+                .createRenderSetup()
+        )
+
+        override fun toString() = renderType.name
     }
 
-    val BLEND = object : ParticleRenderType {
-        override fun begin(tessellator: Tesselator, textureManager: TextureManager): BufferBuilder {
-            RenderSystem.enableBlend()
-            RenderSystem.disableCull()
-            RenderSystem.depthMask(true)
-            RenderSystem.setShader { GameRenderer.getParticleShader() }
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA)
-            return tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
-        }
+    /** Holds the particles of one material and extracts their quads each frame. */
+    class Group(engine: ParticleEngine, val material: Material) : ParticleGroup<com.cobblemon.mod.common.client.render.SnowstormParticle>(engine) {
+        private val state = RenderState(material)
 
-        override fun toString() = "BLEND"
+        override fun extractRenderState(frustum: Frustum, camera: Camera, partialTickTime: Float): ParticleGroupRenderState {
+            state.vertices.clear()
+            for (particle in particles) {
+                particle.render(state.vertices, frustum, camera, partialTickTime)
+            }
+            return state
+        }
     }
 
-    val OPAQUE = object : ParticleRenderType {
-        override fun begin(tessellator: Tesselator, textureManager: TextureManager): BufferBuilder {
-            RenderSystem.enableBlend()
-            RenderSystem.enableCull()
-            RenderSystem.depthMask(true)
-            RenderSystem.setShader { GameRenderer.getParticleShader() }
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES)
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ZERO)
-            return tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE)
+    class RenderState(val material: Material) : ParticleGroupRenderState {
+        val vertices = RecordingVertexConsumer()
+
+        override fun submit(submitNodeCollector: SubmitNodeCollector, camera: CameraRenderState) {
+            if (!vertices.isEmpty) {
+                // Vertices are camera relative already.
+                submitNodeCollector.submitCustomGeometry(PoseStack(), material.geometryType) { _, consumer -> vertices.replay(consumer) }
+            }
         }
 
-        override fun toString() =  "OPAQUE"
+        // The quads are replaced when the group is next extracted.
     }
 }

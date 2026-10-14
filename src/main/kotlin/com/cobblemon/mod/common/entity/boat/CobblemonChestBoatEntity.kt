@@ -132,7 +132,7 @@ class CobblemonChestBoatEntity(entityType: EntityType<CobblemonChestBoatEntity>,
 
     override fun getLootTable() = lootTableId
 
-    override fun setLootTable(lootTable: ResourceKey<LootTable>?) {
+    override fun setLootTable(lootTable: ResourceKey<LootTable>) {
         this.lootTableId = lootTable
     }
 

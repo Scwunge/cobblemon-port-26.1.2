@@ -249,7 +249,7 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
     }
 
     @Deprecated("Deprecated in Java")
-    override fun isPathfindable(state: BlockState?, type: PathComputationType): Boolean {
+    override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean {
         return false
     }
 

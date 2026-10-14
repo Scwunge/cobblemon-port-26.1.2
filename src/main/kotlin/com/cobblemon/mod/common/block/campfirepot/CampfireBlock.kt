@@ -46,7 +46,7 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.world.level.block.state.properties.BooleanProperty
-import net.minecraft.world.level.block.state.properties.DirectionProperty
+import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.pathfinder.PathComputationType
@@ -66,7 +66,7 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
                 Codec.BOOL.fieldOf("isSoul").forGetter(CampfireBlock::isSoul)
             ).apply(it, ::CampfireBlock)
         }
-        val ITEM_DIRECTION = DirectionProperty.create("item_facing")
+        val ITEM_DIRECTION = EnumProperty.create("item_facing", Direction::class.java)
         val POWERED = BlockStateProperties.POWERED
         val COOKING = BooleanProperty.create("cooking")
         val LID = BooleanProperty.create("lid")
@@ -234,7 +234,7 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
     override fun <T : BlockEntity?> getTicker(
         level: Level,
         state: BlockState,
-        blockEntityType: BlockEntityType<T?>
+        blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T?>? {
         return createCookingPotTicker(level, blockEntityType as BlockEntityType<*>, CobblemonBlockEntities.CAMPFIRE) as BlockEntityTicker<T?>?
     }

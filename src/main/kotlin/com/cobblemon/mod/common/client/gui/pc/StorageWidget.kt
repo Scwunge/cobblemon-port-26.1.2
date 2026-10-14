@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.pc
 
+import com.cobblemon.mod.common.client.render.gui.hasShiftDown
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
@@ -406,7 +407,7 @@ class StorageWidget(
 
         if (grabbedSlot == null) {
             if (clickedPokemon != null && pcGui.search.passes(clickedPokemon)) {
-                val shiftClicked = Screen.hasShiftDown()
+                val shiftClicked = hasShiftDown()
                 if (shiftClicked) {
                     if (clickedPosition is PCPosition) {
                         val firstEmptySpace = party.slots.indexOfFirst { it == null }

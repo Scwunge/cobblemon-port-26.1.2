@@ -70,7 +70,7 @@ class MistleafFlowerBlock(lightLevel: (BlockState) -> Int) :
     override fun <T : BlockEntity?> getTicker(
         level: Level,
         state: BlockState,
-        blockEntityType: BlockEntityType<T?>
+        blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T?>? {
         return if (level.isClientSide) null else BaseEntityBlock.createTickerHelper(blockEntityType as BlockEntityType<*>,
             CobblemonBlockEntities.MISTLEAF_FLOWER, MistleafFlowerBlockEntity::serverTick) as BlockEntityTicker<T?>?

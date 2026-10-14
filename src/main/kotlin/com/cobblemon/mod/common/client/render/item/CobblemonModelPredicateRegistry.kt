@@ -8,6 +8,13 @@
 
 package com.cobblemon.mod.common.client.render.item
 
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.ItemOwner
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties
+import net.minecraft.client.multiplayer.ClientLevel
+import com.mojang.serialization.MapCodec
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.cooking.Seasonings
@@ -17,11 +24,31 @@ import com.cobblemon.mod.common.item.interactive.PokerodItem
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.ChatFormatting
-import net.minecraft.client.renderer.item.ItemProperties
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.player.Player
 
+/**
+ * The item model properties Cobblemon's item models select on.
+ *
+ * These were item predicates (ItemProperties) used by model overrides before 1.21.4; they are now range select
+ * properties (used by "range_dispatch" item models) that return the same values. The item lists below only document
+ * which items use them, item model definitions refer to the properties by id.
+ */
 object CobblemonModelPredicateRegistry {
+
+    private fun register(id: Identifier, function: (ItemStack, ClientLevel?, LivingEntity?, Int) -> Float) {
+        lateinit var codec: MapCodec<Property>
+        codec = MapCodec.unit { Property(function, codec) }
+        RangeSelectItemModelProperties.ID_MAPPER.put(id, codec)
+    }
+
+    private class Property(
+        val function: (ItemStack, ClientLevel?, LivingEntity?, Int) -> Float,
+        val codec: MapCodec<Property>
+    ) : RangeSelectItemModelProperty {
+        override fun get(itemStack: ItemStack, level: ClientLevel?, owner: ItemOwner?, seed: Int) = function(itemStack, level, owner?.asLivingEntity(), seed)
+        override fun type() = codec
+    }
 
     fun registerPredicates() {
 
@@ -76,8 +103,7 @@ object CobblemonModelPredicateRegistry {
                 CobblemonItems.ANCIENT_WING_ROD
         )
 
-        rods.forEach { rod ->
-            ItemProperties.register(rod, Identifier.parse("cast")) { stack, world, entity, seed ->
+        register(cobblemonResource("cast")) { stack, world, entity, seed ->
                 if (entity !is Player || entity.fishing !is PokeRodFishingBobberEntity) return@register 0.0f
 
                 val rodId = entity.fishing!!.entityData.get(PokeRodFishingBobberEntity.POKEROD_ID)
@@ -94,12 +120,8 @@ object CobblemonModelPredicateRegistry {
 
                 if (isMainHand && isFishingWithMainHand || isOffHand) 1.0f else 0.0f
             }
-        }
 
-        ItemProperties.register(
-                CobblemonItems.PONIGIRI,
-                cobblemonResource("ponigiri_overlay")
-        ) { stack, world, entity, seed ->
+        register(cobblemonResource("ponigiri_overlay")) { stack, world, entity, seed ->
             val component = stack.get(CobblemonItemComponents.INGREDIENT)
             val id = component?.ingredientIds?.firstOrNull()?.toString() ?: return@register 0.0f
 
@@ -141,8 +163,7 @@ object CobblemonModelPredicateRegistry {
             CobblemonItems.APRIJUICE_YELLOW,
         )
 
-        aprijuice.forEach { aprijuice ->
-            ItemProperties.register(aprijuice, cobblemonResource("aprijuice_quality")) { stack, world, entity, seed ->
+        register(cobblemonResource("aprijuice_quality")) { stack, world, entity, seed ->
                 val rideBoostsComponent = stack.get(CobblemonItemComponents.RIDE_BOOST) ?: return@register 0.0f
                 val quality = rideBoostsComponent.getQuality()
 
@@ -152,7 +173,6 @@ object CobblemonModelPredicateRegistry {
                     CookingQuality.HIGH -> 0.2f
                 }
             }
-        }
 
         /*
         ItemProperties.register(CobblemonItems.POKE_PUFF, cobblemonResource("poke_puff_combined")) { stack, _, _, _ ->

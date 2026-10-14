@@ -8,11 +8,11 @@
 
 package com.cobblemon.mod.common.platform.events
 
+import net.minecraft.client.renderer.SubmitNodeCollector
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Camera
 import net.minecraft.client.DeltaTracker
 import net.minecraft.client.renderer.LevelRenderer
-import org.joml.Matrix4f
 
 /**
  * Event fired during the various [Stage]s of the [LevelRenderer].
@@ -23,14 +23,15 @@ import org.joml.Matrix4f
 data class RenderEvent(
     val stage: Stage,
     val levelRenderer: LevelRenderer,
+    /** Camera relative: the origin is at the camera's position. */
     val poseStack: PoseStack,
-    val modelViewMatrix: Matrix4f,
-    val projectionMatrix: Matrix4f,
+    /** World rendering is deferred since 1.21.9: geometry is submitted here and drawn later in the frame. */
+    val submitNodeCollector: SubmitNodeCollector,
     val tickCounter: DeltaTracker,
     val camera: Camera
 ) {
 
-    /** Represents when a layer is rendered by [LevelRenderer.renderLevel]. Ordinal corresponds with its render order. */
+    /** Represents when geometry is collected for rendering by [LevelRenderer.renderLevel]. */
     enum class Stage {
         TRANSLUCENT
     }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.world.phys.shapes.Shapes
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.block.entity.LecternBlockEntity
@@ -48,6 +49,37 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
     companion object {
         val CODEC: MapCodec<LecternBlock> = simpleCodec(::LecternBlock)
         val EMIT_LIGHT: BooleanProperty = BooleanProperty.create("emit_light")
+
+        // The vanilla lectern's shapes as of 1.21.1 (they are private since 1.21.5).
+        private val SHAPE_BASE: VoxelShape = box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0)
+        private val SHAPE_POST: VoxelShape = box(4.0, 2.0, 4.0, 12.0, 14.0, 12.0)
+        private val SHAPE_COMMON: VoxelShape = Shapes.or(SHAPE_BASE, SHAPE_POST)
+        private val SHAPE_TOP_PLATE: VoxelShape = box(0.0, 15.0, 0.0, 16.0, 15.0, 16.0)
+        private val SHAPE_COLLISION: VoxelShape = Shapes.or(SHAPE_COMMON, SHAPE_TOP_PLATE)
+        private val SHAPE_WEST: VoxelShape = Shapes.or(
+            box(1.0, 10.0, 0.0, 5.333333, 14.0, 16.0),
+            box(5.333333, 12.0, 0.0, 9.666667, 16.0, 16.0),
+            box(9.666667, 14.0, 0.0, 14.0, 18.0, 16.0),
+            SHAPE_COMMON
+        )
+        private val SHAPE_NORTH: VoxelShape = Shapes.or(
+            box(0.0, 10.0, 1.0, 16.0, 14.0, 5.333333),
+            box(0.0, 12.0, 5.333333, 16.0, 16.0, 9.666667),
+            box(0.0, 14.0, 9.666667, 16.0, 18.0, 14.0),
+            SHAPE_COMMON
+        )
+        private val SHAPE_EAST: VoxelShape = Shapes.or(
+            box(10.666667, 10.0, 0.0, 15.0, 14.0, 16.0),
+            box(6.333333, 12.0, 0.0, 10.666667, 16.0, 16.0),
+            box(2.0, 14.0, 0.0, 6.333333, 18.0, 16.0),
+            SHAPE_COMMON
+        )
+        private val SHAPE_SOUTH: VoxelShape = Shapes.or(
+            box(0.0, 10.0, 10.666667, 16.0, 14.0, 15.0),
+            box(0.0, 12.0, 6.333333, 16.0, 16.0, 10.666667),
+            box(0.0, 14.0, 2.0, 16.0, 18.0, 6.333333),
+            SHAPE_COMMON
+        )
     }
 
     init {
@@ -64,19 +96,19 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
 
     override fun getRenderShape(blockState: BlockState?) = RenderShape.MODEL
 
-    override fun getOcclusionShape(blockState: BlockState): VoxelShape = MinecraftLecternBlock.SHAPE_COMMON
+    override fun getOcclusionShape(blockState: BlockState): VoxelShape = SHAPE_COMMON
 
     override fun useShapeForLightOcclusion(blockState: BlockState?) = true
 
-    override fun getCollisionShape(blockState: BlockState?, blockGetter: BlockGetter?, blockPos: BlockPos?, collisionContext: CollisionContext?): VoxelShape = MinecraftLecternBlock.SHAPE_COLLISION
+    override fun getCollisionShape(blockState: BlockState?, blockGetter: BlockGetter?, blockPos: BlockPos?, collisionContext: CollisionContext?): VoxelShape = SHAPE_COLLISION
 
     override fun getShape(blockState: BlockState, blockGetter: BlockGetter?, blockPos: BlockPos?, collisionContext: CollisionContext?): VoxelShape {
         return when (blockState.getValue(FACING) as Direction) {
-            Direction.NORTH -> MinecraftLecternBlock.SHAPE_NORTH
-            Direction.SOUTH -> MinecraftLecternBlock.SHAPE_SOUTH
-            Direction.EAST -> MinecraftLecternBlock.SHAPE_EAST
-            Direction.WEST -> MinecraftLecternBlock.SHAPE_WEST
-            else -> MinecraftLecternBlock.SHAPE_COMMON
+            Direction.NORTH -> SHAPE_NORTH
+            Direction.SOUTH -> SHAPE_SOUTH
+            Direction.EAST -> SHAPE_EAST
+            Direction.WEST -> SHAPE_WEST
+            else -> SHAPE_COMMON
         }
     }
 
@@ -132,7 +164,7 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
                 }
             }
         }
-        return InteractionResult.SUCCESS_NO_ITEM_USED
+        return InteractionResult.SUCCESS
     }
 
     override fun isPathfindable(blockState: BlockState?, pathComputationType: PathComputationType?) = false

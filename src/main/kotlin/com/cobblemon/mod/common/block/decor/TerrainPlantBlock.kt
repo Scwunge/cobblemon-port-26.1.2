@@ -92,7 +92,7 @@ class TerrainPlantBlock(properties: Properties) : TallFlowerBlock(properties), E
     override fun <T : BlockEntity> getTicker(
         level: Level,
         state: BlockState,
-        blockEntityType: BlockEntityType<T?>
+        blockEntityType: BlockEntityType<T>
     ): BlockEntityTicker<T?>? {
         return if (level.isClientSide) null else BaseEntityBlock.createTickerHelper(blockEntityType as BlockEntityType<*>,
             CobblemonBlockEntities.TERRAIN_PLANT, TerrainPlantBlockEntity::serverTick) as BlockEntityTicker<T?>?

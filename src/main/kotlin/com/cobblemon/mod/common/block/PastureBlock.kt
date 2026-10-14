@@ -225,7 +225,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         level: Level,
         pos: BlockPos,
         explosion: Explosion,
-        dropConsumer: BiConsumer<ItemStack?, BlockPos?>
+        dropConsumer: BiConsumer<ItemStack, BlockPos>
     ) {
         val interaction = explosion.blockInteraction
         if (interaction == Explosion.BlockInteraction.DESTROY || interaction == Explosion.BlockInteraction.DESTROY_WITH_DECAY) {
@@ -239,7 +239,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         return createTickerHelper(type, CobblemonBlockEntities.PASTURE, PokemonPastureBlockEntity.TICKER::tick)
     }
 
-    override fun setPlacedBy(world: Level, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun setPlacedBy(world: Level, pos: BlockPos, state: BlockState, placer: LivingEntity, itemStack: ItemStack) {
         world.setBlock(
             pos.above(),
             state

@@ -57,7 +57,7 @@ class MintLitterBlock(properties: Properties?) : Block(properties) {
         return if (!state.canSurvive(level, pos)) Blocks.AIR.defaultBlockState() else super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
 
-    override fun canSurvive(state: BlockState?, level: LevelReader, pos: BlockPos): Boolean {
+    override fun canSurvive(state: BlockState, level: LevelReader, pos: BlockPos): Boolean {
         val posBelow = pos.below()
         return level.getBlockState(posBelow).isFaceSturdy(level, posBelow, Direction.UP)
     }

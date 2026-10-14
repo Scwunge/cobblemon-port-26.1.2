@@ -31,7 +31,7 @@ fun CompoundTag.putUUID(key: String, uuid: UUID) {
 /** Throws when the key is missing or malformed, as CompoundTag#getUUID did. */
 fun CompoundTag.getUUID(key: String): UUID = read(key, UUIDUtil.CODEC).orElseThrow { IllegalArgumentException("Expected UUID-Tag at '$key'") }
 
-fun CompoundTag.hasUUID(key: String): Boolean = (get(key) as? IntArrayTag)?.size == 4
+fun CompoundTag.hasUUID(key: String): Boolean = (get(key) as? IntArrayTag)?.size() == 4
 
 val CompoundTag.allKeys: Set<String>
     get() = keySet()

@@ -8,17 +8,18 @@
 
 package com.cobblemon.mod.common.client.render
 
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import net.minecraft.client.renderer.rendertype.RenderType
+import net.minecraft.client.renderer.SubmitNodeCollector
 import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.client.requests.ClientPlayerActionRequest
 import com.cobblemon.mod.common.client.ClientMultiBattleTeamMember
 import com.cobblemon.mod.common.platform.events.RenderEvent
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.mojang.blaze3d.systems.RenderSystem
 import com.mojang.blaze3d.vertex.*
 import com.mojang.math.Axis
 import net.minecraft.client.Camera
 import net.minecraft.client.Minecraft
-import net.minecraft.client.renderer.GameRenderer
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.EntityAttachment
@@ -83,7 +84,7 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
 
             poseStack.pushPose()
             positionTag(player, poseStack, camera, partialTicks)
-            drawTag(poseStack)
+            drawTag(poseStack, event.submitNodeCollector)
             poseStack.popPose()
         }
     }
@@ -94,11 +95,10 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
         val vec3 = player.attachments.getNullable(EntityAttachment.NAME_TAG, 0, player.getViewYRot(partialTicks))
         poseStack.translate(player.getPosition(partialTicks).x, player.getPosition(partialTicks).y, player.getPosition(partialTicks).z)
         poseStack.translate(vec3!!.x, vec3.y + Y_OFFSET, vec3.z)
-        poseStack.translate(-camera.position.x, -camera.position.y, -camera.position.z) // event posestack does not have PlayerRenderer context
+        poseStack.translate(-camera.position().x, -camera.position().y, -camera.position().z) // event posestack does not have PlayerRenderer context
 
         // billboard
-        val entityRenderDispatcher = Minecraft.getInstance().entityRenderDispatcher
-        poseStack.mulPose(Axis.YP.rotationDegrees((180f - entityRenderDispatcher.camera.yRot)))
+        poseStack.mulPose(Axis.YP.rotationDegrees((180f - camera.yRot())))
         poseStack.scale(SCALE, -SCALE, SCALE)
     }
 
@@ -110,31 +110,45 @@ abstract class ClientPlayerIcon(expiryTime: Int? = null) {
         vertices.addVertex(model, 0.5f, 0f, 0f).setUv(1f, 0f).setColor(1f, 1f, 1f, 1f)
     }
 
-    /** Sets the shading and gl states of the quad then queues for drawing. */
-    private fun drawTag(poseStack: PoseStack) {
-        // texture
-        RenderSystem.setShader { GameRenderer.getPositionTexColorShader() }
-        RenderSystem.setShaderTexture(0, texture)
-        RenderSystem.setShaderColor(1f, 1f, 1f, alpha)
+    /** Submits the quad, faded by the icon's current alpha. */
+    private fun drawTag(poseStack: PoseStack, submitNodeCollector: SubmitNodeCollector) {
+        val alpha = alpha
+        submitNodeCollector.submitCustomGeometry(poseStack, renderType(texture)) { pose, vertices ->
+            buildTag(pose.pose(), AlphaVertexConsumer(vertices, alpha))
+        }
+    }
 
-        // gl states
-        RenderSystem.enableBlend()
-        RenderSystem.defaultBlendFunc()
-        RenderSystem.enableDepthTest()
-
-        // TODO worth making a custom rendertype and getting buffer from multiBufferSource?
-        val model = poseStack.last().pose()
-        val buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR)
-        buildTag(model, buffer)
-        BufferUploader.drawWithShader(buffer.buildOrThrow())
-
-        // undo
-        RenderSystem.disableBlend()
-        RenderSystem.disableDepthTest()
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
+    /** Multiplies the alpha of the vertices it passes on, as the shader colour used to. */
+    private class AlphaVertexConsumer(val delegate: VertexConsumer, val alpha: Float) : VertexConsumer by delegate {
+        override fun setColor(r: Float, g: Float, b: Float, a: Float): VertexConsumer {
+            delegate.setColor(r, g, b, a * alpha)
+            return this
+        }
+        override fun addVertex(x: Float, y: Float, z: Float): VertexConsumer {
+            delegate.addVertex(x, y, z)
+            return this
+        }
+        override fun addVertex(pose: org.joml.Matrix4fc, x: Float, y: Float, z: Float): VertexConsumer {
+            delegate.addVertex(pose, x, y, z)
+            return this
+        }
+        override fun setUv(u: Float, v: Float): VertexConsumer {
+            delegate.setUv(u, v)
+            return this
+        }
     }
 
     companion object {
+        private val renderTypes = mutableMapOf<Identifier, RenderType>()
+
+        /** Textured, translucent and depth tested, as the icons were drawn with the position_tex_color shader. */
+        private fun renderType(texture: Identifier) = renderTypes.getOrPut(texture) {
+            RenderType.create(
+                "cobblemon_player_icon",
+                RenderSetup.builder(CobblemonRenderPipelines.PLAYER_ICON).withTexture("Sampler0", texture).createRenderSetup()
+            )
+        }
+
         private val trackedIcons = mutableMapOf<UUID, ClientPlayerIcon>()
 
         fun onTick() = trackedIcons.values.forEach { it.onTick() }

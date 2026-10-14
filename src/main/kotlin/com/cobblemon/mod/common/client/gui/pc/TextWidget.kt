@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.pc
 
+import com.cobblemon.mod.common.client.render.gui.hasShiftDown
 import com.cobblemon.mod.common.api.text.bold
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.api.text.text
@@ -92,7 +93,7 @@ abstract class TextWidget(
                 val startToLineWidth = Minecraft.getInstance().font.width(lineSubstring.text().bold().font(CobblemonResources.DEFAULT_LARGE))
                 if ((mouseX - startPosX) <= startToLineWidth) break
             }
-            moveCursorTo(maxOf(0, lineSubstring.length - 1), Screen.hasShiftDown())
+            moveCursorTo(maxOf(0, lineSubstring.length - 1), hasShiftDown())
         }
         return result
     }

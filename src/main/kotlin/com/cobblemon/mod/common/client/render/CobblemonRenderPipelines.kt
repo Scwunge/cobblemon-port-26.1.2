@@ -58,4 +58,20 @@ object CobblemonRenderPipelines {
         .withCull(true)
         .withDepthStencilState(DepthStencilState.DEFAULT)
         .build()
+
+    /** The position_tex_color shader for quads in the level: translucent, depth tested and written, not culled. */
+    @JvmField
+    val PLAYER_ICON: RenderPipeline = RenderPipeline.builder(RenderPipelines.GUI_TEXTURED_SNIPPET)
+        .withLocation(cobblemonResource("pipeline/player_icon"))
+        .withCull(false)
+        .withDepthStencilState(DepthStencilState.DEFAULT)
+        .build()
+
+    /** rendertype_cutout (the block cutout shader) without culling, for berries. */
+    @JvmField
+    val BERRY: RenderPipeline = RenderPipeline.builder(RenderPipelines.BLOCK_SNIPPET)
+        .withLocation(cobblemonResource("pipeline/berry"))
+        .withShaderDefine("ALPHA_CUTOUT", 0.5F)
+        .withCull(false)
+        .build()
 }
