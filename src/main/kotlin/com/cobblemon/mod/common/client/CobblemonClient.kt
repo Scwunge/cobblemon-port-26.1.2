@@ -76,6 +76,8 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.pokedex.scanner.PokedexUsageContext
 import com.cobblemon.mod.common.util.isLookingAt
+import com.cobblemon.mod.common.util.isUsingPokedex
+import net.minecraft.client.DeltaTracker
 import net.minecraft.client.Minecraft
 import com.cobblemon.mod.common.client.render.color.BlockColor
 import com.cobblemon.mod.common.client.render.color.ItemColorTintSource
@@ -247,6 +249,20 @@ object CobblemonClient {
             battleOverlay.extractRenderState(context, partialDeltaTicks)
         }
         rideControlsOverlay.extractRenderState(context, partialDeltaTicks)
+    }
+
+    /**
+     * Updates and renders the Pokédex scanner, after the rest of the HUD (as HudRenderCallback did before 1.21.6). It
+     * can't be a HUD element: those are hidden with the HUD, which GuiMixin hides while scanning.
+     */
+    fun renderPokedexScanner(context: GuiGraphicsExtractor, tickCounter: DeltaTracker) {
+        val player = Minecraft.getInstance().player ?: return
+        if (player.isUsingPokedex() || pokedexUsageContext.transitionIntervals > 0) {
+            if (!player.isUsingItem) pokedexUsageContext.resetState(false)
+            pokedexUsageContext.renderUpdate(context, tickCounter)
+        } else {
+            pokedexUsageContext.resetState()
+        }
     }
 
     /** Adds Cobblemon's layers to a player renderer (one per player model type, as before). */

@@ -30,7 +30,6 @@ import com.cobblemon.mod.common.platform.events.ItemTooltipEvent
 import com.cobblemon.mod.common.platform.events.PlatformEvents
 import com.cobblemon.mod.common.platform.events.RenderEvent
 import com.cobblemon.mod.common.util.cobblemonResource
-import com.cobblemon.mod.common.util.isUsingPokedex
 import com.cobblemon.mod.fabric.CobblemonFabric
 import com.mojang.blaze3d.vertex.PoseStack
 import java.util.concurrent.CompletableFuture
@@ -53,8 +52,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader
 import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys
@@ -102,20 +99,6 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
             barrier.wait(Unit).thenRunAsync({ reloadCodedAssets(sharedState.resourceManager()) }, reloadExecutor)
         })
         ResourceLoader.get(PackType.CLIENT_RESOURCES).addListenerOrdering(ResourceReloaderKeys.Client.ATLAS, assetsReloader)
-
-        // Register the HUD render callback for Pokédex
-        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, cobblemonResource("pokedex_scanner")) { graphics, tickDelta ->
-            val client = Minecraft.getInstance()
-            val player = client.player
-            if (player != null) {
-                if (player.isUsingPokedex() || pokedexUsageContext.transitionIntervals > 0) {
-                    if (!player.isUsingItem) pokedexUsageContext.resetState(false)
-                    pokedexUsageContext.renderUpdate(graphics, tickDelta)
-                } else {
-                    pokedexUsageContext.resetState()
-                }
-            }
-        }
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
             val player = client.player
