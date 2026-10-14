@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:figy_berry"
-    }
+    "cobblemon:figy_berry"
   ],
   "processing_time": 50,
   "results": [

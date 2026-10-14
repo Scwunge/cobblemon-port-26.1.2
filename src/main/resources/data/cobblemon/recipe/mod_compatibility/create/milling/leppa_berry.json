@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:leppa_berry"
-    }
+    "cobblemon:leppa_berry"
   ],
   "processing_time": 50,
   "results": [

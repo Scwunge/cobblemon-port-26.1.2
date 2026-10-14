@@ -7,9 +7,7 @@
     "##"
   ],
   "key": {
-    "#": {
-      "item": "cobblemon:fighting_gem"
-    }
+    "#": "cobblemon:fighting_gem"
   },
   "result": {
     "id": "cobblemon:fighting_gem_block",

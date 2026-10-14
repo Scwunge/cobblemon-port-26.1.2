@@ -1,18 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "key": {
-        "#": {
-            "item": "cobblemon:relic_coin_pouch"
-        }
-    },
-    "pattern": [
-        "###",
-        "###",
-        "###"
-    ],
-    "result": {
-        "id": "cobblemon:relic_coin_sack"
-    },
-    "show_notification": true
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "cobblemon:relic_coin_pouch"
+  },
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "result": {
+    "id": "cobblemon:relic_coin_sack"
+  },
+  "show_notification": true
 }

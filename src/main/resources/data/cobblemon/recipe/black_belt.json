@@ -1,20 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        "K  ",
-        "KGK",
-        "  K"
-    ],
-    "key": {
-        "G": {
-            "item": "cobblemon:fighting_gem"
-        },
-        "K": {
-            "item": "minecraft:dried_kelp"
-        }
-    },
-    "result": {
-        "id": "cobblemon:black_belt"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "K  ",
+    "KGK",
+    "  K"
+  ],
+  "key": {
+    "G": "cobblemon:fighting_gem",
+    "K": "minecraft:dried_kelp"
+  },
+  "result": {
+    "id": "cobblemon:black_belt"
+  }
 }

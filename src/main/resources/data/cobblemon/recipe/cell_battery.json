@@ -1,28 +1,24 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        " I",
-        " R",
-        " C"
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " I",
+    " R",
+    " C"
+  ],
+  "key": {
+    "C": "#c:ingots/copper",
+    "R": [
+      {
+        "tag": "c:dusts/redstone"
+      },
+      {
+        "item": "cobblemon:electric_gem"
+      }
     ],
-    "key": {
-        "C": {
-            "tag": "c:ingots/copper"
-        },
-        "R": [
-            {
-            "tag": "c:dusts/redstone"
-            },
-            {
-                "item": "cobblemon:electric_gem"
-            }
-        ],
-        "I": {
-            "tag": "c:ingots/iron"
-        }
-    },
-    "result": {
-        "id": "cobblemon:cell_battery"
-    }
+    "I": "#c:ingots/iron"
+  },
+  "result": {
+    "id": "cobblemon:cell_battery"
+  }
 }

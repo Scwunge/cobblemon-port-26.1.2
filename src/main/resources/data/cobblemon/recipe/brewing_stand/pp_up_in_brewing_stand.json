@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "cobblemon:vivichoke"
-  },
+  "input": "cobblemon:vivichoke",
   "bottle": {
     "item": "cobblemon:medicinal_brew"
   },

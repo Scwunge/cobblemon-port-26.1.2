@@ -1,15 +1,11 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-        {
-            "item": "cobblemon:razor_fang"
-        },
-        {
-            "item": "cobblemon:dragon_gem"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:dragon_fang"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "cobblemon:razor_fang",
+    "cobblemon:dragon_gem"
+  ],
+  "result": {
+    "id": "cobblemon:dragon_fang"
+  }
 }

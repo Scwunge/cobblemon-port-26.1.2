@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:ice_gem_cluster"
-    }
+    "cobblemon:ice_gem_cluster"
   ],
   "processing_time": 150,
   "results": [

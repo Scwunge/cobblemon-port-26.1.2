@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:tanga_berry"
-    }
+    "cobblemon:tanga_berry"
   ],
   "processing_time": 50,
   "results": [

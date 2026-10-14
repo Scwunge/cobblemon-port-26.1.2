@@ -1,20 +1,12 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "misc",
-    "group": "cake",
+  "group": "cake",
   "key": {
-    "M": {
-      "item": "cobblemon:moomoo_milk"
-    },
-    "S": {
-      "item": "minecraft:sugar"
-    },
-    "W": {
-      "item": "minecraft:wheat"
-    },
-    "E": {
-      "item": "minecraft:egg"
-    }
+    "M": "cobblemon:moomoo_milk",
+    "S": "minecraft:sugar",
+    "W": "minecraft:wheat",
+    "E": "minecraft:egg"
   },
   "pattern": [
     "MMM",

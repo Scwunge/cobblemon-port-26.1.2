@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:fairy_gem_cluster"
-    }
+    "cobblemon:fairy_gem_cluster"
   ],
   "processing_time": 150,
   "results": [

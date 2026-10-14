@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:grass_gem_block"
-    }
+    "cobblemon:grass_gem_block"
   ],
   "processing_time": 150,
   "results": [

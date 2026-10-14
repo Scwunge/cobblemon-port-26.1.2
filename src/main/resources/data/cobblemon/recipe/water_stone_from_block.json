@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "evolution_stone_from_block",
   "ingredients": [
-    {
-      "item": "cobblemon:water_stone_block"
-    }
+    "cobblemon:water_stone_block"
   ],
   "result": {
     "count": 9,

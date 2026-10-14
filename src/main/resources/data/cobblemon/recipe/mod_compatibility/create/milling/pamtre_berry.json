@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:pamtre_berry"
-    }
+    "cobblemon:pamtre_berry"
   ],
   "processing_time": 50,
   "results": [

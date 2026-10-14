@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:leaf_stone_ore"
-    }
+    "cobblemon:leaf_stone_ore"
   ],
   "processing_time": 450,
   "results": [

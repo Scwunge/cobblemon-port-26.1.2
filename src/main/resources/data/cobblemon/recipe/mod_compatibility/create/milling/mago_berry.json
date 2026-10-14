@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:mago_berry"
-    }
+    "cobblemon:mago_berry"
   ],
   "processing_time": 50,
   "results": [

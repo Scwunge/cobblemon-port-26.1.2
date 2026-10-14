@@ -1,19 +1,15 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        "I I",
-        "GIG"
-    ],
-    "key": {
-        "G": {
-            "item": "minecraft:glass"
-        },
-        "I": {
-            "tag": "c:ingots/iron"
-        }
-    },
-    "result": {
-        "id": "cobblemon:wise_glasses"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "I I",
+    "GIG"
+  ],
+  "key": {
+    "G": "minecraft:glass",
+    "I": "#c:ingots/iron"
+  },
+  "result": {
+    "id": "cobblemon:wise_glasses"
+  }
 }

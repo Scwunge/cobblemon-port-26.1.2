@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "cobblemon:rawst_berry"
-  },
+  "input": "cobblemon:rawst_berry",
   "bottle": {
     "item": "minecraft:glass_bottle"
   },

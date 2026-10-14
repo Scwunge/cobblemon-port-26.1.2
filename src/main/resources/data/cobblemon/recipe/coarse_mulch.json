@@ -1,16 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "group": "mulches",
-    "ingredients": [
-        {
-            "item": "minecraft:coarse_dirt"
-        },
-        {
-            "item": "cobblemon:mulch_base"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:coarse_mulch"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "mulches",
+  "ingredients": [
+    "minecraft:coarse_dirt",
+    "cobblemon:mulch_base"
+  ],
+  "result": {
+    "id": "cobblemon:coarse_mulch"
+  }
 }

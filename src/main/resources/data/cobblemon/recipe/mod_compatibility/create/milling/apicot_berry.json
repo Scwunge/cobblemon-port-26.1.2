@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:apicot_berry"
-    }
+    "cobblemon:apicot_berry"
   ],
   "processing_time": 50,
   "results": [

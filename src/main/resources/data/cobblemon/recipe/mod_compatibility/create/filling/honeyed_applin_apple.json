@@ -15,9 +15,7 @@
   ],
   "type": "create:filling",
   "ingredients": [
-    {
-      "tag": "cobblemon:apples"
-    },
+    "#cobblemon:apples",
     {
       "type": "neoforge:tag",
       "amount": 250,

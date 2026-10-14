@@ -7,39 +7,23 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
     [
-      {
-        "item": "cobblemon:apricorn_door"
-      },
-      {
-        "item": "cobblemon:apricorn_trapdoor"
-      },
-      {
-        "item": "cobblemon:apricorn_sign"
-      },
-      {
-        "item": "cobblemon:apricorn_hanging_sign"
-      },
-      {
-        "item": "cobblemon:apricorn_fence"
-      },
-      {
-        "item": "cobblemon:apricorn_fence_gate"
-      },
-      {
-        "item": "cobblemon:apricorn_pressure_plate"
-      },
-      {
-        "item": "cobblemon:apricorn_button"
-      },
-      {
-        "item": "cobblemon:apricorn_boat"
-      }
+      "cobblemon:apricorn_door",
+      "cobblemon:apricorn_trapdoor",
+      "cobblemon:apricorn_sign",
+      "cobblemon:apricorn_hanging_sign",
+      "cobblemon:apricorn_fence",
+      "cobblemon:apricorn_fence_gate",
+      "cobblemon:apricorn_pressure_plate",
+      "cobblemon:apricorn_button",
+      "cobblemon:apricorn_boat"
     ]
   ],
   "result": [

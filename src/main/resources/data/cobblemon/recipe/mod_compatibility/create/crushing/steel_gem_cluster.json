@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:steel_gem_cluster"
-    }
+    "cobblemon:steel_gem_cluster"
   ],
   "processing_time": 150,
   "results": [

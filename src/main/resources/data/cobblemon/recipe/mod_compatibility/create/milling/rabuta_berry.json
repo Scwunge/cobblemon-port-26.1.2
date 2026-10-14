@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:rabuta_berry"
-    }
+    "cobblemon:rabuta_berry"
   ],
   "processing_time": 50,
   "results": [

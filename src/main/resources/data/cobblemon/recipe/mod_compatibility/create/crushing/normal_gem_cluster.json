@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:normal_gem_cluster"
-    }
+    "cobblemon:normal_gem_cluster"
   ],
   "processing_time": 150,
   "results": [

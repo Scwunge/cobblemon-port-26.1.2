@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:sitrus_berry"
-    }
+    "cobblemon:sitrus_berry"
   ],
   "processing_time": 50,
   "results": [

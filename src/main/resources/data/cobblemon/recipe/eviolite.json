@@ -1,20 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        " A ",
-        "AEA",
-        " A "
-    ],
-    "key": {
-        "A": {
-            "tag": "c:gems/amethyst"
-        },
-        "E": {
-            "item": "cobblemon:everstone"
-        }
-    },
-    "result": {
-        "id": "cobblemon:eviolite"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "AEA",
+    " A "
+  ],
+  "key": {
+    "A": "#c:gems/amethyst",
+    "E": "cobblemon:everstone"
+  },
+  "result": {
+    "id": "cobblemon:eviolite"
+  }
 }

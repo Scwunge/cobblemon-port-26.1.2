@@ -7,39 +7,23 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
     [
-      {
-        "item": "cobblemon:saccharine_door"
-      },
-      {
-        "item": "cobblemon:saccharine_trapdoor"
-      },
-      {
-        "item": "cobblemon:saccharine_sign"
-      },
-      {
-        "item": "cobblemon:saccharine_hanging_sign"
-      },
-      {
-        "item": "cobblemon:saccharine_fence"
-      },
-      {
-        "item": "cobblemon:saccharine_fence_gate"
-      },
-      {
-        "item": "cobblemon:saccharine_pressure_plate"
-      },
-      {
-        "item": "cobblemon:saccharine_button"
-      },
-      {
-        "item": "cobblemon:saccharine_boat"
-      }
+      "cobblemon:saccharine_door",
+      "cobblemon:saccharine_trapdoor",
+      "cobblemon:saccharine_sign",
+      "cobblemon:saccharine_hanging_sign",
+      "cobblemon:saccharine_fence",
+      "cobblemon:saccharine_fence_gate",
+      "cobblemon:saccharine_pressure_plate",
+      "cobblemon:saccharine_button",
+      "cobblemon:saccharine_boat"
     ]
   ],
   "result": [

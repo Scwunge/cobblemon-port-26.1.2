@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:liechi_berry"
-    }
+    "cobblemon:liechi_berry"
   ],
   "processing_time": 50,
   "results": [

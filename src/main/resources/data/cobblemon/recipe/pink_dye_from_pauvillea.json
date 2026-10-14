@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "pink_dye",
   "ingredients": [
-    {
-      "item": "cobblemon:pauvillea"
-    }
+    "cobblemon:pauvillea"
   ],
   "result": {
     "id": "minecraft:pink_dye"

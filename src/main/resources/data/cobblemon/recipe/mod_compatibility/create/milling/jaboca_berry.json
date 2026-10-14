@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:jaboca_berry"
-    }
+    "cobblemon:jaboca_berry"
   ],
   "processing_time": 50,
   "results": [

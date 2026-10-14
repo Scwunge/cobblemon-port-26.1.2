@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:oran_berry"
-    }
+    "cobblemon:oran_berry"
   ],
   "processing_time": 50,
   "results": [

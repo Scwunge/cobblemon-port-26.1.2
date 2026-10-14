@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:nanab_berry"
-    }
+    "cobblemon:nanab_berry"
   ],
   "processing_time": 50,
   "results": [

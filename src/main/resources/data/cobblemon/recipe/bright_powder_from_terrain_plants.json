@@ -1,9 +1,7 @@
 {
   "type": "minecraft:smelting",
   "group": "misc",
-  "ingredient": {
-    "tag": "cobblemon:terrain_plants"
-  },
+  "ingredient": "#cobblemon:terrain_plants",
   "result": {
     "id": "cobblemon:bright_powder"
   },

@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:lum_berry"
-    }
+    "cobblemon:lum_berry"
   ],
   "processing_time": 50,
   "results": [

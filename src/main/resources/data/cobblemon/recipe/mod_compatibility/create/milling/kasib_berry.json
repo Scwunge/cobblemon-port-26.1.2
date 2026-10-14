@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:kasib_berry"
-    }
+    "cobblemon:kasib_berry"
   ],
   "processing_time": 50,
   "results": [

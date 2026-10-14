@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:lucibell"
-    }
+    "cobblemon:lucibell"
   ],
   "processing_time": 50,
   "results": [

@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "minecraft:dragon_breath"
-  },
+  "input": "minecraft:dragon_breath",
   "bottle": {
     "item": "cobblemon:medicinal_brew"
   },

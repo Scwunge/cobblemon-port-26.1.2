@@ -1,13 +1,11 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "redstone",
-    "group": "wooden_button",
-    "ingredients": [
-        {
-            "item": "cobblemon:saccharine_planks"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:saccharine_button"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "wooden_button",
+  "ingredients": [
+    "cobblemon:saccharine_planks"
+  ],
+  "result": {
+    "id": "cobblemon:saccharine_button"
+  }
 }

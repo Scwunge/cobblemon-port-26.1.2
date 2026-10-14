@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:kelpsy_berry"
-    }
+    "cobblemon:kelpsy_berry"
   ],
   "processing_time": 50,
   "results": [

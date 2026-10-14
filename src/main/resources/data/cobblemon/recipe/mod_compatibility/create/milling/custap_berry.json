@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:custap_berry"
-    }
+    "cobblemon:custap_berry"
   ],
   "processing_time": 50,
   "results": [

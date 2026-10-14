@@ -7,14 +7,14 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
-    {
-      "item": "cobblemon:saccharine_wood"
-    }
+    "cobblemon:saccharine_wood"
   ],
   "result": [
     {

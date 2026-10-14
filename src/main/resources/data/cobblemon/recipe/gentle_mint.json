@@ -1,20 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "group": "pink_mints",
-    "key": {
-        "#": {
-            "item": "cobblemon:pink_mint_leaf"
-        },
-        "W": {
-            "item": "cobblemon:blue_mint_leaf"
-        }
-    },
-    "pattern": [
-        "##",
-        "#W"
-    ],
-    "result": {
-        "id": "cobblemon:gentle_mint"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "pink_mints",
+  "key": {
+    "#": "cobblemon:pink_mint_leaf",
+    "W": "cobblemon:blue_mint_leaf"
+  },
+  "pattern": [
+    "##",
+    "#W"
+  ],
+  "result": {
+    "id": "cobblemon:gentle_mint"
+  }
 }

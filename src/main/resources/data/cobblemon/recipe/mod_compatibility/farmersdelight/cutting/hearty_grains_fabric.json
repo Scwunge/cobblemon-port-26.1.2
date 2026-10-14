@@ -7,14 +7,14 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
-    {
-      "item": "cobblemon:hearty_grains"
-    }
+    "cobblemon:hearty_grains"
   ],
   "result": [
     {

@@ -25,9 +25,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:hearty_grains"
-    }
+    "cobblemon:hearty_grains"
   ],
   "results": [
     {

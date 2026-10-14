@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:pecha_berry"
-    }
+    "cobblemon:pecha_berry"
   ],
   "processing_time": 50,
   "results": [

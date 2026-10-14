@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:deepslate_thunder_stone_ore"
-    }
+    "cobblemon:deepslate_thunder_stone_ore"
   ],
   "processing_time": 450,
   "results": [

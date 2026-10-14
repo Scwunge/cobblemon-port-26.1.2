@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:fighting_gem_cluster"
-    }
+    "cobblemon:fighting_gem_cluster"
   ],
   "processing_time": 150,
   "results": [

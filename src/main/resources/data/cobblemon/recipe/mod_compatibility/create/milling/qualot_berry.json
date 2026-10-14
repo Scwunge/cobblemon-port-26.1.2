@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:qualot_berry"
-    }
+    "cobblemon:qualot_berry"
   ],
   "processing_time": 50,
   "results": [

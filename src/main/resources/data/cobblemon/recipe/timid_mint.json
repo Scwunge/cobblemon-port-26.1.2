@@ -1,20 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "group": "green_mints",
-    "key": {
-        "#": {
-            "item": "cobblemon:green_mint_leaf"
-        },
-        "W": {
-            "item": "cobblemon:red_mint_leaf"
-        }
-    },
-    "pattern": [
-        "##",
-        "#W"
-    ],
-    "result": {
-        "id": "cobblemon:timid_mint"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "green_mints",
+  "key": {
+    "#": "cobblemon:green_mint_leaf",
+    "W": "cobblemon:red_mint_leaf"
+  },
+  "pattern": [
+    "##",
+    "#W"
+  ],
+  "result": {
+    "id": "cobblemon:timid_mint"
+  }
 }

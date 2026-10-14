@@ -1,14 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "building",
-    "group": "planks",
-    "ingredients": [
-        {
-            "tag": "cobblemon:saccharine_logs"
-        }
-    ],
-    "result": {
-        "count": 4,
-        "id": "cobblemon:saccharine_planks"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    "#cobblemon:saccharine_logs"
+  ],
+  "result": {
+    "count": 4,
+    "id": "cobblemon:saccharine_planks"
+  }
 }

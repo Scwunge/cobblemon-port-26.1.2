@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:sky_tumblestone_cluster"
-    }
+    "cobblemon:sky_tumblestone_cluster"
   ],
   "processing_time": 150,
   "results": [

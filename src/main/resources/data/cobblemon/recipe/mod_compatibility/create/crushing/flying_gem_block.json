@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:flying_gem_block"
-    }
+    "cobblemon:flying_gem_block"
   ],
   "processing_time": 150,
   "results": [

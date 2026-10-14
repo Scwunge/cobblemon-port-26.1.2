@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:spelon_berry"
-    }
+    "cobblemon:spelon_berry"
   ],
   "processing_time": 50,
   "results": [

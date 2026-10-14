@@ -7,31 +7,31 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cooking",
   "experience": 1.0,
   "ingredients": [
     [
-        {
-            "item": "minecraft:apple"
-        },
-        {
-            "tag": "cobblemon:apples"
-        }
+      {
+        "item": "minecraft:apple"
+      },
+      {
+        "tag": "cobblemon:apples"
+      }
     ],
     [
-        {
-            "item": "minecraft:apple"
-        },
-        {
-            "tag": "cobblemon:apples"
-        }
+      {
+        "item": "minecraft:apple"
+      },
+      {
+        "tag": "cobblemon:apples"
+      }
     ],
-    {
-      "item": "minecraft:sugar"
-    }
+    "minecraft:sugar"
   ],
   "recipe_book_tab": "drinks",
   "result": {

@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:revival_herb"
-    }
+    "cobblemon:revival_herb"
   ],
   "processing_time": 50,
   "results": [

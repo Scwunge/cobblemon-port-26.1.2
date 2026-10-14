@@ -7,14 +7,14 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
-    {
-      "item": "cobblemon:apricorn_chest_boat"
-    }
+    "cobblemon:apricorn_chest_boat"
   ],
   "result": [
     {

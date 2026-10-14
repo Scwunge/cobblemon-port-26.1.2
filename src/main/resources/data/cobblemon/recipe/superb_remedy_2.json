@@ -1,18 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-        {
-            "item": "cobblemon:remedy"
-        },
-        {
-            "tag": "cobblemon:remedy_berries"
-        },
-        {
-            "item": "cobblemon:energy_root"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:superb_remedy"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "cobblemon:remedy",
+    "#cobblemon:remedy_berries",
+    "cobblemon:energy_root"
+  ],
+  "result": {
+    "id": "cobblemon:superb_remedy"
+  }
 }

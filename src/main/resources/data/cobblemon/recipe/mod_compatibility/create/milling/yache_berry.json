@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:yache_berry"
-    }
+    "cobblemon:yache_berry"
   ],
   "processing_time": 50,
   "results": [

@@ -1,20 +1,16 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        "  G",
-        " I ",
-        "I  "
-    ],
-    "key": {
-        "G": {
-            "item": "cobblemon:poison_gem"
-        },
-        "I": {
-            "tag": "c:ingots/iron"
-        }
-    },
-    "result": {
-        "id": "cobblemon:poison_barb"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "  G",
+    " I ",
+    "I  "
+  ],
+  "key": {
+    "G": "cobblemon:poison_gem",
+    "I": "#c:ingots/iron"
+  },
+  "result": {
+    "id": "cobblemon:poison_barb"
+  }
 }

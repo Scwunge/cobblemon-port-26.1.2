@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:durin_berry"
-    }
+    "cobblemon:durin_berry"
   ],
   "processing_time": 50,
   "results": [

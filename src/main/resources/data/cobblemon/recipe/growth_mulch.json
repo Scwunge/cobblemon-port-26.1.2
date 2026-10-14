@@ -1,16 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "group": "mulches",
-    "ingredients": [
-        {
-            "tag": "c:fertilizers"
-        },
-        {
-            "item": "cobblemon:mulch_base"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:growth_mulch"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "mulches",
+  "ingredients": [
+    "#c:fertilizers",
+    "cobblemon:mulch_base"
+  ],
+  "result": {
+    "id": "cobblemon:growth_mulch"
+  }
 }

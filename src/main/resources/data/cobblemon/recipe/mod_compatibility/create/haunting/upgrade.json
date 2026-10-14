@@ -15,9 +15,7 @@
   ],
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "cobblemon:upgrade"
-    }
+    "cobblemon:upgrade"
   ],
   "results": [
     {

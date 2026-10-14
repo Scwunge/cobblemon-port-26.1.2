@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:pomohana"
-    }
+    "cobblemon:pomohana"
   ],
   "processing_time": 50,
   "results": [

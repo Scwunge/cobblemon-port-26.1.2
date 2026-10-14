@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:wiki_berry"
-    }
+    "cobblemon:wiki_berry"
   ],
   "processing_time": 50,
   "results": [

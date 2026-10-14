@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:razz_berry"
-    }
+    "cobblemon:razz_berry"
   ],
   "processing_time": 50,
   "results": [

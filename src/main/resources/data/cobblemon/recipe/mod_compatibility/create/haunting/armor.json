@@ -15,9 +15,7 @@
   ],
   "type": "create:haunting",
   "ingredients": [
-    {
-      "item": "cobblemon:auspicious_armor"
-    }
+    "cobblemon:auspicious_armor"
   ],
   "results": [
     {

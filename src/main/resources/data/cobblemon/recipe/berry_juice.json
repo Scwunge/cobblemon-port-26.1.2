@@ -1,18 +1,12 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-        {
-            "tag": "cobblemon:berries"
-        },
-        {
-            "tag": "cobblemon:berries"
-        },
-        {
-            "item": "minecraft:bowl"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:berry_juice"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#cobblemon:berries",
+    "#cobblemon:berries",
+    "minecraft:bowl"
+  ],
+  "result": {
+    "id": "cobblemon:berry_juice"
+  }
 }

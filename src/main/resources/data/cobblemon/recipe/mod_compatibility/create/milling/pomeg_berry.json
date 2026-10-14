@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:pomeg_berry"
-    }
+    "cobblemon:pomeg_berry"
   ],
   "processing_time": 50,
   "results": [

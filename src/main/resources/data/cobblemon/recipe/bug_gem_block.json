@@ -7,9 +7,7 @@
     "##"
   ],
   "key": {
-    "#": {
-      "item": "cobblemon:bug_gem"
-    }
+    "#": "cobblemon:bug_gem"
   },
   "result": {
     "id": "cobblemon:bug_gem_block",

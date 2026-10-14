@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:eggant_berry"
-    }
+    "cobblemon:eggant_berry"
   ],
   "processing_time": 50,
   "results": [

@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "cobblemon:energy_root"
-  },
+  "input": "cobblemon:energy_root",
   "bottle": {
     "item": "cobblemon:pp_up"
   },

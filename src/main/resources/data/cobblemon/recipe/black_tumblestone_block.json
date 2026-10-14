@@ -1,16 +1,14 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "building",
-    "pattern": [
-        "##",
-        "##"
-    ],
-    "key": {
-        "#": {
-            "item": "cobblemon:black_tumblestone"
-        }
-    },
-    "result": {
-        "id": "cobblemon:black_tumblestone_block"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "key": {
+    "#": "cobblemon:black_tumblestone"
+  },
+  "result": {
+    "id": "cobblemon:black_tumblestone_block"
+  }
 }

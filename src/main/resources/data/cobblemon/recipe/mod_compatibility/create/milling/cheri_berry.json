@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:cheri_berry"
-    }
+    "cobblemon:cheri_berry"
   ],
   "processing_time": 50,
   "results": [

@@ -7,14 +7,14 @@
       ]
     }
   ],
-  "neoforge:conditions": [{
+  "neoforge:conditions": [
+    {
       "type": "neoforge:false"
-    }],
+    }
+  ],
   "type": "farmersdelight:cutting",
   "ingredients": [
-    {
-      "item": "cobblemon:fire_gem_block"
-    }
+    "cobblemon:fire_gem_block"
   ],
   "result": [
     {

@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:touga_berry"
-    }
+    "cobblemon:touga_berry"
   ],
   "processing_time": 50,
   "results": [

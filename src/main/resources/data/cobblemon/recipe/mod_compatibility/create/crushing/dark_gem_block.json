@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:dark_gem_block"
-    }
+    "cobblemon:dark_gem_block"
   ],
   "processing_time": 150,
   "results": [

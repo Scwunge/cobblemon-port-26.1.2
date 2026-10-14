@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:big_root"
-    }
+    "cobblemon:big_root"
   ],
   "processing_time": 50,
   "results": [

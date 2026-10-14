@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:ground_gem_block"
-    }
+    "cobblemon:ground_gem_block"
   ],
   "processing_time": 150,
   "results": [

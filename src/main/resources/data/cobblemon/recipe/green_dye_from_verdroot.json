@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "green_dye",
   "ingredients": [
-    {
-      "item": "cobblemon:verdroot"
-    }
+    "cobblemon:verdroot"
   ],
   "result": {
     "id": "minecraft:green_dye",

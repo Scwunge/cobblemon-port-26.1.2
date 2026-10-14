@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:chilan_berry"
-    }
+    "cobblemon:chilan_berry"
   ],
   "processing_time": 50,
   "results": [

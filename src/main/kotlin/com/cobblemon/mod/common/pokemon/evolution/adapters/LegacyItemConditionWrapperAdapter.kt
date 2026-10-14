@@ -26,6 +26,14 @@ import net.minecraft.core.registries.Registries
 import net.minecraft.resources.Identifier
 import net.minecraft.tags.TagKey
 import java.lang.reflect.Type
+import com.mojang.datafixers.util.Either
+import net.minecraft.core.Holder
+import net.minecraft.core.HolderOwner
+import net.minecraft.core.HolderSet
+import net.minecraft.util.RandomSource
+import net.minecraft.world.item.Item
+import java.util.Optional
+import java.util.stream.Stream
 
 // This is an ugly adapter because breaking changes are scary and people would ;(
 class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provider = RegistryAccessResolver.getAccess())
@@ -41,7 +49,7 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
 
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ItemPredicate {
         if (json.isJsonPrimitive) {
-            return this.createBuilderForItem(json.asString).build()
+            return this.withLazyTag(this.createBuilderForItem(json.asString).build(), json.asString)
         }
         else if (json.isJsonObject) {
             val jObject = json.asJsonObject
@@ -49,9 +57,9 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
                 val builder = this.createBuilderForItem(jObject.get(LEGACY_ITEM).asString)
                 val nbtPredicate = NbtPredicate.CODEC.decode(JsonOps.INSTANCE, jObject.get(LEGACY_NBT)).result().get().first
                 val itemCustomDataPredicate = CustomDataPredicate(nbtPredicate)
-                return builder
+                return this.withLazyTag(builder
                     .withComponents(net.minecraft.advancements.criterion.DataComponentMatchers.Builder.components().partial(DataComponentPredicates.CUSTOM_DATA, itemCustomDataPredicate).build())
-                    .build()
+                    .build(), jObject.get(LEGACY_ITEM).asString)
             }
         }
         return this.codecAdapter.deserialize(json, typeOfT, context)
@@ -68,10 +76,8 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
             .mapOrElse(
                 { id ->
                     if (isTag) {
-                        val tag = TagKey.create(Registries.ITEM, id)
-                        registryAccess.lookup(Registries.ITEM)
-                            .map { builder.of(it, tag) }
-                            .orElseGet { builder }
+                        // The tag is attached in withLazyTag, item tags may not be bound yet while data loads.
+                        builder
                     } else {
                         BuiltInRegistries.ITEM.getOptional(id)
                             .map { builder.of(BuiltInRegistries.ITEM, it) }
@@ -80,6 +86,32 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
                 },
                 { builder }
             )
+    }
+
+
+    /**
+     * Since 1.21.2 a tag is resolved with getOrThrow while the predicate is built, which fails while
+     * species load because item tags are not bound yet. Point the predicate at a tag set that looks the
+     * tag up on use instead, matching the old getOrCreateTag behaviour.
+     */
+    private fun withLazyTag(predicate: ItemPredicate, raw: String): ItemPredicate {
+        if (!raw.startsWith(TAG_PREFIX)) return predicate
+        val id = Identifier.tryParse(raw.substring(1)) ?: return predicate
+        return ItemPredicate(Optional.of(LazyItemTagSet(TagKey.create(Registries.ITEM, id))), predicate.count(), predicate.components())
+    }
+
+    private class LazyItemTagSet(private val tag: TagKey<Item>) : HolderSet<Item> {
+        private fun resolved(): HolderSet<Item> = BuiltInRegistries.ITEM.get(tag).map { it as HolderSet<Item> }.orElseGet { HolderSet.empty() }
+        override fun stream(): Stream<Holder<Item>> = resolved().stream()
+        override fun size() = resolved().size()
+        override fun isBound() = true
+        override fun unwrap(): Either<TagKey<Item>, List<Holder<Item>>> = Either.left(tag)
+        override fun getRandomElement(random: RandomSource): Optional<Holder<Item>> = resolved().getRandomElement(random)
+        override fun get(index: Int): Holder<Item> = resolved().get(index)
+        override fun contains(holder: Holder<Item>) = holder.`is`(tag)
+        override fun canSerializeIn(owner: HolderOwner<Item>) = true
+        override fun unwrapKey(): Optional<TagKey<Item>> = Optional.of(tag)
+        override fun iterator(): MutableIterator<Holder<Item>> = resolved().iterator()
     }
 
 }

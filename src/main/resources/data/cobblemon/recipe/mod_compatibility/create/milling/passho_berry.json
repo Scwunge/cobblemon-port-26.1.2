@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:passho_berry"
-    }
+    "cobblemon:passho_berry"
   ],
   "processing_time": 50,
   "results": [

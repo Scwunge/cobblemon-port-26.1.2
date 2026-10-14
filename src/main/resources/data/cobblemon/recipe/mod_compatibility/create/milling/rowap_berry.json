@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:rowap_berry"
-    }
+    "cobblemon:rowap_berry"
   ],
   "processing_time": 50,
   "results": [

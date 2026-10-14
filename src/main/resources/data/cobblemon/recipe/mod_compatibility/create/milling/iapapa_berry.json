@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:iapapa_berry"
-    }
+    "cobblemon:iapapa_berry"
   ],
   "processing_time": 50,
   "results": [

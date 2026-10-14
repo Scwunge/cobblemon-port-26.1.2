@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:rindo_berry"
-    }
+    "cobblemon:rindo_berry"
   ],
   "processing_time": 50,
   "results": [

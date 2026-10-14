@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "cobblemon:medicinal_leek"
-  },
+  "input": "cobblemon:medicinal_leek",
   "bottle": {
     "item": "minecraft:potion"
   },

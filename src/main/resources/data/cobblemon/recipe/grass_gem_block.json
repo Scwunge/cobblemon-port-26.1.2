@@ -7,9 +7,7 @@
     "##"
   ],
   "key": {
-    "#": {
-      "item": "cobblemon:grass_gem"
-    }
+    "#": "cobblemon:grass_gem"
   },
   "result": {
     "id": "cobblemon:grass_gem_block",

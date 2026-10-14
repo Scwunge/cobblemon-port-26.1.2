@@ -1,8 +1,6 @@
 {
   "type": "cobblemon:brewing_stand",
-  "input": {
-    "item": "cobblemon:grepa_berry"
-  },
+  "input": "cobblemon:grepa_berry",
   "bottle": {
     "item": "cobblemon:pp_up"
   },

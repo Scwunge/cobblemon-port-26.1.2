@@ -15,9 +15,7 @@
   ],
   "type": "create:crushing",
   "ingredients": [
-    {
-      "item": "cobblemon:nether_fire_stone_ore"
-    }
+    "cobblemon:nether_fire_stone_ore"
   ],
   "processing_time": 450,
   "results": [

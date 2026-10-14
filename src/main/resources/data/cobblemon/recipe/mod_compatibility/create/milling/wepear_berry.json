@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:wepear_berry"
-    }
+    "cobblemon:wepear_berry"
   ],
   "processing_time": 50,
   "results": [

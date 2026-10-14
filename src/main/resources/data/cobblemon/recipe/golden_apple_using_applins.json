@@ -3,12 +3,8 @@
   "category": "misc",
   "group": "golden_apple",
   "key": {
-    "#": {
-      "item": "minecraft:gold_ingot"
-    },
-    "X": {
-      "tag": "cobblemon:apples"
-    }
+    "#": "minecraft:gold_ingot",
+    "X": "#cobblemon:apples"
   },
   "pattern": [
     "###",

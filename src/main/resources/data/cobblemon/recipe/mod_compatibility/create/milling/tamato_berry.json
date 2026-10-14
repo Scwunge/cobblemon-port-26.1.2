@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:tamato_berry"
-    }
+    "cobblemon:tamato_berry"
   ],
   "processing_time": 50,
   "results": [

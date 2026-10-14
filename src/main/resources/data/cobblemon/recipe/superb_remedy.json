@@ -1,15 +1,11 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-        {
-            "item": "cobblemon:fine_remedy"
-        },
-        {
-            "item": "cobblemon:energy_root"
-        }
-    ],
-    "result": {
-        "id": "cobblemon:superb_remedy"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "cobblemon:fine_remedy",
+    "cobblemon:energy_root"
+  ],
+  "result": {
+    "id": "cobblemon:superb_remedy"
+  }
 }

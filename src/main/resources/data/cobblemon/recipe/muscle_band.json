@@ -1,23 +1,17 @@
 {
-    "type": "minecraft:crafting_shaped",
-    "category": "misc",
-    "pattern": [
-        "LIL",
-        "D I",
-        "LDL"
-    ],
-    "key": {
-        "L": {
-            "tag": "c:leathers"
-        },
-        "D": {
-            "tag": "c:dusts/redstone"
-        },
-        "I": {
-            "tag": "c:ingots/gold"
-        }
-    },
-    "result": {
-        "id": "cobblemon:muscle_band"
-    }
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LIL",
+    "D I",
+    "LDL"
+  ],
+  "key": {
+    "L": "#c:leathers",
+    "D": "#c:dusts/redstone",
+    "I": "#c:ingots/gold"
+  },
+  "result": {
+    "id": "cobblemon:muscle_band"
+  }
 }

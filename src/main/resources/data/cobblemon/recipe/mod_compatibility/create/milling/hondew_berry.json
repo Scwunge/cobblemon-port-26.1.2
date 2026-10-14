@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:hondew_berry"
-    }
+    "cobblemon:hondew_berry"
   ],
   "processing_time": 50,
   "results": [

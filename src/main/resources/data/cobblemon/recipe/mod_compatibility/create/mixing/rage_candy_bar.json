@@ -15,12 +15,8 @@
   ],
   "type": "create:mixing",
   "ingredients": [
-    {
-      "tag": "c:crops/wheat"
-    },
-    {
-      "item": "minecraft:sugar"
-    },
+    "#c:crops/wheat",
+    "minecraft:sugar",
     {
       "type": "neoforge:tag",
       "amount": 250,

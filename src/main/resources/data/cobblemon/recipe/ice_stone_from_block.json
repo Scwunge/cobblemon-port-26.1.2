@@ -3,9 +3,7 @@
   "category": "misc",
   "group": "evolution_stone_from_block",
   "ingredients": [
-    {
-      "item": "cobblemon:ice_stone_block"
-    }
+    "cobblemon:ice_stone_block"
   ],
   "result": {
     "count": 9,

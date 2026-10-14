@@ -15,9 +15,7 @@
   ],
   "type": "create:milling",
   "ingredients": [
-    {
-      "item": "cobblemon:aguav_berry"
-    }
+    "cobblemon:aguav_berry"
   ],
   "processing_time": 50,
   "results": [

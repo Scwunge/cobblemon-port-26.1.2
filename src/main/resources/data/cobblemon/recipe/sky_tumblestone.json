@@ -1,13 +1,11 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "misc",
-    "ingredients": [
-        {
-            "item": "cobblemon:sky_tumblestone_block"
-        }
-    ],
-    "result": {
-        "count": 4,
-        "id": "cobblemon:sky_tumblestone"
-    }
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "cobblemon:sky_tumblestone_block"
+  ],
+  "result": {
+    "count": 4,
+    "id": "cobblemon:sky_tumblestone"
+  }
 }

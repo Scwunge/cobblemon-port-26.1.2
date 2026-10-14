@@ -9,19 +9,11 @@
   ],
   "key": {
     "I": [
-      {
-        "item": "minecraft:blue_ice"
-      },
-      {
-        "item": "minecraft:packed_ice"
-      },
-      {
-        "item": "minecraft:ice"
-      }
+      "minecraft:blue_ice",
+      "minecraft:packed_ice",
+      "minecraft:ice"
     ],
-    "G": {
-      "item": "cobblemon:ice_gem"
-    }
+    "G": "cobblemon:ice_gem"
   },
   "result": {
     "id": "cobblemon:never_melt_ice"
