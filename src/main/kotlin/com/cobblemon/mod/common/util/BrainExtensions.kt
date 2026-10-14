@@ -26,3 +26,18 @@ fun <T : Any, E : LivingEntity> Brain<E>.getMemorySafely(memoryType: MemoryModul
         Optional.empty<T>() as Optional<T> // Why on earth is this necessary
     }
 }
+/*
+ * Brain#addActivity's 1.21.1 overloads, which 26.1 folded into a single one taking the activity's conditions and the
+ * memories to erase when it stops.
+ */
+
+fun <E : net.minecraft.world.entity.LivingEntity> net.minecraft.world.entity.ai.Brain<E>.addActivity(
+    activity: net.minecraft.world.entity.schedule.Activity,
+    tasks: com.google.common.collect.ImmutableList<out com.mojang.datafixers.util.Pair<Int, out net.minecraft.world.entity.ai.behavior.BehaviorControl<in E>>>
+) = addActivity(activity, tasks, com.google.common.collect.ImmutableSet.of(), java.util.HashSet())
+
+fun <E : net.minecraft.world.entity.LivingEntity> net.minecraft.world.entity.ai.Brain<E>.addActivityWithConditions(
+    activity: net.minecraft.world.entity.schedule.Activity,
+    tasks: com.google.common.collect.ImmutableList<out com.mojang.datafixers.util.Pair<Int, out net.minecraft.world.entity.ai.behavior.BehaviorControl<in E>>>,
+    conditions: Set<com.mojang.datafixers.util.Pair<net.minecraft.world.entity.ai.memory.MemoryModuleType<*>, net.minecraft.world.entity.ai.memory.MemoryStatus>>
+) = addActivity(activity, tasks, conditions, java.util.HashSet())

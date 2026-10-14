@@ -162,3 +162,8 @@ transitive-accessible method net/minecraft/world/level/block/BaseEntityBlock cre
 # Cooking pot recipe book (ghost recipes)
 accessible method net/minecraft/client/gui/screens/recipebook/GhostSlots setInput (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/util/context/ContextMap;Lnet/minecraft/world/item/crafting/display/SlotDisplay;)V
 accessible method net/minecraft/client/gui/screens/recipebook/GhostSlots setResult (Lnet/minecraft/world/inventory/Slot;Lnet/minecraft/util/context/ContextMap;Lnet/minecraft/world/item/crafting/display/SlotDisplay;)V
+
+# Mounted player poses (MountedPlayerRenderer re-applies vanilla arm posing)
+accessible method net/minecraft/client/model/HumanoidModel poseRightArm (Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V
+accessible method net/minecraft/client/model/HumanoidModel poseLeftArm (Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V
+accessible method net/minecraft/client/model/HumanoidModel setupAttackAnimation (Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V

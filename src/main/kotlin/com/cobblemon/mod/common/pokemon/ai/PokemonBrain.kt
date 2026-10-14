@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.pokemon.ai
 
+import com.cobblemon.mod.common.util.addActivityWithConditions
+import com.cobblemon.mod.common.util.addActivity
 import net.minecraft.world.entity.ai.Brain
 import com.cobblemon.mod.common.CobblemonActivities
 import com.cobblemon.mod.common.CobblemonBehaviours

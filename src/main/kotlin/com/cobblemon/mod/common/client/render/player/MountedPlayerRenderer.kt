@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.player
 
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState
 import com.bedrockk.molang.runtime.value.DoubleValue
 import com.cobblemon.mod.common.api.riding.RidingAnimation
 import com.cobblemon.mod.common.client.entity.PokemonClientDelegate
@@ -43,7 +44,8 @@ object MountedPlayerRenderer {
     )
 
     fun animate(
-        model: HumanoidModel<AbstractClientPlayer>,
+        model: HumanoidModel<HumanoidRenderState>,
+        renderState: HumanoidRenderState,
         pokemonEntity: PokemonEntity,
         player: AbstractClientPlayer,
         headYaw: Float,
@@ -96,7 +98,7 @@ object MountedPlayerRenderer {
             )
         }
 
-        applyRegularAnimation(model, player, ageInTicks)
+        applyRegularAnimation(model, renderState, player, ageInTicks)
     }
 
     /**
@@ -104,7 +106,8 @@ object MountedPlayerRenderer {
      * rendering thingies. It's largely copy paste.
      */
     fun applyRegularAnimation(
-        model: HumanoidModel<AbstractClientPlayer>,
+        model: HumanoidModel<HumanoidRenderState>,
+        renderState: HumanoidRenderState,
         player: AbstractClientPlayer,
         ageInTicks: Float
     ) {
@@ -112,32 +115,32 @@ object MountedPlayerRenderer {
         if (player.isUsingItem) {
             val usingMainHand = player.usedItemHand == InteractionHand.MAIN_HAND
             if (usingMainHand == rightHanded) {
-                model.poseRightArm(player)
+                model.poseRightArm(renderState)
             } else {
-                model.poseLeftArm(player)
+                model.poseLeftArm(renderState)
             }
         } else {
-            val offHandIsTwoHanded: Boolean = if (rightHanded) model.leftArmPose.isTwoHanded else model.rightArmPose.isTwoHanded
+            val offHandIsTwoHanded: Boolean = if (rightHanded) renderState.leftArmPose.isTwoHanded else renderState.rightArmPose.isTwoHanded
             if (rightHanded != offHandIsTwoHanded) {
-                model.poseLeftArm(player)
-                model.poseRightArm(player)
+                model.poseLeftArm(renderState)
+                model.poseRightArm(renderState)
             } else {
-                model.poseRightArm(player)
-                model.poseLeftArm(player)
+                model.poseRightArm(renderState)
+                model.poseLeftArm(renderState)
             }
         }
 
-        model.setupAttackAnimation(player, ageInTicks)
+        model.setupAttackAnimation(renderState)
 
-        if (model.rightArmPose != HumanoidModel.ArmPose.SPYGLASS) {
+        if (renderState.rightArmPose != HumanoidModel.ArmPose.SPYGLASS) {
             AnimationUtils.bobModelPart(model.rightArm, ageInTicks, 1.0F);
         }
 
-        if (model.leftArmPose != HumanoidModel.ArmPose.SPYGLASS) {
+        if (renderState.leftArmPose != HumanoidModel.ArmPose.SPYGLASS) {
             AnimationUtils.bobModelPart(model.leftArm, ageInTicks, -1.0F);
         }
 
-        model.hat.copyFrom(model.head)
+        // The hat is a child of the head since 1.21.2, so it no longer needs to copy the head's pose.
     }
 
     const val RIDING_SITTING_OFFSET = -10.0

@@ -94,15 +94,15 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
 
     override fun <T : BlockEntity> getTicker(world: Level, blockState: BlockState, BlockWithEntityType: BlockEntityType<T>) = createTickerHelper(BlockWithEntityType, CobblemonBlockEntities.LECTERN, ViewerCountBlockEntity.TICKER::tick)
 
-    override fun getRenderShape(blockState: BlockState?) = RenderShape.MODEL
+    override fun getRenderShape(blockState: BlockState) = RenderShape.MODEL
 
     override fun getOcclusionShape(blockState: BlockState): VoxelShape = SHAPE_COMMON
 
-    override fun useShapeForLightOcclusion(blockState: BlockState?) = true
+    override fun useShapeForLightOcclusion(blockState: BlockState) = true
 
-    override fun getCollisionShape(blockState: BlockState?, blockGetter: BlockGetter?, blockPos: BlockPos?, collisionContext: CollisionContext?): VoxelShape = SHAPE_COLLISION
+    override fun getCollisionShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, collisionContext: CollisionContext): VoxelShape = SHAPE_COLLISION
 
-    override fun getShape(blockState: BlockState, blockGetter: BlockGetter?, blockPos: BlockPos?, collisionContext: CollisionContext?): VoxelShape {
+    override fun getShape(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, collisionContext: CollisionContext): VoxelShape {
         return when (blockState.getValue(FACING) as Direction) {
             Direction.NORTH -> SHAPE_NORTH
             Direction.SOUTH -> SHAPE_SOUTH
@@ -120,16 +120,16 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
 
     override fun mirror(blockState: BlockState, mirror: Mirror): BlockState = blockState.rotate(mirror.getRotation(blockState.getValue(FACING) as Direction))
 
-    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block?, BlockState?>) {
+    override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {
         builder.add(FACING)
         builder.add(EMIT_LIGHT)
     }
 
     override fun newBlockEntity(blockPos: BlockPos, blockState: BlockState): BlockEntity = LecternBlockEntity(blockPos, blockState)
 
-    override fun isSignalSource(blockState: BlockState?): Boolean = true
+    override fun isSignalSource(blockState: BlockState): Boolean = true
 
-    override fun getSignal(blockState: BlockState?, blockGetter: BlockGetter?, blockPos: BlockPos?, direction: Direction?): Int = 15
+    override fun getSignal(blockState: BlockState, blockGetter: BlockGetter, blockPos: BlockPos, direction: Direction): Int = 15
 
     override fun playerWillDestroy(level: Level, blockPos: BlockPos, blockState: BlockState, player: Player): BlockState {
         if (!level.isClientSide) {
@@ -167,7 +167,7 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
         return InteractionResult.SUCCESS
     }
 
-    override fun isPathfindable(blockState: BlockState?, pathComputationType: PathComputationType?) = false
+    override fun isPathfindable(blockState: BlockState, pathComputationType: PathComputationType) = false
 
     private fun takeStoredItem(blockEntity: LecternBlockEntity, blockState: BlockState, level: Level, blockPos: BlockPos, player: Player) {
         if (player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty) {

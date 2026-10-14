@@ -784,7 +784,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
                 val itemX = (leftPos + 129 + (index * 18))
                 val itemY = (topPos + 90)
 
-                val stacks = recipe.ingredient.items
+                val stacks = recipe.ingredient.items().map { ItemStack(it) }.toList()
                 if (stacks.isEmpty()) return@forEachIndexed
 
                 val level = Minecraft.getInstance().level ?: return@forEachIndexed
@@ -1269,7 +1269,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
 
         renderMoveInfo(graphics, mouseX, mouseY)
 
-        this.setTooltipForNextFrame(graphics, mouseX, mouseY)
+        // The hovered slot's tooltip is extracted by super.extractRenderState since 1.21.6.
 
         renderHeldMoveInfoTooltip(graphics, mouseX, mouseY)
     }
@@ -1285,13 +1285,12 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         mouseX: Double,
         mouseY: Double,
         guiLeft: Int,
-        guiTop: Int,
-        mouseButton: Int
+        guiTop: Int
     ): Boolean {
         partySlotList.forEach {
             if (it.pokemon != null && it.isMouseOver(mouseX, mouseY)) return false
         }
-        return super.hasClickedOutside(mouseX, mouseY, guiLeft, guiTop, mouseButton)
+        return super.hasClickedOutside(mouseX, mouseY, guiLeft, guiTop)
     }
 
     class MoveDescriptionWidget(pX: Int, pY: Int, width: Int, height: Int) : ScrollingWidget<MoveDescriptionWidget.TextSlot>(

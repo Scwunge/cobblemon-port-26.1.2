@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.net.messages.client.spawn
 
+import net.minecraft.world.entity.EntitySpawnReason
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.mixin.invoker.ClientPlayNetworkHandlerInvoker
 import net.minecraft.client.Minecraft
@@ -36,15 +37,11 @@ abstract class SpawnExtraDataEntityPacket<T: NetworkPacket<T>, E : Entity>(var v
         // This is a copy pasta of ClientPlayNetworkHandler#onEntitySpawn
         // This exists due to us needing to do everything it does except spawn the entity in the world.
         // We invoke applyData then we add the entity to the world.
-        PacketUtils.ensureRunningOnSameThread(this.vanillaSpawnPacket, player.connection, client)
+        PacketUtils.ensureRunningOnSameThread(this.vanillaSpawnPacket, player.connection, client.packetProcessor())
         val entityType = this.vanillaSpawnPacket.type
-        val entity = entityType.create(world) ?: return
+        val entity = entityType.create(world, EntitySpawnReason.LOAD) ?: return
+        // Also applies the packet's movement since 1.21.9.
         entity.recreateFromPacket(this.vanillaSpawnPacket)
-        entity.deltaMovement = Vec3(
-            this.vanillaSpawnPacket.xa,
-            this.vanillaSpawnPacket.ya,
-            this.vanillaSpawnPacket.za
-        )
         // Cobblemon start
         if (this.checkType(entity)) {
             this.applyData(entity as E, world)

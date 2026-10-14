@@ -64,7 +64,7 @@ class TypeGemFeature : Feature<BlockStateConfiguration>(BlockStateConfiguration.
         val airBlocks = mutableListOf<BlockPos>()
 
         for (direction: Direction in Direction.entries) {
-            val pos = origin.offset(direction.normal)
+            val pos = origin.offset(direction.unitVec3i)
             val blockState = worldGenLevel.getBlockState(pos)
             if (blockState.isAir) {
                 airBlocks.add(pos)

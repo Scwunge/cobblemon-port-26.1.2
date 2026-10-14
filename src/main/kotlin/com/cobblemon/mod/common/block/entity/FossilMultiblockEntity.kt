@@ -442,7 +442,7 @@ open class FossilMultiblockEntity(
         if (world is ServerLevel) {
             if (oldProcess == PorygonProcessType.UPGRADE){
                 val facing = blockState.getValue(HorizontalDirectionalBlock.FACING).opposite
-                val offset = facing.normal
+                val offset = facing.unitVec3i
 
                 val particleX = blockPos.x + 0.5 + offset.x * 0.6
                 val particleY = blockPos.y + 0.7
@@ -663,8 +663,8 @@ open class FossilMultiblockEntity(
 
         val candidates = mutableListOf<BlockPos>()
 
-        val forward = facing.normal
-        val right = facing.clockWise.normal
+        val forward = facing.unitVec3i
+        val right = facing.clockWise.unitVec3i
 
         for (forwardDist in 1..2) {
             for (sideOffset in -forwardDist..forwardDist) {

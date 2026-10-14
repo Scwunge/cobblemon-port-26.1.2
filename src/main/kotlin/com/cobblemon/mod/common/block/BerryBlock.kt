@@ -151,7 +151,7 @@ class BerryBlock(private val berryIdentifier: Identifier, settings: Properties) 
         val mutations = hashSetOf<Berry>()
         val treeEntity = world.getBlockEntity(pos) as BerryBlockEntity
         for (direction in this.lookupDirections) {
-            val redirectedPos = pos.offset(direction.normal)
+            val redirectedPos = pos.offset(direction.unitVec3i)
             val redirectedState = world.getBlockState(redirectedPos)
             val berryBlock = redirectedState.block as? BerryBlock? ?: continue
             val berry = berryBlock.berry() ?: continue

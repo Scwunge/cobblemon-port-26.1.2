@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.ai
 
+import com.cobblemon.mod.common.util.addActivity
 import com.google.common.collect.ImmutableList
 import com.mojang.datafixers.util.Pair
 import net.minecraft.world.entity.LivingEntity

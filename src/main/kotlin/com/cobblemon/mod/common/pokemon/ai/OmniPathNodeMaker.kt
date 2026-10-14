@@ -404,7 +404,7 @@ class OmniPathNodeMaker : NodeEvaluator() {
             val connectingBlockPos = BlockPos.MutableBlockPos()
             // Downward non-diagonals
             for (direction in Direction.Plane.HORIZONTAL.iterator()) {
-                connectingBlockPos.set(node.asBlockPos().offset(direction.normal))
+                connectingBlockPos.set(node.asBlockPos().offset(direction.unitVec3i))
                 val blockState = currentContext.getCachedBlockState(connectingBlockPos)
                 val traversableByTangent = blockState.isPathfindable(PathComputationType.AIR)
                 val pathNode2 = getNode(node.x + direction.stepX, node.y - 1, node.z + direction.stepZ) ?: continue

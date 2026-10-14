@@ -173,12 +173,12 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         entity.refreshDimensions()
         val width = entity.boundingBox.xsize
 
-        val idealPlace = blockPos.offset(directionToBehind.normal.multiply(ceil(width).toInt() + 1))
+        val idealPlace = blockPos.offset(directionToBehind.unitVec3i.multiply(ceil(width).toInt() + 1))
         var box = entity.getDimensions(Pose.STANDING).makeBoundingBox(idealPlace.center.subtract(0.0, 0.5, 0.0))
 
         for (i in 0..5) {
-            box = box.move(directionToBehind.normal.x.toDouble(), 0.0, directionToBehind.normal.z.toDouble())
-            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.normal.multiply(i + 1)), entity, box)
+            box = box.move(directionToBehind.unitVec3i.x.toDouble(), 0.0, directionToBehind.unitVec3i.z.toDouble())
+            val fixedPosition = makeSuitableY(world, idealPlace.offset(directionToBehind.unitVec3i.multiply(i + 1)), entity, box)
             if (fixedPosition != null) {
                 entity.setPos(fixedPosition.center.subtract(0.0, 0.5, 0.0))
                 val pc = Cobblemon.storage.getPC(player)

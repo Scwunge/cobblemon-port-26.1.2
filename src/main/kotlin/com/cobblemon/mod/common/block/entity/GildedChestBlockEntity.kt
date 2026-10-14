@@ -86,14 +86,14 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
     override fun getItems() = inventoryContents
 
     override fun startOpen(player: ContainerUser) {
-        if (!this.remove && !player.isSpectator && type != Type.FAKE) {
-            stateManager.incrementOpeners(player, level, blockPos, blockState)
+        if (!this.remove && !player.livingEntity.isSpectator && type != Type.FAKE) {
+            stateManager.incrementOpeners(player.livingEntity, level!!, blockPos, blockState, player.containerInteractionRange)
         }
     }
 
     override fun stopOpen(player: ContainerUser) {
-        if (!this.remove && !player.isSpectator) {
-            stateManager.decrementOpeners(player, level, blockPos, blockState)
+        if (!this.remove && !player.livingEntity.isSpectator) {
+            stateManager.decrementOpeners(player.livingEntity, level!!, blockPos, blockState)
         }
     }
 
@@ -162,7 +162,7 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
         val nbt = CompoundTag()
         try {
             super.saveAdditional(output)
-            if (!trySaveLootTable(nbt)) {
+            if (!trySaveLootTable(output)) {
                 saveAllItems(nbt, inventoryContents, registryLookup)
             }
         } finally {
@@ -175,14 +175,14 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
         val registryLookup = input.lookup()
         super.loadAdditional(input)
         inventoryContents= NonNullList.withSize(containerSize, ItemStack.EMPTY)
-        if (!tryLoadLootTable(nbt)) {
+        if (!tryLoadLootTable(input)) {
             loadAllItems(nbt, inventoryContents, registryLookup)
         }
     }
 
     fun tick() {
         if (!this.remove) {
-            stateManager.recheckOpeners(level, blockPos, this.blockState)
+            stateManager.recheckOpeners(level!!, blockPos, this.blockState)
         }
     }
 }
