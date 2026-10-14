@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.fabric
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization
 import com.cobblemon.mod.common.CobblemonRecipeCategories
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents
@@ -247,16 +248,16 @@ object CobblemonFabric : CobblemonImplementation {
     }
 
     override fun registerEntityDataSerializers() {
-        EntityDataSerializers.registerSerializer(Vec3DataSerializer)
-        EntityDataSerializers.registerSerializer(StringSetDataSerializer)
-        EntityDataSerializers.registerSerializer(PoseTypeDataSerializer)
-        EntityDataSerializers.registerSerializer(PlatformTypeDataSerializer)
-        EntityDataSerializers.registerSerializer(IdentifierDataSerializer)
-        EntityDataSerializers.registerSerializer(UUIDSetDataSerializer)
-        EntityDataSerializers.registerSerializer(OptionalUUIDDataSerializer)
-        EntityDataSerializers.registerSerializer(CompoundTagDataSerializer)
-        EntityDataSerializers.registerSerializer(NPCPlayerTextureSerializer)
-        EntityDataSerializers.registerSerializer(RideBoostsDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("vec3"), Vec3DataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("string_set"), StringSetDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("pose_type"), PoseTypeDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("platform_type"), PlatformTypeDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("identifier"), IdentifierDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("uuid_set"), UUIDSetDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("optional_uuid"), OptionalUUIDDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("compound_tag"), CompoundTagDataSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("npc_player_texture"), NPCPlayerTextureSerializer)
+        FabricEntityDataRegistry.register(cobblemonResource("ride_boosts"), RideBoostsDataSerializer)
     }
 
     override fun registerItems() {
