@@ -28,7 +28,7 @@ class FriendshipFeatureRenderer(
     255,
     selectedPokemon.friendship
 ) {
-    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, x: Float, y: Float, pokemon: Pokemon): Boolean {
+    override fun render(guiGraphics: GuiGraphicsExtractor, x: Float, y: Float, pokemon: Pokemon): Boolean {
         renderElement(guiGraphics, x, y, pokemon)
         return true
     }

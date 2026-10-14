@@ -57,7 +57,7 @@ abstract class TextWidget(
         if (showCursor && !value.isEmpty() && cursorPosition != value.length) {
             val startToCursorWidth = Minecraft.getInstance().font.width((text.getString(cursorPosition).text().bold()).font(CobblemonResources.DEFAULT_LARGE))
             context.fill(
-                RenderType.guiTextHighlight(),
+                net.minecraft.client.renderer.RenderPipelines.GUI_TEXT_HIGHLIGHT,
                 startPosX + startToCursorWidth - 1,
                 y + 2,
                 startPosX + startToCursorWidth,

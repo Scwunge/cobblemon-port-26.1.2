@@ -58,12 +58,8 @@ abstract class CobblemonConfigEditBoxVariable(
 
     override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
         // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
-        val index = entryIndex()
         val top = getContentY()
-        val left = getX()
-        val width = getWidth()
-        val height = getContentHeight()
-        super.extractRenderState(context, index, top, left, width, height, mouseX, mouseY, hovering, partialTick)
+        super.extractContent(context, mouseX, mouseY, hovering, partialTick)
 
         editBox.x = resetButton.x - editBox.width - PADDING
         editBox.y = getY(top) + WIDGET_Y_OFFSET

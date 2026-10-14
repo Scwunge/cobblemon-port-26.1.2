@@ -27,7 +27,7 @@ class PokeNavFillerButton(
     pTextureWidth: Int, pTextureHeight: Int
 ): PokeNavImageButton(posX, posY, pX, pY, pWidth, pHeight, pXTexStart, pYTexStart, pYDiffText, FILLER, pTextureWidth, pTextureHeight, {}, "".text()) {
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         context.pose().pushPose()
     }

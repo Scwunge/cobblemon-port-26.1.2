@@ -112,7 +112,7 @@ class NicknameEntryWidget(
         if (showCursor && !value.isEmpty() && cursorPosition != value.length) {
             val startToCursorWidth = Minecraft.getInstance().font.width((name.getString(cursorPosition).text().bold()).font(CobblemonResources.DEFAULT_LARGE))
             context.fill(
-                RenderType.guiTextHighlight(),
+                net.minecraft.client.renderer.RenderPipelines.GUI_TEXT_HIGHLIGHT,
                 x + startToCursorWidth - 1,
                 y,
                 x + startToCursorWidth,

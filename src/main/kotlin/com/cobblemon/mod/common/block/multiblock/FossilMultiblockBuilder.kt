@@ -160,17 +160,17 @@ class FossilMultiblockBuilder(val centerPos: BlockPos) : MultiblockStructureBuil
             return@run nbt
         }
         val MONITOR_PRED = BlockPredicate.Builder.block()
-            .of(CobblemonBlocks.MONITOR)
+            .of(net.minecraft.core.registries.BuiltInRegistries.BLOCK, CobblemonBlocks.MONITOR)
             .hasNbt(NBT_TO_CHECK)
             .build()
         val FOSSIL_ANALYZER_PRED = BlockPredicate.Builder.block()
-            .of(CobblemonBlocks.FOSSIL_ANALYZER)
+            .of(net.minecraft.core.registries.BuiltInRegistries.BLOCK, CobblemonBlocks.FOSSIL_ANALYZER)
             .hasNbt(NBT_TO_CHECK)
             .build()
 
         val RESTORATION_TANK_PRED = BlockPredicate.Builder.block()
             .hasNbt(NBT_TO_CHECK)
-            .of(CobblemonBlocks.RESTORATION_TANK)
+            .of(net.minecraft.core.registries.BuiltInRegistries.BLOCK, CobblemonBlocks.RESTORATION_TANK)
             .setProperties(StatePropertiesPredicate.Builder.properties()
                 .hasProperty(RestorationTankBlock.PART, RestorationTankBlock.TankPart.BOTTOM))
             .build()

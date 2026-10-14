@@ -122,8 +122,8 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         entryHeight: Int
     ) {
         val entry =  this.getEntry(index)
-        entry.extractRenderState(
-            context, index, y + 2, x, entryWidth, entryHeight, mouseX, mouseY,
+        renderEntry(
+            entry, context, y + 2, x, entryWidth, entryHeight, mouseX, mouseY,
             hovered == entry, delta
         )
     }

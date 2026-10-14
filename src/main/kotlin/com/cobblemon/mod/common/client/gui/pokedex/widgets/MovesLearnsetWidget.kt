@@ -283,11 +283,11 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             }
         }
 
-        if (filteredEntries.isNotEmpty()) listWidget.renderWidget(context, mouseX, mouseY, delta)
+        if (filteredEntries.isNotEmpty()) listWidget.extractRenderState(context, mouseX, mouseY, delta)
 
         renderDataSection(context)
 
-        descriptionWidget.renderWidget(context, mouseX, mouseY, delta)
+        descriptionWidget.extractRenderState(context, mouseX, mouseY, delta)
 
         matrices.pushPose()
         matrices.translate(0.0, 0.0, 500.0) // Translate on top of other elements

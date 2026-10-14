@@ -45,7 +45,7 @@ object PartyTutorialToasts {
         else downKey.displayName
 
     private val toast = CobblemonToast(
-        Mth.createInsecureUUID(),
+        Mth.createInsecureUUID(net.minecraft.util.RandomSource.createThreadSafe()),
         listOf(CobblemonItems.POKEDEX_RED.defaultInstance),
         lang("ui.party.party_select_title").red(),
         lang(

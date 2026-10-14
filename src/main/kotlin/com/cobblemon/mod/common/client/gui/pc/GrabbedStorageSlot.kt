@@ -21,7 +21,7 @@ class GrabbedStorageSlot(
         isSlotSelected = true
     }
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         renderSlot(context = context, posX = mouseX - (width / 2), posY = mouseY - (height / 2), partialTicks = delta)
     }
 

@@ -210,7 +210,7 @@ class PartySlotButton(
 
         // Hover Text
         if (isHovered && hoverText.isNotEmpty()) {
-            this.parent.setTooltipForNextRenderPass(Lists.transform<Component, FormattedCharSequence>(hoverText) { it.visualOrderText })
+            context.setTooltipForNextFrame(Lists.transform<Component, FormattedCharSequence>(hoverText) { it.visualOrderText }, pMouseX, pMouseY)
         }
 
         matrices.popPose()

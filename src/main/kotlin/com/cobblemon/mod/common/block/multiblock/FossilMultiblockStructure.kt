@@ -117,9 +117,10 @@ class FossilMultiblockStructure (
                 return InteractionResult.SUCCESS
             }
             if (this.hasCreatedPokemon) {
-                if (this.fossilOwnerUUID != null && player.uuid != this.fossilOwnerUUID) {
+                val fossilOwnerUUID = this.fossilOwnerUUID
+                if (fossilOwnerUUID != null && player.uuid != fossilOwnerUUID) {
                     var ownerName : String = "UNKNOWN_USER" // TODO: lang agnostic fallback
-                    server()?.services()?.nameToIdCache()?.get(this.fossilOwnerUUID)?.orElse(null)?.name()?.let {
+                    server()?.services()?.nameToIdCache()?.get(fossilOwnerUUID)?.orElse(null)?.name()?.let {
                         ownerName = it
                     }
                     player.sendSystemMessage(lang("fossilmachine.protected", ownerName), true)

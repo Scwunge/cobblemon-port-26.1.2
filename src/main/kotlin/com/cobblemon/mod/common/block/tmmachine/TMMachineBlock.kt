@@ -167,10 +167,10 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Lega
             } else {
                 val serverPlayer = player as? ServerPlayer
                 if (serverPlayer != null) {
-                    val recipeId = cobblemonResource("tm_machine")
+                    val recipeId = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, cobblemonResource("tm_machine"))
                     val recipeOpt = level.server?.recipeManager?.byKey(recipeId)
                     recipeOpt?.ifPresent { recipe ->
-                        if (!serverPlayer.recipeBook.contains(recipe)) {
+                        if (!serverPlayer.recipeBook.contains(recipe.id())) {
                             serverPlayer.awardRecipes(listOf(recipe))
                         }
                     }

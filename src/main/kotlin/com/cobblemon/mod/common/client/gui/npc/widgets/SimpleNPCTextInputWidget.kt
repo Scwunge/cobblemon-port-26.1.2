@@ -140,7 +140,7 @@ class SimpleNPCTextInputWidget(
             if (showCursor && !value.isEmpty() && cursorPosition != value.length) {
                 val startToCursorWidth = Minecraft.getInstance().font.width((cursorLine.substring(0, cursorLinePos).text()))
                 context.fill(
-                    RenderType.guiTextHighlight(),
+                    net.minecraft.client.renderer.RenderPipelines.GUI_TEXT_HIGHLIGHT,
                     x + startToCursorWidth - 1,
                     y + cursorLineIndex * 10 + 1,
                     x + startToCursorWidth,

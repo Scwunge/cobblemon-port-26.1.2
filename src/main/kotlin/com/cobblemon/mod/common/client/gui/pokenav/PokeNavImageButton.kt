@@ -51,9 +51,9 @@ open class PokeNavImageButton(
 
     fun canClick() = this.canClick.invoke()
 
-    override fun onPress() {
+    override fun onPress(input: net.minecraft.client.input.InputWithModifiers) {
         if (this.canClick()) {
-            super.onPress()
+            super.onPress(input)
         }
     }
 

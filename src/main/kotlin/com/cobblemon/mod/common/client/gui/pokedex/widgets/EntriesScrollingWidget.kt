@@ -114,8 +114,8 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         val entry =  this.getEntry(index)
         entry.x = x
         entry.y = y
-        entry.extractRenderState(
-            context, index, y, x, entryWidth, entryHeight, mouseX, mouseY,
+        renderEntry(
+            entry, context, y, x, entryWidth, entryHeight, mouseX, mouseY,
             focused == entry, delta
         )
     }
@@ -138,7 +138,6 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
 
         override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
             // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
-            val index = entryIndex()
             val y = getContentY()
             val x = getX()
             val entryWidth = getWidth()

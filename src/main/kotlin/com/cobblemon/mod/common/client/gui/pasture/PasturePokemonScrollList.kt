@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.pasture
 
+import com.cobblemon.mod.common.client.onPress
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
@@ -89,7 +90,7 @@ class PasturePokemonScrollList(
 
     public override fun addEntry(entry: PastureSlot) = super.addEntry(entry)
     public override fun removeEntry(entry: PastureSlot) = super.removeEntry(entry)
-    override fun renderSelection(context: GuiGraphicsExtractor, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
+    override fun extractSelection(context: GuiGraphicsExtractor, entry: PastureSlot, outlineColor: Int) {}
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
@@ -149,13 +150,13 @@ class PasturePokemonScrollList(
         val button = event.button()
         val deltaX = dragX
         val deltaY = dragY
-        if (scrolling && scrollbarVisible() && mouseX >= scrollBarX()) {
+        if (scrolling && scrollable() && mouseX >= scrollBarX()) {
             if (mouseY < this.listY) {
                 setScrollAmount(0.0)
             } else if (mouseY > bottom) {
                 setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount() += deltaY
+                setScrollAmount(scrollAmount() + deltaY)
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)

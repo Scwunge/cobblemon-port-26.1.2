@@ -323,7 +323,7 @@ class PCGUI(
 
     override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
-        renderBackground(context, mouseX, mouseY, delta)
+        // The background is drawn before extractRenderState since 1.21.6.
 
         val x = (width - BASE_WIDTH) / 2
         val y = (height - BASE_HEIGHT) / 2

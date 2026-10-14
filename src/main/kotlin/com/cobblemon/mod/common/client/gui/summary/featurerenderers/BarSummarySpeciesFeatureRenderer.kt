@@ -39,7 +39,7 @@ open class BarSummarySpeciesFeatureRenderer(
     val value: Int = 0,
     val colour: Vec3? = null
 ) : SummarySpeciesFeatureRenderer<IntSpeciesFeature> {
-    override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
+    override fun render(guiGraphics: GuiGraphicsExtractor, x: Float, y: Float, pokemon: Pokemon, feature: IntSpeciesFeature) {
         renderElement(guiGraphics, x, y, pokemon, feature.value)
     }
 

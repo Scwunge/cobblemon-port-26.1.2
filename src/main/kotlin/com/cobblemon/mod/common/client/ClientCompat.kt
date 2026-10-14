@@ -34,3 +34,10 @@ val Minecraft.timer: DeltaTracker
 fun EditBox.setFilter(filter: Predicate<String>) {
     (this as FilterableEditBox).`cobblemon$setFilter`(filter)
 }
+
+/**
+ * AbstractButton#onPress() before 1.21.9, for presses Cobblemon triggers itself rather than from an input event. The
+ * press is reported as the enter key without modifiers.
+ */
+fun net.minecraft.client.gui.components.AbstractButton.onPress() =
+    onPress(net.minecraft.client.input.KeyEvent(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN, 0, 0))

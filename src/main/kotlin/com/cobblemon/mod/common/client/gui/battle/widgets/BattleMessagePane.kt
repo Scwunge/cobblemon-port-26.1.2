@@ -86,7 +86,12 @@ class BattleMessagePane(
         return super.getRowLeft() + 4
     }
 
-    override fun renderSelection(guiGraphics: GuiGraphicsExtractor, top: Int, width: Int, height: Int, outerColor: Int, innerColor: Int) {
+    override fun extractSelection(guiGraphics: GuiGraphicsExtractor, entry: BattleMessageLine, outlineColor: Int) {
+        // The row geometry renderSelection received before 1.21.9
+        val top = entry.contentY
+        val width = rowWidth
+        val height = entry.contentHeight
+
         blitk(
             matrixStack = guiGraphics.pose(),
             texture = battleMessageHighlight,
@@ -189,7 +194,7 @@ class BattleMessagePane(
             } else if (mouseY > bottom) {
                 setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount() += deltaY
+                setScrollAmount(scrollAmount() + deltaY)
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)

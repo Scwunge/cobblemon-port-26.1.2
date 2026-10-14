@@ -171,7 +171,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                                 }
                             }
                             val client = Minecraft.getInstance()
-                            val sound = MovingSoundInstance(SoundEvent.createVariableRangeEvent(CobblemonSounds.POKE_BALL_TRAIL.location), SoundSource.PLAYERS, { sendOutPosition?.add(sendOutOffset) }, 0.1f, 1f, false, 20, 0)
+                            val sound = MovingSoundInstance(SoundEvent.createVariableRangeEvent(CobblemonSounds.POKE_BALL_TRAIL.location), SoundSource.PLAYERS, { sendOutPosition?.add(sendOutOffset ?: Vec3.ZERO) }, 0.1f, 1f, false, 20, 0)
                             if (!playedThrowingSound) {
                                 client.soundManager.play(sound)
                                 playedThrowingSound = true
@@ -204,7 +204,7 @@ class PokemonClientDelegate : PosableState(), PokemonSideDelegate {
                                     playedSendOutSound = true
                                     /// create end rod particles in a 0.1 radius around the soundPos with a count of 50 and a random velocity of 0.1
                                     sendOutPosition?.let {
-                                        val newPos = it.add(sendOutOffset)
+                                        val newPos = it.add(sendOutOffset ?: Vec3.ZERO)
                                         val ballType =
                                             currentEntity.pokemon.caughtBall.name.path.lowercase().replace("_", "")
                                         val mode = if (currentEntity.isBattling) "battle" else "casual"

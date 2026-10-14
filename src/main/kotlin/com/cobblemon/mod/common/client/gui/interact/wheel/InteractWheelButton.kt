@@ -169,7 +169,8 @@ class InteractWheelButton(
         return if (isHovered(mouseX.toFloat(), mouseY.toFloat())) super.mouseClicked(event, doubleClick) else false
     }
 
-    override fun getTooltip(): Tooltip? {
-        tooltipText?.let { return Tooltip.create(Component.translatable(it)) } ?: return super.getTooltip()
+    // AbstractWidget#getTooltip before 1.21.6
+    fun getTooltip(): Tooltip? {
+        tooltipText?.let { return Tooltip.create(Component.translatable(it)) } ?: return null
     }
 }

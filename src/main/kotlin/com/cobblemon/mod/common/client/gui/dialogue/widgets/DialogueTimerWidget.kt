@@ -41,7 +41,6 @@ class DialogueTimerWidget(
             return
         }
 
-        context.setColor(1F, 1F, 1F, 1F)
         blitk(
             texture = timerResource,
             matrixStack = context.pose(),

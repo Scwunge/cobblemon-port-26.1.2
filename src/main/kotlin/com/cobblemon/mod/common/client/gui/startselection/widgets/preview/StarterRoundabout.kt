@@ -89,13 +89,14 @@ class StarterRoundabout(
         val pMouseX = event.x()
         val pMouseY = event.y()
         val pButton = event.button()
-        if (this.clicked(pMouseX, pMouseY) && this.isValidClickButton(pButton)) {
-            this.onClick(pMouseX, pMouseY)
+        if (this.clicked(pMouseX, pMouseY) && this.isValidClickButton(event.buttonInfo())) {
+            this.onClick(event, doubleClick)
         }
         return super.mouseClicked(event, doubleClick)
     }
 
-    override fun clicked(mouseX: Double, mouseY: Double): Boolean {
+    // AbstractWidget#clicked before 1.21.9
+    fun clicked(mouseX: Double, mouseY: Double): Boolean {
         return this.active && this.visible && this.isHovered()
     }
 

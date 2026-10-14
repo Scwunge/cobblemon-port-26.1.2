@@ -74,18 +74,8 @@ fun renderTooltip(
     poseStack.pushPose()
     poseStack.translate(0.0, 0.0, 1000.0)
 
-    Minecraft.getInstance().let {
-        it.mainRenderTarget.bindWrite(false)
-        context.enableScissor(
-            posX - (tooltipWidth / 2),
-            tooltipTop + 1,
-            (posX - (tooltipWidth / 2)) + tooltipWidth,
-            tooltipTop + TOOLTIP_SLICE_SIZE * text.size - 1
-        )
-        it.gameRenderer.processBlurEffect(delta)
-        context.disableScissor()
-        it.mainRenderTarget.bindWrite(true)
-    }
+    // TODO(parity): 1.21.1 blurred the world behind the tooltip's area here. GUI blur is a whole-screen stratum effect
+    //  since 1.21.6, so the region blur needs its own render state to come back.
 
     val totalHeight = TOOLTIP_SLICE_SIZE * text.size
 

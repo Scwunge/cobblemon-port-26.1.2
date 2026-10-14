@@ -51,6 +51,12 @@ class MarkingButton(
         )
     }
 
+    // Button was concrete before 1.21.9; this is what its plain variant draws. Markings draw through renderButton.
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+        extractDefaultSprite(context)
+        extractDefaultLabel(context.textRendererForWidget(this, GuiGraphicsExtractor.HoveredTextEffects.NONE))
+    }
+
     override fun playDownSound(soundManager: SoundManager) {
         if (canEdit) soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F))
     }

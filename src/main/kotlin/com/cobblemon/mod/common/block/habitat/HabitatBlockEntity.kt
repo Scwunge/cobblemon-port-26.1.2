@@ -202,7 +202,7 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
         tag.getStringOr(DataKeys.HABITAT_MIMIC, "").let {
             mimicId = Identifier.tryParse(it) ?: BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
         }
-        displaySpeciesIds = if (tag.contains(DISPLAY_SPECIES_KEY, Tag.TAG_LIST.toInt())) {
+        displaySpeciesIds = if (tag.getList(DISPLAY_SPECIES_KEY).isPresent) {
             tag.getListOrEmpty(DISPLAY_SPECIES_KEY)
                 .mapNotNull { speciesTag -> Identifier.tryParse(speciesTag.asString().orElse("")) }
                 .distinct()

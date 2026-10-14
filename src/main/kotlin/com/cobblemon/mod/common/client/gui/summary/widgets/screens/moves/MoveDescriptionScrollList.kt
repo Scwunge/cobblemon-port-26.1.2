@@ -72,7 +72,7 @@ class MoveDescriptionScrollList(
             } else if (mouseY > bottom) {
                 setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount() += deltaY
+                setScrollAmount(scrollAmount() + deltaY)
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)

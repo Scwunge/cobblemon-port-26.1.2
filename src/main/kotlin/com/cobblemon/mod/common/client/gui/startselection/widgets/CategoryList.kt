@@ -81,7 +81,7 @@ class CategoryList(
 
     inner class Category(private val category: RenderableStarterCategory, height: Int) : Entry(height) {
 
-        override fun extractRenderState(
+        override fun render(
             guiGraphics: GuiGraphicsExtractor,
             index: Int,
             x: Int,

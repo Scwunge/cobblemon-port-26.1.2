@@ -40,7 +40,6 @@ class BehaviourEditorScreen(
 
     override fun init() {
         super.init()
-        minecraft = Minecraft.getInstance()
         x = (minecraft!!.window.guiScaledWidth / 2) - BASE_WIDTH / 2
         y = (minecraft!!.window.guiScaledHeight / 2) - BASE_HEIGHT / 2
 

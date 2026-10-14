@@ -98,7 +98,7 @@ class PartyOverlay : Gui(Minecraft.getInstance()) {
     private val stateAtIndex = hashMapOf<Int, Pair<UUID, FloatingState>>()
 
     val starterToast = CobblemonToast(
-        Mth.createInsecureUUID(),
+        Mth.createInsecureUUID(net.minecraft.util.RandomSource.createThreadSafe()),
         listOf(CobblemonItems.POKE_BALL.defaultInstance),
         lang("ui.starter.choose_starter_title", SummaryBinding.boundKey().displayName).red(),
         lang("ui.starter.choose_starter_description", SummaryBinding.boundKey().displayName).darkGray(),

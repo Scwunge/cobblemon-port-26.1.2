@@ -295,7 +295,7 @@ class BattleConfigureGUI(
                     backwardIcon = cobblemonResource("textures/gui/interact/request/label_arrow_left.png"),
                     forward = false
                 ) { levelRulesetOptionIndex -= 1 }
-                this.addRenderableWidget(autoLevelNavButtonLeft)
+                this.addRenderableWidget(autoLevelNavButtonLeft!!)
 
                 autoLevelNavButtonRight = BattleRequestNavigationButton(
                     pX = x + 94,
@@ -303,7 +303,7 @@ class BattleConfigureGUI(
                     forwardIcon = cobblemonResource("textures/gui/interact/request/label_arrow_right.png"),
                     forward = true
                 ) {levelRulesetOptionIndex += 1 }
-                this.addRenderableWidget(autoLevelNavButtonRight)
+                this.addRenderableWidget(autoLevelNavButtonRight!!)
             }
         }
     }

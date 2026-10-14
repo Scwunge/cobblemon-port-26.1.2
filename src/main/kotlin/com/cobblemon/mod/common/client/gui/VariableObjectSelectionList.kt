@@ -157,6 +157,6 @@ open class VariableObjectSelectionList(x: Int, y: Int, width: Int, height: Int):
     }
 
     inner class EmptySeparator(height: Int): Entry(height) {
-        override fun extractRenderState(guiGraphics: GuiGraphicsExtractor, index: Int, x: Int, y: Int, mouseX: Int, mouseY: Int, partialTick: Float) {}
+        override fun render(guiGraphics: GuiGraphicsExtractor, index: Int, x: Int, y: Int, mouseX: Int, mouseY: Int, partialTick: Float) {}
     }
 }

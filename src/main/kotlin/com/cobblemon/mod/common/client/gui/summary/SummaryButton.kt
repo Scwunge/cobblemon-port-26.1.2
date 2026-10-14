@@ -49,12 +49,7 @@ class SummaryButton(
 
     var buttonActive = false
 
-    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
-        val d = event.x()
-        val e = event.y()
-        val i = event.button()
-        val f = dragX
-        val g = dragY
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
         return false
     }
 

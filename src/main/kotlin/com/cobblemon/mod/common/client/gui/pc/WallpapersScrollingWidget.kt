@@ -151,7 +151,7 @@ class WallpapersScrollingWidget(
             return false
         }
 
-        override fun getNarration(): Component? {
+        override fun getNarration(): Component {
             return wallpaper.toString().text()
         }
     }
