@@ -25,7 +25,7 @@ import java.lang.reflect.Type
  * @author Licious
  * @since July 2nd, 2022
  */
-class TagKeyAdapter<T>(private val key: ResourceKey<Registry<T>>) : JsonDeserializer<TagKey<T>>, JsonSerializer<TagKey<T>> {
+class TagKeyAdapter<T : Any>(private val key: ResourceKey<Registry<T>>) : JsonDeserializer<TagKey<T>>, JsonSerializer<TagKey<T>> {
 
     override fun deserialize(element: JsonElement, type: Type, ctx: JsonDeserializationContext): TagKey<T> {
         val identifier = Identifier.parse(element.asString.replace("#", ""))

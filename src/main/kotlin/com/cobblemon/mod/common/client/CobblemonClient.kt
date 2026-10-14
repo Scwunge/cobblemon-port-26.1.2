@@ -78,7 +78,7 @@ import net.minecraft.client.color.block.BlockColor
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.MenuScreens
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.model.object.boat.BoatModel
+import net.minecraft.client.model.`object`.boat.BoatModel
 import net.minecraft.client.model.ChestBoatModel
 import net.minecraft.client.model.player.PlayerModel
 import net.minecraft.client.renderer.rendertype.RenderType

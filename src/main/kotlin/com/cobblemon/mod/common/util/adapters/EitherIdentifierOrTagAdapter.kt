@@ -25,7 +25,7 @@ import java.lang.reflect.Type
  * @author Hiroku
  * @since May 7th, 2023
  */
-class EitherIdentifierOrTagAdapter<E, T : Registry<E>>(val resourceKey: ResourceKey<T>) : JsonDeserializer<Either<Identifier, TagKey<E>>> {
+class EitherIdentifierOrTagAdapter<E : Any, T : Registry<E>>(val resourceKey: ResourceKey<T>) : JsonDeserializer<Either<Identifier, TagKey<E>>> {
     override fun deserialize(
         element: JsonElement,
         type: Type,

@@ -311,7 +311,7 @@ object MoLangFunctions {
             }
         }
 
-    fun <T> Holder<T>.asMoLangValue(key: ResourceKey<Registry<T>>): ObjectValue<Holder<T>> {
+    fun <T : Any> Holder<T>.asMoLangValue(key: ResourceKey<Registry<T>>): ObjectValue<Holder<T>> {
         val value =
             ObjectValue(
                 obj = this,

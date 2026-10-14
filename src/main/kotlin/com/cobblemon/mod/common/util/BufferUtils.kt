@@ -74,14 +74,14 @@ fun <T> ByteBuf.writeCollection(collection: Collection<T> , writer: (ByteBuf, T)
     }
 }
 
-fun <T> ByteBuf.writeNullable(obj: T?, writer: (ByteBuf, T) -> Unit) {
+fun <T : Any> ByteBuf.writeNullable(obj: T?, writer: (ByteBuf, T) -> Unit) {
     this.writeBoolean(obj != null)
     obj?.let {
         writer(this, it)
     }
 }
 
-fun <T> ByteBuf.writeNullable(obj: T?, writer: StreamEncoder<ByteBuf, T>) {
+fun <T : Any> ByteBuf.writeNullable(obj: T?, writer: StreamEncoder<ByteBuf, T>) {
     writeNullable(obj) { buf, otherObj ->
         writer.encode(buf, otherObj)
     }

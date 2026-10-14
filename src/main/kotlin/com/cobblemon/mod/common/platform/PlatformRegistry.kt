@@ -26,7 +26,7 @@ import net.minecraft.resources.Identifier
  * @author Licious
  * @since February 11th, 2023
  */
-abstract class PlatformRegistry<R : Registry<T>, K : ResourceKey<R>, T> {
+abstract class PlatformRegistry<R : Registry<T>, K : ResourceKey<R>, T : Any> {
 
     /**
      * The vanilla [Registry].

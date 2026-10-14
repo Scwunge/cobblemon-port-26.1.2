@@ -15,7 +15,7 @@ import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.model.object.boat.BoatModel
+import net.minecraft.client.model.`object`.boat.BoatModel
 import net.minecraft.client.model.ChestBoatModel
 import net.minecraft.client.model.geom.ModelLayerLocation
 import net.minecraft.client.renderer.rendertype.RenderType

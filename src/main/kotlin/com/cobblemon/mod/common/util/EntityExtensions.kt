@@ -278,7 +278,7 @@ fun Entity.closestPosition(positions: Iterable<BlockPos>, filter: (BlockPos) -> 
 
 fun Entity.getIsSubmerged() = isInLava || isUnderWater
 
-fun <T> SynchedEntityData.update(data: EntityDataAccessor<T>, mutator: (T) -> T) {
+fun <T : Any> SynchedEntityData.update(data: EntityDataAccessor<T>, mutator: (T) -> T) {
     val value = get(data)
     val newValue = mutator(value)
     if (value != newValue) {

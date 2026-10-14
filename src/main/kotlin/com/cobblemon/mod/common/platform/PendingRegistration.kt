@@ -17,8 +17,8 @@ import net.minecraft.world.level.block.Block
  * Holds the registry key of the entry currently being constructed by [PlatformRegistry.create].
  *
  * Item and block properties need their ID at construction time since 1.21.2. Rather than threading the ID through every
- * Cobblemon item/block constructor, ItemPropertiesIdMixin and BlockPropertiesIdMixin apply the pending ID to properties
- * created while an entry is being constructed (properties that already have an ID are left alone).
+ * Cobblemon item/block constructor, ItemRegistrationIdMixin and BlockRegistrationIdMixin apply the pending ID to the
+ * properties of items and blocks constructed while an entry is being registered.
  */
 object PendingRegistration {
     private val pending = ThreadLocal<ResourceKey<*>?>()
