@@ -58,7 +58,7 @@ class FishingSpawningCondition: SpawningCondition<FishingSpawnablePosition>() {
             }
         }
         if (bait != null) { // check for the bait on the bobber
-            val pokerodBait = spawnablePosition.baitStack.itemHolder.unwrapKey().orElse(null)?.location()
+            val pokerodBait = spawnablePosition.baitStack.itemHolder.unwrapKey().orElse(null)?.identifier()
             if (pokerodBait != bait) {
                 return false
             }

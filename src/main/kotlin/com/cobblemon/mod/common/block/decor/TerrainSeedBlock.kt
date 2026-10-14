@@ -259,11 +259,11 @@ class TerrainSeedBlock(private val terrainSeedType: TerrainSeedType, settings: P
     }
 
     fun preventDropFromBottomPart(level: Level, pos: BlockPos, state: BlockState, player: Player?) {
-        val doubleblockhalf = state.getValue<DoubleBlockHalf?>(DoublePlantBlock.HALF) as DoubleBlockHalf
+        val doubleblockhalf = state.getValue<DoubleBlockHalf>(DoublePlantBlock.HALF) as DoubleBlockHalf
         if (doubleblockhalf == DoubleBlockHalf.UPPER) {
             val blockpos = pos.below()
             val blockstate = level.getBlockState(blockpos)
-            if (blockstate.`is`(state.getBlock()) && blockstate.getValue<DoubleBlockHalf?>(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER) {
+            if (blockstate.`is`(state.getBlock()) && blockstate.getValue<DoubleBlockHalf>(DoublePlantBlock.HALF) == DoubleBlockHalf.LOWER) {
                 val blockstate1 = if (blockstate.getFluidState()
                         .`is`(Fluids.WATER)
                 ) Blocks.WATER.defaultBlockState() else Blocks.AIR.defaultBlockState()

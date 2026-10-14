@@ -30,7 +30,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import kotlin.math.min
 
-class MintLitterBlock(properties: Properties?) : Block(properties) {
+class MintLitterBlock(properties: Properties) : Block(properties) {
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(FACING, Direction.NORTH)
@@ -39,10 +39,10 @@ class MintLitterBlock(properties: Properties?) : Block(properties) {
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState? {
         val blockState = context.getLevel().getBlockState(context.getClickedPos())
-        return if (blockState.`is`(this)) blockState.setValue<Int?, Int?>(
+        return if (blockState.`is`(this)) blockState.setValue<Int, Int>(
             AMOUNT,
-            min(4, blockState.getValue<Int?>(AMOUNT) as Int + 1)
-        ) as BlockState else this.defaultBlockState().setValue<Direction?, Direction?>(
+            min(4, blockState.getValue<Int>(AMOUNT) as Int + 1)
+        ) as BlockState else this.defaultBlockState().setValue<Direction, Direction>(
             FACING,
             context.getHorizontalDirection().getOpposite()
         ) as BlockState
@@ -78,7 +78,7 @@ class MintLitterBlock(properties: Properties?) : Block(properties) {
         return state.setValue(HORIZONTAL_FACING, rotation.rotate(state.getValue(HORIZONTAL_FACING)))
     }
 
-    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape? {
+    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val litterBoxes = when (state.getValue(FACING)) {
             Direction.SOUTH -> SOUTH_SHAPES
             Direction.WEST -> WEST_SHAPES

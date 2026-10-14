@@ -193,7 +193,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         if (world.getBlockState(pos.above()).isSolidRender()) return InteractionResult.FAIL
         player.openMenu(entity)
         if (!player.level().isClientSide) {
-            PiglinAi.angerNearbyPiglins(player, true)
+            (world as? ServerLevel)?.let { PiglinAi.angerNearbyPiglins(it, player, true) }
         }
         return InteractionResult.SUCCESS
     }
@@ -211,7 +211,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
-    override fun getRenderShape(state: BlockState) = RenderShape.ENTITYBLOCK_ANIMATED
+    override fun getRenderShape(state: BlockState) = RenderShape.INVISIBLE
 
     override fun getStateForPlacement(blockPlaceContext: BlockPlaceContext): BlockState {
         return defaultBlockState()

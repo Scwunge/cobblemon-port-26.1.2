@@ -486,7 +486,7 @@ class OmniPathNodeMaker : NodeEvaluator() {
         }
     }
 
-    override fun getNode(x: Int, y: Int, z: Int): Node? {
+    override fun getNode(x: Int, y: Int, z: Int): Node {
         var nodePenalty = 0F
         var pathNode: Node? = null
 
@@ -593,9 +593,9 @@ class OmniPathNodeMaker : NodeEvaluator() {
 //        if (figuredNode == PathType.OPEN && pos.y >= pfContext.level().getMinBuildHeight() + 1) {
 //            val var10000: PathType = when (getPathType(pfContext, pos.x, pos.y - 1, pos.z)) {
 //                PathType.OPEN, PathType.LAVA, PathType.WALKABLE -> PathType.OPEN
-//                PathType.DAMAGE_OTHER -> PathType.DAMAGE_OTHER
+//                PathType.DAMAGING -> PathType.DAMAGING
 //                PathType.STICKY_HONEY -> PathType.STICKY_HONEY
-//                PathType.POWDER_SNOW -> PathType.DANGER_POWDER_SNOW
+//                PathType.POWDER_SNOW -> PathType.ON_TOP_OF_POWDER_SNOW
 //                PathType.DAMAGE_CAUTIOUS -> PathType.DAMAGE_CAUTIOUS
 //                PathType.TRAPDOOR -> PathType.DANGER_TRAPDOOR
 //                PathType.WATER -> if (canWalkOnWater()) PathType.WALKABLE else PathType.OPEN
@@ -642,14 +642,14 @@ class OmniPathNodeMaker : NodeEvaluator() {
         }
         if (PathType.DAMAGE_CAUTIOUS in set) {
             return PathType.DAMAGE_CAUTIOUS
-        } else if (PathType.DANGER_OTHER in set) {
-            return PathType.DANGER_OTHER
+        } else if (PathType.DAMAGING_IN_NEIGHBOR in set) {
+            return PathType.DAMAGING_IN_NEIGHBOR
         }
 
         return if (PathType.UNPASSABLE_RAIL in set) {
             PathType.UNPASSABLE_RAIL
-        } else if (PathType.DAMAGE_OTHER in set) {
-            PathType.DAMAGE_OTHER
+        } else if (PathType.DAMAGING in set) {
+            PathType.DAMAGING
         } else {
             val result = returnedEarlyPathType.firstOrNull()
             if (result != null) {
@@ -708,7 +708,7 @@ class OmniPathNodeMaker : NodeEvaluator() {
                         PathType.LEAVES -> return type
                         PathType.DAMAGE_CAUTIOUS -> return type
                         PathType.UNPASSABLE_RAIL -> return type
-                        PathType.DAMAGE_OTHER -> return type
+                        PathType.DAMAGING -> return type
                         else -> {}
                     }
                     if (mob.getPathfindingMalus(currentType) < 0) {
@@ -737,11 +737,11 @@ class OmniPathNodeMaker : NodeEvaluator() {
         val block = blockState.block
 
         if (blockState.`is`(Blocks.CACTUS) || blockState.`is`(Blocks.SWEET_BERRY_BUSH)) {
-            return PathType.DANGER_OTHER
+            return PathType.DAMAGING_IN_NEIGHBOR
         }
 
         if (isBurningBlock(blockState) && !this.canPathThroughFire && !(blockState.`is`(Blocks.MAGMA_BLOCK) && !isOnGround())) {
-            return PathType.DANGER_FIRE
+            return PathType.FIRE_IN_NEIGHBOR
         }
 
         if (blockState.`is`(Blocks.WITHER_ROSE) || blockState.`is`(Blocks.POINTED_DRIPSTONE)) {

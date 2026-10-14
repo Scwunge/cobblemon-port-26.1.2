@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class PauvilleaFlowerBlock(properties: Properties?) : DirectionalBlock(properties), BonemealableBlock {
+class PauvilleaFlowerBlock(properties: Properties) : DirectionalBlock(properties), BonemealableBlock {
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(FACING, Direction.DOWN))

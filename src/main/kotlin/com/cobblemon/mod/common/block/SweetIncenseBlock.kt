@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.material.Fluids
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 import net.minecraft.core.particles.ParticleTypes
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.BlockGetter
@@ -59,8 +58,8 @@ class SweetIncenseBlock(properties: Properties) : BaseEntityBlock(properties), S
         builder.add(LIT, WATERLOGGED)
     }
 
-    override fun getLightBlock(state: BlockState, level: BlockGetter, pos: BlockPos): Int {
-        return super.getLightBlock(state, level, pos)
+    override fun getLightBlock(state: BlockState): Int {
+        return super.getLightBlock(state)
     }
 
     override fun getStateForPlacement(context: BlockPlaceContext): BlockState {

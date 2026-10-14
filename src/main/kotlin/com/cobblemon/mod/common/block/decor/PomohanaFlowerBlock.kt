@@ -18,7 +18,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 
-class PomohanaFlowerBlock(properties: Properties?) : PinkPetalsBlock(properties) {
+class PomohanaFlowerBlock(properties: Properties) : PinkPetalsBlock(properties) {
 
     override fun getShape(state: BlockState, world: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape = AABB
 

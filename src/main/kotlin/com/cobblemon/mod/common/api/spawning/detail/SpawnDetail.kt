@@ -102,7 +102,7 @@ abstract class SpawnDetail : ModDependant {
             if (conditions.isEmpty() || conditions.any { it.biomes == null || it.biomes!!.isEmpty() || it.biomes!!.any { it.fits(holder) } }) {
                 if (anticonditions.isEmpty() || anticonditions.none { it.biomes != null && it.biomes!!.any { it.fits(holder) } }) {
                     if (compositeCondition?.isBiomeValid(holder) != false) {
-                        validBiomes.add(key.location())
+                        validBiomes.add(key.identifier())
                     }
                 }
             }

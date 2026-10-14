@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape
 import kotlin.math.min
 
 //TODO: Root/connection shit
-class WistensuFlowerHeadBlock(properties: Properties?) : GrowingPlantHeadBlock(properties, Direction.DOWN, SHAPE, false, 0.1), WistensuFlowerBlock {
+class WistensuFlowerHeadBlock(properties: Properties) : GrowingPlantHeadBlock(properties, Direction.DOWN, SHAPE, false, 0.1), WistensuFlowerBlock {
     companion object {
         val CODEC: MapCodec<WistensuFlowerHeadBlock> = RecordCodecBuilder.mapCodec {
             it.group(propertiesCodec()).apply(it, ::WistensuFlowerHeadBlock)

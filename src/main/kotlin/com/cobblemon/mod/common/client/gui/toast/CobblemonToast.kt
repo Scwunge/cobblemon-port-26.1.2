@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.toast
 
+import net.minecraft.client.renderer.RenderPipelines
 import com.cobblemon.mod.common.net.messages.client.toast.ToastPacket
 import com.cobblemon.mod.common.api.gui.legacyTextColour
 import net.fabricmc.api.EnvType
@@ -56,25 +57,35 @@ class CobblemonToast(
         return font.split(this.description, maxWidth)
     }
 
-    override fun extractRenderState(context: GuiGraphicsExtractor, manager: ToastManager, startTime: Long): Toast.Visibility {
+    // Toasts are updated and rendered separately since 1.21.2; the expiry check that used to start rendering is here.
+    private var expired = false
+
+    override fun update(manager: ToastManager, fullyVisibleForMs: Long) {
+        if (this.startTime == -1L) this.startTime = fullyVisibleForMs
+        val localDuration = this.durationMs
+        if (!expired && localDuration != null && fullyVisibleForMs - this.startTime >= localDuration) {
+            expired = true
+            ToastTracker.remove(this)
+        }
+    }
+
+    override fun getWantedVisibility(): Toast.Visibility = if (expired) Toast.Visibility.HIDE else this.nextVisibility
+
+    override fun extractRenderState(context: GuiGraphicsExtractor, textRenderer: Font, startTime: Long) {
         if (this.startTime == -1L) this.startTime = startTime
 
         val elapsedTime = startTime - this.startTime
         val localDuration = this.durationMs
-        if (localDuration != null && elapsedTime >= localDuration) {
-            ToastTracker.remove(this)
-            return Toast.Visibility.HIDE
-        }
+        if (expired) return
 
-        context.blitSprite(this.frameTexture, 0, 0, this.width(), this.height())
+        context.blitSprite(RenderPipelines.GUI_TEXTURED, this.frameTexture, 0, 0, this.width(), this.height())
 
         val maxWidth = 125
-        val textRenderer = manager.minecraft.font
 
-        context.blitSprite(this.frameTexture, 0, 0, this.width(), this.height() + (getLines(textRenderer, maxWidth).size - 1) * 10)
+        context.blitSprite(RenderPipelines.GUI_TEXTURED, this.frameTexture, 0, 0, this.width(), this.height() + (getLines(textRenderer, maxWidth).size - 1) * 10)
 
         context.text(textRenderer, this.title, 30, 7, legacyTextColour(this.title.style.color?.value ?: -1), false)
-        context.drawWordWrap(textRenderer, this.description, 30, 18, maxWidth, this.description.style.color?.value ?: -1)
+        context.textWithWordWrap(textRenderer, this.description, 30, 18, maxWidth, legacyTextColour(this.description.style.color?.value ?: -1), false)
 
         val iconIndex = if (localDuration != null && localDuration > 0) {
             val repeatsPerIcon = 2
@@ -101,7 +112,6 @@ class CobblemonToast(
         }
 
         this.lastTime = startTime
-        return this.nextVisibility
     }
 
     internal fun updateFrom(packet: ToastPacket) {

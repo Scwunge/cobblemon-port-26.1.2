@@ -14,5 +14,9 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 
 class SweetIncenseBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(
-    null // CobblemonBlockEntities.INCENSE_SWEET // TODO after 1.7
+    noType() // CobblemonBlockEntities.INCENSE_SWEET // TODO after 1.7
     , pos, state)
+
+// The incense block (and its block entity type) is not registered yet; this keeps the null type it was given.
+@Suppress("UNCHECKED_CAST")
+private fun <T> noType(): T = null as T

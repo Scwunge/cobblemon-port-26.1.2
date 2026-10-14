@@ -182,7 +182,7 @@ class TypeGemClusterBlock(
             )
             stack.set(
                 DataComponents.CUSTOM_MODEL_DATA,
-                CustomModelData(state.getValue(STAGE))
+                CustomModelData(listOf(state.getValue(STAGE).toFloat()), listOf(), listOf(), listOf())
             )
         }
 
@@ -238,7 +238,7 @@ class TypeGemClusterBlock(
         return level.getBlockState(supportPos).isFaceSturdy(level, supportPos, direction)
     }
 
-    override fun propagatesSkylightDown(state: BlockState, level: net.minecraft.world.level.BlockGetter, pos: BlockPos): Boolean = true
+    override fun propagatesSkylightDown(state: BlockState): Boolean = true
 
     override fun getShadeBrightness(state: BlockState, level: net.minecraft.world.level.BlockGetter, pos: BlockPos): Float = 1.0F
 
@@ -264,7 +264,7 @@ class TypeGemClusterBlock(
             )
             stack.set(
                 DataComponents.CUSTOM_MODEL_DATA,
-                CustomModelData(state.getValue(STAGE))
+                CustomModelData(listOf(state.getValue(STAGE).toFloat()), listOf(), listOf(), listOf())
             )
         }
         return stack

@@ -140,7 +140,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
         level: BlockGetter,
         pos: BlockPos,
         context: CollisionContext
-    ): VoxelShape? {
+    ): VoxelShape {
 
         if (context is EntityCollisionContext) {
             val entity = context.entity

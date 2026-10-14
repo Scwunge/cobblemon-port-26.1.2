@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 
-class LobailaFlowerBlock(properties: Properties?) : TallFlowerBlock(properties), SimpleWaterloggedBlock {
+class LobailaFlowerBlock(properties: Properties) : TallFlowerBlock(properties), SimpleWaterloggedBlock {
 
     init {
         registerDefaultState(stateDefinition.any()

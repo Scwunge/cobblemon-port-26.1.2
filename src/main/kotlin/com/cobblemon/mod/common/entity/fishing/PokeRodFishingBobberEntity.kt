@@ -116,7 +116,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
         lure: Int,
         rodItemStack: ItemStack
     ) : this(CobblemonEntities.POKE_BOBBER, world) {
-        owner = thrower
+        setOwner(thrower)
         rodStack = rodItemStack
         luckOfTheSeaLevel = luckOfTheSea
         lureLevel = lure
@@ -450,13 +450,13 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
 
     fun stopCastingAudio() {
         if (!this.level().isClientSide) return
-        owner?.let { EntitySoundTracker.stop(it.id, this.castingSound.location) }
+        getOwner()?.let { EntitySoundTracker.stop(it.id, this.castingSound.location) }
     }
 
     // client instantiation
     override fun recreateFromPacket(clientboundAddEntityPacket: ClientboundAddEntityPacket) {
         super.recreateFromPacket(clientboundAddEntityPacket)
-        val owner = this.owner
+        val owner = getOwner()
         if (this.state == State.FLYING && owner != null) {  // starts casting sound when instantiated on client
             val toPlay =
                 EntityBoundSoundInstance(this.castingSound, SoundSource.PLAYERS, 1.0F, 1.0f, owner, this.random.nextLong())
@@ -625,7 +625,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                             .withParameter(LootContextParams.THIS_ENTITY, this)
                             .also {
                                 if (Cobblemon.implementation.modAPI != ModAPI.FABRIC) {
-                                    it.withParameter(LootContextParams.ATTACKING_ENTITY, owner)
+                                    it.withParameter(LootContextParams.ATTACKING_ENTITY, getOwner())
                                 }
                             }
                             .create(LootContextParamSets.FISHING)
@@ -824,7 +824,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                     if (bobberBait.isEmpty)
                         "empty_bait".asIdentifierDefaultingNamespace()
                     else
-                        bobberBait.itemHolder.unwrapKey().map { it.location() }.orElse("empty_bait".asIdentifierDefaultingNamespace())
+                        bobberBait.itemHolder.unwrapKey().map { it.identifier() }.orElse("empty_bait".asIdentifierDefaultingNamespace())
                 val pokemonId = spawnedPokemon.pokemon.species.resourceIdentifier
                 CobblemonCriteria.REEL_IN_POKEMON.trigger(player, ReelInPokemonContext(pokemonId, baitId))
 

@@ -145,7 +145,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = PokeSnackBlockEntity(pos, state)
 
-    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape? {
+    override fun getShape(state: BlockState, level: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape {
         val snackShapes = when (state.getValue(FACING)) {
             Direction.SOUTH -> SOUTH_SHAPES
             Direction.WEST -> WEST_SHAPES

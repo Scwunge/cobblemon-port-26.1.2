@@ -119,7 +119,7 @@ class FossilMultiblockStructure (
             if (this.hasCreatedPokemon) {
                 if (this.fossilOwnerUUID != null && player.uuid != this.fossilOwnerUUID) {
                     var ownerName : String = "UNKNOWN_USER" // TODO: lang agnostic fallback
-                    server()?.profileCache?.get(this.fossilOwnerUUID)?.orElse(null)?.name?.let {
+                    server()?.services()?.nameToIdCache()?.get(this.fossilOwnerUUID)?.orElse(null)?.name()?.let {
                         ownerName = it
                     }
                     player.sendSystemMessage(lang("fossilmachine.protected", ownerName), true)
@@ -288,7 +288,7 @@ class FossilMultiblockStructure (
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level?, pos: BlockPos?): Int {
         if(world == null || pos == null) {
             return 0
         }
@@ -639,7 +639,7 @@ class FossilMultiblockStructure (
         val ops = registryLookup.createSerializationContext(NbtOps.INSTANCE)
         fossilInventory.forEach { fossilInv.add(ItemStack.CODEC.encodeStart(ops, it).getOrThrow()) }
         result.put(DataKeys.FOSSIL_INVENTORY, fossilInv)
-        result.putString(DataKeys.CONNECTOR_DIRECTION, tankConnectorDirection?.toString())
+        tankConnectorDirection?.let { result.putString(DataKeys.CONNECTOR_DIRECTION, it.toString()) }
 
         if (this.resultingFossil != null) {
             result.putString(DataKeys.INSERTED_FOSSIL, this.resultingFossil!!.serializedName)
