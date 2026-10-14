@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.npc
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.client.entity.NPCClientDelegate
 import com.cobblemon.mod.common.client.render.item.HeldItemRenderer
 import com.cobblemon.mod.common.client.render.models.blockbench.PosableEntityModel
@@ -22,7 +25,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import net.minecraft.resources.Identifier
 import kotlin.math.min
 
-class NPCRenderer(context: Context) : LivingEntityRenderer<NPCEntity, PosableEntityModel<NPCEntity>>(context, PosableNPCModel(), 0.5f) {
+class NPCRenderer(context: Context) : LegacyLivingEntityRenderer<NPCEntity, PosableEntityModel<NPCEntity>>(context, PosableNPCModel(), 0.5f) {
     override fun getTextureLocation(entity: NPCEntity): Identifier {
         return VaryingModelRepository.getTexture(entity.resourceIdentifier, (entity.delegate as NPCClientDelegate))
     }

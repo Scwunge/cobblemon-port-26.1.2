@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.pokeball
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.client.entity.EmptyPokeBallClientDelegate
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.pokeball.PosablePokeBallModel
@@ -24,7 +27,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 
-class PokeBallRenderer(context: EntityRendererProvider.Context) : EntityRenderer<EmptyPokeBallEntity>(context) {
+class PokeBallRenderer(context: EntityRendererProvider.Context) : LegacyEntityRenderer<EmptyPokeBallEntity>(context) {
     val model = PosablePokeBallModel()
 
     override fun getTextureLocation(pEntity: EmptyPokeBallEntity): Identifier {

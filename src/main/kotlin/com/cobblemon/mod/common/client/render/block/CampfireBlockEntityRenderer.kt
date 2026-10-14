@@ -19,7 +19,7 @@ import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.client.renderer.block.dispatch.BlockStateModel
@@ -31,7 +31,7 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-class CampfireBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<CampfireBlockEntity> {
+class CampfireBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<CampfireBlockEntity> {
 
     companion object {
         const val CIRCLE_RADIUS = 0.4F

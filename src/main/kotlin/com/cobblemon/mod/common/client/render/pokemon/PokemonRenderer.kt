@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.pokemon
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.Cobblemon
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.OrientationControllable
@@ -69,7 +72,7 @@ import kotlin.math.*
 
 class PokemonRenderer(
     context: EntityRendererProvider.Context
-) : MobRenderer<PokemonEntity, PosablePokemonEntityModel>(context, PosablePokemonEntityModel(), 0.5f) {
+) : LegacyMobRenderer<PokemonEntity, PosablePokemonEntityModel>(context, PosablePokemonEntityModel(), 0.5f) {
     companion object {
         val recallBeamColour = Vector4f(1F, 0.1F, 0.1F, 1F)
         fun ease(x: Double): Double {
@@ -97,6 +100,11 @@ class PokemonRenderer(
         return VaryingModelRepository.getTexture(entity.pokemon.species.resourceIdentifier, entity.delegate as PokemonClientDelegate)
     }
 
+    // Shadows are computed when the render state is extracted, so the per-entity shadow radius is set beforehand.
+    override fun beforeExtract(entity: PokemonEntity, partialTicks: Float) {
+        shadowRadius = (min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).activeSendoutScale)/entity.scale
+    }
+
     override fun render(
         entity: PokemonEntity,
         entityYaw: Float,
@@ -106,7 +114,6 @@ class PokemonRenderer(
         packedLight: Int
     ) {
         val clientDelegate = entity.delegate as PokemonClientDelegate
-        shadowRadius = (min((entity.boundingBox.maxX - entity.boundingBox.minX), (entity.boundingBox.maxZ) - (entity.boundingBox.minZ)).toFloat() / 1.5F * (entity.delegate as PokemonClientDelegate).activeSendoutScale)/entity.scale
         model.posableModel = VaryingModelRepository.getPoser(entity.pokemon.species.resourceIdentifier, clientDelegate)
         model.posableModel.context = model.context
         model.setupEntityTypeContext(entity)

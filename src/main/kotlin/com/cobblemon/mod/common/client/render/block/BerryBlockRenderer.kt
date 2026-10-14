@@ -23,13 +23,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 
-class BerryBlockRenderer(private val context: BlockEntityRendererProvider.Context) : BlockEntityRenderer<BerryBlockEntity> {
+class BerryBlockRenderer(private val context: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<BerryBlockEntity> {
 
     val mulchModels = mutableMapOf(
         MulchVariant.COARSE to CobblemonBakingOverrides.COARSE_MULCH,

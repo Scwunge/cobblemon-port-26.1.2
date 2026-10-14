@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.boat
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
@@ -26,7 +29,7 @@ import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import org.joml.Quaternionf
 
-class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : EntityRenderer<CobblemonBoatEntity>(ctx) {
+class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : LegacyEntityRenderer<CobblemonBoatEntity>(ctx) {
 
     private val boatModels = hashMapOf<CobblemonBoatType, Pair<Identifier, BoatModel>>()
 

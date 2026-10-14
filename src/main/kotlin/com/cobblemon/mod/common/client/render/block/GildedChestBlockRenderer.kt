@@ -17,12 +17,12 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.world.level.block.state.properties.BlockStateProperties
 
-class GildedChestBlockRenderer(context: BlockEntityRendererProvider.Context) : BlockEntityRenderer<GildedChestBlockEntity> {
+class GildedChestBlockRenderer(context: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<GildedChestBlockEntity> {
     val context = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.BLOCK)
         it.put(RenderContext.DO_QUIRKS, true)

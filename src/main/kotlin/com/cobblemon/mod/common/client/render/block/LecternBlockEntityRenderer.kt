@@ -18,7 +18,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.core.Direction
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import net.minecraft.world.level.block.state.BlockState
 import org.spongepowered.asm.mixin.Unique
 
-class LecternBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<LecternBlockEntity> {
+class LecternBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<LecternBlockEntity> {
 
     @Unique
     private val MODEL_PATH = if (Cobblemon.implementation.modAPI == ModAPI.FABRIC) "fabric_resource" else "standalone"

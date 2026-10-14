@@ -53,7 +53,11 @@ import com.mojang.math.Axis
 import net.minecraft.util.Util
 import net.minecraft.client.model.geom.ModelPart
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.RenderStateShard
+import net.minecraft.client.Minecraft
+import net.minecraft.client.renderer.RenderPipelines
+import net.minecraft.client.renderer.rendertype.RenderSetup
+import com.cobblemon.mod.common.client.render.CobblemonRenderPipelines
+import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.client.renderer.rendertype.RenderType
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.Identifier
@@ -420,12 +424,22 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
 
     fun registerRelevantPart(pairing: Pair<String, ModelPart>) = registerRelevantPart(pairing.first, pairing.second)
 
-    /** Needed a custom one, so I can make it take in a dynamic texture instead of resource location */
-    class DynamicStateShard(texture: DynamicTexture) : RenderStateShard.EmptyTextureStateShard(Runnable {
-        RenderSystem.setShaderTexture(0, texture.id)
-    }, Runnable {
-        texture.close() // Cleanup
-    })
+    /**
+     * Interpolated animated textures are DynamicTextures built each frame. Render types reference textures by ID now,
+     * so each one is registered under one of a ring of IDs; it stays alive until its slot is reused (well after the
+     * frame it was drawn in), at which point the texture manager closes it, as the old render state shard did.
+     */
+    object DynamicLayerTextures {
+        private const val SLOTS = 512
+        private var next = 0
+
+        fun register(texture: DynamicTexture): Identifier {
+            val id = cobblemonResource("dynamic_layer/${next}")
+            next = (next + 1) % SLOTS
+            Minecraft.getInstance().textureManager.register(id, texture)
+            return id
+        }
+    }
 
     /** Renders the model. Assumes rotations have been set. Will simply render the base model and then any extra layers. */
     fun render(
@@ -468,7 +482,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
                     getScrollingLayer(texture, scrolling, layer)
                 } else if (layer.texture is AnimatedModelTextureSupplier && layer.texture.interpolation) {
                     val interpolatedTexture = layer.texture.interpolatedTexture(currentState ?: FloatingState()) ?: continue
-                    makeLayer(DynamicStateShard(interpolatedTexture), layer.emissive, layer.translucent, layer.translucent_cull)
+                    makeLayer(DynamicLayerTextures.register(interpolatedTexture), layer.emissive, layer.translucent, layer.translucent_cull)
                 } else {
                     getLayer(texture, layer.emissive, layer.translucent, layer.translucent_cull)
                 }
@@ -500,35 +514,30 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         return ItemDisplayContext.valueOf(displayContextString)
     }
 
-    /** Generates a [RenderType] by the power of god and anime. Only possible thanks to 100 access wideners. */
-    fun makeLayer(texture: RenderStateShard.EmptyTextureStateShard, emissive: Boolean, translucent: Boolean, translucentCull: Boolean): RenderType {
-        val multiPhaseParameters: RenderType.CompositeState = RenderType.CompositeState.builder()
-            .setShaderState(
-                when {
-                    emissive && translucent -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER
-                    !emissive && translucent && translucentCull -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_CULL_SHADER
-                    !emissive && translucent -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER
-                    !emissive && !translucent -> RenderStateShard.RENDERTYPE_ENTITY_CUTOUT_SHADER
-                    else -> RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER
-                }
-            )
-            .setTextureState(texture)
-            .setTransparencyState(if (translucent) RenderStateShard.TRANSLUCENT_TRANSPARENCY else RenderStateShard.NO_TRANSPARENCY)
-            .setLightmapState(if (!emissive) RenderStateShard.LIGHTMAP else RenderStateShard.LightmapStateShard(false))
-            .setCullState(RenderStateShard.CULL)
-            .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-            .setOverlayState(RenderStateShard.OVERLAY)
-            .createCompositeState(false)
-
-        return RenderType.create(
-            "cobblemon_entity_layer",
-            DefaultVertexFormat.NEW_ENTITY,
-            VertexFormat.Mode.QUADS,
-            256,
-            true,
-            translucent,
-            multiPhaseParameters
-        )
+    /**
+     * Generates a [RenderType] by the power of god and anime. Layers keep the 1.21.1 render state: culled, depth
+     * writing, blended only when translucent and without the lightmap when emissive (see [CobblemonRenderPipelines]).
+     */
+    fun makeLayer(texture: Identifier, emissive: Boolean, translucent: Boolean, translucentCull: Boolean): RenderType {
+        val pipeline = when {
+            emissive && translucent -> CobblemonRenderPipelines.LAYER_EMISSIVE_TRANSLUCENT
+            !emissive && translucent && translucentCull -> RenderPipelines.ENTITY_TRANSLUCENT_CULL
+            !emissive && translucent -> CobblemonRenderPipelines.LAYER_TRANSLUCENT
+            !emissive && !translucent -> RenderPipelines.ENTITY_CUTOUT_CULL
+            else -> CobblemonRenderPipelines.LAYER_EMISSIVE
+        }
+        val setup = RenderSetup.builder(pipeline)
+            .withTexture("Sampler0", texture)
+            .useOverlay()
+            .affectsCrumbling()
+            .bufferSize(256)
+        if (!emissive) {
+            setup.useLightmap()
+        }
+        if (translucent) {
+            setup.sortOnUpload()
+        }
+        return RenderType.create("cobblemon_entity_layer", setup.createRenderSetup())
     }
 
     /** Makes a [RenderType] in a jank way. Mostly works so that's cool. */
@@ -538,7 +547,7 @@ open class PosableModel(@Transient override val rootPart: Bone) : ModelFrame {
         } else if (!emissive && !translucentCull) {
             RenderTypes.entityTranslucent(texture)
         } else {
-            makeLayer(RenderStateShard.TextureStateShard(texture, false, false), emissive = emissive, translucent = translucent, translucentCull = translucentCull)
+            makeLayer(texture, emissive = emissive, translucent = translucent, translucentCull = translucentCull)
         }
     }
 

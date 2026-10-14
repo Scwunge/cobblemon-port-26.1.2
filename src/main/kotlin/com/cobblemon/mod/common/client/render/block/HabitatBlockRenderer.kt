@@ -27,14 +27,14 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.particles.ParticleTypes
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import net.minecraft.world.level.block.state.BlockState
 
-class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<HabitatBlockEntity> {
+class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<HabitatBlockEntity> {
     private companion object {
         const val SPECIES_CYCLE_TICKS = 60L
         const val VISUAL_Y_OFFSET = 0.22

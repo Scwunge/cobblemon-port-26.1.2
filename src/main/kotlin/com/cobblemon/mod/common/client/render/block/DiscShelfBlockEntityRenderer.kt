@@ -21,7 +21,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.Direction
 import net.minecraft.core.registries.BuiltInRegistries
@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock
 import org.joml.Matrix4f
 
 class DiscShelfBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) :
-        BlockEntityRenderer<DiscShelfBlockEntity> {
+        LegacyBlockEntityRenderer<DiscShelfBlockEntity> {
 
     private val slotWidthPixels = 6
     private val slotHeightPixels = 2

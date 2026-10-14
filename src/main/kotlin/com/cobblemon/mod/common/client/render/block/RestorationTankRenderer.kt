@@ -26,13 +26,13 @@ import com.mojang.math.Axis
 import kotlin.math.pow
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.core.Direction
 import net.minecraft.world.level.block.HorizontalDirectionalBlock
 
-class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<RestorationTankBlockEntity> {
+class RestorationTankRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<RestorationTankBlockEntity> {
     val context = RenderContext().also {
         it.put(RenderContext.DO_QUIRKS, true)
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.RESURRECTION_MACHINE)

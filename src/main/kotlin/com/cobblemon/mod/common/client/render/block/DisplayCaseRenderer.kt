@@ -19,7 +19,7 @@ import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
 import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.MultiBufferSource
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyBlockEntityRenderer
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider
 import net.minecraft.core.Direction
 import net.minecraft.core.component.DataComponents
@@ -27,7 +27,7 @@ import net.minecraft.world.item.*
 import net.minecraft.world.item.component.CustomModelData
 import net.minecraft.world.level.Level
 
-class DisplayCaseRenderer(ctx: BlockEntityRendererProvider.Context) : BlockEntityRenderer<DisplayCaseBlockEntity> {
+class DisplayCaseRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlockEntityRenderer<DisplayCaseBlockEntity> {
     val context = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
     }

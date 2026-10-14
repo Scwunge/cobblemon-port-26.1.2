@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.generic
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.client.entity.GenericBedrockClientDelegate
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.client.render.models.blockbench.generic.PosableGenericEntityModel
@@ -21,7 +24,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer
 import net.minecraft.client.renderer.entity.EntityRendererProvider
 import net.minecraft.client.renderer.texture.OverlayTexture
 
-class GenericBedrockRenderer(context: EntityRendererProvider.Context) : EntityRenderer<GenericBedrockEntity>(context) {
+class GenericBedrockRenderer(context: EntityRendererProvider.Context) : LegacyEntityRenderer<GenericBedrockEntity>(context) {
     val model = PosableGenericEntityModel()
     override fun getTextureLocation(entity: GenericBedrockEntity) = VaryingModelRepository.getTexture(entity.category, (entity.delegate as GenericBedrockClientDelegate))
     override fun render(entity: GenericBedrockEntity, yaw: Float, partialTicks: Float, poseStack: PoseStack, buffer: MultiBufferSource, packedLight: Int) {

@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.models.blockbench
 
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityModel
 import com.cobblemon.mod.common.client.render.models.blockbench.repository.RenderContext
 import com.cobblemon.mod.common.entity.PosableEntity
 import net.minecraft.client.renderer.texture.OverlayTexture
@@ -15,7 +17,6 @@ import net.minecraft.client.renderer.rendertype.RenderType
 import com.mojang.blaze3d.vertex.VertexConsumer
 import net.minecraft.client.renderer.entity.LivingEntityRenderer
 import com.mojang.blaze3d.vertex.PoseStack
-import net.minecraft.client.model.EntityModel
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.resources.Identifier
@@ -29,8 +30,8 @@ import net.minecraft.resources.Identifier
  * @since January 5th, 2024
  */
 abstract class PosableEntityModel<T : Entity>(
-    renderTypeFunc: (Identifier) -> RenderType = RenderType::entityCutout
-) : EntityModel<T>(renderTypeFunc) {
+    renderTypeFunc: (Identifier) -> RenderType = RenderTypes::entityCutoutCull
+) : LegacyEntityModel<T>(renderTypeFunc) {
     val context: RenderContext = RenderContext().also {
         it.put(RenderContext.RENDER_STATE, RenderContext.RenderState.WORLD)
     }

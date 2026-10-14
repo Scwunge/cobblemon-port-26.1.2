@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.entity
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
 import com.cobblemon.mod.common.api.fishing.PokeRods
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.api.pokeball.PokeBalls
@@ -35,7 +38,7 @@ import net.minecraft.world.item.ItemDisplayContext
 import org.joml.Quaternionf
 
 @Environment(value = EnvType.CLIENT)
-class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : EntityRenderer<PokeRodFishingBobberEntity>(context) {
+class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : LegacyEntityRenderer<PokeRodFishingBobberEntity>(context!!) {
 
     override fun render(fishingBobberEntity: PokeRodFishingBobberEntity, elapsedPartialTicks: Float, tickDelta: Float, matrixStack: PoseStack, vertexConsumerProvider: MultiBufferSource, light: Int) {
         var playerPosXWorld: Double
