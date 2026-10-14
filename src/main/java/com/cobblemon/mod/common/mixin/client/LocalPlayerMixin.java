@@ -42,6 +42,9 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
+import com.llamalad7.mixinextras.sugar.Local;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import java.util.function.Predicate;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -272,5 +275,18 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements O
         } else {
             return new Vector3f(0f, 0f, 0f);
         }
+    }
+
+    /** Don't pick the Pokémon being ridden. Picking moved from GameRenderer to LocalPlayer in 1.21.11. */
+    @ModifyArg(
+        method = "pick(Lnet/minecraft/world/entity/Entity;DDF)Lnet/minecraft/world/phys/HitResult;",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/projectile/ProjectileUtil;getEntityHitResult(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;D)Lnet/minecraft/world/phys/EntityHitResult;"
+        ),
+        index = 4
+    )
+    private static Predicate<Entity> filterPokemonVehicle(Predicate<Entity> original, @Local(ordinal = 0, argsOnly = true) Entity entity) {
+        return (entityX) -> !(entity.getVehicle() == entityX && entityX instanceof PokemonEntity) && original.test(entityX);
     }
 }

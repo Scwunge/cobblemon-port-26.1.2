@@ -35,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import java.util.Collection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,11 +57,14 @@ public abstract class LivingEntityMixin extends Entity implements OrientationCon
         return cobblemon$orientationController;
     }
 
-    @Inject(method = "onEffectRemoved", at = @At(value = "TAIL"))
-    private void cobblemon$onEffectRemoved(MobEffectInstance effect, CallbackInfo ci) {
+    // Effects are removed in batches since 1.21.2 (onEffectRemoved became onEffectsRemoved); once per removed effect, as before
+    @Inject(method = "onEffectsRemoved", at = @At(value = "TAIL"))
+    private void cobblemon$onEffectRemoved(Collection<MobEffectInstance> effects, CallbackInfo ci) {
         final LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayer) {
-            ShoulderEffectRegistry.INSTANCE.onEffectEnd((ServerPlayer) entity);
+            for (MobEffectInstance effect : effects) {
+                ShoulderEffectRegistry.INSTANCE.onEffectEnd((ServerPlayer) entity);
+            }
         }
     }
 

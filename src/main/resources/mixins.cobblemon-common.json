@@ -67,7 +67,6 @@
     "LevelChunkMixin",
     "LightningBoltMixin",
     "LivingEntityMixin",
-    "MinecraftDedicatedServerMixin",
     "MinecraftServerMixin",
     "NbtUtilsMixin",
     "NoteBlockMixin",

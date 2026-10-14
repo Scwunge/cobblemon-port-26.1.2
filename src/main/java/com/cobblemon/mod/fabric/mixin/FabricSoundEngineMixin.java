@@ -19,10 +19,12 @@ import net.minecraft.client.sounds.ChannelAccess;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// SoundEngine#play returns a PlayResult since 1.21.5 and its locals have their proper names since 26.1
 @Mixin(SoundEngine.class)
 public class FabricSoundEngineMixin {
     @Inject(method = "play",
@@ -34,15 +36,15 @@ public class FabricSoundEngineMixin {
     )
     private void cobblemon$overrideChannelExecute(
             SoundInstance sound,
-            CallbackInfo ci,
-            @Local(name = "h") float h,
-            @Local(name = "i") float i,
-            @Local(name = "g") float g,
-            @Local(name = "bl2") boolean bl2,
-            @Local(name = "bl3") boolean bl3,
-            @Local(name = "bl") boolean bl,
-            @Local(name = "vec3") Vec3 vec3,
-            @Local(name = "channelHandle") ChannelAccess.ChannelHandle handle
+            CallbackInfoReturnable<SoundEngine.PlayResult> ci,
+            @Local(name = "volume") float h,
+            @Local(name = "pitch") float i,
+            @Local(name = "attenuationDistance") float g,
+            @Local(name = "isLooping") boolean bl2,
+            @Local(name = "isStreaming") boolean bl3,
+            @Local(name = "isRelative") boolean bl,
+            @Local(name = "position") Vec3 vec3,
+            @Local(name = "handle") ChannelAccess.ChannelHandle handle
     ) {
         if (!(sound instanceof RideLoopSound rideSound)) return;
         if (handle == null) return;
@@ -80,8 +82,8 @@ public class FabricSoundEngineMixin {
     )
     private void cobblemon$applyAlphaReverb(
             SoundInstance sound,
-            CallbackInfo ci,
-            @Local(name = "channelHandle") ChannelAccess.ChannelHandle handle
+            CallbackInfoReturnable<SoundEngine.PlayResult> ci,
+            @Local(name = "handle") ChannelAccess.ChannelHandle handle
     ) {
         if (!(sound instanceof AlphaCrySoundInstance)) return;
         if (handle == null) return;
@@ -92,8 +94,9 @@ public class FabricSoundEngineMixin {
         );
     }
 
+    // SoundEngine#tickNonPaused became tickInGameSound in 1.21.6
     @Inject(
-            method = "tickNonPaused",
+            method = "tickInGameSound",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/sounds/ChannelAccess$ChannelHandle;execute(Ljava/util/function/Consumer;)V",
@@ -102,11 +105,11 @@ public class FabricSoundEngineMixin {
     )
     private void cobblemon$tickableSoundTick(
             CallbackInfo ci,
-            @Local(name = "tickableSoundInstance") TickableSoundInstance instance,
-            @Local(name = "channelHandle", ordinal = 0) ChannelAccess.ChannelHandle handle,
-            @Local(name = "f", ordinal = 0) float volume,
-            @Local(name = "g", ordinal = 0) float pitch,
-            @Local(name = "vec3", ordinal = 0) Vec3 vec3
+            @Local(name = "instance") TickableSoundInstance instance,
+            @Local(name = "handle") ChannelAccess.ChannelHandle handle,
+            @Local(name = "volume") float volume,
+            @Local(name = "pitch") float pitch,
+            @Local(name = "position") Vec3 vec3
     ) {
         if (!(instance instanceof RideLoopSound rideSound)) return;
 

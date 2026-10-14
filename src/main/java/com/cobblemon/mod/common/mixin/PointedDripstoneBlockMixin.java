@@ -22,10 +22,11 @@ public abstract class PointedDripstoneBlockMixin {
 
     @Redirect(
             method = "canGrow(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)Z",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0),
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z", ordinal = 0),
             slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/world/level/block/Blocks;DRIPSTONE_BLOCK:Lnet/minecraft/world/level/block/Block;"))
     )
-    private static boolean cobblemon$validateMoonStoneDripstone(BlockState instance, Block block) {
+    // BlockState#is(Block) is TypedInstance#is(T) since 1.21.9, which erases to is(Object)
+    private static boolean cobblemon$validateMoonStoneDripstone(BlockState instance, Object block) {
         return instance.is(CobblemonBlockTags.DRIPSTONE_GROWABLE);
     }
 

@@ -30,7 +30,7 @@ public abstract class LevelChunkMixin {
 
     @Inject(
         method = "setBlockState",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z", ordinal = 0)
     )
     private void cobblemon$legacyOnRemove(BlockPos pos, BlockState state, int flags, CallbackInfoReturnable<BlockState> cir, @Local(ordinal = 1) BlockState oldState) {
         if (!this.level.isClientSide() && oldState.getBlock() instanceof LegacyOnRemove block) {

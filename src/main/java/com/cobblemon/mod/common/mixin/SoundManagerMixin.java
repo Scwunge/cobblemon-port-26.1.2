@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -66,9 +67,10 @@ public abstract class SoundManagerMixin implements SoundManagerDuck {
     }
 
     /** Blocks filtered sounds from being played while a BattleMusicInstance is in progress. */
-    @Inject(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At("HEAD"), cancellable = true)
-    public void playStart(SoundInstance sound, CallbackInfo cb) {
-        if (filterCondition(sound)) cb.cancel();
+    // SoundManager#play reports whether the sound started since 1.21.5; a blocked sound didn't
+    @Inject(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;", at = @At("HEAD"), cancellable = true)
+    public void playStart(SoundInstance sound, CallbackInfoReturnable<SoundEngine.PlayResult> cb) {
+        if (filterCondition(sound)) cb.setReturnValue(SoundEngine.PlayResult.NOT_STARTED);
     }
 
     @Inject(method = "playDelayed(Lnet/minecraft/client/resources/sounds/SoundInstance;I)V", at = @At("HEAD"), cancellable = true)
@@ -77,8 +79,8 @@ public abstract class SoundManagerMixin implements SoundManagerDuck {
     }
 
     /** Pauses ambient loops while a BattleMusicInstance is in progress. */
-    @Inject(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At("TAIL"))
-    public void playEnd(SoundInstance sound, CallbackInfo cb) {
+    @Inject(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;", at = @At("TAIL"))
+    public void playEnd(SoundInstance sound, CallbackInfoReturnable<SoundEngine.PlayResult> cb) {
         if (ambientLoopCondition(sound)) this.pauseSounds(sound.getIdentifier(), SoundSource.AMBIENT);
     }
 

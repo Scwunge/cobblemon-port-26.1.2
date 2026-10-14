@@ -17,15 +17,20 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import com.cobblemon.mod.common.duck.EntityRenderStateSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.entity.state.ArmedEntityRenderState;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandLayer.class)
 public class ItemInHandLayerMixin {
-    @Inject(method = "renderArmWithItem", at = @At("HEAD"), cancellable = true)
-    private void cobblemon$hideRecallHandItem(LivingEntity entity, ItemStack itemStack, ItemDisplayContext itemDisplayContext, HumanoidArm humanoidArm, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, CallbackInfo ci) {
-        if (humanoidArm == HumanoidArm.RIGHT && RecallArmAnimationTracker.INSTANCE.isRecalling(entity.getUUID())) {
+    // renderArmWithItem became submitArmWithItem in 1.21.9; the entity comes from its render state
+    @Inject(method = "submitArmWithItem", at = @At("HEAD"), cancellable = true)
+    private void cobblemon$hideRecallHandItem(ArmedEntityRenderState state, ItemStackRenderState item, ItemStack itemStack, HumanoidArm humanoidArm, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int light, CallbackInfo ci) {
+        if (humanoidArm == HumanoidArm.RIGHT && ((EntityRenderStateSource) state).cobblemon$getEntity() instanceof LivingEntity entity && RecallArmAnimationTracker.INSTANCE.isRecalling(entity.getUUID())) {
             ci.cancel();
         }
     }

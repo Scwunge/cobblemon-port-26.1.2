@@ -28,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,11 +41,17 @@ public abstract class EntityMixin {
 
     @Shadow @Nullable public abstract Entity getVehicle();
 
-    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;wasTouchingWater:Z", ordinal = 1), cancellable = true)
-    public void cobblemon$verifyActuallyTouchingWater(CallbackInfo ci) {
-        if(this.getVehicle() instanceof PokemonEntity) {
-            ci.cancel();
+    /*
+     * Riders of Pokémon aren't touching water: no splash, no fall distance reset and not marked as in water. This used to
+     * cancel updateInWaterStateAndDoWaterCurrentPushing once the entity was found to be in water; that became
+     * updateFluidInteraction in 1.21.11, where the same follows from the entity not being in water.
+     */
+    @ModifyVariable(method = "updateFluidInteraction", at = @At("STORE"), ordinal = 0)
+    public boolean cobblemon$verifyActuallyTouchingWater(boolean inWater) {
+        if (this.getVehicle() instanceof PokemonEntity) {
+            return false;
         }
+        return inWater;
     }
 
     @WrapOperation(
