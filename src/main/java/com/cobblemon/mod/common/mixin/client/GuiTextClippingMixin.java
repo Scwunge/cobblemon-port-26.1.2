@@ -9,12 +9,11 @@
 package com.cobblemon.mod.common.mixin.client;
 
 import com.cobblemon.mod.common.client.render.TextClipping;
-import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Style;
+import net.minecraft.client.renderer.state.gui.GuiTextRenderState;
+import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 /**
  * This mixin facilitates the gradual reveal of text with NPC dialogue. If there is a better way
@@ -35,12 +34,28 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author Hiroku
  * @since April 18th, 2025
  */
-@Mixin(Font.StringRenderOutput.class)
-public class StringRenderOutputMixin {
-    @Inject(method = "accept", at = @At(value = "HEAD"), cancellable = true)
-    public void onAccept(int i, Style style, int j, CallbackInfoReturnable<Boolean> cir) {
-        if (!TextClipping.canDrawAnotherCharacter()) {
-            cir.setReturnValue(true);
+@Mixin(GuiTextRenderState.class)
+public class GuiTextClippingMixin {
+    /*
+     * Text drawn in GUIs is laid out after the GUI is extracted since 1.21.6, long after the character cap is reset, so
+     * Font.StringRenderOutput#accept can no longer see it. The characters are counted against the cap when the text is
+     * submitted instead, and the text keeps only those.
+     */
+    @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true)
+    private static FormattedCharSequence cobblemon$clipText(FormattedCharSequence text) {
+        if (TextClipping.isUnlimited()) {
+            return text;
         }
+        int[] allowed = { 0 };
+        text.accept((position, style, codepoint) -> {
+            if (!TextClipping.canDrawAnotherCharacter()) return false;
+            allowed[0]++;
+            return true;
+        });
+        int limit = allowed[0];
+        return sink -> {
+            int[] drawn = { 0 };
+            return text.accept((position, style, codepoint) -> drawn[0]++ < limit ? sink.accept(position, style, codepoint) : true);
+        };
     }
 }

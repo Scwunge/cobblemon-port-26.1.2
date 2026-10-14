@@ -8,10 +8,14 @@
 
 package com.cobblemon.mod.common.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.minecraft.server.level.ChunkMap;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
 import static com.cobblemon.mod.common.datafixer.CobblemonSchemas.VERSION_KEY;
 
 import com.cobblemon.mod.common.datafixer.CobblemonSchemas;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.serialization.MapCodec;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -24,46 +28,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
 import net.minecraft.world.level.storage.SavedDataStorage;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(SimpleRegionStorage.class)
+/*
+ * Chunk upgrading moved out of ChunkStorage in 1.21.9: ChunkMap#upgradeChunkTag upgrades a chunk to the current
+ * version through SimpleRegionStorage (which leaves current chunks untouched). Cobblemon's fixes run on the result,
+ * which covers both the outdated chunks this used to fix after vanilla and current chunks it fixed on their own.
+ */
+@Mixin(ChunkMap.class)
 public class ChunkStorageMixin {
-    //Modifies the NBT returned by the vanilla upgradeChunkTag to also incorporate cobblemon fixup stuff
-    @ModifyExpressionValue(
-        method = "upgradeChunkTag(Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Supplier;Lnet/minecraft/nbt/CompoundTag;Ljava/util/Optional;)Lnet/minecraft/nbt/CompoundTag;",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/datafix/DataFixTypes;updateToCurrentVersion(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/nbt/CompoundTag;I)Lnet/minecraft/nbt/CompoundTag;"
-        )
-    )
-    public CompoundTag cobblemon$doChunkFix(
-        CompoundTag vanillaFixed
-    ) {
-        int curVersion = vanillaFixed.contains(VERSION_KEY) ? vanillaFixed.getInt(VERSION_KEY) : 0;
+    @ModifyReturnValue(method = "upgradeChunkTag(Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;", at = @At("RETURN"))
+    public CompoundTag cobblemon$doChunkFix(CompoundTag vanillaFixed) {
+        int curVersion = vanillaFixed.getIntOr(VERSION_KEY, 0);
         return DataFixTypes.CHUNK.update(CobblemonSchemas.getDATA_FIXER(), vanillaFixed, curVersion, CobblemonSchemas.DATA_VERSION);
-    }
-
-    // Our update on the same MC version still needs its own fixes so run them here in that case.
-    @Inject(
-        method = "upgradeChunkTag(Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Supplier;Lnet/minecraft/nbt/CompoundTag;Ljava/util/Optional;)Lnet/minecraft/nbt/CompoundTag;",
-        at = @At("HEAD"),
-        cancellable = true
-    )
-    private void cobblemon$doChunkFixOnCurrentVersion(
-        ResourceKey<Level> levelKey,
-        Supplier<SavedDataStorage> storage,
-        CompoundTag chunkData,
-        Optional<ResourceKey<MapCodec<? extends ChunkGenerator>>> chunkGeneratorKey,
-        CallbackInfoReturnable<CompoundTag> cir
-    ) {
-        if (SimpleRegionStorage.getVersion(chunkData) != SharedConstants.getCurrentVersion().getDataVersion().getVersion()) {
-            return;
-        }
-        int curVersion = chunkData.contains(VERSION_KEY) ? chunkData.getInt(VERSION_KEY) : 0;
-        cir.setReturnValue(DataFixTypes.CHUNK.update(CobblemonSchemas.getDATA_FIXER(), chunkData, curVersion, CobblemonSchemas.DATA_VERSION));
     }
 }

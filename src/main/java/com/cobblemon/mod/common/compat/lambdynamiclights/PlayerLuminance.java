@@ -17,6 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import com.cobblemon.mod.common.util.PlayerExtensionsKt;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -46,8 +47,8 @@ public final class PlayerLuminance extends CustomLuminance implements EntityLumi
     }
 
     private @Range(from = 0L, to = 15L) static int shoulderLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Player player) {
-        final var leftShoulder = PokemonOnShoulderRenderer.shoulderDataFrom(player.getShoulderEntityLeft());
-        final var rightShoulder = PokemonOnShoulderRenderer.shoulderDataFrom(player.getShoulderEntityRight());
+        final var leftShoulder = PokemonOnShoulderRenderer.shoulderDataFrom(PlayerExtensionsKt.getShoulderEntityLeft(player));
+        final var rightShoulder = PokemonOnShoulderRenderer.shoulderDataFrom(PlayerExtensionsKt.getShoulderEntityRight(player));
 
         if (leftShoulder == null && rightShoulder == null) {
             return 0;

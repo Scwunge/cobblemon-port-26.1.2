@@ -127,16 +127,16 @@ public abstract class LivingEntityMixin extends Entity implements OrientationCon
     }
 
     @Override
-    public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
+    public void absSnapTo(double x, double y, double z, float yaw, float pitch) {
         if (cobblemon$orientationController.getActive()) {
-            this.absMoveTo(x, y, z);
+            this.absSnapTo(x, y, z);
             this.setYRot(yaw % 360.0f);
             this.setXRot(pitch % 360.0f);
             this.yRotO = this.getYRot();
             this.xRotO = this.getXRot();
         } else {
-            this.absMoveTo(x, y, z);
-            this.absRotateTo(yaw, pitch);
+            this.absSnapTo(x, y, z);
+            this.absSnapRotationTo(yaw, pitch);
         }
     }
 

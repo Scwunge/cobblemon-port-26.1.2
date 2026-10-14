@@ -74,13 +74,13 @@ public abstract class SoundEngineMixin implements SoundEngineDuck {
     public void resumeSounds(@Nullable Identifier id, @Nullable SoundSource category) {
         if (category != null) {
             this.instanceBySource.get(category).forEach((sound) -> {
-                if (id == null || sound.getLocation().equals(id)) resume(sound);
+                if (id == null || sound.getIdentifier().equals(id)) resume(sound);
             });
         } else if (id == null) {
             this.instanceToChannel.keySet().forEach(this::resume);
         } else {
             this.instanceToChannel.keySet().forEach(sound -> {
-                if (sound.getLocation().equals(id)) resume(sound);
+                if (sound.getIdentifier().equals(id)) resume(sound);
             });
         }
     }
@@ -90,13 +90,13 @@ public abstract class SoundEngineMixin implements SoundEngineDuck {
     public void pauseSounds(@Nullable Identifier id, @Nullable SoundSource category) {
         if (category != null) {
             this.instanceBySource.get(category).forEach((sound) -> {
-                if (id == null || sound.getLocation().equals(id)) pause(sound);
+                if (id == null || sound.getIdentifier().equals(id)) pause(sound);
             });
         } else if (id == null) {
             this.instanceToChannel.keySet().forEach(this::pause);
         } else {
             this.instanceToChannel.keySet().forEach(sound -> {
-                if (sound.getLocation().equals(id)) pause(sound);
+                if (sound.getIdentifier().equals(id)) pause(sound);
             });
         }
     }
@@ -116,7 +116,7 @@ public abstract class SoundEngineMixin implements SoundEngineDuck {
      */
     @Inject(method = "calculatePitch", at = @At("HEAD"), cancellable = true)
     private void cobblemon$allowExtendedNoteblockPitch(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
-        if (sound.getLocation().getPath().startsWith("block.note_block.")) {
+        if (sound.getIdentifier().getPath().startsWith("block.note_block.")) {
             cir.setReturnValue(Mth.clamp(sound.getPitch(), 0.5F, 4.0F));
         }
     }

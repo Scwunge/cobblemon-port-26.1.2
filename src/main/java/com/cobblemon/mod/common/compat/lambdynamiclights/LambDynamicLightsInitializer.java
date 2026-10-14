@@ -34,9 +34,5 @@ public class LambDynamicLightsInitializer implements DynamicLightsInitializer {
             ctx.register(EntityType.PLAYER, PlayerLuminance.INSTANCE);
         });
     }
-
-    @SuppressWarnings({"removal", "UnstableApiUsage"})
-    @Override
-    public void onInitializeDynamicLights(ItemLightSourceManager itemLightSourceManager) {}
 }
 

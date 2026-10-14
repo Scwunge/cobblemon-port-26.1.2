@@ -20,6 +20,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Unique;
+import org.jspecify.annotations.Nullable;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,16 +49,21 @@ public class HumanoidModelMixin {
     @Shadow @Final
     public ModelPart body;
 
-    @Inject(method = "setupAnim*", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/geom/ModelPart;copyFrom(Lnet/minecraft/client/model/geom/ModelPart;)V", shift = At.Shift.BEFORE))
-    public void cobblemon$animateRiders(
-        LivingEntity entity,
-        float limbSwing,
-        float limbSwingAmount,
-        float ageInTicks,
-        float netHeadYaw,
-        float headPitch,
-        CallbackInfo ci
-    ) {
+    /**
+     * Models are posed from a render state since 1.21.2, so the entity is looked up from the player render state's id.
+     * This used to run before the hat copied the head's pose, the last thing setupAnim did; the hat is a child of the
+     * head now, so that is the end of setupAnim.
+     */
+    @Unique
+    private static @Nullable LivingEntity cobblemon$entityOf(HumanoidRenderState state) {
+        if (!(state instanceof AvatarRenderState avatarState)) return null;
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return null;
+        return level.getEntity(avatarState.id) instanceof LivingEntity livingEntity ? livingEntity : null;
+    }
+
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At("TAIL"))
+    public void cobblemon$animateRiders(HumanoidRenderState renderState, CallbackInfo ci) {
         MountedPlayerRenderer.shouldApplyRootAnimation = false;
 
         if (MountedPlayerRenderer.relevantPartsByName.size() <= 1) {
@@ -65,23 +76,16 @@ public class HumanoidModelMixin {
             MountedPlayerRenderer.relevantPartsByName.put("torso", body);
         }
 
+        LivingEntity entity = cobblemon$entityOf(renderState);
+        if (entity == null) return;
+        float netHeadYaw = renderState.yRot;
+        float headPitch = renderState.xRot;
+
         Entity vehicle = entity.getVehicle();
         if (vehicle instanceof PokemonEntity pokemonEntity && entity instanceof OrientationControllable) {
             var shouldRotatePlayerHead = pokemonEntity.ifRidingAvailableSupply(false, (behaviour, settings, state) ->
                     behaviour.shouldRotateRiderHead(settings, state, pokemonEntity)
             );
-
-            // If the player is on a rollable ride then use the ride local rotations to rotate the head
-            // This is to allow the player head to face the correct direction when "freelooking"
-            // TODO: find a way for this to work on built jars without borking head rotations.
-//            if (entity instanceof RidePassenger playerRotater &&
-//                vehicle instanceof OrientationControllable controller &&
-//                controller.getOrientationController().isActive()) {
-//                this.head.xRot = playerRotater.cobblemon$getRideXRot();
-//                headPitch = playerRotater.cobblemon$getRideXRot();
-//                this.head.yRot = playerRotater.cobblemon$getRideYRot();
-//                netHeadYaw = playerRotater.cobblemon$getRideYRot();
-//            }
 
             if (!shouldRotatePlayerHead) {
                 netHeadYaw = 0f;
@@ -95,12 +99,13 @@ public class HumanoidModelMixin {
             if (!(entity instanceof AbstractClientPlayer player)) return;
 
             MountedPlayerRenderer.shouldApplyRootAnimation = true;
-            MountedPlayerRenderer.INSTANCE.animate((HumanoidModel<AbstractClientPlayer>)(Object)this, pokemonEntity, player, netHeadYaw, headPitch, ageInTicks, limbSwing, limbSwingAmount);
+            MountedPlayerRenderer.INSTANCE.animate((HumanoidModel<HumanoidRenderState>)(Object)this, renderState, pokemonEntity, player, netHeadYaw, headPitch, renderState.ageInTicks, renderState.walkAnimationPos, renderState.walkAnimationSpeed);
         }
     }
 
-    @Inject(method = "setupAnim*", at = @At("TAIL"))
-    public void cobblemon$poseRecallArm(LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
+    @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V", at = @At("TAIL"))
+    public void cobblemon$poseRecallArm(HumanoidRenderState renderState, CallbackInfo ci) {
+        LivingEntity entity = cobblemon$entityOf(renderState);
         if (!(entity instanceof AbstractClientPlayer) || entity.getVehicle() instanceof PokemonEntity) return;
         float raise = RecallArmAnimationTracker.INSTANCE.raiseFactor(entity.getUUID());
         if (raise <= 0f) return;

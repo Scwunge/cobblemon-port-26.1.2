@@ -202,12 +202,12 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements O
     @Inject(method = "aiStep", at = @At("HEAD"))
     private void cobblemon$aiStep(CallbackInfo ci) {
         this.cobblemon$isDoubleJumping = false;
-        this.cobblemon$isJumping = this.input.jumping;
+        this.cobblemon$isJumping = this.input.keyPresses.jump();
     }
 
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isSprinting()Z", shift = At.Shift.BEFORE))
     private void cobblemon$updateDoubleJumping(CallbackInfo ci) {
-        if (!this.cobblemon$isJumping && this.input.jumping && this.autoJumpTime <= 0 && !this.isSwimming()) {
+        if (!this.cobblemon$isJumping && this.input.keyPresses.jump() && this.autoJumpTime <= 0 && !this.isSwimming()) {
             if (this.cobblemon$survivalJumpTriggerTime != 0) {
                 this.cobblemon$isDoubleJumping = true;
                 this.cobblemon$survivalJumpTriggerTime = 0;

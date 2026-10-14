@@ -16,6 +16,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.Vec3;
@@ -30,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class CameraMixin implements CameraDuck {
     @Shadow private float eyeHeight;
     @Shadow private float eyeHeightOld;
-    @Shadow private BlockGetter level;
+    @Shadow private Level level;
     @Shadow private Entity entity;
     @Final @Shadow private Vector3f forwards;
     @Final @Shadow private Vector3f up;
@@ -60,9 +62,11 @@ public abstract class CameraMixin implements CameraDuck {
     @Override public float cobblemon$getYRot() { return yRot; }
     @Override public void cobblemon$setYRot(float yRot) { this.yRot = yRot; }
 
-    @WrapOperation(method = "setup", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V"))
-    public void cobblemon$positionCamera(Camera instance, double x, double y, double z, Operation<Void> original, @Local(ordinal = 1, argsOnly = true) boolean thirdPersonReverse) {
-        Entity entity = instance.getEntity();
+    // Camera#setup became Camera#update/alignWithEntity in 1.21.11, which works out whether the view is mirrored itself
+    @WrapOperation(method = "alignWithEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;setPosition(DDD)V"))
+    public void cobblemon$positionCamera(Camera instance, double x, double y, double z, Operation<Void> original) {
+        boolean thirdPersonReverse = Minecraft.getInstance().options.getCameraType().isMirrored();
+        Entity entity = instance.entity();
         Entity vehicle = entity.getVehicle();
         MountedPokemonAnimationRenderController.INSTANCE.reset();
 

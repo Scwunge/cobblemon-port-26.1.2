@@ -79,12 +79,12 @@ public abstract class SoundManagerMixin implements SoundManagerDuck {
     /** Pauses ambient loops while a BattleMusicInstance is in progress. */
     @Inject(method = "play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V", at = @At("TAIL"))
     public void playEnd(SoundInstance sound, CallbackInfo cb) {
-        if (ambientLoopCondition(sound)) this.pauseSounds(sound.getLocation(), SoundSource.AMBIENT);
+        if (ambientLoopCondition(sound)) this.pauseSounds(sound.getIdentifier(), SoundSource.AMBIENT);
     }
 
     @Inject(method = "playDelayed(Lnet/minecraft/client/resources/sounds/SoundInstance;I)V", at = @At("TAIL"))
     public void playEnd(SoundInstance sound, int delay, CallbackInfo cb) {
-        if (ambientLoopCondition(sound)) this.pauseSounds(sound.getLocation(), SoundSource.AMBIENT);
+        if (ambientLoopCondition(sound)) this.pauseSounds(sound.getIdentifier(), SoundSource.AMBIENT);
     }
 
     /** Clears tracked sounds on the client when disconnected. */

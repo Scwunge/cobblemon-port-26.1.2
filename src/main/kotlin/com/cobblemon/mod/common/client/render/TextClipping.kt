@@ -13,7 +13,7 @@ package com.cobblemon.mod.common.client.render
  * is about to occur.
  *
  * Usage: Run [doWithMaxCharacters] with the maximum number of characters that will be allowed to render,
- * or -1 for unlimited, and a mixin will ensure that a string renderer will only visit that many characters
+ * or -1 for unlimited, and a mixin will ensure that text submitted to the GUI will only keep that many characters
  * and cancel all those after.
  *
  * @author Hiroku
@@ -30,6 +30,9 @@ object TextClipping {
         acceptableRenderCount = -1
         renderedCount = 0
     }
+
+    @JvmStatic
+    fun isUnlimited() = acceptableRenderCount == -1
 
     @JvmStatic
     fun canDrawAnotherCharacter(): Boolean {

@@ -10,56 +10,51 @@ package com.cobblemon.mod.common.mixin;
 
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonVillagerProfessions;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.cobblemon.mod.common.duck.VillagerNameHolder;
+import com.llamalad7.mixinextras.sugar.Local;
 import kotlin.Pair;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.client.renderer.entity.state.VillagerDataHolderRenderState;
+import net.minecraft.client.renderer.entity.state.ZombieVillagerRenderState;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.zombie.ZombieVillager;
-import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+/**
+ * Villagers of a Cobblemon profession whose name matches its name tag override use the override's texture instead of
+ * the profession's. This used to cancel the draw and draw the override texture itself; models are submitted with their
+ * texture since 1.21.9, so the texture is swapped on the way in. The villager comes from its render state.
+ */
 @Mixin(RenderLayer.class)
 public abstract class VillagerProfessionLayerMixin {
-    @Inject(method = "renderColoredCutoutModel", at = @At(value = "HEAD"), cancellable = true)
-    private static <T extends LivingEntity> void cobblemon$renderVillagerProfessionLayer(EntityModel<T> entityModel, Identifier resourceLocation, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, T livingEntity, int j, CallbackInfo ci) {
-        if (resourceLocation.getNamespace().equals(Cobblemon.MODID)) {
-            VillagerProfession profession = null;
-            boolean isZombie = false;
+    @ModifyVariable(method = "renderColoredCutoutModel", at = @At("HEAD"), argsOnly = true)
+    private static Identifier cobblemon$renderVillagerProfessionLayer(Identifier resourceLocation, @Local(argsOnly = true) LivingEntityRenderState state) {
+        if (resourceLocation.getNamespace().equals(Cobblemon.MODID) && state instanceof VillagerDataHolderRenderState holder) {
+            VillagerData villagerData = holder.getVillagerData();
+            if (villagerData == null) return resourceLocation;
+            Holder<VillagerProfession> profession = villagerData.profession();
+            boolean isZombie = state instanceof ZombieVillagerRenderState;
 
-            if (livingEntity instanceof Villager) profession = ((Villager) livingEntity).getVillagerData().getProfession();
-            if (livingEntity instanceof ZombieVillager) {
-                profession = ((ZombieVillager) livingEntity).getVillagerData().getProfession();
-                isZombie = true;
-            }
-
-            Pair<String, String[]> override = CobblemonVillagerProfessions.INSTANCE.getNameTagOverride(profession);
-            if (profession != null && override != null) {
-                String entityName = ChatFormatting.stripFormatting(livingEntity.getName().getString());
+            Pair<String, String[]> override = CobblemonVillagerProfessions.INSTANCE.getNameTagOverride(profession.value());
+            if (override != null && profession.unwrapKey().isPresent()) {
+                String entityName = state instanceof VillagerNameHolder nameHolder ? nameHolder.cobblemon$getEntityName() : "";
                 boolean nameMatches = false;
                 for (String name: override.getSecond())
                     if (entityName.endsWith(name)) {
                         nameMatches = true;
                         break;
                     }
-                if (nameMatches && resourceLocation.equals(getProfessionResourceLocation(resourceLocation.getNamespace(), Identifier.parse(profession.name()).getPath(), isZombie))) {
-                    Identifier textureLocation = getProfessionResourceLocation(resourceLocation.getNamespace(), override.getFirst(), isZombie);
-                    VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.entityCutoutNoCull(textureLocation));
-                    entityModel.renderToBuffer(poseStack, vertexConsumer, i, LivingEntityRenderer.getOverlayCoords(livingEntity, 0.0F), j);
-                    ci.cancel();
+                if (nameMatches && resourceLocation.equals(getProfessionResourceLocation(resourceLocation.getNamespace(), profession.unwrapKey().get().identifier().getPath(), isZombie))) {
+                    return getProfessionResourceLocation(resourceLocation.getNamespace(), override.getFirst(), isZombie);
                 }
             }
         }
+        return resourceLocation;
     }
 
     private static Identifier getProfessionResourceLocation(String namespace, String profession, Boolean isZombie) {

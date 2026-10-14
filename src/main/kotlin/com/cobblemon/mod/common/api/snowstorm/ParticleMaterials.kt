@@ -43,7 +43,8 @@ object ParticleMaterials {
     val BLEND = Material("blend", BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA), cull = false)
     val OPAQUE = Material("opaque", BlendFunction(SourceFactor.SRC_COLOR, DestFactor.ZERO), cull = true)
 
-    val ALL = listOf(ALPHA, OPAQUE, BLEND, ADD)
+    // The order ParticleManagerMixin appended them to vanilla's render order in 1.21.1
+    val ALL = listOf(ADD, ALPHA, BLEND, OPAQUE)
 
     /** Registers the particle groups of the materials, rendered after vanilla's particles in the order of [ALL]. */
     fun register() {

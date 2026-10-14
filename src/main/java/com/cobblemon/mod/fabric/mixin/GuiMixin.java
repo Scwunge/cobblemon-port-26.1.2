@@ -16,7 +16,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.LayeredDraw;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GuiMixin {
     private Long lastTimeMillis = null;
 
-    @Inject(method = "renderCameraOverlays", at = @At("HEAD"))
+    @Inject(method = "extractCameraOverlays", at = @At("HEAD"))
     private void beforeChatHook(GuiGraphicsExtractor context, DeltaTracker tickCounter, CallbackInfo ci) {
         if (lastTimeMillis != null) {
             CobblemonClient.INSTANCE.beforeChatRender(context, (System.currentTimeMillis() - lastTimeMillis) / 1000F * 20);
@@ -40,23 +40,16 @@ public class GuiMixin {
         lastTimeMillis = System.currentTimeMillis();
     }
 
-    //Modifies the render condition passed in the LayeredDraw so the layer doesnt render when pokedex is open
-    @WrapOperation(
-        method = "<init>(Lnet/minecraft/client/Minecraft;)V",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/LayeredDraw;add(Lnet/minecraft/client/gui/LayeredDraw;Ljava/util/function/BooleanSupplier;)Lnet/minecraft/client/gui/LayeredDraw;")
+    // Hides the HUD while the Pokédex scanner is open in first person. Gui was a LayeredDraw whose two hideGui-gated
+    // layers this used to wrap; it extracts directly since 1.21.6, so the same hideGui checks are wrapped instead.
+    @ModifyExpressionValue(
+        method = "extractRenderState",
+        at = @At(value = "FIELD", target = "Lnet/minecraft/client/Options;hideGui:Z")
     )
-    private LayeredDraw cobblemon$dontRenderUiInPokedex(
-        LayeredDraw instance,
-        LayeredDraw layeredDraw,
-        BooleanSupplier renderInner,
-        Operation<LayeredDraw> original
-    ) {
-        BooleanSupplier newBool = () -> {
-            if (CobblemonClient.INSTANCE.getPokedexUsageContext().getScanningGuiOpen() && Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
-                return false;
-            }
-            return renderInner.getAsBoolean();
-        };
-        return original.call(instance, layeredDraw, newBool);
+    private boolean cobblemon$dontRenderUiInPokedex(boolean hideGui) {
+        if (CobblemonClient.INSTANCE.getPokedexUsageContext().getScanningGuiOpen() && Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
+            return true;
+        }
+        return hideGui;
     }
 }

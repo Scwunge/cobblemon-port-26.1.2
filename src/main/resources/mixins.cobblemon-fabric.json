@@ -6,7 +6,6 @@
   "plugin": "com.cobblemon.mod.fabric.mixin.MixinConfigPlugin",
   "client": [
     "FabricCameraMixin",
-    "GameRendererMixin",
     "GuiMixin"
   ],
   "mixins": [

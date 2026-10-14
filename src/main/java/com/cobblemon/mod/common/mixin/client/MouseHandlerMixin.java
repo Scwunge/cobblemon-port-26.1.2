@@ -29,6 +29,7 @@ import net.minecraft.util.SmoothDouble;
 import net.minecraft.world.phys.Vec3;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
+import org.joml.Vector2i;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -42,7 +43,6 @@ import static net.minecraft.util.Mth.lerp;
 
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
-    @Shadow private double accumulatedScrollY;
     @Shadow @Final private Minecraft minecraft;
 
     @Unique SmoothDouble xMouseSmoother = new SmoothDouble();
@@ -67,28 +67,29 @@ public abstract class MouseHandlerMixin {
 
     @Unique private double cobblemon$timeDelta;
 
+    /*
+     * Scrolling is accumulated into whole steps by a ScrollWheelHandler since 1.21.2, which hands onScroll the steps
+     * (only when there are some). These ran where onScroll consumed its own accumulated steps and where it moved the
+     * selected hotbar slot, and still do.
+     */
     @Inject(
             method = "onScroll",
             at = @At(
-                    value = "FIELD",
-                    target="Lnet/minecraft/client/MouseHandler;accumulatedScrollY:D",
-                    opcode = Opcodes.PUTFIELD,
-                    ordinal = 2,
-                    shift = At.Shift.BEFORE
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/player/LocalPlayer;isSpectator()Z",
+                    ordinal = 0
             ),
             cancellable = true
     )
-    public void cobblemon$scrollParty(long window, double horizontal, double vertical, CallbackInfo ci) {
+    public void cobblemon$scrollParty(long window, double horizontal, double vertical, CallbackInfo ci, @Local Vector2i wheelXY) {
         if (PartySendBinding.INSTANCE.getWasDown()) {
-            int i = (int) accumulatedScrollY;
+            int i = wheelXY.y;
             if (i > 0) {
-                accumulatedScrollY -= i;
                 CobblemonClient.INSTANCE.getStorage().shiftSelected(false);
                 ci.cancel();
                 PartySendBinding.INSTANCE.actioned();
                 PartyTutorialToasts.INSTANCE.onHoldKeyScrollSwitchedSlot();
             } else if (i < 0) {
-                accumulatedScrollY -= i;
                 CobblemonClient.INSTANCE.getStorage().shiftSelected(true);
                 ci.cancel();
                 PartySendBinding.INSTANCE.actioned();
@@ -101,7 +102,7 @@ public abstract class MouseHandlerMixin {
         method = "onScroll",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/player/Inventory;swapPaint(D)V"
+            target = "Lnet/minecraft/world/entity/player/Inventory;setSelectedSlot(I)V"
         ),
         cancellable = true
     )
@@ -136,7 +137,7 @@ public abstract class MouseHandlerMixin {
             var spyglassSensitivity = Math.pow(defaultSensitivity, 3);
             var lookSensitivity = spyglassSensitivity * 8.0;
             var sensitivity = lerp(usageContext.getFovMultiplier(), spyglassSensitivity, lookSensitivity);
-            var yRotationFlip = this.minecraft.options.invertYMouse().get() ? -1 : 1;
+            var yRotationFlip = this.minecraft.options.invertMouseY().get() ? -1 : 1;
             player.turn(this.accumulatedDX * sensitivity, (this.accumulatedDY * sensitivity * yRotationFlip));
             returnValue = false;
         }
