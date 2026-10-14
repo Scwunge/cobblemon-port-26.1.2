@@ -150,6 +150,7 @@ object CobblemonClient {
 
         this.registerBlockEntityRenderers()
         registerBlockRenderTypes()
+        this.createBoatModelLayers()
         registerColors()
         registerFlywheelRenderers()
         this.registerEntityRenderers()
