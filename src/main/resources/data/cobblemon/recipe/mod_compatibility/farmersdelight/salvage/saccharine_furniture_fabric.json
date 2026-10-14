@@ -42,9 +42,7 @@
         "fabric:type": "farmersdelight:item_ability",
         "action": "axe_dig"
       },
-      {
-        "tag": "minecraft:axes"
-      }
+      "#minecraft:axes"
     ]
   }
 }

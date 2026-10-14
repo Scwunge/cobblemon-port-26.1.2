@@ -2,7 +2,8 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "cobblemon:block/berries/eggant_tree"
+		"1": "cobblemon:block/berries/eggant_tree",
+		"particle": "#1"
 	},
 	"elements": [
 		{

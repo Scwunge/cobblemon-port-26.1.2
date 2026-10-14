@@ -37,9 +37,7 @@
         "fabric:type": "farmersdelight:item_ability",
         "action": "knife_dig"
       },
-      {
-        "tag": "c:tools/knife"
-      }
+      "#c:tools/knife"
     ]
   }
 }
