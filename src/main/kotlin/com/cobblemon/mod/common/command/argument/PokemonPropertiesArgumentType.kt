@@ -30,7 +30,8 @@ class PokemonPropertiesArgumentType: ArgumentType<PokemonProperties> {
         fun properties() = PokemonPropertiesArgumentType()
 
         fun <S> getPokemonProperties(context: CommandContext<S>, name: String): PokemonProperties {
-            return context.getArgument(name, PokemonProperties::class.java)
+            // Functions are parsed while data loads, before species are registered, so parse again when the command runs.
+            return PokemonProperties.parse(context.getArgument(name, PokemonProperties::class.java).originalString)
         }
     }
 
