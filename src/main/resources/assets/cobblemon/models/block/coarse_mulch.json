@@ -1,6 +1,7 @@
 {
   "parent": "cobblemon:block/mulch",
   "textures": {
-    "0": "cobblemon:block/crops/coarse_mulch"
+    "0": "cobblemon:block/crops/coarse_mulch",
+    "particle": "#0"
   }
 }
