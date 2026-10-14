@@ -96,8 +96,8 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         PokemonProperties.parse((result.species.forms.find { it.name == nbt.getStringOr("Variant", "") } ?: result.species.standardForm).name).apply(result)
 
         result.gender = Gender.values()[nbt.getIntOr("Gender", 0)]
-        result.shiny = this.find(nbt, "IsShiny", CompoundTag::getBoolean) ?:
-                        this.find(nbt, "palette", CompoundTag::getString)?.equals("shiny") ?: false
+        result.shiny = this.find(nbt, "IsShiny", { n, k -> n.getBoolean(k).orElse(null) }) ?:
+                        this.find(nbt, "palette", { n, k -> n.getString(k).orElse(null) })?.equals("shiny") ?: false
         result.level = nbt.getIntOr("Level", 0)
         result.addExperience(SidemodExperienceSource("Reforged"), nbt.getIntOr("EXP", 0))
         result.setFriendship(nbt.getIntOr("Friendship", 0))
@@ -145,7 +145,7 @@ class ReforgedConversion(val base: Path) : CobblemonConverter<CompoundTag> {
         // TODO - Nicknames and Original Trainer Data
         // result.nickname = this.find(nbt, "Nickname", NbtCompound::getString)
 
-        val ball = this.find(nbt, "CaughtBall", CompoundTag::getString)
+        val ball = this.find(nbt, "CaughtBall", { n, k -> n.getString(k).orElse(null) })
         result.caughtBall = if(ball != null) PokeBalls.getPokeBall(Identifier.parse(ball)) ?: PokeBalls.POKE_BALL else PokeBalls.POKE_BALL
 
         return result

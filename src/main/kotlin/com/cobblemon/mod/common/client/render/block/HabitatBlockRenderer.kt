@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import net.minecraft.client.renderer.block.MovingBlockRenderState
+import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
+import com.cobblemon.mod.common.client.render.legacy.DeferredBufferSource
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.block.habitat.HabitatBlockEntity
@@ -23,7 +26,6 @@ import kotlin.math.pow
 import kotlin.math.sin
 import net.minecraft.client.Minecraft
 import net.minecraft.client.multiplayer.ClientLevel
-import net.minecraft.client.renderer.ItemBlockRenderTypes
 import net.minecraft.client.renderer.LevelRenderer
 import net.minecraft.client.renderer.MultiBufferSource
 import net.minecraft.client.renderer.rendertype.RenderType
@@ -87,24 +89,20 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlo
         val viewerHoldingHabitatBlock = (player?.mainHandItem ?: player?.offhandItem)?.item == CobblemonItems.HABITAT_BLOCK
         val stateToRender: BlockState = if (viewerHoldingHabitatBlock) entity.blockState else entity.mimickedState
         val level = entity.level ?: return
-        val isSolidRender = if (viewerHoldingHabitatBlock) false else stateToRender.isSolidRender()
-        val renderType = if (viewerHoldingHabitatBlock) {
-            RenderType.cutout()
-        } else {
-            runCatching { ItemBlockRenderTypes.getChunkRenderType(stateToRender) }
-                .getOrElse { if (isSolidRender) RenderType.solid() else RenderType.translucent() }
+        // Block models are submitted as "moving blocks" since 1.21.9: tesselated with the level's light, without culling
+        // against neighbours (as renderBatched did with checkSides = false). The chunk layer follows the model's textures.
+        val movingBlock = MovingBlockRenderState()
+        movingBlock.randomSeedPos = entity.blockPos
+        movingBlock.blockPos = entity.blockPos
+        movingBlock.blockState = stateToRender
+        if (level is ClientLevel) {
+            movingBlock.biome = level.getBiome(entity.blockPos)
+            movingBlock.cardinalLighting = level.cardinalLighting()
+            movingBlock.lightEngine = level.lightEngine
         }
 
         poseStack.pushPose()
-        Minecraft.getInstance().blockRenderer.renderBatched(
-            stateToRender,
-            entity.blockPos,
-            level,
-            poseStack,
-            bufferSource.getBuffer(renderType),
-            false,
-            level.random
-        )
+        (bufferSource as DeferredBufferSource).submitNodeCollector.submitMovingBlock(poseStack, movingBlock)
         poseStack.popPose()
 
         if (viewerHoldingHabitatBlock) {
@@ -142,7 +140,7 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlo
             habitatEntity.blockPos.y + VISUAL_Y_OFFSET + MODEL_Y_ADJUST + 0.4,
             habitatEntity.blockPos.z + 0.5
         )
-        val entityLight = LevelRenderer.getLightColor(level, habitatEntity.blockPos.above())
+        val entityLight = LevelRenderer.getLightCoords(level, habitatEntity.blockPos.above())
 
         poseStack.pushPose()
         poseStack.translate(0.5, VISUAL_Y_OFFSET + MODEL_Y_ADJUST, 0.5)
@@ -153,10 +151,10 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlo
         poseStack.mulPose(Axis.XP.rotationDegrees(SPAWNER_X_TILT_DEGREES))
         poseStack.scale(scale, scale, scale)
 
-        val dispatcher = Minecraft.getInstance().entityRenderDispatcher
-        dispatcher.setRenderShadow(false)
-        dispatcher.render(pokemonEntity, 0.0, 0.0, 0.0, 0F, partialTicks, poseStack, bufferSource, entityLight)
-        dispatcher.setRenderShadow(true)
+        // Rendered without a shadow, as before.
+        @Suppress("UNCHECKED_CAST")
+        val renderer = Minecraft.getInstance().entityRenderDispatcher.getRenderer(pokemonEntity) as LegacyEntityRenderer<PokemonEntity>
+        renderer.render(pokemonEntity, 0F, partialTicks, poseStack, bufferSource, entityLight)
         poseStack.popPose()
 
         emitSpawnerParticles(level, posKey, habitatEntity.blockPos.x, habitatEntity.blockPos.y, habitatEntity.blockPos.z)

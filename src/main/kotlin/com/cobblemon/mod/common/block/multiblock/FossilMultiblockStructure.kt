@@ -210,7 +210,7 @@ class FossilMultiblockStructure (
                     stack?.shrink(1)
                     player.giveOrDropItemStack(
                         ItemStack(
-                            BuiltInRegistries.ITEM.get(
+                            BuiltInRegistries.ITEM.getValue(
                                 returnItem
                             )
                         ), false)

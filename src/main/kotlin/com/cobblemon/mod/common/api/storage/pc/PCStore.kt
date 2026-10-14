@@ -185,10 +185,10 @@ open class PCStore(
         removeDuplicates()
 
         if (nbt.contains(DataKeys.STORE_UNLOCKED_WALLPAPERS)) {
-            unlockedWallpapers.addAll(nbt.getListOrEmpty(DataKeys.STORE_UNLOCKED_WALLPAPERS).map { Identifier.parse(it.asString) })
+            unlockedWallpapers.addAll(nbt.getListOrEmpty(DataKeys.STORE_UNLOCKED_WALLPAPERS).map { Identifier.parse(it.asString().orElse("")) })
         }
         if (nbt.contains(DataKeys.STORE_UNSEEN_WALLPAPERS)) {
-            unseenWallpapers.addAll(nbt.getListOrEmpty(DataKeys.STORE_UNSEEN_WALLPAPERS).map { Identifier.parse(it.asString) })
+            unseenWallpapers.addAll(nbt.getListOrEmpty(DataKeys.STORE_UNSEEN_WALLPAPERS).map { Identifier.parse(it.asString().orElse("")) })
         }
         return this
     }

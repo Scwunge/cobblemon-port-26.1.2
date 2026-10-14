@@ -139,7 +139,7 @@ class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
         }
     }
 
-    override fun <T: BlockEntity?> getTicker(level: Level, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
+    override fun <T : BlockEntity> getTicker(level: Level, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
         return if (type == CobblemonBlockEntities.FOSSIL_MULTIBLOCK) {
             FossilMultiblockEntity.TICKER as BlockEntityTicker<T>
         } else {

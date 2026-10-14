@@ -104,7 +104,7 @@ class BehaviourConfigurationContext {
             .addFunction("entity") { entity.asMostSpecificMoLangValue() }
             .addFunction("create_activity") { params ->
                 val name = params.getString(0).asIdentifierDefaultingNamespace()
-                val activity = entity.level().activityRegistry.get(name) ?: return@addFunction run {
+                val activity = entity.level().activityRegistry.getValue(name) ?: return@addFunction run {
                     Cobblemon.LOGGER.error("Tried loading activity $name as part of an entity brain but that activity does not exist")
                     DoubleValue.ZERO
                 }

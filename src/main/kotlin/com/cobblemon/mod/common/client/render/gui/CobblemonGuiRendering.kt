@@ -122,6 +122,42 @@ class FloatBlitRenderState(
     override fun bounds() = bounds
 }
 
+/** A flat coloured triangle (drawn as a quad whose last two corners coincide). */
+class ColoredTriangleRenderState(
+    private val pose: Matrix3x2fc,
+    private val x0: Float, private val y0: Float,
+    private val x1: Float, private val y1: Float,
+    private val x2: Float, private val y2: Float,
+    private val color: Int,
+    private val scissorArea: ScreenRectangle?
+) : GuiElementRenderState {
+    private val bounds: ScreenRectangle? = run {
+        val ix0 = floor(minOf(x0, x1, x2)).toInt()
+        val iy0 = floor(minOf(y0, y1, y2)).toInt()
+        val ix1 = ceil(maxOf(x0, x1, x2)).toInt()
+        val iy1 = ceil(maxOf(y0, y1, y2)).toInt()
+        val rect = ScreenRectangle(ix0, iy0, ix1 - ix0, iy1 - iy0).transformMaxBounds(pose)
+        if (scissorArea != null) scissorArea.intersection(rect) else rect
+    }
+
+    override fun buildVertices(vertexConsumer: VertexConsumer) {
+        vertexConsumer.addVertexWith2DPose(pose, x0, y0).setColor(color)
+        vertexConsumer.addVertexWith2DPose(pose, x1, y1).setColor(color)
+        vertexConsumer.addVertexWith2DPose(pose, x2, y2).setColor(color)
+        vertexConsumer.addVertexWith2DPose(pose, x2, y2).setColor(color)
+    }
+
+    override fun pipeline(): RenderPipeline = RenderPipelines.GUI
+    override fun textureSetup(): TextureSetup = TextureSetup.noTexture()
+    override fun scissorArea() = scissorArea
+    override fun bounds() = bounds
+}
+
+/** Submits a flat coloured triangle in screen coordinates (the current pose is not applied). */
+fun GuiGraphicsExtractor.fillTriangle(x0: Float, y0: Float, x1: Float, y1: Float, x2: Float, y2: Float, color: Int) {
+    guiRenderState.addGuiElement(ColoredTriangleRenderState(Matrix3x2f(), x0, y0, x1, y1, x2, y2, color, scissorStack.peek()))
+}
+
 /** Submits a float-precision textured quad. */
 fun GuiGraphicsExtractor.blitFloat(
     texture: Identifier,

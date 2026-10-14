@@ -24,7 +24,7 @@ class RegistryElementAdapter<T : Any>(val registryProvider: () -> Registry<T>) :
     override fun deserialize(jElement: JsonElement, type: Type, context: JsonDeserializationContext): T {
         val identifier = context.deserialize<Identifier>(jElement, Identifier::class.java)
         val registry = this.registryProvider()
-        return registry.get(identifier) ?: throw IllegalArgumentException("Cannot resolve element '$identifier' from ${registry.key().identifier()}")
+        return registry.getValue(identifier) ?: throw IllegalArgumentException("Cannot resolve element '$identifier' from ${registry.key().identifier()}")
     }
 
     override fun serialize(element: T, type: Type, context: JsonSerializationContext): JsonElement {

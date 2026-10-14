@@ -22,10 +22,11 @@ class CampfirePotJeiProvider : CobblemonJeiProvider {
     }
 
     override fun registerRecipes(registration: IRecipeRegistration) {
-        val recipeManger = Minecraft.getInstance().level?.recipeManager ?: throw IllegalStateException("Recipe manager not found")
+        // Clients only know synchronized recipes since 1.21.2, Cobblemon synchronizes its recipe types.
+        val recipeManger = Minecraft.getInstance().level?.recipeAccess()?.synchronizedRecipes ?: throw IllegalStateException("Recipe manager not found")
 
-        val shapelessRecipes = recipeManger.getAllRecipesFor(CobblemonRecipeTypes.COOKING_POT_SHAPELESS).map { it.value }
-        val cookingRecipes = recipeManger.getAllRecipesFor(CobblemonRecipeTypes.COOKING_POT_COOKING).map { it.value }
+        val shapelessRecipes = recipeManger.getAllOfType(CobblemonRecipeTypes.COOKING_POT_SHAPELESS).map { it.value() }
+        val cookingRecipes = recipeManger.getAllOfType(CobblemonRecipeTypes.COOKING_POT_COOKING).map { it.value() }
 
         registration.addRecipes(CampfirePotRecipeCategory.RECIPE_TYPE, shapelessRecipes)
         registration.addRecipes(CampfirePotRecipeCategory.RECIPE_TYPE, cookingRecipes)

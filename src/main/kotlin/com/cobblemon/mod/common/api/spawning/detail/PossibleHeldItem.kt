@@ -37,7 +37,7 @@ class PossibleHeldItem(
                 null
             }
         } else {
-            itemRegistry.get(Identifier.parse(item))?.takeIf { it != Items.AIR }
+            itemRegistry.getValue(Identifier.parse(item))?.takeIf { it != Items.AIR }
         } ?: return run {
             LOGGER.error("Unable to find matching spawn held item for ID: $item")
             null

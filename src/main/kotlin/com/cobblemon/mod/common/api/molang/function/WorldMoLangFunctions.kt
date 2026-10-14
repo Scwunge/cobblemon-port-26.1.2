@@ -106,7 +106,7 @@ object WorldMoLangFunctions : AbstractMoLangFunctionHolder<Holder<Level>>() {
             val y = params.getInt(1)
             val z = params.getInt(2)
             val block =
-                world.blockRegistry.get(params.getString(3).asIdentifierDefaultingNamespace())
+                world.blockRegistry.getValue(params.getString(3).asIdentifierDefaultingNamespace())
                     ?: run {
                         Cobblemon.LOGGER.error("Unknown block: ${params.getString(3)}")
                         return@setBlock DoubleValue.ZERO

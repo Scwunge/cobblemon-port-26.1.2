@@ -49,7 +49,7 @@ fun Entity.effectiveName() = this.displayName ?: this.name
 
 fun LivingEntity.hasMemory(memoryIdentifier: Identifier): Boolean {
     val registry = BuiltInRegistries.MEMORY_MODULE_TYPE
-    val memoryType = registry.get(memoryIdentifier)
+    val memoryType = registry.getValue(memoryIdentifier)
     return brain.checkMemory(memoryType, MemoryStatus.VALUE_PRESENT)
 }
 
@@ -77,7 +77,7 @@ fun LivingEntity.jitterDropItem(itemEntity: ItemEntity) {
 
 fun LivingEntity.isDoingActivity(activityIdentifier: Identifier): Boolean {
     val registry = BuiltInRegistries.ACTIVITY
-    val activity = registry.get(activityIdentifier) ?: return false
+    val activity = registry.getValue(activityIdentifier) ?: return false
     return brain.isActive(activity)
 }
 

@@ -272,7 +272,7 @@ class BerryBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobblemon
         nbt.getListOrEmpty(GROWTH_POINTS).filterIsInstance<StringTag>().forEach { element ->
             // In case some 3rd party mutates the NBT incorrectly
             try {
-                val identifier = Identifier.parse(element.asString)
+                val identifier = Identifier.parse(element.asString().orElse(""))
                 this.growthPoints += identifier
             } catch (ignored: IdentifierException) {}
         }

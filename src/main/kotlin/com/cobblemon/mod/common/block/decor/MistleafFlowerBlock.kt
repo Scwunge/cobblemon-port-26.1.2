@@ -67,7 +67,7 @@ class MistleafFlowerBlock(lightLevel: (BlockState) -> Int) :
         return MistleafFlowerBlockEntity(pos, state)
     }
 
-    override fun <T : BlockEntity?> getTicker(
+    override fun <T : BlockEntity> getTicker(
         level: Level,
         state: BlockState,
         blockEntityType: BlockEntityType<T>

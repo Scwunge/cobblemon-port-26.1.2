@@ -235,7 +235,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         super.onExplosionHit(state, level, pos, explosion, dropConsumer)
     }
 
-    override fun <T : BlockEntity?> getTicker(world: Level, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
+    override fun <T : BlockEntity> getTicker(world: Level, state: BlockState, type: BlockEntityType<T>): BlockEntityTicker<T>? {
         return createTickerHelper(type, CobblemonBlockEntities.PASTURE, PokemonPastureBlockEntity.TICKER::tick)
     }
 

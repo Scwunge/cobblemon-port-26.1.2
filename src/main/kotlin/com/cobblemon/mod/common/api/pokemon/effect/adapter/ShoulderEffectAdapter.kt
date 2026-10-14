@@ -30,7 +30,7 @@ object ShoulderEffectAdapter: JsonDeserializer<ShoulderEffect> {
             try {
                 val effectId = Identifier.parse(typeId.replace("-", "_").replace("slow_fall", "slow_falling"))
                 val registry = BuiltInRegistries.MOB_EFFECT
-                val effect = registry.get(effectId)
+                val effect = registry.getValue(effectId)
                 if (effect != null) {
                     return PotionBaseEffect(effect, 0, true, false, false)
                 }

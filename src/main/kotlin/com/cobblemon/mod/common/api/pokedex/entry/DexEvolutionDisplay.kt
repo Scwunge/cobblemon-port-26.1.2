@@ -95,7 +95,7 @@ fun getToolTipHeaderIcon(tradeEvolution: TradeEvolution): CobblemonDexEvolutionR
 
 fun resolveRequirementData(requirement: Requirement): DexEvolutionRequirementDisplay? {
     val icon = requirement.pokedexIcon?.let {
-        RegistryAccessResolver.getAccess().lookupOrThrow(Registries.ITEM).get(it)
+        RegistryAccessResolver.getAccess().lookupOrThrow(Registries.ITEM).getValue(it)
     }
 
     val tooltip = requirement.pokedexTooltip?.let {
@@ -353,7 +353,7 @@ fun buildPokemonPropertiesRequirement(pokemonPropertiesRequirement: PokemonPrope
 fun buildPropertyRangeRequirement(propertyRangeRequirement: PropertyRangeRequirement): DexEvolutionRequirementDisplay? {
     val provider = SpeciesFeatures.getFeature(propertyRangeRequirement.feature) as? IntSpeciesFeatureProvider ?: return null
     val displayName = provider.display?.name?.takeIf { it.isNotBlank() }?.asTranslated()?.green() ?: return null
-    val icon = provider.itemPoints.keys.firstOrNull()?.let { BuiltInRegistries.ITEM.get(it) } ?: Items.NAME_TAG
+    val icon = provider.itemPoints.keys.firstOrNull()?.let { BuiltInRegistries.ITEM.getValue(it) } ?: Items.NAME_TAG
 
     val range = propertyRangeRequirement.range
     val tooltip = lang(

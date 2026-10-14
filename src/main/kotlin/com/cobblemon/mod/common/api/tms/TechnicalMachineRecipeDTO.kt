@@ -30,7 +30,7 @@ data class TechnicalMachineRecipeDTO(
         val ingredient = when {
             item != null ->
                 Ingredient.of(
-                    BuiltInRegistries.ITEM.get(item)
+                    BuiltInRegistries.ITEM.getValue(item)
                 )
 
             tag != null ->

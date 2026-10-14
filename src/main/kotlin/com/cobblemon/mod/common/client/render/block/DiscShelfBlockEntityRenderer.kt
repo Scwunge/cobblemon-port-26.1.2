@@ -68,7 +68,7 @@ class DiscShelfBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context) :
 
         val lightGetter = entity.level as? BlockAndTintGetter
         val packedLight = lightGetter?.let {
-            LevelRenderer.getLightColor(it, entity.blockPos.relative(facing))
+            LevelRenderer.getLightCoords(it, entity.blockPos.relative(facing))
         } ?: if (light != 0) light else 0xF000F0
 
         poseStack.pushPose()

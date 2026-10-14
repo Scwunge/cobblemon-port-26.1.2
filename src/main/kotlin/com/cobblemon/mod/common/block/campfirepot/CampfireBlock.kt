@@ -231,7 +231,7 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
 
     override fun isPathfindable(state: BlockState, type: PathComputationType): Boolean = false
 
-    override fun <T : BlockEntity?> getTicker(
+    override fun <T : BlockEntity> getTicker(
         level: Level,
         state: BlockState,
         blockEntityType: BlockEntityType<T>

@@ -317,7 +317,7 @@ open class PokemonBattle(
             if (actor.itemsUsed.isNotEmpty() && actor.getPlayerUUIDs().count() > 0) {
                 val player = actor.getPlayerUUIDs().first().getPlayer()
                 player?.level()?.itemRegistry.let { registry ->
-                    actor.itemsUsed.mapNotNull { registry?.get(Identifier.tryBySeparator(it.itemName.substringAfter('.'), '.')) }
+                    actor.itemsUsed.mapNotNull { registry?.getValue(Identifier.tryBySeparator(it.itemName.substringAfter('.'), '.')) }
                             .forEach { player?.giveOrDropItemStack(ItemStack(it))}
                 }
             }

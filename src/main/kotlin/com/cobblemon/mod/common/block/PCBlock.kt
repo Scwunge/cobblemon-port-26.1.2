@@ -307,7 +307,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), LegacyOnRemo
         return RenderShape.MODEL
     }
 
-    override fun getFluidState(state: BlockState): FluidState? {
+    override fun getFluidState(state: BlockState): FluidState {
         return if (state.getValue(WATERLOGGED)) {
             Fluids.WATER.getSource(false)
         } else super.getFluidState(state)

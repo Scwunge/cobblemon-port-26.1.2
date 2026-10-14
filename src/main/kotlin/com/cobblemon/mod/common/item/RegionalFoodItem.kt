@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
-class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelectingItem {
+class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelectingItem, LegacyUseEffectsItem {
     override val bagItem = null
 
     override fun use(world: Level, player: Player, hand: InteractionHand): InteractionResult {
@@ -54,7 +54,7 @@ class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelect
     ): InteractionResult {
         if (pokemon.status != null) {
             pokemon.status = null
-            pokemon.entity?.playSound(SoundEvents.GENERIC_EAT, 1F, 1F)
+            pokemon.entity?.playSound(SoundEvents.GENERIC_EAT.value(), 1F, 1F)
             stack.consume(1, player)
             return InteractionResult.SUCCESS
         }
@@ -66,9 +66,14 @@ class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelect
 
     override fun getUseDuration(stack: ItemStack, entity: LivingEntity): Int = 32
 
-    override fun getEatingSound(): SoundEvent = SoundEvents.GENERIC_EAT
+    override fun getEatingSound(): SoundEvent = SoundEvents.GENERIC_EAT.value()
 
     override fun canUseOnPokemon(stack: ItemStack, pokemon: Pokemon): Boolean {
         return pokemon.status != null && pokemon.currentHealth > 0
+    }
+
+    override fun onUseTick(level: Level, livingEntity: LivingEntity, stack: ItemStack, remainingUseDuration: Int) {
+        super.onUseTick(level, livingEntity, stack, remainingUseDuration)
+        tickUseEffects(livingEntity, stack, remainingUseDuration)
     }
 }

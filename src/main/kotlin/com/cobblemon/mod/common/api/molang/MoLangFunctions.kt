@@ -460,7 +460,7 @@ object MoLangFunctions {
             }
 
             is StringTag -> {
-                StringValue(nbt.asString)
+                StringValue(nbt.asString().orElse(""))
             }
 
             is ListTag -> {

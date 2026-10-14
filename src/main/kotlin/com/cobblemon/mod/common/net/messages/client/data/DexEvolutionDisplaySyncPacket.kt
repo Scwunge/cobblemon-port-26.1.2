@@ -73,7 +73,7 @@ class DexEvolutionDisplaySyncPacket(entries: MutableList<DexEvolutionDisplay>)
         val toAspects = buffer.readCollection(Sets::newHashSetWithExpectedSize) { buffer.readString() }
         val requirements = buffer.readCollection(Lists::newArrayListWithExpectedSize) {
             val type = buffer.readByte().toInt()
-            val icon = BuiltInRegistries.ITEM.get(buffer.readIdentifier())
+            val icon = BuiltInRegistries.ITEM.getValue(buffer.readIdentifier())
             val tooltip = buffer.readText().copy()
             if (type == 1) {
                 val condition = buffer.readNullable { b ->

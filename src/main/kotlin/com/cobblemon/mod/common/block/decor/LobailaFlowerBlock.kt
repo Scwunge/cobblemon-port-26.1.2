@@ -33,7 +33,7 @@ class LobailaFlowerBlock(properties: Properties?) : TallFlowerBlock(properties),
             .setValue(WATERLOGGED, false))
     }
 
-    override fun getFluidState(blockState: BlockState): FluidState? {
+    override fun getFluidState(blockState: BlockState): FluidState {
         return if (blockState.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(blockState);
     }
 

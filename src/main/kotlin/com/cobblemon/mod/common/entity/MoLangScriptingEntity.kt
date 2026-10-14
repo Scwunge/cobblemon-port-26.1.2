@@ -89,7 +89,7 @@ interface MoLangScriptingEntity {
     fun loadScriptingFromNBT(nbt: CompoundTag) {
         behavioursAreCustom = nbt.getBooleanOr(DataKeys.SCRIPTED_BEHAVIOURS_ARE_CUSTOM, false)
         behaviours.clear()
-        behaviours.addAll(nbt.getListOrEmpty(DataKeys.SCRIPTED_BEHAVIOURS).map { Identifier.parse(it.asString) })
+        behaviours.addAll(nbt.getListOrEmpty(DataKeys.SCRIPTED_BEHAVIOURS).map { Identifier.parse(it.asString().orElse("")) })
         val dataKey = if (nbt.contains(DataKeys.SCRIPTED_DATA)) DataKeys.SCRIPTED_DATA else "Data" // migrate old use of "Data"
         data = MoLangFunctions.readMoValueFromNBT(nbt.getCompoundOrEmpty(dataKey)) as VariableStruct
         val configKey = if (nbt.contains(DataKeys.SCRIPTED_CONFIG)) DataKeys.SCRIPTED_CONFIG else "Config" // migrate old use of "Config"

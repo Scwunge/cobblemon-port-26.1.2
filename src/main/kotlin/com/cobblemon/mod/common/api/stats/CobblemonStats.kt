@@ -88,7 +88,7 @@ object CobblemonStats {
     @JvmStatic
     fun getStat(cobblemonStat: CobblemonStat) : Identifier {
         val resourceLocation = cobblemonStat.resourceLocation
-        val stat = BuiltInRegistries.CUSTOM_STAT.get(resourceLocation)
+        val stat = BuiltInRegistries.CUSTOM_STAT.getValue(resourceLocation)
         if (stat == null) {
             Cobblemon.LOGGER.error("Could not find stat with id {}", resourceLocation)
         }

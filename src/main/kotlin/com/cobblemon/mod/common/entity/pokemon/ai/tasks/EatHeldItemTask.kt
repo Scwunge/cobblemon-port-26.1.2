@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.pokemon.ai.tasks
 
+import com.cobblemon.mod.common.util.eatingSound
 import com.cobblemon.mod.common.CobblemonMemories
 import com.cobblemon.mod.common.api.molang.MoLangFunctions.asMostSpecificMoLangValue
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -78,7 +79,7 @@ class EatHeldItemTask(entity: PokemonEntity) : Behavior<PokemonEntity>(
                 if (this.timelastEaten + MAX_DURATION <= time) {
                     var resultItemStack = itemStack.finishUsingItem(world, entity)
                     val configuredReturnItem = itemConfig?.returnItem
-                    resultItemStack = if (configuredReturnItem != ItemStack.EMPTY) ItemStack(BuiltInRegistries.ITEM.get(configuredReturnItem))
+                    resultItemStack = if (configuredReturnItem != ItemStack.EMPTY) ItemStack(BuiltInRegistries.ITEM.getValue(configuredReturnItem))
                         else if (resultItemStack.item == itemStack.item)
                             ItemStack.EMPTY // Items that aren't normally edible return themselves
                         else
@@ -103,7 +104,7 @@ class EatHeldItemTask(entity: PokemonEntity) : Behavior<PokemonEntity>(
                         }
                     }
                 } else if ((itemConfig?.fullnessValue ?: 0) > 0 && this.timelastEaten > 0 && entity.random.nextFloat() < 0.4f) {
-                    entity.playSound(entity.getEatingSound(itemStack), 1.0f, 1.0f)
+                    entity.playSound(itemStack.eatingSound, 1.0f, 1.0f)
                     world.broadcastEntityEvent(entity, 45.toByte())
                     spawnFoodParticles(entity, itemStack)
                 }

@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common.integration.jei.cooking
 
+import com.cobblemon.mod.common.item.crafting.CookingPotShapelessRecipe
+import com.cobblemon.mod.common.item.crafting.CookingPotRecipe
+import java.util.Optional
+import mezz.jei.api.recipe.types.IRecipeType
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.cooking.Seasonings
@@ -62,24 +66,32 @@ class CampfirePotRecipeCategory(registration: IRecipeCategoryRegistration) : IRe
         .buildAnimated(CampfireBlockEntity.COOKING_TOTAL_TIME, IDrawableAnimated.StartDirection.LEFT, false)
     val campfirePotIcon: IDrawable = guiHelper.createDrawableItemStack(CobblemonItems.CAMPFIRE_POT_BLACK.defaultInstance)
 
-    override fun getRecipeType(): RecipeType<CookingPotRecipeBase?>? = RECIPE_TYPE
-    override fun getTitle(): Component? = lang("container.campfire_pot")
-    override fun getBackground(): IDrawable? = campfirePotBackground
-    override fun getIcon(): IDrawable? = campfirePotIcon
+    override fun getRecipeType(): IRecipeType<CookingPotRecipeBase> = RECIPE_TYPE
+    override fun getTitle(): Component = lang("container.campfire_pot")
+    // Categories draw their own background since JEI 20 (it was getBackground before).
+    override fun getWidth() = WIDTH
+    override fun getHeight() = HEIGHT
+    override fun getIcon(): IDrawable = campfirePotIcon
 
     override fun setRecipe(
         builder: IRecipeLayoutBuilder,
         recipe: CookingPotRecipeBase,
         focuses: IFocusGroup
     ) {
-        recipe.ingredients.forEachIndexed { index, ingredient ->
+        val ingredients: List<Optional<Ingredient>> = when (recipe) {
+            is CookingPotRecipe -> recipe.getIngredients()
+            is CookingPotShapelessRecipe -> recipe.getIngredients().map { Optional.of(it) }
+            else -> emptyList()
+        }
+        ingredients.forEachIndexed { index, ingredient ->
             val column = index / CRAFTING_GRID_WIDTH
             val row = index % CRAFTING_GRID_WIDTH
 
             val x = 16 + row * 18
             val y = 1 + column * 18
 
-            builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(ingredient)
+            val slot = builder.addSlot(RecipeIngredientRole.INPUT, x, y)
+            ingredient.ifPresent { slot.addIngredients(it) }
         }
 
         if (recipe.seasoningProcessors.isNotEmpty()) {
@@ -104,8 +116,7 @@ class CampfirePotRecipeCategory(registration: IRecipeCategoryRegistration) : IRe
             }
         }
 
-        val registryAccess = Minecraft.getInstance().level?.registryAccess() ?: throw IllegalStateException("Registry access not found")
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 38).addIngredients(Ingredient.of(recipe.getResultItem(registryAccess)))
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 111, 38).addItemStack(recipe.getResultItem())
     }
 
     override fun draw(
@@ -115,6 +126,7 @@ class CampfirePotRecipeCategory(registration: IRecipeCategoryRegistration) : IRe
         mouseX: Double,
         mouseY: Double
     ) {
+        campfirePotBackground.draw(guiGraphics)
         super.draw(recipe, recipeSlotsView, guiGraphics, mouseX, mouseY)
 
         cookProgressSprite.draw(guiGraphics, 79, 22)

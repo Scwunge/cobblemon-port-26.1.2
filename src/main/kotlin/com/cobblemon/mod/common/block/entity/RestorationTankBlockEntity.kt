@@ -103,7 +103,7 @@ class RestorationTankBlockEntity(
                 val returnIdentifier = NaturalMaterials.getReturnItem((stack))
                 if (returnIdentifier != null) {
                     // Store the return item
-                    val returnItem = BuiltInRegistries.ITEM.get(returnIdentifier)
+                    val returnItem = BuiltInRegistries.ITEM.getValue(returnIdentifier)
                     storeReturnItem(returnItem, stack.count)
                 }
             }
@@ -148,7 +148,7 @@ class RestorationTankBlockEntity(
                         // See if there's room
                         for (i in items.indices) {
                             if (items[i] == ItemStack.EMPTY || (items[i].count < items[i].maxStackSize
-                                        && items[i].item == BuiltInRegistries.ITEM.get(returnItem))
+                                        && items[i].item == BuiltInRegistries.ITEM.getValue(returnItem))
                             ) {
                                 return true
                             }

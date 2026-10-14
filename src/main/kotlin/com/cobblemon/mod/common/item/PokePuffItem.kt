@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
-class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
+class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem, LegacyUseEffectsItem {
     override val bagItem = null
 
     companion object {
@@ -133,8 +133,8 @@ class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
         return if (getFlavorType(stack) == "plain") 32 else 0
     }
 
-    override fun getEatingSound(): SoundEvent = SoundEvents.GENERIC_EAT
-    override fun getDrinkingSound(): SoundEvent = SoundEvents.GENERIC_EAT
+    override fun getEatingSound(): SoundEvent = SoundEvents.GENERIC_EAT.value()
+    override fun getDrinkingSound(): SoundEvent = SoundEvents.GENERIC_EAT.value()
 
     override fun finishUsingItem(stack: ItemStack, world: Level, user: LivingEntity): ItemStack {
         if (!world.isClientSide && user is Player && getFlavorType(stack) == "plain") {
@@ -190,5 +190,10 @@ class PokePuffItem : Item(Properties().stacksTo(64)), PokemonSelectingItem {
     private fun getFlavorType(stack: ItemStack): String {
         val flavour = getDominantFlavour(stack)
         return flavour?.name?.lowercase() ?: "plain"
+    }
+
+    override fun onUseTick(level: Level, livingEntity: LivingEntity, stack: ItemStack, remainingUseDuration: Int) {
+        super.onUseTick(level, livingEntity, stack, remainingUseDuration)
+        tickUseEffects(livingEntity, stack, remainingUseDuration)
     }
 }

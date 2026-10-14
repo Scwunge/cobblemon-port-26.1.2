@@ -170,7 +170,7 @@ class StackableItemBlock(settings: Properties, val type: StackableItemBlockType)
         builder.add(HORIZONTAL_FACING, AMOUNT, WATERLOGGED)
     }
 
-    override fun getFluidState(blockState: BlockState): FluidState? = if (blockState.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(blockState)
+    override fun getFluidState(blockState: BlockState): FluidState = if (blockState.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(blockState)
 
     override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         if (state.getValue(WATERLOGGED)) {

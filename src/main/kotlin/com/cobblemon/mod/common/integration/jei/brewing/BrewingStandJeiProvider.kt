@@ -22,12 +22,12 @@ class BrewingStandJeiProvider : CobblemonJeiProvider {
 
     override fun registerRecipes(registration: IRecipeRegistration) {
         val recipeManger =
-            Minecraft.getInstance().level?.recipeManager ?: throw IllegalStateException("Recipe manager not found")
+            Minecraft.getInstance().level?.recipeAccess()?.synchronizedRecipes ?: throw IllegalStateException("Recipe manager not found")
 
-        val allBrewingRecipes = recipeManger.getAllRecipesFor(CobblemonRecipeTypes.BREWING_STAND)
+        val allBrewingRecipes = recipeManger.getAllOfType(CobblemonRecipeTypes.BREWING_STAND)
 
         val jeiRecipes = allBrewingRecipes.map { entry ->
-            JeiBrewingStandRecipe(entry.value, entry.id)
+            JeiBrewingStandRecipe(entry.value(), entry.id().identifier())
         }
 
         registration.addRecipes(RecipeTypes.BREWING, jeiRecipes)

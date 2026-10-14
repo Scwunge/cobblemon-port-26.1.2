@@ -91,7 +91,7 @@ abstract class SpawningCondition<T : SpawnablePosition> {
             return false
         } else if (spawnablePosition.skyLight > maxSkyLight.orMax() || spawnablePosition.skyLight < minSkyLight.orMin()) {
             return false
-        } else if (timeRange != null && !timeRange!!.contains((spawnablePosition.world.overworldClockTime() % 24000).toInt())) {
+        } else if (timeRange != null && !timeRange!!.contains((spawnablePosition.world.overworldClockTime % 24000).toInt())) {
             return false
         } else if (canSeeSky != null && canSeeSky != spawnablePosition.canSeeSky) {
             return false

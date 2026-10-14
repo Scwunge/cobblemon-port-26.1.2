@@ -62,7 +62,7 @@ open class WallAttachedDirectionalBlock(settings: Properties): HorizontalDirecti
         return null
     }
 
-    override fun getFluidState(blockState: BlockState): FluidState? = if (blockState.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(blockState)
+    override fun getFluidState(blockState: BlockState): FluidState = if (blockState.getValue(WATERLOGGED)) Fluids.WATER.getSource(false) else super.getFluidState(blockState)
 
     override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         if (state.getValue(WATERLOGGED)) {

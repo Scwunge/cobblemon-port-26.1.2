@@ -59,7 +59,7 @@ fun describePokemonProperties(properties: PokemonProperties): MutableComponent? 
 
     val heldItemDescriptor = properties.heldItem?.let { heldItem ->
         val itemId = heldItem.substringBefore('[').trim().asIdentifierDefaultingNamespace()
-        val item = BuiltInRegistries.ITEM.get(itemId)
+        val item = BuiltInRegistries.ITEM.getValue(itemId)
         if (item == Items.AIR) null else lang("ui.pokedex.requirement.properties.held_item", item.description.plainCopy().green())
     }
 

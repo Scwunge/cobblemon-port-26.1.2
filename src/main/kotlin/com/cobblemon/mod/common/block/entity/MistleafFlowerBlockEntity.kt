@@ -28,14 +28,14 @@ class MistleafFlowerBlockEntity(pos: BlockPos, state: BlockState): BlockEntity(C
 
             val wantedState = when (state.`is`(CobblemonBlocks.MISTLEAF)) {
                 //The light level and comparator output increases on odds from New to Full, and decreases on the evens from Full to New
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 4) -> 1 //New Moon
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 5) -> 3 //Waxing Crescent
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 6) -> 5 //First Quarter
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 7) -> 7 //Waxing Gibbous
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 0) -> 8 //Full Moon
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 1) -> 6 //Waning Gibbous
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 2) -> 4 // Third Quarter
-                ((level.overworldClockTime().toInt().mod(24000) in 12542..23459) && level.moonPhase == 3) -> 2 //Waning Crescent
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 4) -> 1 //New Moon
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 5) -> 3 //Waxing Crescent
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 6) -> 5 //First Quarter
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 7) -> 7 //Waxing Gibbous
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 0) -> 8 //Full Moon
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 1) -> 6 //Waning Gibbous
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 2) -> 4 // Third Quarter
+                ((level.overworldClockTime.toInt().mod(24000) in 12542..23459) && level.moonPhase == 3) -> 2 //Waning Crescent
                 else -> 0 //Daytime, and likely dimensions with no concept of day/night cycle or moon phase
             }
 

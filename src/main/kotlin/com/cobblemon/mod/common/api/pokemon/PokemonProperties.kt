@@ -746,7 +746,7 @@ open class PokemonProperties {
         scaleModifier = if (tag.contains(DataKeys.POKEMON_SCALE_MODIFIER)) tag.getFloatOr(DataKeys.POKEMON_SCALE_MODIFIER, 0F) else null
         val custom = tag.getListOrEmpty(DataKeys.POKEMON_PROPERTIES_CUSTOM)
         // This is kinda gross
-        custom.forEach { customProperties.addAll(parse(it.asString).customProperties) }
+        custom.forEach { customProperties.addAll(parse(it.asString().orElse("")).customProperties) }
         updateAspects()
         return this
     }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.item.food
 
+import net.minecraft.world.item.component.Consumables
 import com.cobblemon.mod.common.CobblemonItemComponents
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -27,8 +28,8 @@ class SinisterTeaItem : Item(
                         .alwaysEdible()
                         .nutrition(0)
                         .saturationModifier(0.0f)
-                        .usingConvertsTo(Items.BOWL)
-                        .build())
+                        .build(), Consumables.defaultDrink().build())
+                .usingConvertsTo(Items.BOWL)
 ) {
     override fun finishUsingItem(stack: ItemStack, world: Level, user: LivingEntity): ItemStack {
         if (!world.isClientSide) {
@@ -54,12 +55,5 @@ class SinisterTeaItem : Item(
 
     override fun getUseAnimation(stack: ItemStack) = ItemUseAnimation.DRINK
 
-    // todo not sure which one is needed at the moment, but I assume just the eating sound?
-    override fun getDrinkingSound(): SoundEvent {
-        return SoundEvents.GENERIC_DRINK
-    }
-
-    override fun getEatingSound(): SoundEvent {
-        return SoundEvents.GENERIC_DRINK
-    }
+    // The drinking sounds come from the drink consumable since 1.21.2 (they were getDrinkingSound/getEatingSound).
 }

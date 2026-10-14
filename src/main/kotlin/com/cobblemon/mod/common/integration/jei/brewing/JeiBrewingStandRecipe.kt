@@ -19,11 +19,11 @@ class JeiBrewingStandRecipe(
 ) : IJeiBrewingRecipe {
 
     override fun getPotionInputs(): List<ItemStack> {
-        return recipe.bottle.items.asList()
+        return recipe.bottle.items().map { ItemStack(it) }.toList()
     }
 
     override fun getIngredients(): List<ItemStack> {
-        return recipe.input.items.asList()
+        return recipe.input.items().map { ItemStack(it) }.toList()
     }
 
     override fun getPotionOutput(): ItemStack {

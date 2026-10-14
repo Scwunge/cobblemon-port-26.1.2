@@ -76,7 +76,7 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
     var pool: HabitatPool = HabitatPool.default()
     var mimicId: Identifier = BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
     val mimickedState: BlockState
-        get() = BuiltInRegistries.BLOCK.get(mimicId).defaultBlockState() ?: Blocks.STONE.defaultBlockState()
+        get() = BuiltInRegistries.BLOCK.getValue(mimicId).defaultBlockState() ?: Blocks.STONE.defaultBlockState()
     var displaySpeciesIds: List<Identifier> = emptyList()
 
     // This is cached here so that it doesn't have to be regenerated every time the block is triggered, updated when settings change.
@@ -204,7 +204,7 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
         }
         displaySpeciesIds = if (tag.contains(DISPLAY_SPECIES_KEY, Tag.TAG_LIST.toInt())) {
             tag.getListOrEmpty(DISPLAY_SPECIES_KEY)
-                .mapNotNull { speciesTag -> Identifier.tryParse(speciesTag.asString) }
+                .mapNotNull { speciesTag -> Identifier.tryParse(speciesTag.asString().orElse("")) }
                 .distinct()
         } else {
             emptyList()

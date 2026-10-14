@@ -77,21 +77,21 @@ object CobblemonItemGroups {
     }
 
     @JvmStatic
-    val BLOCKS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(BLOCKS_KEY)
+    val BLOCKS get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(BLOCKS_KEY)
     @JvmStatic
-    val UTILITY_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(UTILITY_ITEMS_KEY)
+    val UTILITY_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(UTILITY_ITEMS_KEY)
     @JvmStatic
-    val AGRICULTURE get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(AGRICULTURE_KEY)
+    val AGRICULTURE get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(AGRICULTURE_KEY)
     @JvmStatic
-    val ARCHAEOLOGY get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(ARCHAEOLOGY_KEY)
+    val ARCHAEOLOGY get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(ARCHAEOLOGY_KEY)
     @JvmStatic
-    val CONSUMABLES get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(CONSUMABLES_KEY)
+    val CONSUMABLES get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CONSUMABLES_KEY)
     @JvmStatic
-    val HELD_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(HELD_ITEMS_KEY)
+    val HELD_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(HELD_ITEMS_KEY)
     @JvmStatic
-    val EVOLUTION_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(EVOLUTION_ITEMS_KEY)
+    val EVOLUTION_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(EVOLUTION_ITEMS_KEY)
     @JvmStatic
-    val TM_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.get(TM_ITEMS_KEY)
+    val TM_ITEMS get() = BuiltInRegistries.CREATIVE_MODE_TAB.getValue(TM_ITEMS_KEY)
 
     @JvmStatic
     val BUILDING_BLOCKS_INJECTIONS = this.inject(

@@ -56,7 +56,5 @@ class PonigiriItem : Item(
 
     override fun getUseAnimation(stack: ItemStack) = ItemUseAnimation.EAT
 
-    override fun getEatingSound(): SoundEvent {
-        return SoundEvents.GENERIC_EAT
-    }
+    // The eating sound is the food consumable's default since 1.21.2.
 }

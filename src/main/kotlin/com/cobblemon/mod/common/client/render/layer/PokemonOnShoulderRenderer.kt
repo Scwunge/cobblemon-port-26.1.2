@@ -311,7 +311,7 @@ class PokemonOnShoulderRenderer(renderLayerParent: RenderLayerParent<AvatarRende
             val formName = shoulderNbt.getStringOr(DataKeys.SHOULDER_FORM, "")
             val form = species.forms.firstOrNull { it.name == formName } ?: species.standardForm
             val aspects =
-                shoulderNbt.getListOrEmpty(DataKeys.SHOULDER_ASPECTS).map { it.asString }.toSet()
+                shoulderNbt.getListOrEmpty(DataKeys.SHOULDER_ASPECTS).map { it.asString().orElse("") }.toSet()
             val scaleModifier = shoulderNbt.getFloatOr(DataKeys.SHOULDER_SCALE_MODIFIER, 0F)
             val shownItem = Minecraft.getInstance().level?.registryAccess()
                 ?.let { parseOptionalItemStack(it, shoulderNbt.getCompoundOrEmpty(DataKeys.SHOULDER_ITEM)) }

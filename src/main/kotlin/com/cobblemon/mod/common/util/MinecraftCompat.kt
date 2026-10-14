@@ -106,3 +106,17 @@ fun Player.displayClientMessage(message: Component, overlay: Boolean) {
 /** Style#withFont(ResourceLocation) before 1.21.9: a font from a font definition. */
 fun net.minecraft.network.chat.Style.withFont(font: net.minecraft.resources.Identifier): net.minecraft.network.chat.Style =
     withFont(net.minecraft.network.chat.FontDescription.Resource(font))
+
+/**
+ * ItemStack#getEatingSound before 1.21.2: the item's eating sound. Eating sounds belong to consumables since then, so
+ * this is the consumable's sound when it is eaten (rather than drunk), Cobblemon's own eating sound for items that
+ * declare one, and the generic eating sound otherwise, as Item#getEatingSound defaulted to.
+ */
+val ItemStack.eatingSound: net.minecraft.sounds.SoundEvent
+    get() {
+        val item = item
+        if (item is com.cobblemon.mod.common.item.LegacyUseEffectsItem) return item.getEatingSound()
+        val consumable = get(net.minecraft.core.component.DataComponents.CONSUMABLE)
+        if (consumable != null && consumable.animation() == net.minecraft.world.item.ItemUseAnimation.EAT) return consumable.sound().value()
+        return net.minecraft.sounds.SoundEvents.GENERIC_EAT.value()
+    }

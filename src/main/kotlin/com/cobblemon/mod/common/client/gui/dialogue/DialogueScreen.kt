@@ -155,7 +155,7 @@ class DialogueScreen(var dialogueDTO: DialogueDTO) : Screen("gui.dialogue".asTra
 
         val currentSpeaker = dialogueDTO.currentPageDTO.speaker
         gibber = dialogueDTO.currentPageDTO.gibber ?: currentSpeaker?.let { speakers[it]?.gibber }
-        gibberSounds = gibber?.sounds?.mapNotNull { BuiltInRegistries.SOUND_EVENT.get(it) } ?: emptyList()
+        gibberSounds = gibber?.sounds?.mapNotNull { BuiltInRegistries.SOUND_EVENT.getValue(it) } ?: emptyList()
 
         expressionsToRun = dialogueDTO.currentPageDTO.clientActions.map { it.asExpressionLike() }
         val centerX = scaledWidth / 2F

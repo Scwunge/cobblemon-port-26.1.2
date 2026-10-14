@@ -100,7 +100,7 @@ class HabitatEditGUI(
             val id = Identifier.tryParse(value)
             val valid = id != null &&
                 BuiltInRegistries.BLOCK.containsKey(id) &&
-                BuiltInRegistries.BLOCK.get(id).builtInRegistryHolder().`is`(CobblemonBlockTags.HABITAT_MIMICS)
+                BuiltInRegistries.BLOCK.getValue(id).builtInRegistryHolder().`is`(CobblemonBlockTags.HABITAT_MIMICS)
             if (valid) {
                 habitatSettingsDTO.mimicId = id
             }
@@ -110,7 +110,7 @@ class HabitatEditGUI(
         val initialMimicId = Identifier.tryParse(mimicInput.value)
         val initialMimicValid = initialMimicId != null &&
             BuiltInRegistries.BLOCK.containsKey(initialMimicId) &&
-            BuiltInRegistries.BLOCK.get(initialMimicId).builtInRegistryHolder().`is`(CobblemonBlockTags.HABITAT_MIMICS)
+            BuiltInRegistries.BLOCK.getValue(initialMimicId).builtInRegistryHolder().`is`(CobblemonBlockTags.HABITAT_MIMICS)
         mimicInput.setTextColor(if (initialMimicValid) validTextColor else invalidTextColor)
         setFieldValidity("mimic", initialMimicValid, "ui.edit.habitat.validation.mimic")
         addOptionWidget(mimicInput)

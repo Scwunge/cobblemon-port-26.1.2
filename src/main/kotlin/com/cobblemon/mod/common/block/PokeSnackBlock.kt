@@ -358,7 +358,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
             level.setBlock(pos, state.setValue(BITES, newBites) as BlockState, UPDATE_ALL)
         }
 
-        level.playSound(null, player?.blockPosition() ?: pos, SoundEvents.GENERIC_EAT, if (player != null) SoundSource.PLAYERS else SoundSource.NEUTRAL)
+        level.playSound(null, player?.blockPosition() ?: pos, SoundEvents.GENERIC_EAT.value(), if (player != null) SoundSource.PLAYERS else SoundSource.NEUTRAL)
         spawnEatParticles(level, pos)
 
         player?.let {

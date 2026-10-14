@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.gui.summary.widgets.screens.stats
 
+import net.minecraft.util.ARGB
+import com.cobblemon.mod.common.client.render.gui.fillTriangle
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.api.pokemon.feature.SpeciesFeatures
@@ -31,7 +33,6 @@ import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.cobblemonResource
 import com.cobblemon.mod.common.util.lang
 import com.mojang.blaze3d.systems.RenderSystem
-import com.mojang.blaze3d.vertex.BufferUploader
 import com.mojang.blaze3d.vertex.DefaultVertexFormat
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.Tesselator
@@ -179,15 +180,9 @@ class StatWidget(
         }
     }
 
-    private fun drawTriangle(colour: Vector3f, v1: Vec2, v2: Vec2, v3: Vec2, opacity: Float = 0.6F) {
-        CobblemonResources.WHITE.let { RenderSystem.setShaderTexture(0, it) }
-        RenderSystem.setShaderColor(colour.x, colour.y, colour.z, opacity)
-        val bufferBuilder = Tesselator.getInstance().begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION)
-        bufferBuilder.addVertex(v1.x, v1.y, 10F)
-        bufferBuilder.addVertex(v2.x, v2.y, 10F)
-        bufferBuilder.addVertex(v3.x, v3.y, 10F)
-        BufferUploader.drawWithShader(bufferBuilder.buildOrThrow())
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F)
+    // The triangles were drawn in screen space with the shader colour; they are GUI elements since 1.21.6.
+    private fun drawTriangle(context: GuiGraphicsExtractor, colour: Vector3f, v1: Vec2, v2: Vec2, v3: Vec2, opacity: Float = 0.6F) {
+        context.fillTriangle(v1.x, v1.y, v2.x, v2.y, v3.x, v3.y, ARGB.colorFromFloat(opacity, colour.x, colour.y, colour.z))
     }
 
     /**
@@ -196,7 +191,7 @@ class StatWidget(
      * @param ratios list of ratios for how far each vertex is from the center, starting from top vertex going clockwise
      * @param colour the colour to render
      */
-    private fun drawStatPolygon(ratios: List<Float>, colour: Vector3f) {
+    private fun drawStatPolygon(context: GuiGraphicsExtractor, ratios: List<Float>, colour: Vector3f) {
         val sides = ratios.size
         if (sides !in 5 .. 6) return
 
@@ -235,12 +230,10 @@ class StatWidget(
         val centerPoint = Vec2(centerX, centerY)
 
         // Draw triangles between each vertex and the next clockwise starting from top vertex
-        RenderSystem.disableDepthTest()
         for (i in vertices.indices) {
             val nextIndex = (i + 1) % vertices.size
-            drawTriangle(colour, vertices[i], centerPoint, vertices[nextIndex])
+            drawTriangle(context, colour, vertices[i], centerPoint, vertices[nextIndex])
         }
-        RenderSystem.enableDepthTest()
     }
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
@@ -296,8 +289,8 @@ class StatWidget(
                     width = 134,
                     height = 115
                 )
-                otherStatLeftButton?.renderWidget(context, pMouseX, pMouseY, pPartialTicks)
-                otherStatRightButton?.renderWidget(context, pMouseX, pMouseY, pPartialTicks)
+                otherStatLeftButton?.extractRenderState(context, pMouseX, pMouseY, pPartialTicks)
+                otherStatRightButton?.extractRenderState(context, pMouseX, pMouseY, pPartialTicks)
             }
         } else {
             if (renderPentagonStats) {
@@ -334,7 +327,7 @@ class StatWidget(
                         }
                     }
 
-                    drawStatPolygon(
+                    drawStatPolygon(context, 
                         ratios = RidingStat.entries.map { pokemon.getRideStat(selectedBehaviour.key, it) / 100F },
                         colour = pentagonColour
                     )
@@ -397,7 +390,7 @@ class StatWidget(
                 )
 
                 when (statOptions.get(statTabIndex)) {
-                    STATS -> drawStatPolygon(
+                    STATS -> drawStatPolygon(context, 
                         listOf(
                             pokemon.maxHealth,
                             pokemon.attack,
@@ -408,11 +401,11 @@ class StatWidget(
                         ).map { it / 400F },
                         colour = Vector3f(50F/255F, 215F/255F, 1F)
                     )
-                    IV -> drawStatPolygon(
+                    IV -> drawStatPolygon(context, 
                         statLabels.values.map { pokemon.ivs.getEffectiveBattleIV(it) / 31F },
                         colour = Vector3f(216F/255, 100F/255, 1F)
                     )
-                    EV -> drawStatPolygon(
+                    EV -> drawStatPolygon(context, 
                         statLabels.values.map { (pokemon.evs[it]?.toFloat() ?: 0F) / EVs.MAX_STAT_VALUE.toFloat() },
                         colour = Vector3f(1F, 1F, 100F/255F)
                     )

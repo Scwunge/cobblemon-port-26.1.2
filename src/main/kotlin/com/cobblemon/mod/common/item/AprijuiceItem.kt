@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.ItemUseAnimation
 import net.minecraft.world.level.Level
 
-class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)), PokemonSelectingItem {
+class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)), PokemonSelectingItem, LegacyUseEffectsItem {
     override val bagItem = null
 
     fun hasRideBoosts(stack: ItemStack): Boolean {
@@ -121,10 +121,15 @@ class AprijuiceItem(val type: Apricorn): CobblemonItem(Properties().stacksTo(16)
 
     // todo not sure which one is needed at the moment, but I assume just the eating sound?
     override fun getDrinkingSound(): SoundEvent {
-        return SoundEvents.GENERIC_DRINK
+        return SoundEvents.GENERIC_DRINK.value()
     }
 
     override fun getEatingSound(): SoundEvent {
-        return SoundEvents.GENERIC_DRINK
+        return SoundEvents.GENERIC_DRINK.value()
+    }
+
+    override fun onUseTick(level: Level, livingEntity: LivingEntity, stack: ItemStack, remainingUseDuration: Int) {
+        super.onUseTick(level, livingEntity, stack, remainingUseDuration)
+        tickUseEffects(livingEntity, stack, remainingUseDuration)
     }
 }
