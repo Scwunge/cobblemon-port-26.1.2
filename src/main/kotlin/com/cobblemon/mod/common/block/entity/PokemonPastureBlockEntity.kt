@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.util.readBlockPos
 import com.cobblemon.mod.common.util.writeBlockPos
@@ -353,8 +358,10 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         )
     }
 
-    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(nbt, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val nbt = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         val list = nbt.getListOrEmpty(DataKeys.TETHER_POKEMON)
         this.ownerId = if (nbt.hasUUID(DataKeys.TETHER_OWNER_ID)) nbt.getUUID(DataKeys.TETHER_OWNER_ID) else null
         this.ownerName = nbt.getStringOr(DataKeys.TETHER_OWNER_NAME, "").takeIf { it.isNotEmpty() } ?: ""
@@ -383,22 +390,28 @@ class PokemonPastureBlockEntity(pos: BlockPos, state: BlockState) :
         this.maxRoamPos = nbt.readBlockPos(DataKeys.TETHER_MAX_ROAM_POS).get()
     }
 
-    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(nbt, registryLookup)
-        val list = ListTag()
-        for (tethering in tetheredPokemon) {
-            val tetheringNBT = CompoundTag()
-            tetheringNBT.putUUID(DataKeys.TETHERING_ID, tethering.tetheringId)
-            tetheringNBT.putUUID(DataKeys.TETHERING_PLAYER_ID, tethering.playerId)
-            tetheringNBT.putUUID(DataKeys.POKEMON_UUID, tethering.pokemonId)
-            tetheringNBT.putUUID(DataKeys.PC_ID, tethering.pcId)
-            tetheringNBT.putInt(DataKeys.TETHERING_ENTITY_ID, tethering.entityId)
-            list.add(tetheringNBT)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val nbt = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            val list = ListTag()
+            for (tethering in tetheredPokemon) {
+                val tetheringNBT = CompoundTag()
+                tetheringNBT.putUUID(DataKeys.TETHERING_ID, tethering.tetheringId)
+                tetheringNBT.putUUID(DataKeys.TETHERING_PLAYER_ID, tethering.playerId)
+                tetheringNBT.putUUID(DataKeys.POKEMON_UUID, tethering.pokemonId)
+                tetheringNBT.putUUID(DataKeys.PC_ID, tethering.pcId)
+                tetheringNBT.putInt(DataKeys.TETHERING_ENTITY_ID, tethering.entityId)
+                list.add(tetheringNBT)
+            }
+            nbt.put(DataKeys.TETHER_POKEMON, list)
+            nbt.put(DataKeys.TETHER_MIN_ROAM_POS, writeBlockPos(minRoamPos))
+            nbt.put(DataKeys.TETHER_MAX_ROAM_POS, writeBlockPos(maxRoamPos))
+            ownerId?.let { nbt.putUUID(DataKeys.TETHER_OWNER_ID, it) }
+            nbt.putString(DataKeys.TETHER_OWNER_NAME, this.ownerName)
+        } finally {
+            output.putAll(nbt)
         }
-        nbt.put(DataKeys.TETHER_POKEMON, list)
-        nbt.put(DataKeys.TETHER_MIN_ROAM_POS, writeBlockPos(minRoamPos))
-        nbt.put(DataKeys.TETHER_MAX_ROAM_POS, writeBlockPos(maxRoamPos))
-        ownerId?.let { nbt.putUUID(DataKeys.TETHER_OWNER_ID, it) }
-        nbt.putString(DataKeys.TETHER_OWNER_NAME, this.ownerName)
     }
 }

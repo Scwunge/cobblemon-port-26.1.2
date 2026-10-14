@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.block
 
+import java.util.function.Consumer
+import net.minecraft.world.item.component.TooltipDisplay
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.api.text.gray
@@ -53,7 +56,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("DEPRECATED", "OVERRIDE_DEPRECATION")
-class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
+class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings), LegacyOnRemove {
     companion object {
         val CODEC: MapCodec<HealingMachineBlock> = simpleCodec(::HealingMachineBlock)
 
@@ -132,7 +135,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
     }
 
     override fun onRemove(state: BlockState, world: Level, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
+        if (!state.`is`(newState.block)) LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
     override fun useWithoutItem(blockState: BlockState, world: Level, blockPos: BlockPos, player: Player, hit: BlockHitResult): InteractionResult {
@@ -212,7 +215,7 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
 
     override fun hasAnalogOutputSignal(state: BlockState) = true
 
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int = (world.getBlockEntity(pos) as? HealingMachineBlockEntity)?.currentSignal ?: 0
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int = (world.getBlockEntity(pos) as? HealingMachineBlockEntity)?.currentSignal ?: 0
 
     override fun <T : BlockEntity> getTicker(world: Level, blockState: BlockState, blockWithEntityType: BlockEntityType<T>): BlockEntityTicker<T>? = createTickerHelper(blockWithEntityType, CobblemonBlockEntities.HEALING_MACHINE, HealingMachineBlockEntity.TICKER::tick)
 
@@ -220,13 +223,13 @@ class HealingMachineBlock(settings: Properties) : BaseEntityBlock(settings) {
         return RenderShape.MODEL
     }
 
-    override fun appendHoverText(
-        stack: ItemStack,
-        context: Item.TooltipContext,
-        tooltip: MutableList<Component>,
-        options: TooltipFlag
-    ) {
-        tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip1".asTranslated().gray())
-        tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip2".asTranslated().gray())
+    override fun appendHoverText(stack: ItemStack, context: TooltipContext, display: TooltipDisplay, tooltipAdder: Consumer<Component>, options: TooltipFlag) {
+        val tooltip = mutableListOf<Component>()
+        try {
+            tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip1".asTranslated().gray())
+            tooltip.add("block.${Cobblemon.MODID}.healing_machine.tooltip2".asTranslated().gray())
+        } finally {
+            tooltip.forEach(tooltipAdder::accept)
+        }
     }
 }

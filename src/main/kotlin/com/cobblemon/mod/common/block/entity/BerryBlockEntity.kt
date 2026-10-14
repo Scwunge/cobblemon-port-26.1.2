@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.berry.Berry
@@ -255,7 +260,9 @@ class BerryBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobblemon
         return harvest(world, state, pos, null);
     }
 
-    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+    override fun loadAdditional(input: ValueInput) {
+        val nbt = input.asCompoundTag()
+        val registryLookup = input.lookup()
         this.berryIdentifier = Identifier.parse(nbt.getStringOr(BERRY, "").takeIf { it.isNotBlank() } ?: "cobblemon:pecha")
         this.wasLoading = true
         this.growthPoints.clear()
@@ -281,17 +288,23 @@ class BerryBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobblemon
         this.renderState?.needsRebuild = true
     }
 
-    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        nbt.putInt(GROWTH_TIMER, this.growthTimer)
-        nbt.putInt(STAGE_TIMER, this.stageTimer)
-        val list = ListTag()
-        list += this.growthPoints.map { StringTag.valueOf(it.toString()) }
-        nbt.put(GROWTH_POINTS, list)
-        nbt.putString(BERRY, berryIdentifier.toString())
-        nbt.putInt(MULCH_DURATION, mulchDuration)
-        nbt.putString(GROWTH_POINTS_SEQUENCE, growthPointSequence)
-        nbt.putString(MULCH_VARIANT, mulchVariant.toString())
-        nbt.putLong(LAST_TICK_TIME, lastTickTime)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val nbt = CompoundTag()
+        try {
+            nbt.putInt(GROWTH_TIMER, this.growthTimer)
+            nbt.putInt(STAGE_TIMER, this.stageTimer)
+            val list = ListTag()
+            list += this.growthPoints.map { StringTag.valueOf(it.toString()) }
+            nbt.put(GROWTH_POINTS, list)
+            nbt.putString(BERRY, berryIdentifier.toString())
+            nbt.putInt(MULCH_DURATION, mulchDuration)
+            nbt.putString(GROWTH_POINTS_SEQUENCE, growthPointSequence)
+            nbt.putString(MULCH_VARIANT, mulchVariant.toString())
+            nbt.putLong(LAST_TICK_TIME, lastTickTime)
+        } finally {
+            output.putAll(nbt)
+        }
     }
 
     override fun setChanged() {

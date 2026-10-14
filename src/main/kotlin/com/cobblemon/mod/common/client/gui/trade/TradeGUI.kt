@@ -515,9 +515,9 @@ class TradeGUI(
         super.onClose()
     }
 
-    override fun renderBlurredBackground(delta: Float) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
 
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     private fun setOfferedPokemon(pokemon: Pokemon?, isOpposing: Boolean = false) {
         protectiveTicks = 20
@@ -629,8 +629,8 @@ class TradeGUI(
             val itemY = y + 125
             if (!heldItem.isEmpty) {
                 val textRenderer = Minecraft.getInstance().font
-                context.renderItem(heldItem, itemX, itemY)
-                context.renderItemDecorations(textRenderer, heldItem, itemX, itemY)
+                context.item(heldItem, itemX, itemY)
+                context.itemDecorations(textRenderer, heldItem, itemX, itemY)
             }
 
             // Shiny Icon

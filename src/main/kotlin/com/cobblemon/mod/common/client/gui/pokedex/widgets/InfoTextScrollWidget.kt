@@ -109,23 +109,16 @@ abstract class InfoTextScrollWidget(val pX: Int, val pY: Int): ScrollingWidget<I
         )
     }
 
-    override fun getScrollbarPosition(): Int {
-        return left + width - scrollBarWidth
-    }
+    override val scrollbarPosition: Int
+        get() = left + width - scrollBarWidth
 
     class TextSlot(val text : String) : Slot<TextSlot>() {
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            y: Int,
-            x: Int,
-            entryWidth: Int,
-            entryHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovered: Boolean,
-            tickDelta: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val y = getContentY()
+            val x = getX()
+            val entryWidth = getWidth()
+            val entryHeight = getContentHeight()
             val matrices = context.pose()
 
             matrices.pushPose()

@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.item.interactive
 
+import java.util.function.Consumer
+import net.minecraft.world.item.component.TooltipDisplay
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.interaction.PokemonEntityInteraction
@@ -56,11 +58,16 @@ class TechnicalMachineItem(properties: Properties) : CobblemonItem(properties), 
         return true
     }
 
-    override fun appendHoverText(stack: ItemStack, context: TooltipContext, tooltip: MutableList<Component>, tooltipFlag: TooltipFlag) {
-        val move = TMMoveComponent.getTMMove(stack)
-        val text = move?.displayName ?: lang("tms.unknown_move")
-        tooltip.add(text.gray())
-        super.appendHoverText(stack, context, tooltip, tooltipFlag)
+    override fun appendHoverText(stack: ItemStack, context: TooltipContext, display: TooltipDisplay, tooltipAdder: Consumer<Component>, tooltipFlag: TooltipFlag) {
+        val tooltip = mutableListOf<Component>()
+        try {
+            val move = TMMoveComponent.getTMMove(stack)
+            val text = move?.displayName ?: lang("tms.unknown_move")
+            tooltip.add(text.gray())
+            super.appendHoverText(stack, context, display, tooltipAdder, tooltipFlag)
+        } finally {
+            tooltip.forEach(tooltipAdder::accept)
+        }
     }
 
     override val sound: SoundEvent? = CobblemonSounds.TM_USE

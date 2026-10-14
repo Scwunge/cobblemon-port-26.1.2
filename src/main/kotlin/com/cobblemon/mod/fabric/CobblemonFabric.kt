@@ -252,6 +252,7 @@ object CobblemonFabric : CobblemonImplementation {
         EntityDataSerializers.registerSerializer(IdentifierDataSerializer)
         EntityDataSerializers.registerSerializer(UUIDSetDataSerializer)
         EntityDataSerializers.registerSerializer(OptionalUUIDDataSerializer)
+        EntityDataSerializers.registerSerializer(CompoundTagDataSerializer)
         EntityDataSerializers.registerSerializer(NPCPlayerTextureSerializer)
         EntityDataSerializers.registerSerializer(RideBoostsDataSerializer)
     }

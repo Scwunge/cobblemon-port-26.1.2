@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.block.campfirepot
 
+import net.minecraft.world.level.redstone.Orientation
+import net.minecraft.world.level.ScheduledTickAccess
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.block.entity.CampfireBlockEntity
@@ -55,7 +58,7 @@ import org.jetbrains.annotations.Nullable
 import net.minecraft.world.level.block.CampfireBlock as MCCampfireBlock
 
 @Suppress("OVERRIDE_DEPRECATION")
-class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock(settings), SimpleWaterloggedBlock {
+class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock(settings), LegacyOnRemove, SimpleWaterloggedBlock {
     companion object {
         val CODEC: MapCodec<CampfireBlock> = RecordCodecBuilder.mapCodec {
             it.group(
@@ -209,21 +212,14 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
         builder.add(FACING, ITEM_DIRECTION, POWERED, COOKING, LID)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        world: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         return if (direction == state.getValue(FACING) && !state.canSurvive(world, pos)) Blocks.AIR.defaultBlockState()
-        else super.updateShape(state, direction, neighborState, world, pos, neighborPos)
+        else super.updateShape(state, world, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
 
     override fun getRenderShape(state: BlockState) = RenderShape.MODEL
 
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos))
     }
 
@@ -275,19 +271,12 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
         }
     }
 
-    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         return if (isSoul) ItemStack(Blocks.SOUL_CAMPFIRE) else ItemStack(Blocks.CAMPFIRE)
     }
 
-    override fun neighborChanged(
-        state: BlockState,
-        level: Level,
-        pos: BlockPos,
-        neighborBlock: Block,
-        neighborPos: BlockPos,
-        movedByPiston: Boolean
-    ) {
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston)
+    override fun neighborChanged(state: BlockState, level: Level, pos: BlockPos, neighborBlock: Block, orientation: Orientation?, movedByPiston: Boolean) {
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston)
         val isPowered = level.hasNeighborSignal(pos)
         val blockEntity = level.getBlockEntity(pos) as? CampfireBlockEntity ?: return
 
@@ -327,10 +316,10 @@ class CampfireBlock(settings: Properties, val isSoul: Boolean) : BaseEntityBlock
                     }
                 }
 
-                super.onRemove(state, level, pos, newState, movedByPiston)
+                LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
                 level.updateNeighbourForOutputSignal(pos, this)
             } else {
-                super.onRemove(state, level, pos, newState, movedByPiston)
+                LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
             }
         }
     }

@@ -36,7 +36,7 @@ class TradeButton(
         private val buttonActiveResource = cobblemonResource("textures/gui/trade/trade_button_active.png")
     }
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val enabled = parent.offeredPokemon != null && parent.opposingOfferedPokemon != null && parent.protectiveTicks <= 0 && !parent.tradeProcessing
         val active = parent.trade.acceptedOppositeOffer && !parent.trade.oppositeAcceptedMyOffer.get()
 

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.decor
 
+import net.minecraft.world.entity.InsideBlockEffectApplier
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.block.entity.TerrainPlantBlockEntity
@@ -67,7 +68,7 @@ class TerrainPlantBlock(properties: Properties) : TallFlowerBlock(properties), E
         if (entityInside) level.scheduleTick(pos, this, 30) // tick occasionally to check if player inside
     }
 
-    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
+    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity, effectApplier: InsideBlockEffectApplier, isPrecise: Boolean) {
         // Lucibell lower block will be our 'driver'
         if (!level.isClientSide && !state.getValue(GLOWING) && state.`is`(CobblemonBlocks.LUCIBELL)) {
             val halfState = state.getValue(HALF)

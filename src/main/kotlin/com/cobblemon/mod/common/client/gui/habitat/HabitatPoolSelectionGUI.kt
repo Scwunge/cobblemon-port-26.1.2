@@ -74,7 +74,7 @@ class HabitatPoolSelectionGUI(
         guiGraphics.fill(0, 0, width, headerHeight, Color(0, 0, 0, 150).rgb)
         guiGraphics.fill(0, getFooterTop(), width, height, Color(0, 0, 0, 150).rgb)
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
-        guiGraphics.drawCenteredString(font, title, width / 2, 8, 0xFFFFFF)
+        guiGraphics.centeredText(font, title, width / 2, 8, legacyTextColour(0xFFFFFF))
     }
 
     private fun getFooterTop(): Int {
@@ -114,13 +114,13 @@ class HabitatPoolSelectionGUI(
             setSelected(children().firstOrNull { it.poolId == selectedPoolId })
         }
 
-        override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}
+        override fun extractListBackground(guiGraphics: GuiGraphicsExtractor) {}
 
         override fun getRowWidth(): Int {
             return listWidth - 8
         }
 
-        override fun getScrollbarPosition(): Int {
+        override fun scrollBarX(): Int {
             return left + listWidth - 6
         }
 
@@ -129,18 +129,12 @@ class HabitatPoolSelectionGUI(
             private val poolName: String,
             private val onSelect: (Identifier?) -> Unit
         ) : ObjectSelectionList.Entry<PoolEntry>() {
-            override fun extractRenderState(
-                guiGraphics: GuiGraphicsExtractor,
-                index: Int,
-                rowTop: Int,
-                rowLeft: Int,
-                rowWidth: Int,
-                rowHeight: Int,
-                mouseX: Int,
-                mouseY: Int,
-                hovered: Boolean,
-                partialTick: Float
-            ) {
+            override fun extractContent(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, partialTick: Float) {
+                // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+                val rowTop = getContentY()
+                val rowLeft = getX()
+                val rowWidth = getWidth()
+                val rowHeight = getContentHeight()
                 guiGraphics.text(Minecraft.getInstance().font, poolName.asTranslated(), rowLeft + 4, rowTop + 6, legacyTextColour(0xFFFFFF))
             }
 

@@ -41,7 +41,7 @@ class IconButton(
     }
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         resource?.let {
             blitk(
                 matrixStack = context.pose(),

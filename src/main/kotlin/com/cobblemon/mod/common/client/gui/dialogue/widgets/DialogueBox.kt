@@ -124,9 +124,8 @@ class DialogueBox(
         return LINE_WIDTH
     }
 
-    override fun getScrollbarPosition(): Int {
-        return this.x + 186
-    }
+    override val scrollbarPosition: Int
+        get() = this.x + 186
 
     override fun getBottom(): Int {
         return this.y + this.height - 2
@@ -188,7 +187,7 @@ class DialogueBox(
     class DialogueLine(val line: FormattedCharSequence, val lineColor: Int) : Entry<DialogueLine>() {
         override fun getNarration() = "".text()
 
-        override fun renderBack(
+        fun renderBack(
             context: GuiGraphicsExtractor,
             index: Int,
             y: Int,
@@ -201,18 +200,12 @@ class DialogueBox(
             tickDelta: Float
         ) {}
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            rowTop: Int,
-            rowLeft: Int,
-            rowWidth: Int,
-            rowHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            isHovered: Boolean,
-            partialTicks: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, isHovered: Boolean, partialTicks: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val rowTop = getContentY()
+            val rowLeft = getX()
+            val rowWidth = getWidth()
+            val rowHeight = getContentHeight()
             drawScaledText(
                 context,
                 line,

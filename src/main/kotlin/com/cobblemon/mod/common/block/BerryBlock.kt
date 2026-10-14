@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.block
 
 //import dev.lambdaurora.lambdynlights.util.SodiumDynamicLightHandler.pos
+import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.berry.Berries
 import com.cobblemon.mod.common.api.berry.Berry
@@ -241,8 +242,8 @@ class BerryBlock(private val berryIdentifier: Identifier, settings: Properties) 
     }
 
     @Deprecated("Deprecated in Java")
-    override fun updateShape(state: BlockState, direction: Direction, neighborState: BlockState, world: LevelAccessor, pos: BlockPos, neighborPos: BlockPos): BlockState {
-        return if (state.canSurvive(world, pos)) super.updateShape(state, direction, neighborState, world, pos, neighborPos) else Blocks.AIR.defaultBlockState()
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
+        return if (state.canSurvive(world, pos)) super.updateShape(state, world, scheduledTickAccess, pos, direction, neighborPos, neighborState, random) else Blocks.AIR.defaultBlockState()
     }
 
     override fun setPlacedBy(world: Level, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack) {
@@ -259,7 +260,7 @@ class BerryBlock(private val berryIdentifier: Identifier, settings: Properties) 
         builder.add(IS_ROOTED)
     }
 
-    override fun getCloneItemStack(world: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(world: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         val berryItem = this.berry()?.item() ?: return ItemStack.EMPTY
         return ItemStack(berryItem)
     }

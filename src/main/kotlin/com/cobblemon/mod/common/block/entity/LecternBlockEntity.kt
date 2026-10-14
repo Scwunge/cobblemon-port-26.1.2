@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.block.LecternBlock
 import net.minecraft.core.BlockPos
@@ -22,13 +27,21 @@ import net.minecraft.world.level.block.state.BlockState
 class LecternBlockEntity(blockPos: BlockPos, blockState: BlockState) : ViewerCountBlockEntity(CobblemonBlockEntities.LECTERN, blockPos, blockState) {
     val inventory: NonNullList<ItemStack> = NonNullList.withSize(1, ItemStack.EMPTY)
 
-    override fun saveAdditional(compoundTag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(compoundTag, registryLookup)
-        ContainerHelper.saveAllItems(compoundTag, inventory, true, registryLookup)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val compoundTag = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            ContainerHelper.saveAllItems(compoundTag, inventory, true, registryLookup)
+        } finally {
+            output.putAll(compoundTag)
+        }
     }
 
-    override fun loadAdditional(compoundTag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(compoundTag, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val compoundTag = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         ContainerHelper.loadAllItems(compoundTag, inventory, registryLookup)
     }
 

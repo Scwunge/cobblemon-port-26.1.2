@@ -189,8 +189,8 @@ class PokedexGUI private constructor(
             }
         }
 
-    override fun renderBlurredBackground(delta: Float) {}
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     public override fun init() {
         super.init()

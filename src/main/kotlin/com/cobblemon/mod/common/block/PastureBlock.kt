@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.ScheduledTickAccess
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonNetwork
@@ -60,7 +63,7 @@ import net.minecraft.world.level.gameevent.GameEvent
 import java.util.function.BiConsumer
 
 @Suppress("OVERRIDE_DEPRECATION", "DEPRECATION")
-class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWaterloggedBlock {
+class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRemove, SimpleWaterloggedBlock {
     companion object {
         val CODEC = simpleCodec(::PastureBlock)
 
@@ -334,7 +337,7 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
     }
 
     override fun onRemove(state: BlockState, world: Level, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
+        if (!state.`is`(newState.block)) LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
@@ -343,16 +346,9 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), SimpleWater
         } else super.getFluidState(state)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        world: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
         }
 
         val isPasture = neighborState.`is`(this)

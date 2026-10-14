@@ -33,7 +33,7 @@ class ReleaseButton(
         private val buttonResource = cobblemonResource("textures/gui/pc/pc_release_button.png")
     }
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         if (parent.canDeleteSelected() && !parent.displayConfirmRelease) {
             blitk(
                 matrixStack = context.pose(),

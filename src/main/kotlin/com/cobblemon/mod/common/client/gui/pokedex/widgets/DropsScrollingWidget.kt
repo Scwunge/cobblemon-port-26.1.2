@@ -61,9 +61,8 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
         }
     }
 
-    override fun getScrollbarPosition(): Int {
-        return left + width - scrollBarWidth - 7
-    }
+    override val scrollbarPosition: Int
+        get() = left + width - scrollBarWidth - 7
 
     override fun getBottom(): Int {
         return this.y + this.height - 1
@@ -134,18 +133,12 @@ class DropsScrollingWidget(val pX: Int, val pY: Int): ScrollingWidget<DropsScrol
     }
 
     class DropWidgetEntry(val entry: ItemDropEntry): Slot<DropWidgetEntry>() {
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            y: Int,
-            x: Int,
-            entryWidth: Int,
-            entryHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovered: Boolean,
-            tickDelta: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val y = getContentY()
+            val x = getX()
+            val entryWidth = getWidth()
+            val entryHeight = getContentHeight()
             context.pose().pushPose()
             context.pose().translate(0f, 0f, 100f)
             val itemStack = Minecraft.getInstance().player?.level()?.itemRegistry?.get(entry.item)?.defaultInstance ?: ItemStack.EMPTY

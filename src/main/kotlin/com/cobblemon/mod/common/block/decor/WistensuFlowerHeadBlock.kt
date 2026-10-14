@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.block.decor
 
 
+import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -60,14 +61,7 @@ class WistensuFlowerHeadBlock(properties: Properties?) : GrowingPlantHeadBlock(p
         additionalBlockStateDefinition(builder)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        level: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, level: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         val updateState = wisternUpdateShape(state, direction, neighborState, level, pos, neighborPos, this)
         if (updateState != null) return updateState
 

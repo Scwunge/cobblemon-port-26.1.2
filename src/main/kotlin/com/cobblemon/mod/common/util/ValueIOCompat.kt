@@ -52,3 +52,12 @@ fun ValueOutput.putAll(tag: CompoundTag) {
 
 /** All entries of this input as a CompoundTag. */
 fun ValueInput.asCompoundTag(): CompoundTag = read(WholeCompoundCodec).orElseGet(::CompoundTag)
+
+/**
+ * Registries for block entity save code that used to receive them as a parameter of saveAdditional. Block entities
+ * are saved while in a level; the server's registries are the fallback.
+ */
+fun net.minecraft.world.level.block.entity.BlockEntity.blockEntityRegistries(): net.minecraft.core.HolderLookup.Provider =
+    level?.registryAccess()
+        ?: com.cobblemon.mod.common.Cobblemon.implementation.server()?.registryAccess()
+        ?: net.minecraft.core.RegistryAccess.EMPTY

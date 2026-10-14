@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.decor
 
+import net.minecraft.core.Direction
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.block.entity.MistleafFlowerBlockEntity
 import net.minecraft.core.BlockPos
@@ -81,7 +82,7 @@ class MistleafFlowerBlock(lightLevel: (BlockState) -> Int) :
     }
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean { return true }
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         return state.getValue(GLOWING) as Int
     }
 }

@@ -35,7 +35,7 @@ class MoveDescriptionScrollList(
         this.setRenderHeader(false, 0)
     }
 
-    override fun getScrollbarPosition(): Int {
+    override fun scrollBarX(): Int {
         return x + width - 3
     }
 
@@ -69,21 +69,21 @@ class MoveDescriptionScrollList(
         val deltaY = dragY
         if (scrolling) {
             if (mouseY < y) {
-                scrollAmount = 0.0
+                setScrollAmount(0.0)
             } else if (mouseY > bottom) {
-                scrollAmount = maxScroll.toDouble()
+                setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount += deltaY
+                scrollAmount() += deltaY
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)
     }
 
-    override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}
+    override fun extractListBackground(guiGraphics: GuiGraphicsExtractor) {}
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= getScrollbarPosition().toDouble()
-                && mouseX < (getScrollbarPosition() + 3).toDouble()
+        scrolling = mouseX >= scrollBarX().toDouble()
+                && mouseX < (scrollBarX() + 3).toDouble()
                 && mouseY >= y
                 && mouseY < bottom
     }

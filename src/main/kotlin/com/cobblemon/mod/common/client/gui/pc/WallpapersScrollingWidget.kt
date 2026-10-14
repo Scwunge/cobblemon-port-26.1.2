@@ -56,7 +56,8 @@ class WallpapersScrollingWidget(
         createEntries()
     }
 
-    override fun getScrollbarPosition(): Int = x + width - 3
+    override val scrollbarPosition: Int
+        get() = x + width - 3
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         blitk(
@@ -104,18 +105,12 @@ class WallpapersScrollingWidget(
     }
 
     inner class WallpaperEntry(val wallpaper: Identifier, var altWallpaper: Identifier?, var isNew: Boolean) : Slot<WallpaperEntry>() {
-        override fun extractRenderState(
-            guiGraphics: GuiGraphicsExtractor,
-            index: Int,
-            top: Int,
-            left: Int,
-            width: Int,
-            height: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovering: Boolean,
-            partialTick: Float
-        ) {
+        override fun extractContent(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val top = getContentY()
+            val left = getX()
+            val width = getWidth()
+            val height = getContentHeight()
             val matrices = guiGraphics.pose()
             val resource = if (Screen.hasShiftDown() && altWallpaper !== null) altWallpaper else wallpaper
             blitk(

@@ -762,9 +762,8 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             selectedEntry = entry
         }
 
-        override fun getScrollbarPosition(): Int {
-            return left + HALF_OVERLAY_WIDTH - SCROLL_BAR_WIDTH
-        }
+        override val scrollbarPosition: Int
+        get() = left + HALF_OVERLAY_WIDTH - SCROLL_BAR_WIDTH
 
         override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
             val xLeft = this.scrollbarPosition
@@ -807,7 +806,12 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             private var lastX = 0
             private var lastY = 0
 
-            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+                // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+                val y = getContentY()
+                val x = getX()
+                val entryWidth = getWidth()
+                val entryHeight = getContentHeight()
                 lastX = x
                 lastY = y
 
@@ -963,12 +967,16 @@ class MovesLearnsetWidget(val pX: Int, val pY: Int) : SoundlessWidget(
             )
         }
 
-        override fun getScrollbarPosition(): Int {
-            return left + width - DESCRIPTION_SCROLLBAR_WIDTH
-        }
+        override val scrollbarPosition: Int
+        get() = left + width - DESCRIPTION_SCROLLBAR_WIDTH
 
         class TextSlot(val text: String) : Slot<TextSlot>() {
-            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+                // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+                val y = getContentY()
+                val x = getX()
+                val entryWidth = getWidth()
+                val entryHeight = getContentHeight()
                 drawScaledText(
                     context = context,
                     text = text.text(),

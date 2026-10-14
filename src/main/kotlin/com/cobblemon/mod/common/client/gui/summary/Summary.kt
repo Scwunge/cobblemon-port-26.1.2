@@ -137,7 +137,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
     private var mainScreenIndex = INFO
     var sideScreenIndex = PARTY
 
-    override fun renderBlurredBackground(delta: Float) { }
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) { }
 
     /**
      * Initializes the Summary Screen
@@ -496,7 +496,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         }
     }
 
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun extractRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         schedulingTracker.update(delta / 20F)
@@ -633,8 +633,8 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         val itemX = x + 3
         val itemY = y + 104
         if (!displayedItem.isEmpty) {
-            context.renderItem(displayedItem, itemX, itemY)
-            context.renderItemDecorations(Minecraft.getInstance().font, displayedItem, itemX, itemY)
+            context.item(displayedItem, itemX, itemY)
+            context.itemDecorations(Minecraft.getInstance().font, displayedItem, itemX, itemY)
         }
 
         drawScaledText(

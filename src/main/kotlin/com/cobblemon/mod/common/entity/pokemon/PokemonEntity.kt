@@ -8,7 +8,10 @@
 
 package com.cobblemon.mod.common.entity.pokemon
 
+import com.cobblemon.mod.common.util.shoulderEntityLeft
+import com.cobblemon.mod.common.util.shoulderEntityRight
 import com.cobblemon.mod.common.api.net.serializers.OptionalUUIDDataSerializer
+import com.cobblemon.mod.common.util.saveOptional
 import com.cobblemon.mod.common.util.asCompoundTag
 import com.cobblemon.mod.common.util.putAll
 import net.minecraft.world.level.storage.ValueOutput
@@ -760,7 +763,7 @@ open class PokemonEntity(
             if (state.block == CobblemonBlocks.PASTURE) {
                 val direction = state.getValue(HorizontalDirectionalBlock.FACING)
                 val width = this.boundingBox.xsize
-                val tpPos = pastureBlockPos.offset(direction.normal.multiply(ceil(width).toInt() + 1)).center
+                val tpPos = pastureBlockPos.offset(direction.unitVec3i.multiply(ceil(width).toInt() + 1)).center
                 val heightAllowance = 4.0 // Allow spawning up to x blocks above the pastureBlock y level
 
                 // Attempt tp and recall if it fails
@@ -1198,7 +1201,7 @@ open class PokemonEntity(
 
         if (ownerUUID == player.uuid || ownerUUID == null) {
             if (itemStack.`is`(Items.SHEARS) && this.readyForShearing()) {
-                this.shear(SoundSource.PLAYERS)
+                (level() as? ServerLevel)?.let { this.shear(it, SoundSource.PLAYERS, itemStack) }
                 this.gameEvent(GameEvent.SHEAR, player)
                 itemStack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND)
                 return InteractionResult.SUCCESS
@@ -1254,14 +1257,14 @@ open class PokemonEntity(
             } else if (itemStack.item is DyeItem && colorFeatureType != null) {
                 val currentColor = colorFeature?.value ?: ""
                 val item = itemStack.item as DyeItem
-                if (!item.dyeColor.name.equals(currentColor, ignoreCase = true)) {
+                if (!itemStack.get(DataComponents.DYE)!!.name.equals(currentColor, ignoreCase = true)) {
                     if (player is ServerPlayer) {
                         if (colorFeature != null) {
-                            colorFeature.value = item.dyeColor.name.lowercase()
+                            colorFeature.value = itemStack.get(DataComponents.DYE)!!.name.lowercase()
                             this.pokemon.markFeatureDirty(colorFeature)
                         } else {
                             val newColorFeature =
-                                StringSpeciesFeature(DataKeys.CAN_BE_COLORED, item.dyeColor.name.lowercase())
+                                StringSpeciesFeature(DataKeys.CAN_BE_COLORED, itemStack.get(DataComponents.DYE)!!.name.lowercase())
                             this.pokemon.features.add(newColorFeature)
                             this.pokemon.onChange()
                         }
@@ -1346,9 +1349,9 @@ open class PokemonEntity(
 
     override fun canBeSeenAsEnemy() = super.canBeSeenAsEnemy() && !isBusy
 
-    override fun doHurtTarget(target: Entity): Boolean {
+    override fun doHurtTarget(level: ServerLevel, target: Entity): Boolean {
         if (beamMode != 0) return false
-        return super.doHurtTarget(target)
+        return super.doHurtTarget(level, target)
     }
 
     override fun hurtServer(level: ServerLevel, source: DamageSource, amount: Float): Boolean {
@@ -1918,7 +1921,7 @@ open class PokemonEntity(
         if (this.controllingPassenger != null || this.hasRider()) {
             // Reset fall distance every tick if the Pokémon isn't nosediving
             if (this.deltaMovement.y() > -0.5F && this.fallDistance > 1.0F) {
-                this.fallDistance = 1.0F
+                this.fallDistance = 1.0
             }
         }
         super.move(type, pos)
@@ -1937,8 +1940,8 @@ open class PokemonEntity(
                 }
 
                 // Rotate velocity vector to face the current y rotation
-                val f = Mth.sin(this.yRot.toRadians())
-                val g = Mth.cos(this.yRot.toRadians())
+                val f = Mth.sin(this.yRot.toRadians().toDouble())
+                val g = Mth.cos(this.yRot.toRadians().toDouble())
                 val v = Vec3(
                     inp.x * g.toDouble() - inp.z * f.toDouble(),
                     inp.y,
@@ -2038,7 +2041,7 @@ open class PokemonEntity(
     override fun checkFallDamage(y: Double, onGround: Boolean, state: BlockState, pos: BlockPos) {
         super.checkFallDamage(y, onGround, state, pos)
         if (isFlying() && this.passengers.isEmpty() && y < 0.0 && !onGround) {
-            fallDistance = 0F // Prevent fall damage after flying without a rider
+            fallDistance = 0.0 // Prevent fall damage after flying without a rider
         }
     }
 
@@ -2089,7 +2092,7 @@ open class PokemonEntity(
      */
     override fun setCustomName(name: Component?) {
         // We do this as a compromise to keep as much compatibility as possible with other mods expecting this entity to act like a vanilla one
-        this.pokemon.nickname = Component.literal(name?.string)
+        this.pokemon.nickname = Component.literal(name?.string.orEmpty())
     }
 
     /**
@@ -2231,7 +2234,7 @@ open class PokemonEntity(
     override fun setLeashedTo(entity: Entity, bl: Boolean) {
         super.setLeashedTo(entity, bl)
         if (this.ownerUUID != null && this.ownerUUID != entity.uuid) {
-            dropLeash(true, true)
+            dropLeash()
         }
     }
 

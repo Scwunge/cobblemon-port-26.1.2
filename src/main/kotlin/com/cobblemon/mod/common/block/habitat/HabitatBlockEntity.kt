@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.habitat
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonNetwork.sendPacket
@@ -167,25 +172,33 @@ class HabitatBlockEntity(pos: BlockPos, state: BlockState) :
         level?.sendBlockUpdated(worldPosition, blockState, blockState, Block.UPDATE_ALL)
     }
 
-    override fun saveAdditional(tag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(tag, registryLookup)
-        tag.putString(DataKeys.HABITAT_MIMIC, mimicId.toString())
-        tag.putString(DataKeys.HABITAT_PHASE_ORDER, phaseOrder.toString())
-        // Only save the level range when it's a non-trivial one
-        if (levelRange.first != 1 || levelRange.last != Cobblemon.config.maxPokemonLevel) {
-            tag.putString(DataKeys.HABITAT_LEVEL_RANGE, IntRangeAdapter.serialize(levelRange))
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val tag = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            tag.putString(DataKeys.HABITAT_MIMIC, mimicId.toString())
+            tag.putString(DataKeys.HABITAT_PHASE_ORDER, phaseOrder.toString())
+            // Only save the level range when it's a non-trivial one
+            if (levelRange.first != 1 || levelRange.last != Cobblemon.config.maxPokemonLevel) {
+                tag.putString(DataKeys.HABITAT_LEVEL_RANGE, IntRangeAdapter.serialize(levelRange))
+            }
+            tag.putString(DataKeys.HABITAT_MODIFIERS, modifiers.asString())
+            tag.putString(DataKeys.HABITAT_SPAWNING_STYLE, spawningStyle.type.toString())
+            spawningStyle.writeToNBT(tag)
+            HabitatPool.writePoolToNBT(pool = pool, nbt = tag)
+            val speciesListTag = ListTag()
+            displaySpeciesIds.forEach { speciesListTag.add(StringTag.valueOf(it.toString())) }
+            tag.put(DISPLAY_SPECIES_KEY, speciesListTag)
+        } finally {
+            output.putAll(tag)
         }
-        tag.putString(DataKeys.HABITAT_MODIFIERS, modifiers.asString())
-        tag.putString(DataKeys.HABITAT_SPAWNING_STYLE, spawningStyle.type.toString())
-        spawningStyle.writeToNBT(tag)
-        HabitatPool.writePoolToNBT(pool = pool, nbt = tag)
-        val speciesListTag = ListTag()
-        displaySpeciesIds.forEach { speciesListTag.add(StringTag.valueOf(it.toString())) }
-        tag.put(DISPLAY_SPECIES_KEY, speciesListTag)
     }
 
-    override fun loadAdditional(tag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(tag, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val tag = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         tag.getStringOr(DataKeys.HABITAT_MIMIC, "").let {
             mimicId = Identifier.tryParse(it) ?: BuiltInRegistries.BLOCK.getKey(Blocks.STONE)
         }

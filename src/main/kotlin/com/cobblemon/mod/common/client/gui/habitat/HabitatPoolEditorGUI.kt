@@ -169,7 +169,7 @@ class HabitatPoolEditorGUI(
         guiGraphics.fill(0, 0, width, height, Color(0, 0, 0, 100).rgb)
         guiGraphics.fill(0, 0, width, headerHeight, Color(0, 0, 0, 150).rgb)
         guiGraphics.fill(0, getFooterTop(), width, height, Color(0, 0, 0, 150).rgb)
-        guiGraphics.drawCenteredString(font, title, width / 2, 8, 0xFFFFFF)
+        guiGraphics.centeredText(font, title, width / 2, 8, legacyTextColour(0xFFFFFF))
         
         val buttonWidth = getScaledWidth() - 20
         val colWidth = buttonWidth / 6

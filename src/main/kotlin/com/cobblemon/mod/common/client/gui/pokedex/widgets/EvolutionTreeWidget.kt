@@ -317,14 +317,14 @@ class EvolutionTreeWidget(
             val (_, firstChildY) = getDrawingCoordinates(treeDrawingNode.children.first())
             val (_, lastChildY) = getDrawingCoordinates(treeDrawingNode.children.last())
 
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                 treeForkStart,
                 treeForkEnd,
                 middleStart,
                 LINE_COLOR,
             )
 
-            guiGraphics.vLine(
+            guiGraphics.verticalLine(
                 treeForkEnd,
                 firstChildY + SCROLL_SLOT_SIZE / 2,
                 lastChildY + SCROLL_SLOT_SIZE / 2,
@@ -491,21 +491,21 @@ class EvolutionTreeWidget(
         }
 
         if (icons.isEmpty()) {
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                 lineStartX,
                 lineEndX,
                 lineY,
                 LINE_COLOR,
             )
         } else {
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                 lineStartX,
                 iconX - 1,
                 lineY,
                 LINE_COLOR,
             )
 
-            guiGraphics.hLine(
+            guiGraphics.horizontalLine(
                 iconX + iconSize,
                 lineEndX,
                 lineY,

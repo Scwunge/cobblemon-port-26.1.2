@@ -69,7 +69,7 @@ class ConfigVariableList(
     public override fun addEntry(entry: ConfigVariable) = super.addEntry(entry)
     public override fun removeEntry(entry: ConfigVariable) = super.removeEntry(entry)
 
-    override fun renderListSeparators(guiGraphics: GuiGraphicsExtractor) {}
+    override fun extractListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         correctSize()
@@ -114,7 +114,7 @@ class ConfigVariableList(
                 && mouseY < bottom
     }
 
-    override fun renderListBackground(context: GuiGraphicsExtractor) {}
+    override fun extractListBackground(context: GuiGraphicsExtractor) {}
 
     private fun correctSize() {
         setRectangle(WIDTH, HEIGHT, listX, (listY - 4))
@@ -186,18 +186,12 @@ class ConfigVariableList(
             return children.filterIsInstance<NarratableEntry>()
         }
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            rowTop: Int,
-            rowLeft: Int,
-            rowWidth: Int,
-            rowHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            isHovered: Boolean,
-            partialTicks: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, isHovered: Boolean, partialTicks: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val rowTop = getContentY()
+            val rowLeft = getX()
+            val rowWidth = getWidth()
+            val rowHeight = getContentHeight()
             val x = rowLeft - 4
             val y = rowTop
             if (variable.type == MoLangVariableType.BOOLEAN) {

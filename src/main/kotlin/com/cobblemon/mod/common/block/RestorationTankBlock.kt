@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.world.level.redstone.Orientation
+import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.api.multiblock.MultiblockBlock
 import com.cobblemon.mod.common.api.multiblock.MultiblockEntity
@@ -157,7 +159,7 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
         return true
     }
 
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
         if(world == null || pos == null) {
             return 0
         }
@@ -181,14 +183,7 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
     }
 
     @Deprecated("Deprecated in Java")
-    override fun neighborChanged(
-        state: BlockState,
-        world: Level,
-        pos: BlockPos,
-        sourceBlock: Block,
-        sourcePos: BlockPos,
-        notify: Boolean
-    ) {
+    override fun neighborChanged(state: BlockState, world: Level, pos: BlockPos, sourceBlock: Block, orientation: Orientation?, notify: Boolean) {
         val bl = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.above())
         val bl2 = state.getValue(TRIGGERED)
         if (bl && !bl2) {
@@ -224,14 +219,7 @@ class RestorationTankBlock(settings: Properties) : MultiblockBlock(settings), Wo
         }
     }
 
-    override fun updateShape(
-            state: BlockState,
-            direction: Direction,
-            neighborState: BlockState,
-            world: LevelAccessor,
-            pos: BlockPos,
-            neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         val isTank = neighborState.`is`(this)
         val part = state.getValue(PART)
         if (!isTank && part == TankPart.TOP && neighborPos == pos.below()) {

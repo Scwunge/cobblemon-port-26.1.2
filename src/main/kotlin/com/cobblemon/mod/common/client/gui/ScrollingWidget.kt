@@ -8,16 +8,21 @@
 
 package com.cobblemon.mod.common.client.gui
 
-import com.cobblemon.mod.common.mixin.accessor.EntryListWidgetAccessor
-import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.ObjectSelectionList
-import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.entity.layers.RenderLayer
 import net.minecraft.util.Mth
+import kotlin.math.max
 
+/**
+ * Cobblemon's scrolling list. It lays out its rows itself (see [getRowTop]) rather than using vanilla's layout.
+ *
+ * Since 1.21.9 vanilla lists store each entry's position on the entry and entries render through
+ * Entry#extractContent without position arguments. To keep every list pixel-identical, [renderEntry] places an entry
+ * so that its content area (getX, getContentY, getWidth, getContentHeight) equals the row position, width and height
+ * this widget used to pass to Entry#render. The old list API used by subclasses ([scrollAmount], [maxScroll],
+ * [maxPosition], [scrollbarPosition], [itemHeight], [getEntry]) is kept here on top of the new one.
+ */
 abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     top: Int = 0,
     val left: Int = 0,
@@ -32,10 +37,37 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     top, // Top
     slotHeight // Slot Height
 ), CobblemonRenderable {
-    override fun renderListBackground(guiGraphics: GuiGraphicsExtractor) {}
-    override fun renderSelection(context: GuiGraphicsExtractor, y: Int, entryWidth: Int, entryHeight: Int, borderColor: Int, fillColor: Int) {}
-    override fun renderDecorations(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {}
+    /** The height of a row (AbstractSelectionList#itemHeight before 1.21.9). */
+    val itemHeight: Int = slotHeight
 
+    override fun extractListBackground(graphics: GuiGraphicsExtractor) {}
+    override fun extractSelection(graphics: GuiGraphicsExtractor, entry: T, outlineColor: Int) {}
+    open fun renderDecorations(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {}
+
+    /** AbstractSelectionList#getScrollAmount/setScrollAmount before 1.21.9. */
+    var scrollAmount: Double
+        get() = scrollAmount()
+        set(value) { setScrollAmount(value) }
+
+    /** The total height of the rows (AbstractSelectionList#getMaxPosition before 1.21.9). */
+    open val maxPosition: Int
+        get() = this.itemCount * this.itemHeight
+
+    /** AbstractSelectionList#getMaxScroll before 1.21.9. */
+    open val maxScroll: Int
+        get() = max(0, this.maxPosition - (this.height - 4))
+
+    override fun maxScrollAmount(): Int = this.maxScroll
+
+    override fun contentHeight(): Int = this.maxPosition + 4
+
+    /** The x position of the scrollbar (AbstractSelectionList#getScrollbarPosition before 1.21.9). */
+    open val scrollbarPosition: Int
+        get() = this.left + this.width - this.scrollBarWidth
+
+    override fun scrollBarX(): Int = this.scrollbarPosition
+
+    open fun getEntry(index: Int): T = this.children()[index]
 
     init {
         setRectangle(width, height, top, top + height)
@@ -54,41 +86,15 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     }
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
-        val asAccessor = this as EntryListWidgetAccessor
         this.focused = if (this.isMouseOver(mouseX.toDouble(), mouseY.toDouble())) this.getEntryAtPosition(
             mouseX.toDouble(),
             mouseY.toDouble()
         ) else null
-        val renderBackground = false
-        if (renderBackground) {
-            context.setColor(0.125f, 0.125f, 0.125f, 1.0f)
-            context.blit(
-                Screen.MENU_BACKGROUND,
-                this.left,
-                this.y,
-                right.toFloat(),
-                (this.bottom + scrollAmount.toInt()).toFloat(),
-                this.right - this.left,
-                this.bottom - this.y, 32, 32
-            )
-            context.setColor(1.0f, 1.0f, 1.0f, 1.0f)
-        }
-
-        val l1 = this.rowLeft
-        val l = this.y + 4 - scrollAmount.toInt()
+        // The menu background and header that used to be optionally drawn here were always disabled for these lists.
 
         this.enableScissor(context)
-        if (asAccessor.renderHeader) {
-            this.renderHeader(context, l1, l)
-        }
-
         this.renderListItems(context, mouseX, mouseY, delta)
         context.disableScissor()
-
-        val renderHorizontalShadows = false
-        if (renderHorizontalShadows) {
-            this.renderHorizontalShadows(context, mouseX, mouseY, delta)
-        }
 
         val maxScroll = this.maxScroll
         if (maxScroll > 0) {
@@ -96,7 +102,6 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         }
 
         this.renderDecorations(context, mouseX, mouseY)
-        RenderSystem.disableBlend()
     }
 
     open fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float){
@@ -117,40 +122,11 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         context.fill(xLeft ,k1, xRight - 1, k1 + j2 - 1, -4144960)
     }
 
-    open fun renderHorizontalShadows(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float){
-        context.setColor(0.25f, 0.25f, 0.25f, 1.0f)
-        context.blit(
-            Screen.MENU_BACKGROUND,
-            this.left, 0, 0.0f, 0.0f,
-            this.width,
-            this.y, 32, 32
-        )
-        context.blit(
-            Screen.MENU_BACKGROUND,
-            this.left,
-            this.bottom, 0.0f,
-            bottom.toFloat(),
-            this.width,
-            this.height - this.bottom, 32, 32
-        )
-        context.setColor(1.0f, 1.0f, 1.0f, 1.0f)
-        context.fillGradient(
-            RenderType.guiOverlay(),
-            this.left,
-            this.y,
-            this.right,
-            this.y + 4, -16777216, 0, 0
-        )
-        context.fillGradient(
-            RenderType.guiOverlay(),
-            this.left,
-            this.bottom - 4,
-            this.right,
-            this.bottom, 0, -16777216, 0
-        )
+    override fun extractListItems(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
+        renderListItems(graphics, mouseX, mouseY, a)
     }
 
-    override fun renderListItems(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    open fun renderListItems(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val i = this.rowLeft
         val j = this.rowWidth
         val k = this.itemHeight
@@ -160,12 +136,12 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
             val n = this.getRowTop(m)
             val o = this.getRowBottom(m)
             if (o >= this.y && n <= this.bottom) {
-                this.renderItem(context!!, mouseX, mouseY, delta, m, i, n, j, k)
+                this.renderItem(context, mouseX, mouseY, delta, m, i, n, j, k)
             }
         }
     }
 
-    override fun renderItem(
+    open fun renderItem(
         context: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int,
@@ -177,10 +153,17 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
         entryHeight: Int
     ) {
         val entry =  this.getEntry(index)
-        entry.render(
-            context, index, y, x, entryWidth, entryHeight, mouseX, mouseY,
-            focused == entry, delta
-        )
+        renderEntry(entry, context, y, x, entryWidth, entryHeight, mouseX, mouseY, focused == entry, delta)
+    }
+
+    /** Renders [entry] with the row geometry Entry#render used to receive (top, left, width, height). */
+    fun renderEntry(entry: T, context: GuiGraphicsExtractor, top: Int, left: Int, width: Int, height: Int, mouseX: Int, mouseY: Int, hovered: Boolean, delta: Float) {
+        // Entry content is inset by 2px on each side of the entry's bounds.
+        entry.x = left
+        entry.y = top - 2
+        entry.setWidth(width)
+        entry.setHeight(height + 4)
+        entry.extractContent(context, mouseX, mouseY, hovered, delta)
     }
 
     override fun getRowLeft(): Int {
@@ -202,8 +185,6 @@ abstract class ScrollingWidget<T : ObjectSelectionList.Entry<T>>(
     override fun getRowBottom(index: Int): Int {
         return this.getRowTop(index) + this.itemHeight
     }
-
-    override fun getScrollbarPosition(): Int = this.left + this.width - this.scrollBarWidth
 
     abstract class Slot<T : Slot<T>>(): Entry<T>() {
         // Override render to show each individual element

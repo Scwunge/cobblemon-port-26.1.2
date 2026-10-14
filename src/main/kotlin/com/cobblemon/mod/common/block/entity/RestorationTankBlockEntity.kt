@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.api.fossil.NaturalMaterials
 import com.cobblemon.mod.common.api.multiblock.builder.MultiblockStructureBuilder
@@ -31,13 +36,21 @@ class RestorationTankBlockEntity(
 ) : FossilMultiblockEntity(pos, state, multiblockBuilder, CobblemonBlockEntities.RESTORATION_TANK) {
     val inv = RestorationTankInventory(this)
 
-    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(nbt, registryLookup)
-        ContainerHelper.saveAllItems(nbt, inv.items, registryLookup)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val nbt = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            ContainerHelper.saveAllItems(nbt, inv.items, registryLookup)
+        } finally {
+            output.putAll(nbt)
+        }
     }
 
-    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(nbt, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val nbt = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         ContainerHelper.loadAllItems(nbt, inv.items, registryLookup)
     }
 

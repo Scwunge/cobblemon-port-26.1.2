@@ -9,11 +9,11 @@ accessWidener	v2	official
 
 transitive-accessible method net/minecraft/client/renderer/entity/LivingEntityRenderer addLayer (Lnet/minecraft/client/renderer/entity/layers/RenderLayer;)Z
 transitive-accessible field net/minecraft/world/entity/Entity DATA_AIR_SUPPLY_ID Lnet/minecraft/network/syncher/EntityDataAccessor;
-# TODO(port): not found in 26.1.2: transitive-accessible method net/minecraft/world/entity/player/Player setShoulderEntityLeft (Lnet/minecraft/nbt/CompoundTag;)V
-# TODO(port): not found in 26.1.2: transitive-accessible method net/minecraft/world/entity/player/Player setShoulderEntityRight (Lnet/minecraft/nbt/CompoundTag;)V
-# TODO(port): not found in 26.1.2: transitive-accessible method net/minecraft/world/entity/player/Player respawnEntityOnShoulder (Lnet/minecraft/nbt/CompoundTag;)V
-# TODO(port): not found in 26.1.2: transitive-accessible method net/minecraft/world/entity/player/Player getShoulderEntityLeft ()Lnet/minecraft/nbt/CompoundTag;
-# TODO(port): not found in 26.1.2: transitive-accessible method net/minecraft/world/entity/player/Player getShoulderEntityRight ()Lnet/minecraft/nbt/CompoundTag;
+transitive-accessible method net/minecraft/server/level/ServerPlayer setShoulderEntityLeft (Lnet/minecraft/nbt/CompoundTag;)V
+transitive-accessible method net/minecraft/server/level/ServerPlayer setShoulderEntityRight (Lnet/minecraft/nbt/CompoundTag;)V
+transitive-accessible method net/minecraft/server/level/ServerPlayer respawnEntityOnShoulder (Lnet/minecraft/nbt/CompoundTag;)V
+transitive-accessible method net/minecraft/server/level/ServerPlayer getShoulderEntityLeft ()Lnet/minecraft/nbt/CompoundTag;
+transitive-accessible method net/minecraft/server/level/ServerPlayer getShoulderEntityRight ()Lnet/minecraft/nbt/CompoundTag;
 transitive-accessible method net/minecraft/client/renderer/entity/EntityRenderers register (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/client/renderer/entity/EntityRendererProvider;)V
 # TODO(port): not found in 26.1.2: transitive-accessible field net/minecraft/client/Minecraft itemColors Lnet/minecraft/client/color/item/ItemColors;
 transitive-accessible field net/minecraft/client/model/geom/ModelPart children Ljava/util/Map;

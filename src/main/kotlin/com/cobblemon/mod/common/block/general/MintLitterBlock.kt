@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.general
 
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.ScheduledTickAccess
 import com.cobblemon.mod.common.util.rotateShape
 import com.mojang.serialization.MapCodec
 import com.mojang.serialization.codecs.RecordCodecBuilder
@@ -51,22 +53,8 @@ class MintLitterBlock(properties: Properties?) : Block(properties) {
         builder.add(AMOUNT)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction?,
-        neighborState: BlockState?,
-        level: LevelAccessor?,
-        pos: BlockPos?,
-        neighborPos: BlockPos?
-    ): BlockState {
-        return if (!state.canSurvive(level, pos)) Blocks.AIR.defaultBlockState() else super.updateShape(
-            state,
-            direction,
-            neighborState,
-            level,
-            pos,
-            neighborPos
-        )
+    override fun updateShape(state: BlockState, level: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
+        return if (!state.canSurvive(level, pos)) Blocks.AIR.defaultBlockState() else super.updateShape(state, level, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
 
     override fun canSurvive(state: BlockState?, level: LevelReader, pos: BlockPos): Boolean {
@@ -74,7 +62,7 @@ class MintLitterBlock(properties: Properties?) : Block(properties) {
         return level.getBlockState(posBelow).isFaceSturdy(level, posBelow, Direction.UP)
     }
 
-    override fun propagatesSkylightDown(state: BlockState, level: BlockGetter?, pos: BlockPos?): Boolean {
+    override fun propagatesSkylightDown(state: BlockState): Boolean {
         return state.getFluidState().isEmpty()
     }
 

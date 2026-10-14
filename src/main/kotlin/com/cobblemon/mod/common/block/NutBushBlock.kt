@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.world.entity.InsideBlockEffectApplier
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.tags.CobblemonBlockTags
 import com.mojang.serialization.MapCodec
@@ -44,7 +45,7 @@ class NutBushBlock(properties: Properties) : VegetationBlock(properties), Boneme
 
     override fun codec(): MapCodec<NutBushBlock> = CODEC
 
-    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         return ItemStack(CobblemonItems.GALARICA_NUTS)
     }
 
@@ -69,7 +70,7 @@ class NutBushBlock(properties: Properties) : VegetationBlock(properties), Boneme
         }
     }
 
-    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity) {
+    override fun entityInside(state: BlockState, level: Level, pos: BlockPos, entity: Entity, effectApplier: InsideBlockEffectApplier, isPrecise: Boolean) {
         if (entity is LivingEntity && entity.type !== EntityType.FOX && entity.type !== EntityType.BEE) {
             entity.makeStuckInBlock(state, Vec3(0.8, 0.75, 0.8))
         }

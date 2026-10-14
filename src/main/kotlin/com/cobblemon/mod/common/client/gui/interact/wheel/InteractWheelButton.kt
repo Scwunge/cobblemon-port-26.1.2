@@ -64,7 +64,7 @@ class InteractWheelButton(
     private var passedTicks = 0F
     private val blinkInterval = 35
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val matrices = context.pose()
         passedTicks += delta
 

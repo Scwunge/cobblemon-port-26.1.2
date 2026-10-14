@@ -79,7 +79,7 @@ class TMPartySlotWidget(
         else -> null
     }
 
-    override fun extractWidgetRenderState(context: net.minecraft.client.gui.GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun extractContents(context: net.minecraft.client.gui.GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         state.currentAspects = pokemon?.aspects ?: emptySet()
         val matrices = context.pose()
 

@@ -192,7 +192,7 @@ class PokeSnackBlock(settings: Properties, val isLure: Boolean): BaseEntityBlock
         level.sendBlockUpdated(pos, state, state, UPDATE_CLIENTS)
     }
 
-    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(level: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         val blockEntity = level.getBlockEntity(pos) as? PokeSnackBlockEntity ?: return ItemStack.EMPTY
         return blockEntity.toItemStack()
     }

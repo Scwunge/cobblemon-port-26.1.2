@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.mixin;
 
+import net.minecraft.network.syncher.SynchedEntityData;
+import com.cobblemon.mod.common.entity.player.ShoulderData;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.OrientationControllable;
@@ -404,4 +406,15 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
         original.call(target, strength, x, z);
     }
 
+    /** See {@link ShoulderData}: define the synced shoulder data right after Player's own entity data. */
+    @Inject(method = "<clinit>", at = @At("TAIL"))
+    private static void cobblemon$defineShoulderDataAccessors(CallbackInfo ci) {
+        ShoulderData.init();
+    }
+
+    @Inject(method = "defineSynchedData", at = @At("TAIL"))
+    private void cobblemon$defineShoulderData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+        builder.define(ShoulderData.LEFT, new CompoundTag());
+        builder.define(ShoulderData.RIGHT, new CompoundTag());
+    }
 }

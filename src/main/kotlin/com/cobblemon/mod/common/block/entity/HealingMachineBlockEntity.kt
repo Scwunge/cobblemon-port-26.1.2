@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.util.allKeys
 import com.cobblemon.mod.common.util.hasUUID
@@ -156,11 +161,10 @@ class HealingMachineBlockEntity(
         clearData()
     }
 
-    override fun loadAdditional(
-        compoundTag: CompoundTag,
-        registryLookup: HolderLookup.Provider
-    ) {
-        super.loadAdditional(compoundTag, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val compoundTag = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
 
         this.pokeBalls.clear()
 
@@ -195,31 +199,34 @@ class HealingMachineBlockEntity(
         }
     }
 
-    override fun saveAdditional(
-        compoundTag: CompoundTag,
-        registryLookup: HolderLookup.Provider
-    ) {
-        super.saveAdditional(compoundTag, registryLookup)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val compoundTag = CompoundTag()
+        try {
+            super.saveAdditional(output)
 
-        if (this.currentUser != null) {
-            compoundTag.putUUID(DataKeys.HEALER_MACHINE_USER, this.currentUser!!)
-        } else {
-            compoundTag.remove(DataKeys.HEALER_MACHINE_USER)
-        }
-
-        if (this.pokeBalls().isNotEmpty()) {
-            val pokeBallsTag = CompoundTag()
-            this.pokeBalls().forEach { (index, pokeBall) ->
-                pokeBallsTag.putString(index.toString(), pokeBall.name.toString())
+            if (this.currentUser != null) {
+                compoundTag.putUUID(DataKeys.HEALER_MACHINE_USER, this.currentUser!!)
+            } else {
+                compoundTag.remove(DataKeys.HEALER_MACHINE_USER)
             }
-            compoundTag.put(DataKeys.HEALER_MACHINE_POKEBALLS, pokeBallsTag)
-        } else {
-            compoundTag.remove(DataKeys.HEALER_MACHINE_POKEBALLS)
-        }
 
-        compoundTag.putInt(DataKeys.HEALER_MACHINE_TIME_LEFT, this.healTimeLeft)
-        compoundTag.putFloat(DataKeys.HEALER_MACHINE_CHARGE, this.healingCharge)
-        compoundTag.putBoolean(DataKeys.HEALER_MACHINE_INFINITE, this.infinite)
+            if (this.pokeBalls().isNotEmpty()) {
+                val pokeBallsTag = CompoundTag()
+                this.pokeBalls().forEach { (index, pokeBall) ->
+                    pokeBallsTag.putString(index.toString(), pokeBall.name.toString())
+                }
+                compoundTag.put(DataKeys.HEALER_MACHINE_POKEBALLS, pokeBallsTag)
+            } else {
+                compoundTag.remove(DataKeys.HEALER_MACHINE_POKEBALLS)
+            }
+
+            compoundTag.putInt(DataKeys.HEALER_MACHINE_TIME_LEFT, this.healTimeLeft)
+            compoundTag.putFloat(DataKeys.HEALER_MACHINE_CHARGE, this.healingCharge)
+            compoundTag.putBoolean(DataKeys.HEALER_MACHINE_INFINITE, this.infinite)
+        } finally {
+            output.putAll(compoundTag)
+        }
     }
 
     override fun getUpdatePacket(): Packet<ClientGamePacketListener>? = ClientboundBlockEntityDataPacket.create(this)

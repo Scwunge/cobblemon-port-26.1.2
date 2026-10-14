@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.util.DataKeys
 import net.minecraft.core.BlockPos
 import net.minecraft.core.HolderLookup
@@ -41,13 +46,21 @@ open class ViewerCountBlockEntity(type: BlockEntityType<*>?, blockPos: BlockPos,
         if (inRangeViewers < viewerCount) changeViewerCount(inRangeViewers)
     }
 
-    override fun saveAdditional(compoundTag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(compoundTag, registryLookup)
-        compoundTag.putInt(DataKeys.BLOCK_ENTITY_USER_AMOUNT, viewerCount)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val compoundTag = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            compoundTag.putInt(DataKeys.BLOCK_ENTITY_USER_AMOUNT, viewerCount)
+        } finally {
+            output.putAll(compoundTag)
+        }
     }
 
-    override fun loadAdditional(compoundTag: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(compoundTag, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val compoundTag = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         viewerCount = if (compoundTag.contains(DataKeys.BLOCK_ENTITY_USER_AMOUNT)) compoundTag.getIntOr(DataKeys.BLOCK_ENTITY_USER_AMOUNT, 0) else 0
     }
 

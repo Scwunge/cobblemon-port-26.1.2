@@ -53,11 +53,11 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
         correctSize()
     }
 
-    override fun getScrollbarPosition(): Int {
+    override fun scrollBarX(): Int {
         return x + width - 3
     }
 
-    override fun renderListBackground(context: GuiGraphicsExtractor) {}
+    override fun extractListBackground(context: GuiGraphicsExtractor) {}
 
     override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
         val matrices = context.pose()
@@ -126,17 +126,17 @@ abstract class SummaryScrollList<T : ObjectSelectionList.Entry<T>>(
             if (mouseY < listY) {
                 setScrollAmount(0.0)
             } else if (mouseY > bottom) {
-                setScrollAmount(maxScroll.toDouble())
+                setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                setScrollAmount(scrollAmount + deltaY)
+                setScrollAmount(scrollAmount() + deltaY)
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarPosition.toDouble()
-                && mouseX < (this.scrollbarPosition + 3).toDouble()
+        scrolling = mouseX >= this.scrollBarX().toDouble()
+                && mouseX < (this.scrollBarX() + 3).toDouble()
                 && mouseY >= listY
                 && mouseY < bottom
     }

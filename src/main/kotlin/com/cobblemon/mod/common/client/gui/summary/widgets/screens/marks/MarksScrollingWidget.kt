@@ -43,7 +43,8 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
 
     override fun getRowLeft(): Int = if (children().size > 5) (left + 1) else left
 
-    override fun getScrollbarPosition(): Int = rowLeft + width - 3
+    override val scrollbarPosition: Int
+        get() = rowLeft + width - 3
 
     override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         // Do not render scrollbar if all rows are already visible
@@ -146,18 +147,12 @@ class MarksScrollingWidget(val pX: Int, val pY: Int, val setSelectedMark: () -> 
             return anyHovered
         }
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            y: Int,
-            x: Int,
-            entryWidth: Int,
-            entryHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovered: Boolean,
-            tickDelta: Float
-        ) {}
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val y = getContentY()
+            val x = getX()
+            val entryWidth = getWidth()
+            val entryHeight = getContentHeight()}
 
         override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
             val mouseX = event.x()

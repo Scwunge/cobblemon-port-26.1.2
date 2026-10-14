@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
+import com.cobblemon.mod.common.entity.player.ShoulderData
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.PlayerSpawnerAccessor
@@ -492,3 +493,13 @@ fun ServerPlayer.updateShoulderNbt(pokemon: Pokemon) {
     nbt.putFloat(DataKeys.SHOULDER_SCALE_MODIFIER, pokemon.effectiveScale)
     if ((pokemon.state as ShoulderedState).isLeftShoulder) shoulderEntityLeft = nbt else shoulderEntityRight = nbt
 }
+
+/**
+ * The shoulder entity data of a player as synced to clients (see [ShoulderData]). On the server, ServerPlayer's own
+ * getShoulderEntityLeft/Right take precedence over these.
+ */
+val Player.shoulderEntityLeft: CompoundTag
+    get() = entityData.get(ShoulderData.LEFT)
+
+val Player.shoulderEntityRight: CompoundTag
+    get() = entityData.get(ShoulderData.RIGHT)

@@ -8,6 +8,12 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.entity.player.StackedItemContents
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import net.minecraft.util.ARGB
 import com.cobblemon.mod.common.CobblemonRecipeTypes
@@ -388,7 +394,7 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
     }
 
     override fun getRecipeUsed() = null
-    override fun fillStackedContents(contents: StackedContents) {
+    override fun fillStackedContents(contents: StackedItemContents) {
         for (itemStack in this.items) {
             contents.accountSimpleStack(itemStack);
         }
@@ -408,21 +414,29 @@ class CampfireBlockEntity(pos: BlockPos, state: BlockState) : BaseContainerBlock
         level?.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_CLIENTS)
     }
 
-    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.saveAdditional(tag, registries)
+    override fun saveAdditional(output: ValueOutput) {
+        val registries = blockEntityRegistries()
+        val tag = CompoundTag()
+        try {
+            super.saveAdditional(output)
 
-        tag.putInt("CookingProgress", this.cookingProgress)
+            tag.putInt("CookingProgress", this.cookingProgress)
 
-        ContainerHelper.saveAllItems(tag, this.items, registries)
-        potComponent?.let { component ->
-            PotComponent.CODEC.encodeStart(NbtOps.INSTANCE, component)
-                .result()
-                ?.ifPresent { encoded -> tag.put("PotComponent", encoded) }
+            ContainerHelper.saveAllItems(tag, this.items, registries)
+            potComponent?.let { component ->
+                PotComponent.CODEC.encodeStart(NbtOps.INSTANCE, component)
+                    .result()
+                    ?.ifPresent { encoded -> tag.put("PotComponent", encoded) }
+            }
+        } finally {
+            output.putAll(tag)
         }
     }
 
-    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.loadAdditional(tag, registries)
+    override fun loadAdditional(input: ValueInput) {
+        val tag = input.asCompoundTag()
+        val registries = input.lookup()
+        super.loadAdditional(input)
 
         this.cookingProgress = tag.getIntOr("CookingProgress", 0)
 

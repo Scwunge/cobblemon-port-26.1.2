@@ -135,9 +135,9 @@ class PCGUI(
     var selectPointerOffsetIncrement = false
     var displayOptions = false
 
-    override fun renderBlurredBackground(delta: Float) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
 
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun init() {
         val x = (width - BASE_WIDTH) / 2
@@ -510,8 +510,8 @@ class PCGUI(
             val itemX = x + 3
             val itemY = y + 98
             if (!displayedItem.isEmpty) {
-                context.renderItem(displayedItem, itemX, itemY)
-                context.renderItemDecorations(Minecraft.getInstance().font, displayedItem, itemX, itemY)
+                context.item(displayedItem, itemX, itemY)
+                context.itemDecorations(Minecraft.getInstance().font, displayedItem, itemX, itemY)
             }
 
             drawScaledText(

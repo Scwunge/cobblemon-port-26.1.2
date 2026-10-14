@@ -65,6 +65,7 @@
     "ItemPropertiesIdMixin",
     "ItemStackComponentizationFixMixin",
     "LecternBlockMixin",
+    "LevelChunkMixin",
     "LightningBoltMixin",
     "LivingEntityMixin",
     "MinecraftDedicatedServerMixin",

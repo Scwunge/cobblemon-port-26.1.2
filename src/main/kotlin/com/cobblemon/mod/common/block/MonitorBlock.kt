@@ -116,7 +116,7 @@ class MonitorBlock(settings: Properties) : MultiblockBlock(settings) {
         return true
     }
 
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
         val monitorEntity = world.getBlockEntity(pos) as? MultiblockEntity
         val multiBlockEntity = monitorEntity?.multiblockStructure
         if(multiBlockEntity != null) {

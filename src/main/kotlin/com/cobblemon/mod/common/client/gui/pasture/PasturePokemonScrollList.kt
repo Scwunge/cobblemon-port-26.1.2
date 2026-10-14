@@ -85,7 +85,7 @@ class PasturePokemonScrollList(
         }
     }
 
-    override fun getScrollbarPosition() = x + width - 3
+    override fun scrollBarX(): Int = x + width - 3
 
     public override fun addEntry(entry: PastureSlot) = super.addEntry(entry)
     public override fun removeEntry(entry: PastureSlot) = super.removeEntry(entry)
@@ -149,26 +149,26 @@ class PasturePokemonScrollList(
         val button = event.button()
         val deltaX = dragX
         val deltaY = dragY
-        if (scrolling && scrollbarVisible() && mouseX >= scrollbarPosition) {
+        if (scrolling && scrollbarVisible() && mouseX >= scrollBarX()) {
             if (mouseY < this.listY) {
-                scrollAmount = 0.0
+                setScrollAmount(0.0)
             } else if (mouseY > bottom) {
-                scrollAmount = maxScroll.toDouble()
+                setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount += deltaY
+                scrollAmount() += deltaY
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarPosition.toDouble()
-                && mouseX < (this.scrollbarPosition + 3).toDouble()
+        scrolling = mouseX >= this.scrollBarX().toDouble()
+                && mouseX < (this.scrollBarX() + 3).toDouble()
                 && mouseY >= listY
                 && mouseY < bottom
     }
 
-    override fun renderListBackground(context: GuiGraphicsExtractor) {}
+    override fun extractListBackground(context: GuiGraphicsExtractor) {}
 
     private fun correctSize() {
         setRectangle(WIDTH, HEIGHT, listX, (listY - 4))
@@ -210,18 +210,12 @@ class PasturePokemonScrollList(
 
         override fun getNarration() = pokemon.displayName
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            rowTop: Int,
-            rowLeft: Int,
-            rowWidth: Int,
-            rowHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            isHovered: Boolean,
-            partialTicks: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, isHovered: Boolean, partialTicks: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val rowTop = getContentY()
+            val rowLeft = getX()
+            val rowWidth = getWidth()
+            val rowHeight = getContentHeight()
             val x = rowLeft - 4
             val y = rowTop + 2
 

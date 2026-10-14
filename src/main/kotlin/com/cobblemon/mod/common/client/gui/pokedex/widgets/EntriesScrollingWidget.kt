@@ -64,9 +64,8 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         return super.addEntry(entry)
     }
 
-    override fun getScrollbarPosition(): Int {
-        return pX + width - SCROLL_BAR_WIDTH
-    }
+    override val scrollbarPosition: Int
+        get() = pX + width - SCROLL_BAR_WIDTH
 
     override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
@@ -137,18 +136,13 @@ class EntriesScrollingWidget(val pX: Int, val pY: Int, val setPokedexEntry: (Pok
         var x: Int = 0
         var y: Int = 0
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            y: Int,
-            x: Int,
-            entryWidth: Int,
-            entryHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovered: Boolean,
-            tickDelta: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val index = entryIndex()
+            val y = getContentY()
+            val x = getX()
+            val entryWidth = getWidth()
+            val entryHeight = getContentHeight()
             dexDataList.forEachIndexed { index, pokedexEntry ->
                 val species = PokemonSpecies.getByIdentifier(pokedexEntry.speciesId)
                 val discoveryLevel = discoveryLevelList[index]

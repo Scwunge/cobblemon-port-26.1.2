@@ -97,18 +97,12 @@ class EvolutionSelectScreen(
 
         override fun getNarration() = evolution.species.translatedName
 
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            rowTop: Int,
-            rowLeft: Int,
-            rowWidth: Int,
-            rowHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            isHovered: Boolean,
-            partialTicks: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, isHovered: Boolean, partialTicks: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val rowTop = getContentY()
+            val rowLeft = getX()
+            val rowWidth = getWidth()
+            val rowHeight = getContentHeight()
             val x = rowLeft - 3
             val y = rowTop
             val matrices = context.pose()

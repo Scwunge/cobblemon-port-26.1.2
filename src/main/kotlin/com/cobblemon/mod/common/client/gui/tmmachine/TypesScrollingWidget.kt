@@ -45,7 +45,8 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
         }
     }
 
-    override fun getScrollbarPosition(): Int = rowLeft + width - 3
+    override val scrollbarPosition: Int
+        get() = rowLeft + width - 3
 
     override fun renderScrollbar(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
         val xLeft = this.scrollbarPosition
@@ -137,7 +138,12 @@ class TypesScrollingWidget(val pX: Int, val pY: Int, val setType: (ElementalType
             }
         }
 
-        override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {}
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val y = getContentY()
+            val x = getX()
+            val entryWidth = getWidth()
+            val entryHeight = getContentHeight()}
 
         override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean  {
             val mouseX = event.x()

@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.ScheduledTickAccess
+import net.minecraft.world.level.LevelReader
+import com.cobblemon.mod.common.util.dropContentsOnDestroy
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.block.entity.DisplayCaseBlockEntity
 import com.cobblemon.mod.common.item.PokeBallItem
 import com.mojang.serialization.MapCodec
@@ -34,7 +39,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType
 import net.minecraft.world.phys.BlockHitResult
 
 @Suppress("OVERRIDE_DEPRECATION")
-class DisplayCaseBlock(settings: Properties) : BaseEntityBlock(settings) {
+class DisplayCaseBlock(settings: Properties) : BaseEntityBlock(settings), LegacyOnRemove {
     init {
         registerDefaultState(stateDefinition.any()
             .setValue(FACING, Direction.NORTH)
@@ -68,16 +73,9 @@ class DisplayCaseBlock(settings: Properties) : BaseEntityBlock(settings) {
         return DisplayCaseBlockEntity(pos, state)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        world: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         return if (direction == state.getValue(FACING) && !state.canSurvive(world, pos)) Blocks.AIR.defaultBlockState()
-        else super.updateShape(state, direction, neighborState, world, pos, neighborPos)
+        else super.updateShape(state, world, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
 
     override fun useWithoutItem(
@@ -104,16 +102,16 @@ class DisplayCaseBlock(settings: Properties) : BaseEntityBlock(settings) {
     ) {
         val entity = world.getBlockEntity(pos) as DisplayCaseBlockEntity
         if (!entity.getStack().isEmpty) {
-            Containers.dropContentsOnDestroy(state, newState, world, pos)
+            dropContentsOnDestroy(state, newState, world, pos)
         }
-        super.onRemove(state, world, pos, newState, moved)
+        LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
     override fun getRenderShape(state: BlockState) = RenderShape.MODEL
 
     override fun getShadeBrightness(state: BlockState, level: BlockGetter, pos: BlockPos): Float = 0.75F
 
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
         val stack = (world.getBlockEntity(pos) as DisplayCaseBlockEntity).getStack()
 
         if (stack.isEmpty) return 0

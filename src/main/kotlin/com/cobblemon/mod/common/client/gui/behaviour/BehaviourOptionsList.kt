@@ -51,9 +51,9 @@ class BehaviourOptionsList(
         }
     }
 
-    override fun renderListBackground(context: GuiGraphicsExtractor) {}
+    override fun extractListBackground(context: GuiGraphicsExtractor) {}
 
-    override fun renderListSeparators(guiGraphics: GuiGraphicsExtractor) {}
+    override fun extractListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
     override fun getScrollbarPosition() = left + width - 6
 
@@ -108,18 +108,12 @@ class BehaviourOptionsList(
         override fun setFocused(focused: Boolean) {}
         override fun isFocused() = false
 
-        override fun extractRenderState(
-            guiGraphics: GuiGraphicsExtractor,
-            index: Int,
-            top: Int,
-            left: Int,
-            width: Int,
-            height: Int,
-            mouseX: Int,
-            mouseY: Int,
-            hovering: Boolean,
-            partialTick: Float
-        ) {
+        override fun extractContent(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovering: Boolean, partialTick: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val top = getContentY()
+            val left = getX()
+            val width = getWidth()
+            val height = getContentHeight()
             slotRow.x = parent.left + 5 + (if (alignButtonRight) 0 else (BUTTON_WIDTH - 1))
             slotRow.y = top + 1
             slotRow.buttonWidth = SLOT_WIDTH - (if (parent.children().size > 6) 6 else 0)

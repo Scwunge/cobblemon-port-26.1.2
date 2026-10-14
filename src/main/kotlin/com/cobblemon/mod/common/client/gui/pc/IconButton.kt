@@ -38,7 +38,7 @@ class IconButton(
     var highlighted = false
     var showAlt = false
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTicks: Float) {
 
         blitk(
             matrixStack = context.pose(),

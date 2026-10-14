@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.boat
 
+import net.minecraft.world.entity.ContainerUser
 import com.cobblemon.mod.common.CobblemonEntities
 import net.minecraft.core.NonNullList
 import net.minecraft.nbt.CompoundTag
@@ -151,7 +152,7 @@ class CobblemonChestBoatEntity(entityType: EntityType<CobblemonChestBoatEntity>,
 
     private fun emptyInventory(): NonNullList<ItemStack> = NonNullList.withSize(INVENTORY_SLOTS, ItemStack.EMPTY)
 
-    override fun stopOpen(player: Player) {
+    override fun stopOpen(player: ContainerUser) {
         this.level().gameEvent(GameEvent.CONTAINER_CLOSE, this.position(), GameEvent.Context.of(player))
     }
 

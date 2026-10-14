@@ -34,7 +34,7 @@ class BattleResponseButton(
         private val declineIconResource = cobblemonResource("textures/gui/interact/request/icon_decline.png")
     }
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         val hovered = (isHovered(pMouseX.toDouble(), pMouseY.toDouble()))
         blitk(
                 matrixStack = context.pose(),

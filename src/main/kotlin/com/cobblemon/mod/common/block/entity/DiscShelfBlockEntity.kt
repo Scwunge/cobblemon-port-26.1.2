@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import net.minecraft.world.InteractionResult
 import com.cobblemon.mod.common.CobblemonItems
@@ -236,14 +241,22 @@ class DiscShelfBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(Cobbl
         return ClientboundBlockEntityDataPacket.create(this)
     }
 
-    override fun saveAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.saveAdditional(tag, registries)
-        ContainerHelper.saveAllItems(tag, items, true, registries)
-        tag.putInt("LastInteractedSlot", lastInteractedSlot)
+    override fun saveAdditional(output: ValueOutput) {
+        val registries = blockEntityRegistries()
+        val tag = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            ContainerHelper.saveAllItems(tag, items, true, registries)
+            tag.putInt("LastInteractedSlot", lastInteractedSlot)
+        } finally {
+            output.putAll(tag)
+        }
     }
 
-    override fun loadAdditional(tag: CompoundTag, registries: HolderLookup.Provider) {
-        super.loadAdditional(tag, registries)
+    override fun loadAdditional(input: ValueInput) {
+        val tag = input.asCompoundTag()
+        val registries = input.lookup()
+        super.loadAdditional(input)
         items.clear()
         ContainerHelper.loadAllItems(tag, items, registries)
         lastInteractedSlot = tag.getIntOr("LastInteractedSlot", 0)

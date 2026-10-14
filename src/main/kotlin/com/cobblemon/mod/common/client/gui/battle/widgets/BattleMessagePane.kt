@@ -48,10 +48,10 @@ class BattleMessagePane(
         //setRenderBackground(false)
 
         messageQueue.subscribe {
-            val fullyScrolledDown = maxScroll - scrollAmount < 10
+            val fullyScrolledDown = maxScrollAmount() - scrollAmount() < 10
             addEntry(BattleMessageLine(this, it))
             if (fullyScrolledDown) {
-                scrollAmount = maxScroll.toDouble()
+                setScrollAmount(maxScrollAmount().toDouble())
             }
         }
     }
@@ -132,7 +132,7 @@ class BattleMessagePane(
         return LINE_WIDTH
     }
 
-    override fun getScrollbarPosition(): Int {
+    override fun scrollBarX(): Int {
         return this.x + 154
     }
 
@@ -185,37 +185,31 @@ class BattleMessagePane(
         val deltaY = dragY
         if (scrolling) {
             if (mouseY < this.y) {
-                scrollAmount = 0.0
+                setScrollAmount(0.0)
             } else if (mouseY > bottom) {
-                scrollAmount = maxScroll.toDouble()
+                setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount += deltaY
+                scrollAmount() += deltaY
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarPosition.toDouble()
-                && mouseX < (this.scrollbarPosition + 3).toDouble()
+        scrolling = mouseX >= this.scrollBarX().toDouble()
+                && mouseX < (this.scrollBarX() + 3).toDouble()
                 && mouseY >= this.y
                 && mouseY < bottom
     }
 
     class BattleMessageLine(val pane: BattleMessagePane, val line: FormattedCharSequence) : Entry<BattleMessageLine>() {
         override fun getNarration() = "".text()
-        override fun extractRenderState(
-            context: GuiGraphicsExtractor,
-            index: Int,
-            rowTop: Int,
-            rowLeft: Int,
-            rowWidth: Int,
-            rowHeight: Int,
-            mouseX: Int,
-            mouseY: Int,
-            isHovered: Boolean,
-            partialTicks: Float
-        ) {
+        override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, isHovered: Boolean, partialTicks: Float) {
+            // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+            val rowTop = getContentY()
+            val rowLeft = getX()
+            val rowWidth = getWidth()
+            val rowHeight = getContentHeight()
             drawScaledText(
                 context,
                 line,

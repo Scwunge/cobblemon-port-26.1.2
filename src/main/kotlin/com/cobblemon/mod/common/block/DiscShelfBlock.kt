@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.block.entity.DiscShelfBlockEntity
 import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
@@ -28,7 +29,7 @@ import net.minecraft.world.Containers
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class DiscShelfBlock(properties: Properties) : BaseEntityBlock(properties) {
+class DiscShelfBlock(properties: Properties) : BaseEntityBlock(properties), LegacyOnRemove {
     companion object {
         val CODEC: MapCodec<DiscShelfBlock> = simpleCodec(::DiscShelfBlock)
         val FACING: DirectionProperty = HorizontalDirectionalBlock.FACING
@@ -72,7 +73,7 @@ class DiscShelfBlock(properties: Properties) : BaseEntityBlock(properties) {
 
     override fun hasAnalogOutputSignal(state: BlockState) = true
 
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         val entity = level.getBlockEntity(pos) as? DiscShelfBlockEntity
         return entity?.items?.count { !it.isEmpty }?.coerceIn(0, 14) ?: 0
     }
@@ -92,9 +93,9 @@ class DiscShelfBlock(properties: Properties) : BaseEntityBlock(properties) {
                     level.updateNeighbourForOutputSignal(pos, this)
                 }
             }
-            super.onRemove(state, level, pos, newState, movedByPiston)
+            LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
         } else {
-            super.onRemove(state, level, pos, newState, movedByPiston)
+            LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
         }
     }
 

@@ -288,7 +288,7 @@ class FossilMultiblockStructure (
     }
 
     @Deprecated("Deprecated in Java")
-    override fun getAnalogOutputSignal(state: BlockState, world: Level?, pos: BlockPos?): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
         if(world == null || pos == null) {
             return 0
         }

@@ -64,7 +64,7 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
 
     override fun getRenderShape(blockState: BlockState?) = RenderShape.MODEL
 
-    override fun getOcclusionShape(blockState: BlockState?, blockGetter: BlockGetter?, blockPos: BlockPos?): VoxelShape = MinecraftLecternBlock.SHAPE_COMMON
+    override fun getOcclusionShape(blockState: BlockState): VoxelShape = MinecraftLecternBlock.SHAPE_COMMON
 
     override fun useShapeForLightOcclusion(blockState: BlockState?) = true
 
@@ -82,7 +82,7 @@ class LecternBlock(properties: Properties): BaseEntityBlock(properties) {
 
     override fun getStateForPlacement(blockPlaceContext: BlockPlaceContext): BlockState = this.defaultBlockState().setValue(FACING, blockPlaceContext.horizontalDirection.opposite).setValue(EMIT_LIGHT, false)
 
-    override fun getCloneItemStack(levelReader: LevelReader, blockPos: BlockPos, blockState: BlockState): ItemStack = ItemStack(Blocks.LECTERN)
+    override fun getCloneItemStack(levelReader: LevelReader, blockPos: BlockPos, blockState: BlockState, includeData: Boolean): ItemStack = ItemStack(Blocks.LECTERN)
 
     override fun rotate(blockState: BlockState, rotation: Rotation) = blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING) as Direction)) as BlockState
 

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.world.level.redstone.Orientation
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.mojang.serialization.MapCodec
 import net.minecraft.core.BlockPos
@@ -99,7 +100,7 @@ class SaccharineLogSlatheredBlock(properties: Properties) : HorizontalDirectiona
         return super.getStateForPlacement(context)
     }
 
-    override fun neighborChanged(state: BlockState, level: Level, pos: BlockPos, neighborBlock: Block, neighborPos: BlockPos,  movedByPiston: Boolean) {
+    override fun neighborChanged(state: BlockState, level: Level, pos: BlockPos, neighborBlock: Block, orientation: Orientation?, movedByPiston: Boolean) {
         val facingDirection = state.getValue(FACING)
         val targetPos = pos.relative(facingDirection)
 
@@ -114,7 +115,7 @@ class SaccharineLogSlatheredBlock(properties: Properties) : HorizontalDirectiona
             }
         }
 
-        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston)
+        super.neighborChanged(state, level, pos, neighborBlock, orientation, movedByPiston)
     }
 
     override fun createBlockStateDefinition(builder: StateDefinition.Builder<Block, BlockState>) {

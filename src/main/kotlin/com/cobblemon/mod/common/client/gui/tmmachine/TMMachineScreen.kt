@@ -795,8 +795,8 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
 
                 val itemStack = stacks[index].copy().also { it.count = recipe.count }
 
-                context.renderItem(itemStack, itemX, itemY)
-                context.renderItemDecorations(Minecraft.getInstance().font, itemStack, itemX, itemY)
+                context.item(itemStack, itemX, itemY)
+                context.itemDecorations(Minecraft.getInstance().font, itemStack, itemX, itemY)
 
                 if (
                     menu.carried.isEmpty &&
@@ -1129,7 +1129,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         return super.mouseClicked(event, doubleClick)
     }
 
-    override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ContainerInput) {
+    override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ContainerInput) {
         super.slotClicked(slot, slotId, mouseButton, type)
         updateHeldStackMove()
         checkForSlotChanges()
@@ -1173,10 +1173,9 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
 
     override fun extractBackground(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {}
 
-    override fun renderBg(guiGraphics: GuiGraphicsExtractor, partialTick: Float, mouseX: Int, mouseY: Int) {}
 
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, delta: Float) {
-        super.renderTransparentBackground(graphics)
+        super.extractTransparentBackground(graphics)
 
         val matrices = graphics.pose()
         blitk(
@@ -1278,8 +1277,8 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         renderHeldMoveInfoTooltip(graphics, mouseX, mouseY)
     }
 
-    override fun renderBlurredBackground(partialTick: Float) {}
-    override fun renderLabels(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
+    override fun extractLabels(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {}
 
     fun playSound(soundEvent: SoundEvent) {
         Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(soundEvent, 1.0F))
@@ -1350,12 +1349,16 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
             )
         }
 
-        override fun getScrollbarPosition(): Int {
-            return left + width - DESCRIPTION_SCROLLBAR_WIDTH
-        }
+        override val scrollbarPosition: Int
+        get() = left + width - DESCRIPTION_SCROLLBAR_WIDTH
 
         class TextSlot(val text: String) : Slot<TextSlot>() {
-            override fun extractRenderState(context: GuiGraphicsExtractor, index: Int, y: Int, x: Int, entryWidth: Int, entryHeight: Int, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+            override fun extractContent(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, hovered: Boolean, tickDelta: Float) {
+                // Entry geometry is no longer passed in (1.21.9); these match the old arguments.
+                val y = getContentY()
+                val x = getX()
+                val entryWidth = getWidth()
+                val entryHeight = getContentHeight()
                 drawScaledText(
                     context = context,
                     text = text.text(),

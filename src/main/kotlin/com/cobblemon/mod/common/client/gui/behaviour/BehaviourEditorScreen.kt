@@ -80,9 +80,9 @@ class BehaviourEditorScreen(
         )
     }
 
-    override fun renderBlurredBackground(delta: Float) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
 
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun isPauseScreen() = false
 

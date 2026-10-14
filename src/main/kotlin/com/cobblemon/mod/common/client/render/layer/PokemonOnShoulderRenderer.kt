@@ -9,6 +9,7 @@
 package com.cobblemon.mod.common.client.render.layer
 
 import com.bedrockk.molang.runtime.value.DoubleValue
+import com.cobblemon.mod.common.util.parseOptionalItemStack
 import com.cobblemon.mod.common.util.getUUID
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.Cobblemon
@@ -308,7 +309,7 @@ class PokemonOnShoulderRenderer<T : Player>(renderLayerParent: RenderLayerParent
                 shoulderNbt.getListOrEmpty(DataKeys.SHOULDER_ASPECTS).map { it.asString }.toSet()
             val scaleModifier = shoulderNbt.getFloatOr(DataKeys.SHOULDER_SCALE_MODIFIER, 0F)
             val shownItem = Minecraft.getInstance().level?.registryAccess()
-                ?.let { ItemStack.parseOptional(it, shoulderNbt.getCompoundOrEmpty(DataKeys.SHOULDER_ITEM)) }
+                ?.let { parseOptionalItemStack(it, shoulderNbt.getCompoundOrEmpty(DataKeys.SHOULDER_ITEM)) }
                 ?: ItemStack.EMPTY
             return ShoulderData(pokemonUUID, species, form, aspects, scaleModifier, shownItem)
         }

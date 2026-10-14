@@ -8,6 +8,12 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.entity.ContainerUser
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.CobblemonSounds
@@ -244,18 +250,26 @@ class TMMachineBlockEntity(pos: BlockPos, state: BlockState) :
         return TMMachineMenu(containerId, inventory, tmMachineInventory, containerData)
     }
 
-    override fun saveAdditional(compound: CompoundTag, registries: HolderLookup.Provider) {
-        super.saveAdditional(compound, registries)
-        saveTint(compound)
-        compound.putBoolean(BURN_ACTIVE_TAG, burnActive)
-        compound.putBoolean(REPEAT_PROCESS_TAG, repeatProcess)
-        compound.putInt(BURN_PROGRESS_TAG, burnProgress)
-        compound.putString(ACTIVE_MOVE_TAG, activeMove)
-        ContainerHelper.saveAllItems(compound, tmMachineInventory.items, registries)
+    override fun saveAdditional(output: ValueOutput) {
+        val registries = blockEntityRegistries()
+        val compound = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            saveTint(compound)
+            compound.putBoolean(BURN_ACTIVE_TAG, burnActive)
+            compound.putBoolean(REPEAT_PROCESS_TAG, repeatProcess)
+            compound.putInt(BURN_PROGRESS_TAG, burnProgress)
+            compound.putString(ACTIVE_MOVE_TAG, activeMove)
+            ContainerHelper.saveAllItems(compound, tmMachineInventory.items, registries)
+        } finally {
+            output.putAll(compound)
+        }
     }
 
-    override fun loadAdditional(compound: CompoundTag, registries: HolderLookup.Provider) {
-        super.loadAdditional(compound, registries)
+    override fun loadAdditional(input: ValueInput) {
+        val compound = input.asCompoundTag()
+        val registries = input.lookup()
+        super.loadAdditional(input)
         loadTint(compound)
         burnActive = compound.getBooleanOr(BURN_ACTIVE_TAG, false)
         repeatProcess = compound.getBooleanOr(REPEAT_PROCESS_TAG, false)
@@ -405,11 +419,11 @@ class TMMachineBlockEntity(pos: BlockPos, state: BlockState) :
             }
         }
 
-        override fun startOpen(player: Player) {
+        override fun startOpen(player: ContainerUser) {
             blockEntity.startOpen(player)
         }
 
-        override fun stopOpen(player: Player) {
+        override fun stopOpen(player: ContainerUser) {
             blockEntity.stopOpen(player)
         }
     }

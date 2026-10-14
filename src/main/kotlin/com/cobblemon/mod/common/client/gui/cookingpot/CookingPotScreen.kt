@@ -132,11 +132,17 @@ class CookingPotScreen(
         addRenderableWidget(cookButton)
     }
 
-    override fun renderLabels(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
+    override fun extractLabels(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int) {
         guiGraphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, legacyTextColour(4210752), false)
     }
 
-    override fun renderBg(
+    // AbstractContainerScreen used to draw its background (renderBg) from renderBackground; it no longer does.
+    override fun extractBackground(context: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+        super.extractBackground(context, mouseX, mouseY, partialTick)
+        renderBg(context, partialTick, mouseX, mouseY)
+    }
+
+    fun renderBg(
         context: GuiGraphicsExtractor,
         partialTick: Float,
         mouseX: Int,
@@ -203,13 +209,13 @@ class CookingPotScreen(
         this.recipeBookComponent.setTooltipForNextFrame(context, this.leftPos, this.topPos, mouseX, mouseY)
     }
 
-    override fun renderSlot(guiGraphics: GuiGraphicsExtractor, slot: Slot) {
+    override fun extractSlot(guiGraphics: GuiGraphicsExtractor, slot: Slot, mouseX: Int, mouseY: Int) {
         if (slot is SeasoningSlot && ((!menu.carried.isEmpty && !slot.mayPlace(menu.carried)) || (slot.hasItem() && !slot.mayPlace(slot.item))) ) {
             val x = slot.x
             val y = slot.y
             guiGraphics.fill(x,y,x+16,y+16,822018048)
         }
-        super.renderSlot(guiGraphics, slot)
+        super.extractSlot(guiGraphics, slot, mouseX, mouseY)
     }
 
     override fun recipesUpdated() {
@@ -250,7 +256,7 @@ class CookingPotScreen(
         }
     }
 
-    override fun renderTooltip(
+    override fun extractTooltip(
         guiGraphics: GuiGraphicsExtractor,
         mouseX: Int,
         mouseY: Int
@@ -281,7 +287,7 @@ class CookingPotScreen(
     }
 
     // Java nullability with kotlin is my greatest enemy, it'll complain but this works
-    override fun slotClicked(slot: Slot?, slotId: Int, mouseButton: Int, type: ContainerInput) {
+    override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ContainerInput) {
         super.slotClicked(slot, slotId, mouseButton, type)
         recipeBookComponent.slotClicked(slot)
     }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.multiblock
 
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.block.entity.FossilMultiblockEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
@@ -26,7 +27,7 @@ import net.minecraft.world.phys.BlockHitResult
 /**
  * A block that can be part of a [MultiblockStructure]
  */
-abstract class MultiblockBlock(properties: Properties) : BaseEntityBlock(properties) {
+abstract class MultiblockBlock(properties: Properties) : BaseEntityBlock(properties), LegacyOnRemove {
 
     override fun setPlacedBy(
         world: Level,
@@ -61,7 +62,7 @@ abstract class MultiblockBlock(properties: Properties) : BaseEntityBlock(propert
         if (entity is MultiblockEntity && entity.multiblockStructure != null && state.block != newState.block) {
             entity.multiblockStructure!!.playerWillDestroy(level, pos, state, null)
         }
-        super.onRemove(state, level, pos, newState, movedByPiston)
+        LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
     }
 
     override fun newBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? {
@@ -74,9 +75,9 @@ abstract class MultiblockBlock(properties: Properties) : BaseEntityBlock(propert
     }
 
     //This is done so a block picked with NBT doesnt absolutely DESTROY multiblocks
-    override fun getCloneItemStack(world: LevelReader, pos: BlockPos, state: BlockState): ItemStack {
+    override fun getCloneItemStack(world: LevelReader, pos: BlockPos, state: BlockState, includeData: Boolean): ItemStack {
         val blockEntity = world.getBlockEntity(pos) as? MultiblockEntity ?: return ItemStack.EMPTY
-        return if (blockEntity.multiblockStructure == null) super.getCloneItemStack(world, pos, state) else ItemStack.EMPTY
+        return if (blockEntity.multiblockStructure == null) super.getCloneItemStack(world, pos, state, includeData) else ItemStack.EMPTY
     }
 
     abstract fun createMultiBlockEntity(pos: BlockPos, state: BlockState): FossilMultiblockEntity

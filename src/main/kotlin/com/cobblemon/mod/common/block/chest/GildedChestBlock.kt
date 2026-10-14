@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common.block.chest
 
+import net.minecraft.world.level.ScheduledTickAccess
+import net.minecraft.world.level.LevelReader
+import com.cobblemon.mod.common.util.dropContentsOnDestroy
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.scheduling.afterOnServer
@@ -53,7 +57,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
 @Suppress("OVERRIDE_DEPRECATION")
-class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEntityBlock(settings),
+class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEntityBlock(settings), LegacyOnRemove,
     SimpleWaterloggedBlock {
 
     init {
@@ -103,16 +107,9 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         }
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        world: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
-        if (state.getValue(WATERLOGGED)) world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos)
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
+        if (state.getValue(WATERLOGGED)) scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
+        return super.updateShape(state, world, scheduledTickAccess, pos, direction, neighborPos, neighborState, random)
     }
 
     override fun getFluidState(state: BlockState): FluidState {
@@ -209,9 +206,9 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         moved: Boolean
     ) {
         if (!isFake()) {
-            Containers.dropContentsOnDestroy(state, newState, world, pos)
+            dropContentsOnDestroy(state, newState, world, pos)
         }
-        super.onRemove(state, world, pos, newState, moved)
+        LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
     override fun getRenderShape(state: BlockState) = RenderShape.ENTITYBLOCK_ANIMATED
@@ -235,7 +232,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
         return true
     }
 
-    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, world: Level, pos: BlockPos, direction: Direction): Int {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos))
     }
 

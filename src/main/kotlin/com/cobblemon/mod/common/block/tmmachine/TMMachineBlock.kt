@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.block.tmmachine
 
+import com.cobblemon.mod.common.util.dropContentsOnDestroy
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.block.entity.TMMachineBlockEntity
@@ -47,7 +49,7 @@ import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 import org.jetbrains.annotations.Nullable
 
-class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), SimpleWaterloggedBlock {
+class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), LegacyOnRemove, SimpleWaterloggedBlock {
 
     companion object {
         val EMPTY: BooleanProperty = BooleanProperty.create("empty")
@@ -126,7 +128,7 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Simp
         else createTickerHelper(serverType, clientType, TMMachineBlockEntity::serverTick)
     }
 
-    override fun fallOn(level: Level, state: BlockState, pos: BlockPos, entity: Entity, fallDistance: Float) {
+    override fun fallOn(level: Level, state: BlockState, pos: BlockPos, entity: Entity, fallDistance: Double) {
         if (!level.isClientSide && (entity is LivingEntity) &&
             (entity.bbWidth * entity.bbWidth * entity.bbHeight > 0.512F) &&
             (entity.y >= (pos.y + 0.55)) &&
@@ -209,8 +211,8 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Simp
     override fun getShape(state: BlockState, getter: BlockGetter, pos: BlockPos, context: CollisionContext): VoxelShape = if (state.getValue(OPEN)) SHAPE_OPEN else SHAPE
 
     override fun onRemove(state: BlockState, level: Level, pos: BlockPos, newState: BlockState, movedByPiston: Boolean) {
-        Containers.dropContentsOnDestroy(state, newState, level, pos)
-        super.onRemove(state, level, pos, newState, movedByPiston)
+        dropContentsOnDestroy(state, newState, level, pos)
+        LegacyOnRemove.removeBlockEntity(state, level, pos, newState)
     }
 
     override fun isSignalSource(state: BlockState): Boolean = false
@@ -219,7 +221,7 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Simp
 
     override fun hasAnalogOutputSignal(state: BlockState): Boolean = true
 
-    /*override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+    /*override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         val be = level.getBlockEntity(pos) as? TMMachineBlockEntity ?: return 0
 
         // Have comparator output act like a progress bar when burning because that might be super dope to see without going into the menu
@@ -227,7 +229,7 @@ class TMMachineBlock(properties: Properties) : BaseEntityBlock(properties), Simp
         return scaled.coerceIn(0, 15)
     }*/
 
-    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos): Int {
+    override fun getAnalogOutputSignal(state: BlockState, level: Level, pos: BlockPos, direction: Direction): Int {
         val be = level.getBlockEntity(pos) as? TMMachineBlockEntity ?: return 0
 
         // Have comparator output act like a progress bar when burning because that might be super dope to see without going into the menu

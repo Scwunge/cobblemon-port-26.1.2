@@ -35,7 +35,7 @@ open class PokeNavImageButton(
     // TODO: Make lang key per button
 ): Button(pX, pY, pWidth, pHeight, "cobblemon.ui.pokenav.narrator.backbutton".asTranslated(), onPress, DEFAULT_NARRATION), CobblemonRenderable {
 
-    override fun extractWidgetRenderState(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
+    override fun extractContents(context: GuiGraphicsExtractor, pMouseX: Int, pMouseY: Int, pPartialTicks: Float) {
         // Render Button Image
         this.applyBlitk(context.pose(), pMouseX, pMouseY, pPartialTicks)
         // Draw Text

@@ -92,7 +92,7 @@ class CobblemonToast(
         }
 
         val icon = this.icons[iconIndex]
-        context.renderFakeItem(icon, 8, 8)
+        context.fakeItem(icon, 8, 8)
         if (this.hasProgressBar()) {
             context.fill(3, 28, 157, 29, -1)
             val f = Mth.clampedLerp(this.lastProgress, this.progress, (startTime - this.lastTime).toFloat() / 100F)

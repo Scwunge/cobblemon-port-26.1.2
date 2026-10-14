@@ -8,6 +8,12 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.entity.ContainerUser
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
 import com.cobblemon.mod.common.block.chest.GildedChestBlock.Type
@@ -77,13 +83,13 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
 
     override fun getItems() = inventoryContents
 
-    override fun startOpen(player: Player) {
+    override fun startOpen(player: ContainerUser) {
         if (!this.remove && !player.isSpectator && type != Type.FAKE) {
             stateManager.incrementOpeners(player, level, blockPos, blockState)
         }
     }
 
-    override fun stopOpen(player: Player) {
+    override fun stopOpen(player: ContainerUser) {
         if (!this.remove && !player.isSpectator) {
             stateManager.decrementOpeners(player, level, blockPos, blockState)
         }
@@ -149,15 +155,23 @@ class GildedChestBlockEntity(pos: BlockPos, state: BlockState, val type: Type = 
         world.blockEvent(pos, block, 1, newViewerCount)
     }
 
-    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(nbt, registryLookup)
-        if (!trySaveLootTable(nbt)) {
-            ContainerHelper.saveAllItems(nbt, inventoryContents, registryLookup)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val nbt = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            if (!trySaveLootTable(nbt)) {
+                ContainerHelper.saveAllItems(nbt, inventoryContents, registryLookup)
+            }
+        } finally {
+            output.putAll(nbt)
         }
     }
 
-    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.loadAdditional(nbt, registryLookup)
+    override fun loadAdditional(input: ValueInput) {
+        val nbt = input.asCompoundTag()
+        val registryLookup = input.lookup()
+        super.loadAdditional(input)
         inventoryContents= NonNullList.withSize(containerSize, ItemStack.EMPTY)
         if (!tryLoadLootTable(nbt)) {
             ContainerHelper.loadAllItems(nbt, inventoryContents, registryLookup)

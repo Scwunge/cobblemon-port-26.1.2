@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.mixin;
 
+import net.minecraft.nbt.CompoundTag;
+import com.cobblemon.mod.common.entity.player.ShoulderData;
 import com.cobblemon.mod.common.Cobblemon;
 import com.cobblemon.mod.common.OrientationControllable;
 import com.cobblemon.mod.common.PlayerSpawnerAccessor;
@@ -141,5 +143,16 @@ public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
                 !Cobblemon.config.getWorldSpawningBlocklist().contains(
                         ((ServerLevelDuck) this.serverLevel()).cobblemon$getLevelResourceLocation()
                 );
+    }
+
+    /** Keep the client's copy of the shoulder data in sync, see {@link ShoulderData}. */
+    @Inject(method = "setShoulderEntityLeft", at = @At("TAIL"))
+    private void cobblemon$syncShoulderEntityLeft(CompoundTag tag, CallbackInfo ci) {
+        ((ServerPlayer) (Object) this).getEntityData().set(ShoulderData.LEFT, tag);
+    }
+
+    @Inject(method = "setShoulderEntityRight", at = @At("TAIL"))
+    private void cobblemon$syncShoulderEntityRight(CompoundTag tag, CallbackInfo ci) {
+        ((ServerPlayer) (Object) this).getEntityData().set(ShoulderData.RIGHT, tag);
     }
 }

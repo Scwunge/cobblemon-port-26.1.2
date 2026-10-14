@@ -99,9 +99,9 @@ class NPCEditorScreen(
         addRenderableWidget(ConfigVariableList(leftX + 134, topY + 35, this))
     }
 
-    override fun renderBlurredBackground(delta: Float) {}
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {}
 
-    override fun renderMenuBackground(context: GuiGraphicsExtractor) {}
+    override fun extractMenuBackground(context: GuiGraphicsExtractor) {}
 
     override fun isPauseScreen() = false
 

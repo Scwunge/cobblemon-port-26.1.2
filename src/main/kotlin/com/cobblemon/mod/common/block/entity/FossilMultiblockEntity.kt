@@ -8,6 +8,11 @@
 
 package com.cobblemon.mod.common.block.entity
 
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueInput
+import com.cobblemon.mod.common.util.blockEntityRegistries
+import com.cobblemon.mod.common.util.putAll
+import net.minecraft.world.level.storage.ValueOutput
 import com.cobblemon.mod.common.*
 import com.cobblemon.mod.common.util.readBlockPos
 import com.cobblemon.mod.common.CobblemonSounds
@@ -136,7 +141,9 @@ open class FossilMultiblockEntity(
         }
     }
 
-    override fun loadAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
+    override fun loadAdditional(input: ValueInput) {
+        val nbt = input.asCompoundTag()
+        val registryLookup = input.lookup()
         val oldMultiblockStructure = this.multiblockStructure as? FossilMultiblockStructure
         multiblockStructure = if (nbt.contains(DataKeys.MULTIBLOCK_STORAGE)) {
             if (oldMultiblockStructure?.fossilState != null) {
@@ -164,10 +171,16 @@ open class FossilMultiblockEntity(
         updateMonitorScreen()
     }
 
-    override fun saveAdditional(nbt: CompoundTag, registryLookup: HolderLookup.Provider) {
-        super.saveAdditional(nbt, registryLookup)
-        if (!diskStack.isEmpty) {
-            nbt.put(DataKeys.MONITOR_DISK, ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, diskStack).orThrow)
+    override fun saveAdditional(output: ValueOutput) {
+        val registryLookup = blockEntityRegistries()
+        val nbt = CompoundTag()
+        try {
+            super.saveAdditional(output)
+            if (!diskStack.isEmpty) {
+                nbt.put(DataKeys.MONITOR_DISK, ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, diskStack).orThrow)
+            }
+        } finally {
+            output.putAll(nbt)
         }
     }
 

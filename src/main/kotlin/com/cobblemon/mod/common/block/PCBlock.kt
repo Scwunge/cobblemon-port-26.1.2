@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.block
 
+import net.minecraft.util.RandomSource
+import net.minecraft.world.level.ScheduledTickAccess
+import com.cobblemon.mod.common.api.block.LegacyOnRemove
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlockEntities
 import com.cobblemon.mod.common.CobblemonSounds
@@ -50,7 +53,7 @@ import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.Shapes
 import net.minecraft.world.phys.shapes.VoxelShape
 
-class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterloggedBlock {
+class PCBlock(properties: Properties): BaseEntityBlock(properties), LegacyOnRemove, SimpleWaterloggedBlock {
     companion object {
         val CODEC = simpleCodec(::PCBlock)
         val PART = EnumProperty.create("part", PCPart::class.java)
@@ -257,7 +260,7 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
     }
 
     override fun onRemove(state: BlockState, world: Level, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        if (!state.`is`(newState.block)) super.onRemove(state, world, pos, newState, moved)
+        if (!state.`is`(newState.block)) LegacyOnRemove.removeBlockEntity(state, world, pos, newState)
     }
 
     override fun useWithoutItem(
@@ -309,16 +312,9 @@ class PCBlock(properties: Properties): BaseEntityBlock(properties), SimpleWaterl
         } else super.getFluidState(state)
     }
 
-    override fun updateShape(
-        state: BlockState,
-        direction: Direction,
-        neighborState: BlockState,
-        world: LevelAccessor,
-        pos: BlockPos,
-        neighborPos: BlockPos
-    ): BlockState {
+    override fun updateShape(state: BlockState, world: LevelReader, scheduledTickAccess: ScheduledTickAccess, pos: BlockPos, direction: Direction, neighborPos: BlockPos, neighborState: BlockState, random: RandomSource): BlockState {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
+            scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world))
         }
 
         val isPC = neighborState.`is`(this)

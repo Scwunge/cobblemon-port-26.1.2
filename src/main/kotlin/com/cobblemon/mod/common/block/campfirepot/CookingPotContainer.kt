@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block.campfirepot
 
+import net.minecraft.world.entity.player.StackedItemContents
 import com.cobblemon.mod.common.block.entity.CampfireBlockEntity
 import net.minecraft.core.NonNullList
 import net.minecraft.world.ContainerHelper
@@ -67,7 +68,7 @@ class CookingPotContainer : TransientCraftingContainer {
     override fun getHeight() = CampfireBlockEntity.Companion.CRAFTING_GRID_WIDTH
     override fun getWidth() = CampfireBlockEntity.Companion.CRAFTING_GRID_WIDTH
     override fun getItems() = this.items.toList()
-    override fun fillStackedContents(contents: StackedContents) {
+    override fun fillStackedContents(contents: StackedItemContents) {
         for (itemStack in this.items) {
             contents.accountSimpleStack(itemStack)
         }
