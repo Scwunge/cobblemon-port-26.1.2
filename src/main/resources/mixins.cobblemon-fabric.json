@@ -6,12 +6,12 @@
   "plugin": "com.cobblemon.mod.fabric.mixin.MixinConfigPlugin",
   "client": [
     "FabricCameraMixin",
-    "GuiMixin"
+    "GuiMixin",
+    "FabricSoundEngineMixin"
   ],
   "mixins": [
     "EntityMixin",
     "FabricBrewingStandMenuMixin",
-    "FabricSoundEngineMixin",
     "PlayerMixin",
     "ServerEntityMixin"
   ]
