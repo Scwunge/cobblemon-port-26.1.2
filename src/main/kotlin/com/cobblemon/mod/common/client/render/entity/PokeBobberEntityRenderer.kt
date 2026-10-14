@@ -188,10 +188,10 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
             armOffset = -armOffset
         }
         val handSwingProgress = playerEntity.getAttackAnim(tickDelta)
-        val swingAngle = Mth.sin(Mth.sqrt(handSwingProgress) * Math.PI.toFloat())
+        val swingAngle = Mth.sin((Mth.sqrt(handSwingProgress) * Math.PI.toFloat()).toDouble())
         val bodyYawRadians = Mth.lerp(tickDelta, playerEntity.yBodyRotO, playerEntity.yBodyRot) * (Math.PI.toFloat() / 180)
-        val sinBodyYaw = Mth.sin(bodyYawRadians).toDouble()
-        val cosBodyYaw = Mth.cos(bodyYawRadians).toDouble()
+        val sinBodyYaw = Mth.sin(bodyYawRadians.toDouble()).toDouble()
+        val cosBodyYaw = Mth.cos(bodyYawRadians.toDouble()).toDouble()
         val horizontalOffset = armOffset.toDouble() * 0.35
         if (!entityRenderDispatcher.options.cameraType.isFirstPerson || playerEntity != Minecraft.getInstance().player) {
             playerEyeYWorld = Mth.lerp(tickDelta.toDouble(), playerEntity.xo, playerEntity.x) - cosBodyYaw * horizontalOffset - sinBodyYaw * 0.8

@@ -22,7 +22,6 @@ import kotlin.math.min
 import kotlin.random.Random
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
-import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.core.BlockPos
 import net.minecraft.core.RegistryAccess
 import net.minecraft.core.registries.Registries
@@ -40,8 +39,6 @@ import org.joml.Vector4f
 import kotlin.jvm.optionals.getOrNull
 
 fun cobblemonResource(path: String): Identifier = Identifier.fromNamespaceAndPath(Cobblemon.MODID, path)
-fun cobblemonModel(path: String, variant: String) =
-    ModelResourceLocation(cobblemonResource(path), variant)
 
 fun String.asTranslated() = Component.translatable(this)
 fun String.asResource() = Identifier.parse(this)
@@ -151,7 +148,7 @@ val PosableState.isInWaterOrRain: Boolean
     get() = getEntity()?.isInWaterOrRain == true
 
 fun Screen.isInventoryKeyPressed(client: Minecraft?, keyCode: Int, scanCode: Int): Boolean {
-    return client?.options?.keyInventory?.matches(keyCode, scanCode) == true
+    return client?.options?.keyInventory?.matches(net.minecraft.client.input.KeyEvent(keyCode, scanCode, 0)) == true
 }
 
 fun InteractionHand.toEquipmentSlot(): EquipmentSlot {
@@ -227,16 +224,16 @@ fun Collection<ObtainableItem>.findMatchingEntry(registryAccess: RegistryAccess,
  * @param entityType A literal entity ID or an entity tag.
  */
 fun resolveEntityTypes(registryAccess: RegistryAccess, entityType: String): Set<EntityType<*>> {
-    val registry = registryAccess.registry(Registries.ENTITY_TYPE).getOrNull() ?: return emptySet()
+    val registry = registryAccess.lookup(Registries.ENTITY_TYPE).getOrNull() ?: return emptySet()
     val types = mutableSetOf<EntityType<*>>()
 
     if (entityType.startsWith("#")) {
         val id = Identifier.tryParse(entityType.substring(1)) ?: return emptySet()
         val tag = TagKey.create(Registries.ENTITY_TYPE, id)
-        registry.getTag(tag).getOrNull()?.stream()?.forEach { types.add(it.value()) }
+        registry.get(tag).getOrNull()?.stream()?.forEach { types.add(it.value()) }
     } else {
         val id = Identifier.tryParse(entityType) ?: return emptySet()
-        registry.get(id)?.let { types.add(it) }
+        registry.getOptional(id).getOrNull()?.let { types.add(it) }
     }
 
     return types

@@ -102,3 +102,7 @@ fun Player.playNotifySound(sound: SoundEvent, source: SoundSource, volume: Float
 fun Player.displayClientMessage(message: Component, overlay: Boolean) {
     if (overlay) sendOverlayMessage(message) else sendSystemMessage(message)
 }
+
+/** Style#withFont(ResourceLocation) before 1.21.9: a font from a font definition. */
+fun net.minecraft.network.chat.Style.withFont(font: net.minecraft.resources.Identifier): net.minecraft.network.chat.Style =
+    withFont(net.minecraft.network.chat.FontDescription.Resource(font))

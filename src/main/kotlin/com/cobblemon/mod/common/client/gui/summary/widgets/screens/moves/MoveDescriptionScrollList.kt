@@ -32,7 +32,6 @@ class MoveDescriptionScrollList(
     init {
         this.y = this.listY
         this.x = this.listX
-        this.setRenderHeader(false, 0)
     }
 
     override fun scrollBarX(): Int {

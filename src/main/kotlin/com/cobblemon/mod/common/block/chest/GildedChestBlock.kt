@@ -190,7 +190,7 @@ class GildedChestBlock(settings: Properties, val type: Type = Type.RED) : BaseEn
             }
         }
         val entity = world.getBlockEntity(pos) as? GildedChestBlockEntity ?: return InteractionResult.FAIL
-        if (world.getBlockState(pos.above()).isSolidRender(world, pos.above())) return InteractionResult.FAIL
+        if (world.getBlockState(pos.above()).isSolidRender()) return InteractionResult.FAIL
         player.openMenu(entity)
         if (!player.level().isClientSide) {
             PiglinAi.angerNearbyPiglins(player, true)

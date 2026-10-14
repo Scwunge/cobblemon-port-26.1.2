@@ -594,7 +594,7 @@ class BirdBehaviour : RidingBehaviour<BirdSettings, BirdState> {
     ): Boolean {
         if (!state.gliding.get()) return false
         val impactSpeed = impactVec.horizontalDistance().toFloat() * 10f
-        return vehicle.causeFallDamage(impactSpeed, 1f, vehicle.damageSources().flyIntoWall())
+        return vehicle.causeFallDamage(impactSpeed.toDouble(), 1f, vehicle.damageSources().flyIntoWall())
     }
 
     override fun getRideSounds(

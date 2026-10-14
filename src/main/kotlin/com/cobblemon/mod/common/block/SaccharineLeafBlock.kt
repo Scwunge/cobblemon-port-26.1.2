@@ -241,7 +241,7 @@ class SaccharineLeafBlock(settings: Properties) : LeavesBlock(settings), Bonemea
                     val blockState = level.getBlockState(blockPos)
                     val voxelShape2 = blockState.getCollisionShape(level, blockPos)
                     val f = voxelShape2.max(Direction.Axis.Y)
-                    if ((f < 1.0 || !blockState.isSolidRender(level, blockPos)) && blockState.fluidState.isEmpty) {
+                    if ((f < 1.0 || !blockState.isSolidRender()) && blockState.fluidState.isEmpty) {
                         this.addHoneyParticle(level, pos, voxelShape, pos.y.toDouble() - 0.05)
                     }
                 }

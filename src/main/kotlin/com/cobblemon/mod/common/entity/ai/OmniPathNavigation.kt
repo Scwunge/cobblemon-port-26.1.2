@@ -239,19 +239,19 @@ class OmniPathNavigation(val world: Level, val entity: Mob) : GroundPathNavigati
             val blockGetter: BlockGetter = level
             if (blockGetter.getFluidState(pos).`is`(FluidTags.WATER)) {
                 val blockPos = pos.below()
-                return level.getBlockState(blockPos).isSolidRender(this.level, blockPos)
+                return level.getBlockState(blockPos).isSolidRender()
             }
         }
         if (pather.canWalkOnWater()) {
             val blockGetter: BlockGetter = level
             if (blockGetter.getFluidState(pos.below()).`is`(FluidTags.WATER)) {
-                return !level.getBlockState(pos).isSolidRender(this.level, pos)
+                return !level.getBlockState(pos).isSolidRender()
             }
         }
         if (pather.canWalkOnLava()) {
             val blockGetter: BlockGetter = level
             if (blockGetter.getFluidState(pos.below()).`is`(FluidTags.LAVA)) {
-                return !level.getBlockState(pos).isSolidRender(this.level, pos)
+                return !level.getBlockState(pos).isSolidRender()
             }
         }
         if (pather.canFly()) {

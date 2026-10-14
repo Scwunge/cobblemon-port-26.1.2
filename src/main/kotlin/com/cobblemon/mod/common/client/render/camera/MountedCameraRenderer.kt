@@ -212,7 +212,7 @@ object MountedCameraRenderer {
             val pitchDeg = vehicleController.pitch
             // ConsiderPitch to be already 90 if within the deadzone around it.
             val cutoffPitch = min(1.0, (Mth.abs(pitchDeg) / (90.0f - pitchDeadzoneDeg))) * 90.0f * sign(pitchDeg)
-            val lerpRateMod = Mth.cos(Math.toRadians(cutoffPitch).toFloat())
+            val lerpRateMod = Mth.cos((Math.toRadians(cutoffPitch).toFloat()).toDouble())
 
             // Apply smoothing from the cameras current yaw to the yaw of the velocity
             // vector of the ride

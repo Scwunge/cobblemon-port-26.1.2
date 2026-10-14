@@ -710,7 +710,7 @@ class Summary private constructor(party: Collection<Pokemon?>, private val edita
         }
 
 
-        if ( !nicknameSelected && (isInventoryKeyPressed(minecraft, keyCode, scanCode) || SummaryBinding.matches(keyCode, scanCode)) ){
+        if ( !nicknameSelected && (isInventoryKeyPressed(minecraft, keyCode, scanCode) || SummaryBinding.matches(event)) ){
             saveActiveMark()
             saveMarkings()
             Minecraft.getInstance().setScreen(null)

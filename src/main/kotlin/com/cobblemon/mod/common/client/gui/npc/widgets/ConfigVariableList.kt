@@ -58,14 +58,13 @@ class ConfigVariableList(
         this.x = listX
         this.y = listY
         correctSize()
-        setRenderHeader(false, 0)
         parent.dto.registeredVariables.sortedBy { it.category.string }.forEach { variable ->
             val value = parent.dto.variables[variable.variableName] ?: variable.defaultValue
             addEntry(ConfigVariable(variable, value, this))
         }
     }
 
-    override fun getScrollbarPosition() = x + width - 3
+    override fun scrollBarX() = x + width - 3
 
     public override fun addEntry(entry: ConfigVariable) = super.addEntry(entry)
     public override fun removeEntry(entry: ConfigVariable) = super.removeEntry(entry)
@@ -98,19 +97,19 @@ class ConfigVariableList(
         val deltaY = dragY
         if (scrolling) {
             if (mouseY < this.listY) {
-                scrollAmount = 0.0
+                setScrollAmount(0.0)
             } else if (mouseY > bottom) {
-                scrollAmount = maxScroll.toDouble()
+                setScrollAmount(maxScrollAmount().toDouble())
             } else {
-                scrollAmount += deltaY
+                setScrollAmount(scrollAmount() + deltaY)
             }
         }
         return super.mouseDragged(event, deltaX, deltaY)
     }
 
     private fun updateScrollingState(mouseX: Double, mouseY: Double) {
-        scrolling = mouseX >= this.scrollbarPosition.toDouble()
-                && mouseX < (this.scrollbarPosition + 3).toDouble()
+        scrolling = mouseX >= this.scrollBarX().toDouble()
+                && mouseX < (this.scrollBarX() + 3).toDouble()
                 && mouseY >= listY
                 && mouseY < bottom
     }
@@ -166,7 +165,7 @@ class ConfigVariableList(
             parent.parent.dto.variables[variable.variableName] = if (booleanValue) "1" else "0"
             (it as NPCEditorButton).cycleButtonState = booleanValue
         }.also {
-            it.tooltip = tooltip
+            it.setTooltip(tooltip)
         }
 
         init {
@@ -218,7 +217,7 @@ class ConfigVariableList(
 
                 // Manually renders the tooltip for the edit box because disabling its border messes everything up
                 val isEditBoxHovered = mouseX >= x && mouseX <= x + SLOT_WIDTH - 1 && mouseY >= y + 15 && mouseY <= y + 15 + 14
-                tooltipHolder.refreshTooltipForNextRenderPass(isEditBoxHovered, editBox.isFocused, editBox.rectangle)
+                tooltipHolder.refreshTooltipForNextRenderPass(context, mouseX, mouseY, isEditBoxHovered, editBox.isFocused, editBox.rectangle)
             }
         }
     }

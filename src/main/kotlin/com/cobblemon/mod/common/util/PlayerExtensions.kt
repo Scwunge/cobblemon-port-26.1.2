@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.util
 
+import net.minecraft.nbt.CompoundTag
 import com.cobblemon.mod.common.entity.player.ShoulderData
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonSounds
@@ -328,14 +329,14 @@ fun ServerPlayer.raycast(maxDistance: Float, fluidHandling: ClipContext.Fluid?):
     val f = xRot
     val g = yRot
     val vec3d = eyePosition
-    val h = Mth.cos(-g * 0.017453292f - 3.1415927f)
-    val i = Mth.sin(-g * 0.017453292f - 3.1415927f)
-    val j = -Mth.cos(-f * 0.017453292f)
-    val k = Mth.sin(-f * 0.017453292f)
+    val h = Mth.cos((-g * 0.017453292f - 3.1415927f).toDouble())
+    val i = Mth.sin((-g * 0.017453292f - 3.1415927f).toDouble())
+    val j = -Mth.cos((-f * 0.017453292f).toDouble())
+    val k = Mth.sin((-f * 0.017453292f).toDouble())
     val l = i * j
     val n = h * j
     val vec3d2 = vec3d.add(l.toDouble() * maxDistance, k.toDouble() * maxDistance, n.toDouble() * maxDistance)
-    return level().clip(ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling, this))
+    return level().clip(ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling ?: ClipContext.Fluid.NONE, this))
 }
 
 fun ServerPlayer.raycastSafeSendout(pokemon: Pokemon, maxDistance: Double, dropHeight: Double, fluidHandling: ClipContext.Fluid?): Vec3? {
@@ -343,14 +344,14 @@ fun ServerPlayer.raycastSafeSendout(pokemon: Pokemon, maxDistance: Double, dropH
     val f = xRot
     val g = yRot
     val vec3d = eyePosition
-    val h = Mth.cos(-g * 0.017453292f - 3.1415927f)
-    val i = Mth.sin(-g * 0.017453292f - 3.1415927f)
-    val j = -Mth.cos(-f * 0.017453292f)
-    val k = Mth.sin(-f * 0.017453292f)
+    val h = Mth.cos((-g * 0.017453292f - 3.1415927f).toDouble())
+    val i = Mth.sin((-g * 0.017453292f - 3.1415927f).toDouble())
+    val j = -Mth.cos((-f * 0.017453292f).toDouble())
+    val k = Mth.sin((-f * 0.017453292f).toDouble())
     val l = i * j
     val n = h * j
     val vec3d2 = vec3d.add(l.toDouble() * maxDistance, k.toDouble() * maxDistance, n.toDouble() * maxDistance)
-    val result = level().clip(ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling, this))
+    val result = level().clip(ClipContext(vec3d, vec3d2, ClipContext.Block.OUTLINE, fluidHandling ?: ClipContext.Fluid.NONE, this))
 
 
     if (level().getBlockState(result.blockPos).isAir) {
@@ -417,7 +418,7 @@ fun ServerPlayer.raycastSafeSendout(pokemon: Pokemon, maxDistance: Double, dropH
     return null
 }
 
-fun Inventory.usableItems() = offhand + items
+fun Inventory.usableItems() = listOf(getItem(Inventory.SLOT_OFFHAND)) + nonEquipmentItems
 
 /**
  * Utility function meant to emulate the behavior seen across Minecraft when attempting to give items directly to player but there's not enough room for the entire stack.

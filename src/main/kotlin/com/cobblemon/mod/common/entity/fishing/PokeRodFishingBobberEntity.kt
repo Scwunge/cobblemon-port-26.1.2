@@ -131,10 +131,10 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
 
         val throwerPitch = thrower.xRot
         val throwerYaw = thrower.yRot
-        val cosYaw = Mth.cos(-throwerYaw * 0.017453292f - 3.1415927f)
-        val sinYaw = Mth.sin(-throwerYaw * 0.017453292f - 3.1415927f)
-        val cosPitch = -Mth.cos(-throwerPitch * 0.017453292f)
-        val sinPitch = Mth.sin(-throwerPitch * 0.017453292f)
+        val cosYaw = Mth.cos((-throwerYaw * 0.017453292f - 3.1415927f).toDouble())
+        val sinYaw = Mth.sin((-throwerYaw * 0.017453292f - 3.1415927f).toDouble())
+        val cosPitch = -Mth.cos((-throwerPitch * 0.017453292f).toDouble())
+        val sinPitch = Mth.sin((-throwerPitch * 0.017453292f).toDouble())
         val posX = thrower.x - sinYaw.toDouble() * 0.3
         val posY = thrower.eyeY
         val posZ = thrower.z - cosYaw.toDouble() * 0.3
@@ -280,8 +280,8 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             if (this.fishTravelCountdown > 0) {
                 this.fishAngle += random.triangle(0.0, 9.188).toFloat()
                 val f = this.fishAngle * (Math.PI.toFloat() / 180)
-                val g = Mth.sin(f)
-                val h = Mth.cos(f)
+                val g = Mth.sin(f.toDouble())
+                val h = Mth.cos(f.toDouble())
                 val offsetX = this.x + (g * this.fishTravelCountdown.toFloat() * 0.1f).toDouble()
                 val offsetY = (Mth.floor(this.y).toFloat() + 1.0f).toDouble()
                 val j = this.z + (h * this.fishTravelCountdown.toFloat() * 0.1f).toDouble()
@@ -393,9 +393,9 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
             if (random.nextFloat() < f) {
                 val g = Mth.nextFloat(this.random, 0.0f, 360.0f) * 0.017453292f
                 val h = Mth.nextFloat(this.random, 25.0f, 60.0f)
-                val d = this.x + (Mth.sin(g) * h).toDouble() * 0.1 // X
+                val d = this.x + (Mth.sin(g.toDouble()) * h).toDouble() * 0.1 // X
                 val e = (Mth.floor(this.y).toFloat() + 1.0f).toDouble() // Y
-                val j = this.z + (Mth.cos(g) * h).toDouble() * 0.1 // randomized Z value
+                val j = this.z + (Mth.cos(g.toDouble()) * h).toDouble() * 0.1 // randomized Z value
                 val blockState = serverWorld.getBlockState(BlockPos.containing(d, e - 1.0, j))
                 if (blockState.`is`(Blocks.WATER)) {
                     val currentTime = serverWorld.gameTime
@@ -683,7 +683,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
 
                                 val g = Mth.nextFloat(random, 0.0f, 360.0f) * (Math.PI.toFloat() / 180)
                                 val h = Mth.nextFloat(random, 25.0f, 60.0f)
-                                val partX = this.x + (Mth.sin(g) * h).toDouble() * 0.1
+                                val partX = this.x + (Mth.sin(g.toDouble()) * h).toDouble() * 0.1
                                 serverWorld.sendParticles(
                                     ParticleTypes.SPLASH,
                                     partX,

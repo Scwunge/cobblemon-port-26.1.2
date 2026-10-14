@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.api.gui
 
+import com.cobblemon.mod.common.util.withFont
 import com.cobblemon.mod.common.api.text.font
 import com.cobblemon.mod.common.client.gui.battle.BattleOverlay.Companion.PORTRAIT_DIAMETER
 import com.cobblemon.mod.common.client.render.SpriteType

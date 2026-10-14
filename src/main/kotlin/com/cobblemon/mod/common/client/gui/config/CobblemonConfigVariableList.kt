@@ -53,7 +53,6 @@ class CobblemonConfigVariableList(
         this.x = 0
         this.y = minecraft.window.guiScaledHeight / 2 - HEIGHT / 2
 
-        setRenderHeader(false, 0)
         addEntries()
     }
 
@@ -120,7 +119,7 @@ class CobblemonConfigVariableList(
     }
 
     override fun getRowWidth(): Int = width
-    override fun getScrollbarPosition(): Int = width / 2 - SLOT_WIDTH / 2 + SLOT_WIDTH + PADDING
+    override fun scrollBarX(): Int = width / 2 - SLOT_WIDTH / 2 + SLOT_WIDTH + PADDING
 
     fun filterConfigurations(text: String) {
         for (entry in entries) {
@@ -133,7 +132,7 @@ class CobblemonConfigVariableList(
             }
         }
 
-        scrollAmount = min(maxScroll.toDouble(), scrollAmount)
+        setScrollAmount(min(maxScrollAmount().toDouble(), scrollAmount()))
     }
 
     abstract class CobblemonConfigVariableListEntry(

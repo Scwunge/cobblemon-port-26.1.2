@@ -452,7 +452,7 @@ class TradeGUI(
         val keyCode = event.key()
         val scanCode = event.scancode()
         val modifiers = event.modifiers()
-        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true) {
+        if (minecraft?.options?.keyInventory?.matches(event) == true) {
             CancelTradePacket().sendToServer()
             cancelTradeSound()
             Minecraft.getInstance().setScreen(null)

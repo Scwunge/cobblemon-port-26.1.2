@@ -369,7 +369,7 @@ class StarterSelectionScreen(private val categories: List<RenderableStarterCateg
         val keyCode = event.key()
         val scanCode = event.scancode()
         val modifiers = event.modifiers()
-        if (minecraft?.options?.keyInventory?.matches(keyCode, scanCode) == true || SummaryBinding.matches(keyCode, scanCode)) {
+        if (minecraft?.options?.keyInventory?.matches(event) == true || SummaryBinding.matches(event)) {
             Minecraft.getInstance().setScreen(null)
             return true
         }

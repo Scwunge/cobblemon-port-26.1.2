@@ -87,7 +87,7 @@ class HabitatBlockRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBlo
         val viewerHoldingHabitatBlock = (player?.mainHandItem ?: player?.offhandItem)?.item == CobblemonItems.HABITAT_BLOCK
         val stateToRender: BlockState = if (viewerHoldingHabitatBlock) entity.blockState else entity.mimickedState
         val level = entity.level ?: return
-        val isSolidRender = if (viewerHoldingHabitatBlock) false else stateToRender.isSolidRender(level, entity.blockPos)
+        val isSolidRender = if (viewerHoldingHabitatBlock) false else stateToRender.isSolidRender()
         val renderType = if (viewerHoldingHabitatBlock) {
             RenderType.cutout()
         } else {

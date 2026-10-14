@@ -11,9 +11,6 @@ package com.cobblemon.mod.common.entity.boat
 import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.mixin.accessor.BoatEntityAccessor
 import net.minecraft.core.BlockPos
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.StringTag
-import net.minecraft.nbt.Tag
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
@@ -22,6 +19,11 @@ import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.tags.FluidTags
 import net.minecraft.world.entity.EntityType
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.level.storage.ValueInput
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat
+import java.util.function.Supplier
 import net.minecraft.world.entity.vehicle.boat.Boat
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.Items
@@ -32,7 +34,19 @@ import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.WoodType
 
 @Suppress("unused")
-open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) : Boat(entityType, world) {
+/**
+ * Cobblemon's boats. A single entity type covers every [CobblemonBoatType], which is synced and saved separately.
+ *
+ * Since 1.21.2 a boat's drop item is supplied when it is constructed (it used to be an overridable getter), so the
+ * supplier resolves it from this boat's type.
+ */
+open class CobblemonBoatEntity private constructor(
+    entityType: EntityType<out Boat>,
+    world: Level,
+    private val dropItemSupplier: DropItemSupplier
+) : Boat(entityType, world, dropItemSupplier) {
+
+    constructor(entityType: EntityType<out Boat>, world: Level) : this(entityType, world, DropItemSupplier())
 
     constructor(world: Level) : this(CobblemonEntities.BOAT, world)
 
@@ -42,6 +56,10 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
         this.xo = x
         this.yo = y
         this.zo = z
+    }
+
+    init {
+        dropItemSupplier.boat = this
     }
 
     /**
@@ -63,7 +81,8 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
      */
     val baseBlock: Block get() = this.boatType.baseBlock
 
-    override fun getDropItem(): Item = this.boatType.boatItem
+    /** The item this boat drops (AbstractBoat#getDropItem is final since 1.21.2). */
+    protected open fun dropItem(): Item = this.boatType.boatItem
 
     override fun getAddEntityPacket(entityTrackerEntry: ServerEntity): Packet<ClientGamePacketListener> = ClientboundAddEntityPacket(this, entityTrackerEntry)
 
@@ -72,26 +91,17 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
         builder.define(TYPE_TRACKED_DATA, CobblemonBoatType.APRICORN.ordinal)
     }
 
-    override fun readAdditionalSaveData(nbt: CompoundTag) {
-        if (nbt.contains(TYPE_KEY, Tag.TAG_STRING.toInt())) {
-            this.boatType = CobblemonBoatType.valueOf(nbt.getStringOr(TYPE_KEY, ""))
-        }
+    override fun readAdditionalSaveData(input: ValueInput) {
+        input.getString(TYPE_KEY).ifPresent { this.boatType = CobblemonBoatType.valueOf(it) }
     }
 
-    override fun addAdditionalSaveData(nbt: CompoundTag) {
-        nbt.put(TYPE_KEY, StringTag.valueOf(this.boatType.name))
-    }
-
-    override fun setVariant(type: Type) {
-        throw UnsupportedOperationException("The vanilla boat type is not present in the Cobblemon implementation use the boatType property")
-    }
-
-    override fun getVariant(): Type {
-        return Type.BAMBOO //have to return something here as otherwise it breaks vanilla interactions (e.g. player getting into boat)
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        output.putString(TYPE_KEY, this.boatType.name)
     }
 
     override fun getSinglePassengerXOffset(): Float = this.boatType.mountedOffset
 
+    // Boats broke into planks and sticks when falling onto land until 1.21.2; Cobblemon's boats keep doing so.
     override fun checkFallDamage(heightDifference: Double, onGround: Boolean, state: BlockState, landedPosition: BlockPos) {
         val accessor = this.accessor()
         accessor.setFallVelocity(this.deltaMovement.y)
@@ -99,31 +109,37 @@ open class CobblemonBoatEntity(entityType: EntityType<out Boat>, world: Level) :
             return
         }
         if (!this.level().getFluidState(this.blockPosition().below()).`is`(FluidTags.WATER) && heightDifference < 0.0) {
-            this.fallDistance -= heightDifference.toFloat()
+            this.fallDistance -= heightDifference
         }
         if (!onGround) {
             return
         }
-        if (this.fallDistance < 3F || accessor.location != Status.ON_LAND) {
+        if (this.fallDistance < 3.0 || accessor.location != AbstractBoat.Status.ON_LAND) {
             this.resetFallDistance()
             return
         }
         this.causeFallDamage(this.fallDistance, 1F, this.damageSources().fall())
-        if (this.level().isClientSide || this.isRemoved) {
+        val level = this.level() as? ServerLevel ?: return
+        if (this.isRemoved) {
             return
         }
-        this.kill()
-        if (this.level().gameRules.getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+        this.kill(level)
+        if (level.gameRules.get(GameRules.ENTITY_DROPS)) {
             repeat(3) {
-                this.spawnAtLocation(this.boatType.baseBlock)
+                this.spawnAtLocation(level, this.boatType.baseBlock)
             }
             repeat(2) {
-                this.spawnAtLocation(Items.STICK)
+                this.spawnAtLocation(level, Items.STICK)
             }
         }
     }
 
     protected fun accessor(): BoatEntityAccessor = this as BoatEntityAccessor
+
+    private class DropItemSupplier : Supplier<Item> {
+        lateinit var boat: CobblemonBoatEntity
+        override fun get(): Item = boat.dropItem()
+    }
 
     companion object {
 

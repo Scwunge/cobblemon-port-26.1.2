@@ -55,12 +55,12 @@ class BehaviourOptionsList(
 
     override fun extractListSeparators(guiGraphics: GuiGraphicsExtractor) {}
 
-    override fun getScrollbarPosition() = left + width - 6
+    override fun scrollBarX() = left + width - 6
 
     fun removeEntry(entry: Identifier) {
         children().find { it.resourceLocation == entry }?.let { removeEntry(it) }
         // Resize scrollbar to avoid visual issues upon removal
-        setScrollAmount(if (children().size < 7) 0.0 else getScrollAmount())
+        setScrollAmount(if (children().size < 7) 0.0 else scrollAmount())
     }
 
     fun addEntry(entry: Identifier, alignButtonRight: Boolean) {
@@ -138,7 +138,7 @@ class BehaviourOptionsList(
             slotRow.extractRenderState(guiGraphics, mouseX, mouseY, partialTick)
 
             if (hovering) {
-                tooltipHolder.refreshTooltipForNextRenderPass(hovering, false, ScreenRectangle(left, top, width, height))
+                tooltipHolder.refreshTooltipForNextRenderPass(guiGraphics, mouseX, mouseY, hovering, false, ScreenRectangle(left, top, width, height))
             }
         }
     }

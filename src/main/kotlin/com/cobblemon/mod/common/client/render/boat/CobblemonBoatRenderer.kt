@@ -8,65 +8,81 @@
 
 package com.cobblemon.mod.common.client.render.boat
 
-import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
-import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
-import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
+
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatEntity
-import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.entity.boat.CobblemonBoatType
 import com.cobblemon.mod.common.util.cobblemonResource
-import net.minecraft.client.model.`object`.boat.BoatModel
-import net.minecraft.client.model.ChestBoatModel
-import net.minecraft.client.model.geom.ModelLayerLocation
-import net.minecraft.client.renderer.rendertype.RenderType
-import net.minecraft.client.renderer.entity.EntityRendererProvider
-import net.minecraft.client.renderer.entity.EntityRenderer
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.math.Axis
-import net.minecraft.client.renderer.MultiBufferSource
+import net.minecraft.client.model.Model
+import net.minecraft.client.model.`object`.boat.BoatModel
+import net.minecraft.client.model.geom.ModelLayerLocation
+import net.minecraft.client.model.geom.ModelLayers
+import net.minecraft.client.renderer.SubmitNodeCollector
+import net.minecraft.client.renderer.entity.EntityRenderer
+import net.minecraft.client.renderer.entity.EntityRendererProvider
+import net.minecraft.client.renderer.entity.state.BoatRenderState
+import net.minecraft.client.renderer.rendertype.RenderTypes
+import net.minecraft.client.renderer.state.level.CameraRenderState
 import net.minecraft.client.renderer.texture.OverlayTexture
 import net.minecraft.resources.Identifier
 import net.minecraft.util.Mth
 import org.joml.Quaternionf
 
-class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : LegacyEntityRenderer<CobblemonBoatEntity>(ctx) {
+/** The render state of Cobblemon's boats: vanilla's boat state plus the boat's [CobblemonBoatType]. */
+class CobblemonBoatRenderState : BoatRenderState() {
+    var boatType = CobblemonBoatType.APRICORN
+}
+
+class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val hasChest: Boolean) : EntityRenderer<CobblemonBoatEntity, CobblemonBoatRenderState>(ctx) {
 
     private val boatModels = hashMapOf<CobblemonBoatType, Pair<Identifier, BoatModel>>()
+    private val waterPatchModel = Model.Simple(ctx.bakeLayer(ModelLayers.BOAT_WATER_PATCH)) { RenderTypes.waterMask() }
 
     init {
         this.shadowRadius = 0.8F
-        CobblemonBoatType.values().forEach { type ->
+        CobblemonBoatType.entries.forEach { type ->
             this.boatModels[type] = generateTextureIdentifier(type, this.hasChest) to generateBoatModel(ctx, type, this.hasChest)
         }
     }
 
-    override fun getTextureLocation(entity: CobblemonBoatEntity): Identifier = this.boatModels[entity.boatType]!!.first
+    override fun createRenderState() = CobblemonBoatRenderState()
 
-    override fun render(entity: CobblemonBoatEntity, yaw: Float, tickDelta: Float, matrices: PoseStack, vertexConsumers: MultiBufferSource, light: Int) {
+    override fun extractRenderState(entity: CobblemonBoatEntity, state: CobblemonBoatRenderState, partialTicks: Float) {
+        super.extractRenderState(entity, state, partialTicks)
+        state.boatType = entity.boatType
+        state.yRot = entity.getYRot(partialTicks)
+        state.hurtTime = entity.hurtTime - partialTicks
+        state.hurtDir = entity.hurtDir
+        state.damageTime = (entity.damage - partialTicks).coerceAtLeast(0F)
+        state.bubbleAngle = entity.getBubbleAngle(partialTicks)
+        state.isUnderWater = entity.isUnderWater
+        state.rowingTimeLeft = entity.getRowingTime(0, partialTicks)
+        state.rowingTimeRight = entity.getRowingTime(1, partialTicks)
+    }
+
+    override fun submit(state: CobblemonBoatRenderState, matrices: PoseStack, submitNodeCollector: SubmitNodeCollector, camera: CameraRenderState) {
         matrices.pushPose()
         matrices.translate(0F, 0.375F, 0F)
-        matrices.mulPose(Axis.YP.rotationDegrees(180F - yaw))
-        val h = entity.hurtTime - tickDelta
-        val j = (entity.damage - tickDelta).coerceAtLeast(0F)
+        matrices.mulPose(Axis.YP.rotationDegrees(180F - state.yRot))
+        val h = state.hurtTime
+        val j = state.damageTime
         if (h > 0F) {
-            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(h) * h * j / 10F * entity.hurtDir))
+            matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(h.toDouble()) * h * j / 10F * state.hurtDir))
         }
-        val k = entity.getBubbleAngle(tickDelta)
+        val k = state.bubbleAngle
         if (!Mth.equal(k, 0F)) {
-            matrices.mulPose(Quaternionf().setAngleAxis(entity.getBubbleAngle(tickDelta) * 0.017453292F, 1F, 0F, 1F))
+            matrices.mulPose(Quaternionf().setAngleAxis(k * 0.017453292F, 1F, 0F, 1F))
         }
-        val (identifier, entityModel) = this.boatModels[entity.boatType]!!
+        val (identifier, entityModel) = this.boatModels[state.boatType]!!
         matrices.scale(-1F, -1F, 1F)
         matrices.mulPose(Axis.YP.rotationDegrees(90F))
-        entityModel.setupAnim(entity, tickDelta, 0F, -0.1F, 0F, 0F)
-        val vertexConsumer = vertexConsumers.getBuffer(entityModel.renderType(identifier))
-        entityModel.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, -0x1)
-        if (!entity.isUnderWater) {
-            val vertexConsumer2 = vertexConsumers.getBuffer(RenderTypes.waterMask())
-            entityModel.waterPatch().render(matrices, vertexConsumer2, light, OverlayTexture.NO_OVERLAY)
+        submitNodeCollector.submitModel(entityModel, state, matrices, identifier, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null)
+        if (!state.isUnderWater) {
+            submitNodeCollector.submitModel(waterPatchModel, net.minecraft.util.Unit.INSTANCE, matrices, identifier, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null)
         }
         matrices.popPose()
-        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light)
+        super.submit(state, matrices, submitNodeCollector, camera)
     }
 
     companion object {
@@ -80,7 +96,7 @@ class CobblemonBoatRenderer(ctx: EntityRendererProvider.Context, private val has
         private fun generateBoatModel(ctx: EntityRendererProvider.Context, type: CobblemonBoatType, hasChest: Boolean): BoatModel {
             val modelLayer = this.createBoatModelLayer(type, hasChest)
             val modelPart = ctx.bakeLayer(modelLayer)
-            return if (hasChest) ChestBoatModel(modelPart) else BoatModel(modelPart)
+            return BoatModel(modelPart)
         }
 
         internal fun createBoatModelLayer(type: CobblemonBoatType, hasChest: Boolean): ModelLayerLocation {

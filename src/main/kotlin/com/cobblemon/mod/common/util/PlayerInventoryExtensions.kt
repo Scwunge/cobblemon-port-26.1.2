@@ -14,7 +14,9 @@ import java.util.function.Predicate
 import java.util.stream.Collectors
 
 fun Inventory.removeAmountIf(amount: Int, rule: Predicate<ItemStack>) {
-    this.compartments.forEach {
+    // The inventory's compartments as they were before 1.21.5: the main items, the armor and the offhand.
+    val compartments = listOf(nonEquipmentItems, (36..39).map(::getItem), listOf(getItem(Inventory.SLOT_OFFHAND)))
+    compartments.forEach {
         var index = 0
         val matches = it.stream()
             .map { a -> Pair(index++, a) }

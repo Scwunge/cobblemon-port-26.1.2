@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.mixin;
 
+import com.cobblemon.mod.common.duck.ScaleOverridingEntity;
 import com.cobblemon.mod.common.CobblemonNetwork;
 import com.cobblemon.mod.common.OrientationControllable;
 import com.cobblemon.mod.common.api.orientation.OrientationController;
@@ -111,6 +112,13 @@ public abstract class LivingEntityMixin extends Entity implements OrientationCon
         }
 
         return offset;
+    }
+
+    @Inject(method = "getScale", at = @At("HEAD"), cancellable = true)
+    private void cobblemon$overrideScale(CallbackInfoReturnable<Float> cir) {
+        if ((Object) this instanceof ScaleOverridingEntity entity) {
+            cir.setReturnValue(entity.cobblemon$getScale());
+        }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

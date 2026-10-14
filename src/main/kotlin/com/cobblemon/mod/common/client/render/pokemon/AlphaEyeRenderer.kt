@@ -100,7 +100,7 @@ fun renderAlphaEyeBloom(
         val eyeLocalPos = wrapper.matrix.getTranslation(Vector3f()).toVec3d()
         val eyeWorldPos = entityPos.add(eyeLocalPos)
         val toCam = camPos.subtract(eyeWorldPos).normalize()
-        val camUp = Minecraft.getInstance().gameRenderer.mainCamera.upVector.toVec3d()
+        val camUp = Minecraft.getInstance().gameRenderer.mainCamera.upVector().toVec3d()
         val camPerp = camUp.cross(toCam).normalize()
 
         // Have the bloom shrink depending upon if you're looking at the eye from the side or behind.
@@ -256,7 +256,7 @@ fun doAlphaEyeRendering(
 ) {
 
     val clientDelegate = entity.delegate as PokemonClientDelegate
-    val camPos = Minecraft.getInstance().gameRenderer.mainCamera.position
+    val camPos = Minecraft.getInstance().gameRenderer.mainCamera.position()
 
     val visibleLocators = clientDelegate.locatorStates.filter { (locator, _) -> clientDelegate.isLocatorVisible(locator) }
 

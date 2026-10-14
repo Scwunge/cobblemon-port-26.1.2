@@ -45,7 +45,7 @@ class CobblemonRandomSurfacePos {
         }
 
         fun getPos(mob: PathfinderMob, radius: Int, yRange: Int, toDoubleFunction: ToDoubleFunction<BlockPos?>): Vec3? {
-            val bl = GoalUtils.mobRestricted(mob, radius)
+            val bl = GoalUtils.mobRestricted(mob, radius.toDouble())
             return RandomPos.generateRandomPos(Supplier {
                 val blockPos = RandomPos.generateRandomDirection(mob.getRandom(), radius, yRange)
                 val blockPos2 = generateRandomPosTowardDirection(mob, radius, bl, blockPos)
@@ -55,7 +55,7 @@ class CobblemonRandomSurfacePos {
 
         fun getPosTowards(mob: PathfinderMob, radius: Int, yRange: Int, vectorPosition: Vec3): Vec3? {
             val vec3 = vectorPosition.subtract(mob.getX(), mob.getY(), mob.getZ())
-            val bl = GoalUtils.mobRestricted(mob, radius)
+            val bl = GoalUtils.mobRestricted(mob, radius.toDouble())
             return getPosInDirection(mob, radius, yRange, vec3, bl)
         }
         private fun getPosInDirection(
@@ -69,8 +69,8 @@ class CobblemonRandomSurfacePos {
                 val blockPos: BlockPos? =
                     RandomPos.generateRandomDirectionWithinRadians(
                         mob.getRandom(),
-                        radius,
-                        yRange,
+                        radius.toDouble(),
+                        yRange.toDouble(),
                         0,
                         vectorPosition.x,
                         vectorPosition.z,
@@ -101,7 +101,7 @@ class CobblemonRandomSurfacePos {
             shortCircuit: Boolean,
             pos: BlockPos
         ): BlockPos? {
-            val blockPos = RandomPos.generateRandomPosTowardDirection(mob, radius, mob.getRandom(), pos)
+            val blockPos = RandomPos.generateRandomPosTowardDirection(mob, radius.toDouble(), mob.getRandom(), pos)
             return if (!GoalUtils.isOutsideLimits(blockPos, mob) && !GoalUtils.isRestricted(
                     shortCircuit,
                     mob,
