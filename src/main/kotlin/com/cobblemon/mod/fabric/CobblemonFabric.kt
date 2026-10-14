@@ -8,7 +8,7 @@
 
 package com.cobblemon.mod.fabric
 
-import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityDataRegistry
+import net.fabricmc.fabric.api.`object`.builder.v1.entity.FabricEntityDataRegistry
 import net.fabricmc.fabric.api.recipe.v1.sync.RecipeSynchronization
 import com.cobblemon.mod.common.CobblemonRecipeCategories
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityLevelChangeEvents
