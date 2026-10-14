@@ -1,6 +1,104 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "cobblemon:item/pokemon_model"
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": "thirdperson_lefthand",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "thirdperson_lefthand"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "thirdperson_righthand",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "thirdperson_righthand"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "firstperson_lefthand",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "firstperson_lefthand"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "firstperson_righthand",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "firstperson_righthand"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "head",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "head"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "gui",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "gui"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "ground",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "ground"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      },
+      {
+        "when": "fixed",
+        "model": {
+          "type": "minecraft:special",
+          "model": {
+            "type": "cobblemon:pokemon",
+            "display_context": "fixed"
+          },
+          "base": "cobblemon:item/pokemon_model"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:special",
+      "model": {
+        "type": "cobblemon:pokemon",
+        "display_context": "none"
+      },
+      "base": "cobblemon:item/pokemon_model"
+    }
   }
 }

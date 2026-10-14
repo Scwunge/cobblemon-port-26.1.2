@@ -1,6 +1,138 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "cobblemon:item/technical_machine"
+    "type": "minecraft:select",
+    "property": "cobblemon:tm_type",
+    "cases": [
+      {
+        "when": "bug",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/bug_tm"
+        }
+      },
+      {
+        "when": "dark",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/dark_tm"
+        }
+      },
+      {
+        "when": "dragon",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/dragon_tm"
+        }
+      },
+      {
+        "when": "electric",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/electric_tm"
+        }
+      },
+      {
+        "when": "fairy",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/fairy_tm"
+        }
+      },
+      {
+        "when": "fighting",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/fighting_tm"
+        }
+      },
+      {
+        "when": "fire",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/fire_tm"
+        }
+      },
+      {
+        "when": "flying",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/flying_tm"
+        }
+      },
+      {
+        "when": "ghost",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/ghost_tm"
+        }
+      },
+      {
+        "when": "grass",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/grass_tm"
+        }
+      },
+      {
+        "when": "ground",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/ground_tm"
+        }
+      },
+      {
+        "when": "ice",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/ice_tm"
+        }
+      },
+      {
+        "when": "normal",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/normal_tm"
+        }
+      },
+      {
+        "when": "poison",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/poison_tm"
+        }
+      },
+      {
+        "when": "psychic",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/psychic_tm"
+        }
+      },
+      {
+        "when": "rock",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/rock_tm"
+        }
+      },
+      {
+        "when": "steel",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/steel_tm"
+        }
+      },
+      {
+        "when": "water",
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/tm/water_tm"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "cobblemon:item/technical_machine"
+    }
   }
 }

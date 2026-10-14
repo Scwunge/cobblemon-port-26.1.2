@@ -16,6 +16,7 @@ import net.minecraft.client.color.item.ItemTintSources
 import net.minecraft.client.multiplayer.ClientLevel
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.Identifier
+import net.minecraft.util.ARGB
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.client.renderer.block.BlockAndTintGetter
@@ -38,9 +39,12 @@ fun interface BlockColor {
 
 /**
  * The tint source for one tint index of an [ItemColor]. Item models refer to it as {"type": <id>, "tint_index": <n>}.
+ *
+ * Tints are ARGB since 1.21.4 (ItemColor ignored the alpha), so colours are made opaque; the colour mixes can lose
+ * alpha to rounding.
  */
 class ItemColorTintSource(val provider: ItemColor, val tintIndex: Int, private val codec: MapCodec<ItemColorTintSource>) : ItemTintSource {
-    override fun calculate(itemStack: ItemStack, level: ClientLevel?, owner: LivingEntity?) = provider.getColor(itemStack, tintIndex)
+    override fun calculate(itemStack: ItemStack, level: ClientLevel?, owner: LivingEntity?) = ARGB.opaque(provider.getColor(itemStack, tintIndex))
 
     override fun type() = codec
 

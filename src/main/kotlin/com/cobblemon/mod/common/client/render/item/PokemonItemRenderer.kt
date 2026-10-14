@@ -8,7 +8,6 @@
 
 package com.cobblemon.mod.common.client.render.item
 
-import net.minecraft.client.Minecraft
 import net.minecraft.util.LightCoordsUtil
 import com.cobblemon.mod.common.client.render.models.blockbench.FloatingState
 import net.minecraft.client.renderer.rendertype.RenderTypes
@@ -17,7 +16,6 @@ import com.cobblemon.mod.common.client.render.models.blockbench.repository.Varyi
 import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.item.PokemonItem
 import com.cobblemon.mod.common.util.math.fromEulerXYZDegrees
-import com.mojang.blaze3d.platform.Lighting
 import com.mojang.blaze3d.vertex.PoseStack
 import com.mojang.blaze3d.vertex.VertexConsumer
 import com.mojang.blaze3d.vertex.VertexMultiConsumer
@@ -53,9 +51,7 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
 
         val transformations = positions[mode]!!
 
-        if (mode == ItemDisplayContext.GUI) {
-            Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_FLAT)
-        }
+        // GUI lighting is flat through "gui_light": "front" in models/item/pokemon_model.json since 1.21.4.
 
         matrices.scale(transformations.scale.x, transformations.scale.y, transformations.scale.z)
         matrices.translate(transformations.translation.x, transformations.translation.y, transformations.translation.z)
@@ -101,10 +97,6 @@ class PokemonItemRenderer : CobblemonBuiltinItemRenderer {
         model.setDefault()
         matrices.popPose()
         matrices.popPose()
-
-        if (mode == ItemDisplayContext.GUI) {
-            Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_3D)
-        }
     }
 
     companion object {

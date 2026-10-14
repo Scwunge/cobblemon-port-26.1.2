@@ -14,7 +14,12 @@ import net.minecraft.world.entity.ItemOwner
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties
 import net.minecraft.client.multiplayer.ClientLevel
+import com.mojang.serialization.Codec
 import com.mojang.serialization.MapCodec
+import com.cobblemon.mod.common.item.components.TMMoveComponent
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperty
+import net.minecraft.world.item.ItemDisplayContext
 import com.cobblemon.mod.common.CobblemonItemComponents
 import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.api.cooking.Seasonings
@@ -50,7 +55,21 @@ object CobblemonModelPredicateRegistry {
         override fun type() = codec
     }
 
+    /** The elemental type of a TM's move, which picks its tm/<type>_tm model (ItemRendererMixin before 1.21.4). */
+    private object TMTypeProperty : SelectItemModelProperty<String> {
+        val TYPE: SelectItemModelProperty.Type<TMTypeProperty, String> = SelectItemModelProperty.Type.create(MapCodec.unit(TMTypeProperty), Codec.STRING)
+
+        override fun get(itemStack: ItemStack, level: ClientLevel?, owner: LivingEntity?, seed: Int, displayContext: ItemDisplayContext): String? =
+            TMMoveComponent.getTMMove(itemStack)?.elementalType?.showdownId
+
+        override fun valueCodec(): Codec<String> = Codec.STRING
+
+        override fun type() = TYPE
+    }
+
     fun registerPredicates() {
+        SelectItemModelProperties.ID_MAPPER.put(cobblemonResource("tm_type"), TMTypeProperty.TYPE)
+        CobblemonSpecialModelRenderers.register()
 
         val rods = listOf(
                 CobblemonItems.AZURE_ROD,

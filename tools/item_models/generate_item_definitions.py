@@ -6,8 +6,9 @@ Item ids are read from CobblemonItems.kt. Run from the repository root:
 
     python tools/item_models/generate_item_definitions.py
 
-Re-running is safe: definitions are regenerated, and overrides already removed from the item models are read from
-git (the base commit's model files) when --overrides-from is given, otherwise from the current files.
+The overrides have been removed from the item models, so a re-run needs them read from the commit before that:
+
+    python tools/item_models/generate_item_definitions.py --overrides-from 69a86e9
 """
 
 import argparse
@@ -183,6 +184,21 @@ def item_node(item_id, info, blocks, base_rev):
     node = overrides_to_node(item_id, ref, data["overrides"], tints) if "overrides" in data else model(ref, tints)
 
     helper = info["helper"]
+    if item_id == "technical_machine":
+        # The TM of the move's type (cobblemon:tm_type, ItemRendererMixin before 1.21.4).
+        types = sorted(p.stem[: -len("_tm")] for p in (MODELS / "tm").glob("*_tm.json"))
+        return {
+            "type": "minecraft:select",
+            "property": "cobblemon:tm_type",
+            "cases": [{"when": t, "model": model(f"cobblemon:item/tm/{t}_tm")} for t in types],
+            "fallback": node,
+        }
+    if item_id == "pokemon_model":
+        # A builtin/entity model before 1.21.4; the special renderer is told the display context by the case.
+        contexts = ["none", "thirdperson_lefthand", "thirdperson_righthand", "firstperson_lefthand",
+                    "firstperson_righthand", "head", "gui", "ground", "fixed"]
+        special = lambda c: {"type": "minecraft:special", "model": {"type": "cobblemon:pokemon", "display_context": c}, "base": ref}
+        return display_select([(c, special(c)) for c in contexts[1:]], special("none"))
     if helper == "pokeBallItem":
         # The 3D model everywhere but in GUIs and item frames (ItemRendererMixin before 1.21.4).
         return display_select([(["gui", "fixed"], node)], model(f"cobblemon:item/{item_id}_model"))
