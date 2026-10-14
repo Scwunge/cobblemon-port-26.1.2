@@ -55,7 +55,7 @@ class BeneathHeightmapPlacementModifier(val heightmap: Heightmap.Types, val offs
         val positions = mutableListOf<BlockPos>()
 
         var y = topY
-        while (y > context.minBuildHeight && (reach == null || topY - y < reach)) {
+        while (y > context.minY && (reach == null || topY - y < reach)) {
             positions.add(BlockPos(x, y, z))
             y--
         }

@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.pokemon
 
+import com.cobblemon.mod.common.util.readList
+import com.cobblemon.mod.common.util.readNullableOf
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.Priority
 import com.cobblemon.mod.common.api.abilities.Abilities
@@ -337,9 +339,9 @@ class FormData(
                 { _ -> buffer.readSizedInt(IntSize.U_SHORT) }
             ).toMutableMap()
         }
-        this._primaryType = buffer.readNullable { pb -> ElementalTypes.get(pb.readString()) }
-        this._secondaryType = buffer.readNullable { pb -> ElementalTypes.get(pb.readString()) }
-        this._experienceGroup = buffer.readNullable { pb -> ExperienceGroups.findByName(pb.readString()) }
+        this._primaryType = buffer.readNullableOf { pb -> ElementalTypes.get(pb.readString()) }
+        this._secondaryType = buffer.readNullableOf { pb -> ElementalTypes.get(pb.readString()) }
+        this._experienceGroup = buffer.readNullableOf { pb -> ExperienceGroups.findByName(pb.readString()) }
         this._height = buffer.readNullable { pb -> pb.readFloat() }
         this._weight = buffer.readNullable { pb -> pb.readFloat() }
         this._maleRatio = buffer.readNullable { pb -> pb.readFloat() }

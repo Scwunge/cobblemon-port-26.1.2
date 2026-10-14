@@ -71,7 +71,7 @@ class MoveSearchWidget(
         if (iconHovered(mouseX.toInt(), mouseY.toInt())) {
             Minecraft.getInstance().soundManager.play(SimpleSoundInstance.forUI(CobblemonSounds.GUI_CLICK, 1.0F, 0.25F))
             // Simulate clicking on text area if icon is clicked
-            if (!isFocused) return super.mouseClicked(x + (width / 2.0), y + (height / 2.0), button)
+            if (!isFocused) return super.mouseClicked(MouseButtonEvent(x + (width / 2.0), y + (height / 2.0), event.buttonInfo()), doubleClick)
         }
         return super.mouseClicked(event, doubleClick)
     }

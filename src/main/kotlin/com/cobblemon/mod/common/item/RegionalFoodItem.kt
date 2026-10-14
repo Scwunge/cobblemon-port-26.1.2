@@ -40,7 +40,7 @@ class RegionalFoodItem(properties: Properties) : Item(properties), PokemonSelect
 
         // Otherwise heal pokémon with the item
         val superInteractionResult = super<PokemonSelectingItem>.use(player, stack, true)
-        if (superInteractionResult.result != InteractionResult.PASS) {
+        if (superInteractionResult != InteractionResult.PASS) {
             return superInteractionResult
         }
 

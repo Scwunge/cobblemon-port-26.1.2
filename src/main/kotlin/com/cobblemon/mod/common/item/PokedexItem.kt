@@ -28,7 +28,7 @@ import net.minecraft.world.phys.AABB
 
 class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacksTo(1)) {
 
-    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation? = ItemUseAnimation.TOOT_HORN
+    override fun getUseAnimation(itemStack: ItemStack): ItemUseAnimation = ItemUseAnimation.TOOT_HORN
 
     override fun getUseDuration(stack: ItemStack, user: LivingEntity): Int = 72000
 
@@ -84,7 +84,7 @@ class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacks
         world: Level,
         user: LivingEntity,
         remainingUseTicks: Int
-    ) {
+    ): Boolean {
         // Check if the player is interacting with a Pokémon
         val range = if (user is Player) user.entityInteractionRange() else 5.0
         val entity = world.getEntities(user, AABB.ofSize(user.position(), range, range, range))
@@ -98,5 +98,6 @@ class PokedexItem(val type: PokedexType): CobblemonItem(Item.Properties().stacks
         }
 
         super.releaseUsing(stack, world, user, remainingUseTicks)
+        return false
     }
 }

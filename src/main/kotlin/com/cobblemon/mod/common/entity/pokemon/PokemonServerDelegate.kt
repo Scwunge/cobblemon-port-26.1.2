@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.pokemon
 
+import com.cobblemon.mod.common.util.gameRules
 import com.cobblemon.mod.common.util.server
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.bedrockk.molang.runtime.value.DoubleValue
@@ -413,7 +414,7 @@ class PokemonServerDelegate : PokemonSideDelegate {
     fun doDeathDrops() {
         if (entity.ownerUUID == null && entity.owner == null && entity.level().gameRules.get(CobblemonGameRules.DO_POKEMON_LOOT)) {
             val heldItem = (entity as PokemonEntity?)?.pokemon?.heldItemNoCopy() ?: ItemStack.EMPTY
-            if (!heldItem.isEmpty) entity.spawnAtLocation(heldItem.item)
+            if (!heldItem.isEmpty) entity.spawnAtLocation(entity.level() as net.minecraft.server.level.ServerLevel, heldItem.item)
 
             val dropTable = (entity.drops ?: entity.pokemon.form.drops)
             val drops = dropTable.getDrops().toMutableList()

@@ -72,7 +72,7 @@ fun ServerLevel.isBoxLoaded(box: AABB): Boolean {
 
     for (chunkX in startChunkX..endChunkX) {
         for (chunkZ in startChunkZ..endChunkZ) {
-            if (!this.areEntitiesLoaded(ChunkPos.asLong(chunkX, chunkZ))) {
+            if (!this.areEntitiesLoaded(ChunkPos.pack(chunkX, chunkZ))) {
                 return false
             }
         }

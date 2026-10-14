@@ -65,13 +65,26 @@ class PlayerRenderableFace(val playerId: UUID, override val isLeftSide: Boolean)
         val size = 37F
         val xOffset = 0
         val yOffset = 72
-        InventoryScreen.renderEntityInInventory(GuiGraphicsExtractor, xOffset.toFloat(), yOffset.toFloat(), size, Vector3f(), quaternionf, quaternionf2, entity)
+        // Entities in GUIs are picture-in-picture elements made from a render state since 1.21.6: the state is taken
+        // while the entity is posed, then drawn around where InventoryScreen#renderEntityInInventory placed it.
+        val renderState = Minecraft.getInstance().entityRenderDispatcher.getRenderer(entity).createRenderState(entity, 1F)
+        renderState.shadowPieces.clear()
+        renderState.outlineColor = 0
         // Resets the entity
         entity.yBodyRot = oldBodyYaw
         entity.yRot = oldEntityYaw
         entity.xRot = oldPitch
         entity.yHeadRotO = oldPrevHeadYaw
         entity.yHeadRot = oldHeadYaw
+
+        val pose = GuiGraphicsExtractor.pose()
+        val origin = pose.transformPosition(org.joml.Vector2f(xOffset.toFloat(), yOffset.toFloat()))
+        val scale = size * kotlin.math.sqrt(kotlin.math.abs(pose.determinant()))
+        val halfSize = kotlin.math.ceil(scale * 2).toInt()
+        GuiGraphicsExtractor.entity(
+            renderState, scale, Vector3f(), quaternionf, quaternionf2,
+            origin.x.toInt() - halfSize, origin.y.toInt() - halfSize, origin.x.toInt() + halfSize, origin.y.toInt() + halfSize
+        )
     }
 }
 

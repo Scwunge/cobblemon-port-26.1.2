@@ -72,7 +72,7 @@ val Level.isNight: Boolean
     get() = isDarkOutside
 
 /** Level#blockUpdated before 1.21.2. */
-fun Level.blockUpdated(pos: BlockPos, block: Block) = updateNeighborsAt(pos, block)
+fun net.minecraft.world.level.LevelAccessor.blockUpdated(pos: BlockPos, block: Block) = updateNeighborsAt(pos, block)
 
 /** EntityGetter#getNearbyPlayers before 1.21.2. */
 fun Level.getNearbyPlayers(conditions: TargetingConditions, source: LivingEntity?, area: AABB): List<Player> {
@@ -161,5 +161,34 @@ object ComponentJson {
     fun fromJson(json: String, registries: net.minecraft.core.HolderLookup.Provider): Component? {
         val element = com.google.gson.JsonParser.parseString(json) ?: return null
         return net.minecraft.network.chat.ComponentSerialization.CODEC.parse(registries.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE), element).getOrThrow()
+    }
+}
+
+/**
+ * Level#getGameRules before 1.21.11. Only server levels have game rules since then, and every caller of this runs on the
+ * server.
+ */
+val Level.gameRules: net.minecraft.world.level.gamerules.GameRules
+    get() = (this as net.minecraft.server.level.ServerLevel).gameRules
+
+/**
+ * BeehiveBlockEntity#addOccupant(Entity) from 1.21.1, which took any entity; it only takes bees since 1.21.2. This is
+ * the same, including skipping the hive's fire check when marking it changed.
+ */
+fun net.minecraft.world.level.block.entity.BeehiveBlockEntity.addOccupant(entity: Entity) {
+    if (isFull) return
+    entity.stopRiding()
+    entity.ejectPassengers()
+    storeBee(net.minecraft.world.level.block.entity.BeehiveBlockEntity.Occupant.of(entity))
+    val level = level
+    if (level != null) {
+        val blockPos = blockPos
+        level.playSound(null, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), net.minecraft.sounds.SoundEvents.BEEHIVE_ENTER, SoundSource.BLOCKS, 1.0F, 1.0F)
+        level.gameEvent(net.minecraft.world.level.gameevent.GameEvent.BLOCK_CHANGE, blockPos, net.minecraft.world.level.gameevent.GameEvent.Context.of(entity, blockState))
+    }
+    entity.discard()
+    if (level != null) {
+        level.blockEntityChanged(blockPos)
+        if (!blockState.isAir) level.updateNeighbourForOutputSignal(blockPos, blockState.block)
     }
 }

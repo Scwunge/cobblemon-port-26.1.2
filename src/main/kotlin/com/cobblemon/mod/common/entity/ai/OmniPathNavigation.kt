@@ -46,7 +46,7 @@ import kotlin.math.acos
  * @author Hiroku
  * @since April 18th, 2025
  */
-class OmniPathNavigation(val world: Level, val entity: Mob) : GroundPathNavigation(entity, world) {
+class OmniPathNavigation(val world: Level, val entity: Mob) : NullableGroundPathNavigation(entity, world) {
     val pather = entity as OmniPathingEntity
 
     var cachedCurrentNode: Node? = null
@@ -171,7 +171,7 @@ class OmniPathNavigation(val world: Level, val entity: Mob) : GroundPathNavigati
 
     fun findPath(target: BlockPos, distance: Int): Path? = createPath(ImmutableSet.of(target), 8, false, distance)
 
-    override fun createPath(target: BlockPos, distance: Int): Path? {
+    override fun createPathOrNull(target: BlockPos, distance: Int): Path? {
         var target = target
 
         var blockPos: BlockPos
@@ -274,7 +274,7 @@ class OmniPathNavigation(val world: Level, val entity: Mob) : GroundPathNavigati
         return if ((canFloat()) && blockGetter.getFluidState(blockPos).`is`(FluidTags.WATER)) vec.y + 0.5 else super.getGroundY(vec)
     }
 
-    override fun createPath(entity: Entity, distance: Int): Path? {
+    override fun createPathOrNull(entity: Entity, distance: Int): Path? {
         return this.createPath(entity.blockPosition(), distance)
     }
 

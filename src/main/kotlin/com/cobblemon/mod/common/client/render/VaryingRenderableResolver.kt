@@ -218,7 +218,7 @@ class AnimatedModelTextureSupplier(
         val frameIndex = floor(state.animationSeconds * fps).toInt()
         try {
             if (frameIndex >= frames.size && !loop) {
-                return DynamicTexture(NativeImage.read(resourceManager.getResourceOrThrow(frames.last()).open()))
+                return DynamicTexture({ frames.last().toString() }, NativeImage.read(resourceManager.getResourceOrThrow(frames.last()).open()))
             }
         } catch (e : Exception) {
             return null
@@ -239,8 +239,8 @@ class AnimatedModelTextureSupplier(
 
         for (x in 0..<texture1.width) {
             for (y in 0..<texture1.height) {
-                val color1 = texture1.getPixelRGBA(x,y).toRGBA()
-                val color2 = texture2.getPixelRGBA(x,y).toRGBA()
+                val color1 = net.minecraft.util.ARGB.toABGR(texture1.getPixel(x,y)).toRGBA()
+                val color2 = net.minecraft.util.ARGB.toABGR(texture2.getPixel(x,y)).toRGBA()
 
                 var newRed : Int
                 var newGreen : Int
@@ -266,12 +266,11 @@ class AnimatedModelTextureSupplier(
 
                 val finalColor = (newAlpha shl 24) or (newRed shl 16) or (newGreen shl 8) or newBlue
 
-                texture1.setPixelRGBA(x,y,finalColor) //We aren't using texture 1 anymore so it's easier to override it
+                texture1.setPixelABGR(x,y,finalColor) //We aren't using texture 1 anymore so it's easier to override it
             }
         }
-        val newTexture = DynamicTexture(texture1)
-        newTexture.setFilter(false, false)
-        return newTexture
+        // Dynamic textures sample nearest without mipmaps by default now, which is what setFilter(false, false) did
+        return DynamicTexture({ "cobblemon interpolated texture" }, texture1)
     }
 }
 

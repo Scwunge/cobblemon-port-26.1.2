@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.net.messages.client.trade
 
+import com.cobblemon.mod.common.util.readList
+import com.cobblemon.mod.common.util.readNullableOf
 import com.cobblemon.mod.common.api.net.NetworkPacket
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.net.IntSize
@@ -86,7 +88,7 @@ class TradeStartedPacket(
         fun decode(buffer: RegistryFriendlyByteBuf) = TradeStartedPacket(
             buffer.readUUID(),
             buffer.readText().copy(),
-            buffer.readList { buffer.readNullable { TradeablePokemon.decode(buffer) } }
+            buffer.readList { buffer.readNullableOf { TradeablePokemon.decode(buffer) } }
         )
     }
 

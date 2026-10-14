@@ -66,7 +66,7 @@ internal class PokemonP1(
             val speciesFeatureProviders = SpeciesFeatures.getFeaturesFor(other.species)
             val feature = speciesFeatureProviders.firstNotNullOfOrNull { provider -> provider(featureNbt) } ?: return@forEach
             if (
-                featureNbt.contains("keys", Tag.TAG_STRING.toInt()) &&
+                featureNbt.getString("keys").isPresent &&
                 !featureNbt.getListOrEmpty("keys").contains(StringTag.valueOf(featureId))
             ) {
                 return@forEach

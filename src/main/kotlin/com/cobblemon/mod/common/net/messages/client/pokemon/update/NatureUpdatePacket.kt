@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.net.messages.client.pokemon.update
 
+import com.cobblemon.mod.common.util.readNullableOf
 import com.cobblemon.mod.common.Cobblemon.LOGGER
 import com.cobblemon.mod.common.api.pokemon.Natures
 import com.cobblemon.mod.common.net.messages.client.PokemonUpdatePacket
@@ -51,7 +52,7 @@ class NatureUpdatePacket(pokemon: () -> Pokemon?, val nature: Nature?, val minte
 
     companion object {
         val ID = cobblemonResource("nature_update")
-        fun decode(buffer: RegistryFriendlyByteBuf) = NatureUpdatePacket(decodePokemon(buffer), buffer.readNullable { Natures.getNature(buffer.readIdentifier()) }, buffer.readBoolean())
+        fun decode(buffer: RegistryFriendlyByteBuf) = NatureUpdatePacket(decodePokemon(buffer), buffer.readNullableOf { Natures.getNature(buffer.readIdentifier()) }, buffer.readBoolean())
     }
 
 }

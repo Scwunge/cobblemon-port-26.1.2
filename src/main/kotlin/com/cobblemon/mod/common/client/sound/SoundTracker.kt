@@ -34,12 +34,12 @@ abstract class SoundTracker<T> {
     fun play(id: T, sound: SoundInstance) {
         if (!sound.canPlaySound()) return //If sound cannot be played, return early
         val tracks = this.trackedSounds.computeIfAbsent(id) { hashMapOf() }
-        tracks.get(sound.location)?.let { existing -> manager.stop(existing) }  // replace anything already playing
-        tracks.put(sound.location, sound)
+        tracks.get(sound.identifier)?.let { existing -> manager.stop(existing) }  // replace anything already playing
+        tracks.put(sound.identifier, sound)
         manager.play(sound)
     }
 
-    fun stop(id: T, sound: SoundInstance) = this.stop(id, sound.location)
+    fun stop(id: T, sound: SoundInstance) = this.stop(id, sound.identifier)
 
     fun stop(id: T, location: Identifier) {
         val emitter = trackedSounds.get(id) ?: return

@@ -237,14 +237,6 @@ class PokerodItem(val pokeRodId: Identifier, settings: Properties) : FishingRodI
         return InteractionResult.SUCCESS
     }
 
-    override fun getEnchantmentValue(): Int {
-        return 1
-    }
-
-    override fun getDescriptionId(): String {
-        return "item.cobblemon.poke_rod"
-    }
-
     private fun playAttachSound(entity: Entity) {
         entity.playSound(CobblemonSounds.FISHING_BAIT_ATTACH, 1F, 1F)
     }

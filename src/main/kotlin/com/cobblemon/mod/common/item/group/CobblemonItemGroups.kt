@@ -383,7 +383,7 @@ object CobblemonItemGroups {
             )
             stack.set(
                 DataComponents.CUSTOM_MODEL_DATA,
-                CustomModelData(i)
+                CustomModelData(listOf(i.toFloat()), listOf(), listOf(), listOf())
             )
             entries.accept(stack)
         }

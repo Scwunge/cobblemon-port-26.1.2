@@ -1602,7 +1602,8 @@ object CobblemonItems : PlatformRegistry<Registry<Item>, ResourceKey<Registry<It
     private fun candyItem(name: String, rarity: Rarity = Rarity.COMMON, calculator: CandyItem.Calculator): CandyItem  = this.create(name, { CandyItem(rarity, calculator) })
 
     private fun pokerodItem(pokeRodId: Identifier, rarity: Rarity = Rarity.COMMON): PokerodItem {
-        val settings = Item.Properties().stacksTo(1).durability(256).rarity(rarity)
+        // Enchantability and the shared description id were PokerodItem overrides before 1.21.2
+        val settings = Item.Properties().stacksTo(1).durability(256).rarity(rarity).enchantable(1).overrideDescription("item.cobblemon.poke_rod")
         val item = create(pokeRodId.path, { PokerodItem(pokeRodId, settings) })
         pokeRods.add(item)
         return item

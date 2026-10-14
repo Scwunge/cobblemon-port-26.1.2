@@ -40,7 +40,12 @@ object WholeCompoundCodec : MapCodec<CompoundTag>() {
     }
 
     override fun <T> encode(input: CompoundTag, ops: DynamicOps<T>, prefix: RecordBuilder<T>): RecordBuilder<T> {
-        input.keySet().forEach { key -> prefix.add(key, NbtOps.INSTANCE.convertTo(ops, input.get(key)!!)) }
+        @Suppress("UNCHECKED_CAST")
+        val anyOps = ops as DynamicOps<Any>
+        input.keySet().forEach { key ->
+            @Suppress("UNCHECKED_CAST")
+            prefix.add(key, NbtOps.INSTANCE.convertTo(anyOps, input.get(key)!!) as T)
+        }
         return prefix
     }
 }

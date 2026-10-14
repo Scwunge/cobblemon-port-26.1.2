@@ -52,7 +52,7 @@ import net.minecraft.world.phys.Vec3
  * @author Hiroku
  * @since September 10th, 2022
  */
-class OmniPathNodeMaker : NodeEvaluator() {
+class OmniPathNodeMaker : NullableNodeEvaluator() {
     private val nodePosToType: Long2ObjectMap<PathType> = Long2ObjectOpenHashMap()
     private val nodePosToState: Long2ObjectMap<BlockState> = Long2ObjectOpenHashMap()
 
@@ -77,14 +77,14 @@ class OmniPathNodeMaker : NodeEvaluator() {
     }
 
     override fun getTarget(x: Double, y: Double, z: Double): Target {
-        return Target(super.getNode(Mth.floor(x), Mth.floor(y + 0.5), Mth.floor(z)))
+        return Target(baseNode(Mth.floor(x), Mth.floor(y + 0.5), Mth.floor(z)))
     }
 
     override fun getStart(): Node {
         val x = Mth.floor(mob.boundingBox.minX)
         val y = Mth.floor(mob.boundingBox.minY + 0.5)
         val z = Mth.floor(mob.boundingBox.minZ)
-        val node = super.getNode(x, y, z)
+        val node = baseNode(x, y, z)
         node.type = this.getNodeType(mob, node.asBlockPos())
         node.costMalus = mob.getPathfindingMalus(node.type)
         return node
@@ -223,7 +223,7 @@ class OmniPathNodeMaker : NodeEvaluator() {
     }
 
     private fun getNodeAndUpdateCostToMax(x: Int, y: Int, z: Int, pathType: PathType, malus: Float): Node? {
-        val node = this.getNode(x, y, z) ?: super.getNode(x, y, z) ?: return null
+        val node = this.getNode(x, y, z) ?: baseNode(x, y, z) ?: return null
         node.type = pathType
         node.costMalus = max(node.costMalus.toDouble(), malus.toDouble()).toFloat()
         return node
@@ -486,14 +486,14 @@ class OmniPathNodeMaker : NodeEvaluator() {
         }
     }
 
-    override fun getNode(x: Int, y: Int, z: Int): Node {
+    override fun getNodeOrNull(x: Int, y: Int, z: Int): Node? {
         var nodePenalty = 0F
         var pathNode: Node? = null
 
         val type = addNodePos(x, y, z)
         if (isValidPathType(type) &&
             mob.getPathfindingMalus(type).also { nodePenalty = it } >= 0.0f &&
-            super.getNode(x, y, z).also { pathNode = it } != null
+            baseNode(x, y, z).also { pathNode = it } != null
         ) {
             pathNode!!.type = type
             pathNode!!.costMalus = pathNode!!.costMalus.coerceAtLeast(nodePenalty)

@@ -113,7 +113,7 @@ class PotionBaseEffect(
             return false
         }
 
-        override fun tick(entity: LivingEntity, overwriteCallback: Runnable): Boolean {
+        override fun tickServer(level: net.minecraft.server.level.ServerLevel, entity: LivingEntity, overwriteCallback: Runnable): Boolean {
             if (this.effect.value().shouldApplyEffectTickThisTick(entity.tickCount, this.amplifier)) {
                 this.onEffectStarted(entity)
             }
@@ -127,7 +127,7 @@ class PotionBaseEffect(
         }
 
         override fun onEffectStarted(entity: LivingEntity) {
-            this.effect.value().applyEffectTick(entity, this.upgrade?.amplifier ?: this.amplifier)
+            (entity.level() as? net.minecraft.server.level.ServerLevel)?.let { this.effect.value().applyEffectTick(it, entity, this.upgrade?.amplifier ?: this.amplifier) }
         }
 
         @Suppress("CAST_NEVER_SUCCEEDS")

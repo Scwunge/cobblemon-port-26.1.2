@@ -721,7 +721,7 @@ open class PokemonProperties {
         shiny = if (tag.contains(DataKeys.POKEMON_SHINY)) tag.getBooleanOr(DataKeys.POKEMON_SHINY, false) else null
         gender = if (tag.contains(DataKeys.POKEMON_GENDER)) Gender.valueOf(tag.getStringOr(DataKeys.POKEMON_GENDER, "")) else null
         species = if (tag.contains(DataKeys.POKEMON_SPECIES_TEXT)) tag.getStringOr(DataKeys.POKEMON_SPECIES_TEXT, "") else null
-        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) com.cobblemon.mod.common.util.ComponentJson.fromJson(tag.getStringOr(DataKeys.POKEMON_NICKNAME, ""), registryLookup) else null
+        nickname = if (tag.contains(DataKeys.POKEMON_NICKNAME)) com.cobblemon.mod.common.util.ComponentJson.fromJson(tag.getStringOr(DataKeys.POKEMON_NICKNAME, ""), registryLookup)?.copy() else null
         form = if (tag.contains(DataKeys.POKEMON_FORM_ID)) tag.getStringOr(DataKeys.POKEMON_FORM_ID, "") else null
         friendship = if (tag.contains(DataKeys.POKEMON_FRIENDSHIP)) tag.getIntOr(DataKeys.POKEMON_FRIENDSHIP, 0) else null
         fullness = if (tag.contains(DataKeys.POKEMON_FULLNESS)) tag.getIntOr(DataKeys.POKEMON_FULLNESS, 0) else null

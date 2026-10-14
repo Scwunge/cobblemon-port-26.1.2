@@ -31,12 +31,7 @@ class IconButton(
     val silent: Boolean = false,
     val clickAction: OnPress
 ): Button(buttonX.toInt(), buttonY.toInt(), buttonWidth.toInt(), buttonHeight.toInt(), "".text(), clickAction, DEFAULT_NARRATION), CobblemonRenderable {
-    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
-        val d = event.x()
-        val e = event.y()
-        val i = event.button()
-        val f = dragX
-        val g = dragY
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
         return false
     }
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}
@@ -63,7 +58,7 @@ class IconButton(
         val button = event.button()
         if (active && visible && button == 0 && isMouseOver(mouseX, mouseY)) {
             playDownSound(Minecraft.getInstance().soundManager)
-            onClick(mouseX, mouseY)
+            onClick(event, doubleClick)
             return true
         }
         return false

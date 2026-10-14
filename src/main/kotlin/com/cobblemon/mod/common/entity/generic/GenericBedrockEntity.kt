@@ -8,6 +8,12 @@
 
 package com.cobblemon.mod.common.entity.generic
 
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.server.level.ServerLevel
+import com.cobblemon.mod.common.util.putAll
+import com.cobblemon.mod.common.util.asCompoundTag
+import net.minecraft.world.level.storage.ValueOutput
+import net.minecraft.world.level.storage.ValueInput
 import com.bedrockk.molang.runtime.struct.QueryStruct
 import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.api.net.serializers.IdentifierDataSerializer
@@ -100,7 +106,8 @@ class GenericBedrockEntity(world: Level) : Entity(CobblemonEntities.GENERIC_BEDR
         builder.define(POSE_TYPE, PoseType.NONE)
     }
 
-    override fun readAdditionalSaveData(nbt: CompoundTag) {
+    override fun readAdditionalSaveData(input: ValueInput) {
+        val nbt = input.asCompoundTag()
         this.category = Identifier.parse(nbt.getStringOr(DataKeys.GENERIC_BEDROCK_CATEGORY, ""))
         this.aspects = nbt.getListOrEmpty(DataKeys.GENERIC_BEDROCK_ASPECTS).map { it.asString().orElse("") }.toSet()
         this.entityData.set(POSE_TYPE, PoseType.values()[nbt.getByteOr(DataKeys.GENERIC_BEDROCK_POSE_TYPE, 0.toByte()).toInt()])
@@ -110,7 +117,8 @@ class GenericBedrockEntity(world: Level) : Entity(CobblemonEntities.GENERIC_BEDR
         this.syncAge = nbt.getBooleanOr(DataKeys.GENERIC_BEDROCK_SYNC_AGE, false)
     }
 
-    override fun addAdditionalSaveData(nbt: CompoundTag) {
+    override fun addAdditionalSaveData(output: ValueOutput) {
+        val nbt = CompoundTag()
         nbt.putString(DataKeys.GENERIC_BEDROCK_CATEGORY, category.toString())
         nbt.put(DataKeys.GENERIC_BEDROCK_ASPECTS, ListTag().also { it.addAll(aspects.map(StringTag::valueOf)) })
         nbt.putByte(DataKeys.GENERIC_BEDROCK_POSE_TYPE, getCurrentPoseType().ordinal.toByte())
@@ -118,10 +126,18 @@ class GenericBedrockEntity(world: Level) : Entity(CobblemonEntities.GENERIC_BEDR
         nbt.putFloat(DataKeys.GENERIC_BEDROCK_COLLIDER_WIDTH, colliderWidth)
         nbt.putFloat(DataKeys.GENERIC_BEDROCK_COLLIDER_HEIGHT, colliderHeight)
         nbt.putBoolean(DataKeys.GENERIC_BEDROCK_SYNC_AGE, syncAge)
+        output.putAll(nbt)
+    }
+
+    // What Entity#hurt did for entities that don't take damage before 1.21.2
+    override fun hurtServer(level: ServerLevel, source: DamageSource, damage: Float): Boolean {
+        if (isInvulnerableToBase(source)) return false
+        markHurt()
+        return false
     }
 
     override fun isPickable() = true
-    override fun canBeCollidedWith() = true
+    override fun canBeCollidedWith(other: Entity?) = true
 
     override fun shouldBeSaved() = super.shouldBeSaved() && this.savesToWorld
     override fun getDimensions(pose: Pose) = EntityDimensions.scalable(colliderWidth, colliderHeight).scale(scale)

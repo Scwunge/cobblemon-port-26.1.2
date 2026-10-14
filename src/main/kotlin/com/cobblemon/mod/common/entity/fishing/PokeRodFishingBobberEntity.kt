@@ -625,7 +625,7 @@ class PokeRodFishingBobberEntity(type: EntityType<out PokeRodFishingBobberEntity
                             .withParameter(LootContextParams.THIS_ENTITY, this)
                             .also {
                                 if (Cobblemon.implementation.modAPI != ModAPI.FABRIC) {
-                                    it.withParameter(LootContextParams.ATTACKING_ENTITY, getOwner())
+                                    it.withOptionalParameter(LootContextParams.ATTACKING_ENTITY, getOwner())
                                 }
                             }
                             .create(LootContextParamSets.FISHING)

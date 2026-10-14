@@ -71,7 +71,7 @@ class SlowpokeTailRegrowthSpeciesFeature(var regrowthSeconds: Int = 0) : Species
 
     fun onShear(pokemonEntity: PokemonEntity) {
         this.regrowthSeconds = CobblemonMechanics.slowpokeTails.regrowthSeconds
-        val itemEntity = pokemonEntity.spawnAtLocation(CobblemonItems.TASTY_TAIL) ?: return
+        val itemEntity = pokemonEntity.spawnAtLocation(pokemonEntity.level() as net.minecraft.server.level.ServerLevel, CobblemonItems.TASTY_TAIL) ?: return
         pokemonEntity.pokemon.updateAspects()
         pokemonEntity.pokemon.markFeatureDirty(this)
         pokemonEntity.jitterDropItem(itemEntity)

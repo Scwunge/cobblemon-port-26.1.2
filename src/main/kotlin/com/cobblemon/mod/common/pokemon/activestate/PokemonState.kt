@@ -75,7 +75,7 @@ class InactivePokemonState : PokemonState() {
     override fun hashCode() = 0
     companion object {
         @JvmStatic
-        val CODEC: Codec<InactivePokemonState> = Codec.unit { InactivePokemonState() }
+        val CODEC: Codec<InactivePokemonState> = com.mojang.serialization.MapCodec.unitCodec { InactivePokemonState() }
     }
 }
 

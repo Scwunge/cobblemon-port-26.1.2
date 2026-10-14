@@ -20,7 +20,8 @@ import net.minecraft.network.chat.Component
 import net.minecraft.world.item.ItemStack
 import org.joml.Vector4f
 
-class PokemonItem : CobblemonItem(Properties().stacksTo(1).component(CobblemonItemComponents.POKEMON_ITEM, null)) {
+// 1.21.1 also set POKEMON_ITEM to null here, which leaves the component unset; null values are no longer accepted
+class PokemonItem : CobblemonItem(Properties().stacksTo(1)) {
 
     override fun getName(stack: ItemStack): Component = this.species(stack)?.translatedName ?: super.getName(stack)
 

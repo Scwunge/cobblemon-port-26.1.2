@@ -55,7 +55,7 @@ fun LivingEntity.hasMemory(memoryIdentifier: Identifier): Boolean {
 
 fun LivingEntity.hasMemory(tagKey: TagKey<MemoryModuleType<*>>): Boolean {
     val registry = BuiltInRegistries.MEMORY_MODULE_TYPE
-    val memoryTypesInTag = registry.getTag(tagKey).orElse(null) ?: return false
+    val memoryTypesInTag = registry.get(tagKey).orElse(null) ?: return false
     return memoryTypesInTag.any { brain.checkMemory(it.value(), MemoryStatus.VALUE_PRESENT) }
 }
 
@@ -83,7 +83,7 @@ fun LivingEntity.isDoingActivity(activityIdentifier: Identifier): Boolean {
 
 fun LivingEntity.isDoingActivity(tagKey: TagKey<Activity>): Boolean {
     val registry = BuiltInRegistries.ACTIVITY
-    val activitiesInTag = registry.getTag(tagKey).orElse(null) ?: return false
+    val activitiesInTag = registry.get(tagKey).orElse(null) ?: return false
     return activitiesInTag.any { brain.isActive(it.value()) }
 }
 

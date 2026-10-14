@@ -33,7 +33,7 @@ class SwitchToFightTaskConfig : SingleTaskConfig {
             it.present(MemoryModuleType.ATTACK_TARGET)
         ).apply(it) { _ ->
             Trigger { world, entity, _ ->
-                if (entity.commandSenderWorld.getCurrentDifficultyAt(entity.blockPosition()).difficulty == Difficulty.PEACEFUL) {
+                if (entity.level().difficulty == Difficulty.PEACEFUL) {
                     return@Trigger false
                 }
 

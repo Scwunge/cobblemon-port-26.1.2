@@ -67,7 +67,7 @@ fun String.splitMap(delimiter: String, assigner: String) : MutableList<Pair<Stri
     return result
 }
 
-fun <T, U : Registry<T>> String.asIdentifierOrTag(resourceKey: ResourceKey<U>): Either<Identifier, TagKey<T>> {
+fun <T : Any, U : Registry<T>> String.asIdentifierOrTag(resourceKey: ResourceKey<U>): Either<Identifier, TagKey<T>> {
     return if (this.startsWith("#")) {
         val tagLocation = Identifier.parse(this.substring(1))
         Either.right(TagKey.create<T>(resourceKey, tagLocation))

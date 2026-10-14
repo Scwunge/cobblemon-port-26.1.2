@@ -118,7 +118,7 @@ class EatHeldItemTask(entity: PokemonEntity) : Behavior<PokemonEntity>(
         //TODO: Figure out how to this with snowstorm so we can use mouth/face/head locators
         // The issue as of this writing is we don't have a clean way to utilize the item texture for the particle in snowstorm
         serverLevel.sendParticles(
-            ItemParticleOption(ParticleTypes.ITEM, itemStack),
+            ItemParticleOption(ParticleTypes.ITEM, net.minecraft.world.item.ItemStackTemplate.fromNonEmptyStack(itemStack)),
             entity.x, entity.y + 0.5, entity.z, // particle position (centered on entity)
             5, // count
             0.1, 0.1, 0.1, // x, y, z offset spread

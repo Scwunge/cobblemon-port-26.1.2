@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
 
 
-class WearableHatItem(override val name: String): CobblemonItem(Properties()), WearableItem {
+class WearableHatItem(override val name: String): CobblemonItem(Properties().component(net.minecraft.core.component.DataComponents.EQUIPPABLE, WearableItem.equippable())), WearableItem {
     override fun use(level: Level, player: Player, usedHand: InteractionHand): InteractionResult {
         val hitPokemon = player.traceFirstEntityCollision(
             entityClass = PokemonEntity::class.java,

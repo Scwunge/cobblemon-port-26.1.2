@@ -1664,7 +1664,7 @@ open class Pokemon : ShowdownIdentifiable {
         when (originalTrainerType) {
             OriginalTrainerType.PLAYER -> {
                 UUID.fromString(originalTrainer)?.let { uuid ->
-                    server()?.profileCache?.get(uuid)?.orElse(null)?.name?.let {
+                    server()?.services()?.nameToIdCache()?.get(uuid)?.orElse(null)?.name()?.let {
                         originalTrainerName = it
                     }
                 }

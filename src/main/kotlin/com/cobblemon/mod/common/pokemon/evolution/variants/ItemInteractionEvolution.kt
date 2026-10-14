@@ -42,7 +42,7 @@ open class ItemInteractionEvolution(
         id = "id",
         result = PokemonProperties(),
         shedder = null,
-        requiredContext = ItemPredicate.Builder.item().of(Items.EGG).build(),
+        requiredContext = ItemPredicate.Builder.item().of(net.minecraft.core.registries.BuiltInRegistries.ITEM, Items.EGG).build(),
         optional = true,
         consumeHeldItem = true,
         requirements = mutableSetOf(),

@@ -15,30 +15,37 @@ import net.minecraft.stats.Stats
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.Equipable
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE
 import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.level.Level
 
-interface WearableItem : Equipable {
+/**
+ * Items worn on the head. Equipable became the equippable component in 1.21.2; [equippable] is what each wearable
+ * gives that component.
+ */
+interface WearableItem {
     val name: String
 
     companion object {
         const val MODEL_PATH = "item/wearable"
+
+        /** What Equipable#getEquipmentSlot and the default Equipable#getEquipSound amounted to. */
+        fun equippable(): net.minecraft.world.item.equipment.Equippable =
+            net.minecraft.world.item.equipment.Equippable.builder(EquipmentSlot.HEAD).build()
     }
 
     fun getModel3d(): Identifier = cobblemonResource("${MODEL_PATH}/${this.name}")
     fun getModel2d(): Identifier = cobblemonResource(this.name)
 
-    override fun getEquipmentSlot(): EquipmentSlot {
+    fun getEquipmentSlot(): EquipmentSlot {
         return EquipmentSlot.HEAD
     }
 
     /**
      * Swap stack with equipment slot
      * Copied from vanilla, modified to account for stackable items
-     * @see Equipable.swapWithEquipmentSlot
+     * @see net.minecraft.world.item.equipment.Equippable.swapWithEquipmentSlot
      *
      * @param item
      * @param level

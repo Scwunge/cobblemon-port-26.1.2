@@ -31,9 +31,9 @@ import net.minecraft.server.level.ServerPlayer
 class FabricPacketInfo<T : NetworkPacket<T>>(val info: PacketRegisterInfo<T>) {
     fun registerPacket(client: Boolean) {
         (if (client) {
-            PayloadTypeRegistry.playS2C()
+            PayloadTypeRegistry.clientboundPlay()
         } else {
-            PayloadTypeRegistry.playC2S()
+            PayloadTypeRegistry.serverboundPlay()
         })
         .register(info.payloadId, info.codec)
     }
@@ -48,7 +48,7 @@ class FabricPacketInfo<T : NetworkPacket<T>>(val info: PacketRegisterInfo<T>) {
     fun registerServerHandler() {
         ServerPlayNetworking.registerGlobalReceiver(info.payloadId) { obj, context ->
             val handler = info.handler as ServerNetworkPacketHandler<T>
-            handler.handle(obj, context.player().server!!, context.player() as ServerPlayer)
+            handler.handle(obj, context.player().level().server, context.player())
         }
     }
 }

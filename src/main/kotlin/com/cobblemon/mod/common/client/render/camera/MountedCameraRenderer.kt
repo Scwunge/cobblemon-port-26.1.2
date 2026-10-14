@@ -370,7 +370,7 @@ object MountedCameraRenderer {
                     vec32,
                     ClipContext.Block.VISUAL,
                     ClipContext.Fluid.NONE,
-                    instance.entity
+                    instance.entity()?.let { net.minecraft.world.phys.shapes.CollisionContext.of(it) } ?: net.minecraft.world.phys.shapes.CollisionContext.empty()
                 )
             )
             if (hitResult.type != HitResult.Type.MISS) {

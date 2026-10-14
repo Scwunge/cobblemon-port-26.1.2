@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.particle
 
+import net.minecraft.util.RandomSource
 import com.bedrockk.molang.runtime.MoLangRuntime
 import com.bedrockk.molang.runtime.struct.VariableStruct
 import com.cobblemon.mod.common.api.snowstorm.BedrockParticleOptions
@@ -54,7 +55,8 @@ class SnowstormParticleType : ParticleType<SnowstormParticleOptions>(true) {
             z: Double,
             velocityX: Double,
             velocityY: Double,
-            velocityZ: Double
+            velocityZ: Double,
+            random: RandomSource
         ): Particle {
             //Particles with local position move with their emitter
             val isLocal = parameters.effect.space.localPosition

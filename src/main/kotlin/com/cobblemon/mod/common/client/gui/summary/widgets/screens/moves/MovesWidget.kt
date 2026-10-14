@@ -187,7 +187,7 @@ class MovesWidget(
 
          // Render move description
         if (selectedMove != null) {
-            descriptionScrollList.renderWidget(context, pMouseX, pMouseY, pPartialTicks)
+            descriptionScrollList.extractRenderState(context, pMouseX, pMouseY, pPartialTicks)
         }
     }
 

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.entity.npc
 
+import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.util.asCompoundTag
 import com.cobblemon.mod.common.util.putAll
 import net.minecraft.world.level.storage.ValueInput

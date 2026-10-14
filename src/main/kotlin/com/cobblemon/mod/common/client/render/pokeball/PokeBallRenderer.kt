@@ -46,7 +46,7 @@ class PokeBallRenderer(context: EntityRendererProvider.Context) : LegacyEntityRe
         poseStack.pushPose()
         poseStack.mulPose(Axis.YP.rotationDegrees(yaw))
         poseStack.scale(0.7F, -0.7F, -0.7F)
-        val vertexConsumer = ItemRenderer.getFoilBufferDirect(buffer, RenderTypes.entityCutoutCull(getTextureLocation(entity)), false, false)
+        val vertexConsumer = buffer.getBuffer(RenderTypes.entityCutoutCull(getTextureLocation(entity)))
         state.updatePartialTicks(partialTicks)
         model.setLayerContext(buffer, state, VaryingModelRepository.getLayers(entity.pokeBall.name, state))
         this.model.setupAnim(entity, 0f, 0f, entity.tickCount + partialTicks, 0F, 0F)

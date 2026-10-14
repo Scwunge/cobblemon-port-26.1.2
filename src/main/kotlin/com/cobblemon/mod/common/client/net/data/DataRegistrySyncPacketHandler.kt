@@ -13,15 +13,15 @@ import com.cobblemon.mod.common.net.messages.client.data.DataRegistrySyncPacket
 import net.minecraft.client.Minecraft
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-class DataRegistrySyncPacketHandler<P, T : DataRegistrySyncPacket<P, T>> : ClientNetworkPacketHandler<T> {
+class DataRegistrySyncPacketHandler<P : Any, T : DataRegistrySyncPacket<P, T>> : ClientNetworkPacketHandler<T> {
     override fun handle(packet: T, client: Minecraft) {
         val buffer = requireNotNull(packet.buffer) { "Buffer missing on DataRegistrySyncPacket" }
 
         packet.entries.clear()
-        packet.entries.addAll(buffer.readList { buf ->
-            val entry = packet.decodeEntry(buf as RegistryFriendlyByteBuf)
-            entry
-        }.filterNotNull())
+        // FriendlyByteBuf#readList, which no longer accepts entries that decode to null
+        repeat(buffer.readVarInt()) {
+            packet.decodeEntry(buffer as RegistryFriendlyByteBuf)?.let { packet.entries.add(it) }
+        }
         buffer.release()
         packet.synchronizeDecoded(packet.entries)
     }

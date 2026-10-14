@@ -8,7 +8,15 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import com.cobblemon.mod.common.util.cobblemonResource
+import net.minecraft.client.KeyMapping
+
+/**
+ * Key mapping categories are registered identifiers since 1.21.9. Their labels are
+ * key.category.cobblemon.cobblemon and key.category.cobblemon.cobblemon.debug, which carry the text of the old
+ * key.cobblemon.categories.* keys.
+ */
 object KeybindCategories {
-    const val COBBLEMON_CATEGORY = "key.cobblemon.categories.cobblemon"
-    const val COBBLEMON_DEBUG_CATEGORY = "key.cobblemon.categories.cobblemon.debug"
+    val COBBLEMON_CATEGORY: KeyMapping.Category = KeyMapping.Category.register(cobblemonResource("cobblemon"))
+    val COBBLEMON_DEBUG_CATEGORY: KeyMapping.Category = KeyMapping.Category.register(cobblemonResource("cobblemon.debug"))
 }

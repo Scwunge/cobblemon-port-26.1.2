@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import net.minecraft.client.KeyMapping
 import com.cobblemon.mod.common.client.timer
 import com.mojang.blaze3d.platform.InputConstants
 import net.minecraft.client.Minecraft
@@ -22,7 +23,7 @@ abstract class CobblemonBlockingKeyBinding(
     name: String,
     type: InputConstants.Type = InputConstants.Type.KEYSYM,
     key: Int,
-    category: String
+    category: KeyMapping.Category
 ) : CobblemonKeyBinding(name, type, key, category) {
     var wasDown = false
     var timeDown = 0F

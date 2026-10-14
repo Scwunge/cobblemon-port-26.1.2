@@ -306,7 +306,6 @@ class PokedexScannerRenderer {
         val screenWidth = client.window.guiScaledWidth
         val screenHeight = client.window.guiScaledHeight
 
-        RenderSystem.enableBlend()
 
         // Pokédex transition in/out animation
         val effectiveIntervals = clamp(usageContext.transitionIntervals + (if (usageContext.scanningGuiOpen) 1 else -1) * tickDelta, 0F, 12F)
@@ -459,7 +458,6 @@ class PokedexScannerRenderer {
             }
         }
 
-        RenderSystem.disableBlend()
     }
 
     fun onRenderOverlay(graphics: GuiGraphicsExtractor, tickCounter: DeltaTracker) {

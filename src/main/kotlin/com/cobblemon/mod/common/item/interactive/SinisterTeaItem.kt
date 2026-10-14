@@ -42,7 +42,7 @@ class SinisterTeaItem : Item(
                     val effect = holder.value()
 
                     if (effect.isInstantenous && (inst.duration <= 1)) {
-                        effect.applyInstantenousEffect(user as? Player, null, user, inst.amplifier, 1.0)
+                        (user.level() as? net.minecraft.server.level.ServerLevel)?.let { effect.applyInstantenousEffect(it, user as? Player, null, user, inst.amplifier, 1.0) }
                     } else {
                         user.addEffect(inst)
                     }

@@ -8,6 +8,9 @@
 
 package com.cobblemon.mod.common.client.gui.battle
 
+import com.cobblemon.mod.common.client.render.gui.graphics
+import com.cobblemon.mod.common.client.render.gui.GuiModelLighting
+import com.cobblemon.mod.common.client.render.gui.CobblemonModelPipState
 import net.minecraft.util.LightCoordsUtil
 import com.cobblemon.mod.common.Cobblemon
 import net.minecraft.client.renderer.rendertype.RenderTypes
@@ -501,7 +504,6 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         val texture = VaryingModelRepository.getTexture(state.pokeBall.name, state)
         val renderType = RenderTypes.entityCutoutCull(texture)//model.getLayer(texture)
 
-        RenderSystem.applyModelViewMatrix()
         val quaternion1 = Axis.YP.rotationDegrees(-32F * if (reversed) -1F else 1F)
         val quaternion2 = Axis.XP.rotationDegrees(5F)
 
@@ -510,30 +512,29 @@ class BattleOverlay : Gui(Minecraft.getInstance()), Schedulable {
         state.updatePartialTicks(partialTicks)
         model.applyAnimations(null, state, 0F, 0F, 0F, 0F, 0F)
 
-        matrixStack.scale(scale, scale, -scale)
-        matrixStack.translate(0.0, 5.5, -4.0)
-        matrixStack.pushPose()
+        // 3D content inside a GUI is drawn as a picture-in-picture element; the body is the original rendering.
+        CobblemonModelPipState.submit(matrixStack.graphics, radius = scale * 8F) { poseStack, immediate ->
+            poseStack.scale(scale, scale, -scale)
+            poseStack.translate(0.0, 5.5, -4.0)
+            poseStack.pushPose()
 
-        matrixStack.scale(scale * state.scale, scale * state.scale, 0.1F)
+            poseStack.scale(scale * state.scale, scale * state.scale, 0.1F)
 
-        matrixStack.mulPose(quaternion1)
-        matrixStack.mulPose(quaternion2)
+            poseStack.mulPose(quaternion1)
+            poseStack.mulPose(quaternion2)
 
-        val light1 = Vector3f(2.2F, 4.0F, -4.0F)
-        val light2 = Vector3f(1.1F, -4.0F, 7.0F)
-        RenderSystem.setShaderLights(light1, light2)
-        quaternion1.conjugate()
+            val light1 = Vector3f(2.2F, 4.0F, -4.0F)
+            val light2 = Vector3f(1.1F, -4.0F, 7.0F)
+            GuiModelLighting.setup(light1, light2)
 
-        val immediate = Minecraft.getInstance().renderBuffers().bufferSource()
-        val buffer = immediate.getBuffer(renderType)
-        val packedLight = LightCoordsUtil.pack(11, 7)
-        model.render(context, matrixStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
+            val buffer = immediate.getBuffer(renderType)
+            val packedLight = LightCoordsUtil.pack(11, 7)
+            model.render(context, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, -0x1)
 
-        immediate.endBatch()
+            immediate.endBatch()
 
-        matrixStack.popPose()
-
-        Minecraft.getInstance().gameRenderer.lighting.setupFor(Lighting.Entry.ITEMS_3D)
+            poseStack.popPose()
+        }
     }
 
     fun onLogout() {

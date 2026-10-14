@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import net.minecraft.client.KeyMapping
 import com.mojang.blaze3d.platform.InputConstants
 
 
@@ -22,7 +23,7 @@ abstract class CobblemonCustomKeyBinding(
     name: String,
     type: InputConstants.Type = InputConstants.Type.KEYSYM,
     key: Int,
-    category: String
+    category: KeyMapping.Category
 ) : CobblemonKeyBinding(name, type, key, category) {
 
     var run: Runnable? = null

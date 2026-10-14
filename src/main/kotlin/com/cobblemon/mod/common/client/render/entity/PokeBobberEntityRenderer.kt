@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.entity
 
+import com.cobblemon.mod.common.client.render.legacy.LegacyItemRendering
 import com.cobblemon.mod.common.client.render.legacy.LegacyMobRenderer
 import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
 import com.cobblemon.mod.common.client.render.legacy.LegacyEntityRenderer
@@ -140,7 +141,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
         val ballItem = PokeBalls.getPokeBall(pokeRod?.pokeBallId!!)!!.item
 
         // render the pokebobber
-        Minecraft.getInstance().itemRenderer.renderStatic(
+        LegacyItemRendering.renderStatic(
             ballItem.defaultInstance,
             ItemDisplayContext.GROUND,
             light,
@@ -168,7 +169,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
 
 
         // render the bait
-        Minecraft.getInstance().itemRenderer.renderStatic(
+        LegacyItemRendering.renderStatic(
                 pokeBobberBaitItemStack,
                 ItemDisplayContext.GROUND,
                 light,
@@ -200,7 +201,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
             eyeHeightOffset = if (playerEntity.isCrouching) -0.1875f else 0.0f
         } else {
             playerPosXWorld = 960.0 / entityRenderDispatcher.options.fov().get().toDouble()
-            var vec3d = entityRenderDispatcher.camera.nearPlane.getPointOnPlane(armOffset.toFloat() * 0.525f, -0.1f)
+            var vec3d = entityRenderDispatcher.camera!!.getNearPlane(entityRenderDispatcher.options.fov().get().toFloat()).getPointOnPlane(armOffset.toFloat() * 0.525f, -0.1f)
             vec3d = vec3d.scale(playerPosXWorld)
             vec3d = vec3d.yRot(swingAngle * 0.5f)
             vec3d = vec3d.xRot(-swingAngle * 0.7f)
@@ -217,10 +218,13 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
         val deltaX = (playerEyeYWorld - playerPosXWorld).toFloat()
         val deltaY = (playerPosYWorld - bobberPosY).toFloat() + eyeHeightOffset
         val deltaZ = (playerPosZWorld - bobberPosZ).toFloat()
-        val vertexConsumer2 = vertexConsumerProvider.getBuffer(RenderType.lineStrip())
+        // Line strips are gone (1.21.9), so each segment of the old strip is drawn as its own line between the same points
+        val vertexConsumer2 = vertexConsumerProvider.getBuffer(RenderTypes.lines())
         val entry2 = matrixStack.last()
-        for (lineIndex in 0..16) {
-            renderFishingLine(pokeRod.lineColor, deltaX, deltaY, deltaZ, vertexConsumer2, entry2, percentage(lineIndex, 16), percentage(lineIndex + 1, 16))
+        val lineWidth = Minecraft.getInstance().gameRenderer.gameRenderState.windowRenderState.appropriateLineWidth
+        for (lineIndex in 0 until 16) {
+            renderFishingLine(pokeRod.lineColor, deltaX, deltaY, deltaZ, vertexConsumer2, entry2, percentage(lineIndex, 16), percentage(lineIndex + 1, 16), lineWidth)
+            renderFishingLine(pokeRod.lineColor, deltaX, deltaY, deltaZ, vertexConsumer2, entry2, percentage(lineIndex + 1, 16), percentage(lineIndex + 2, 16), lineWidth)
         }
 
         matrixStack.popPose() // close main rendering transforms
@@ -261,7 +265,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
         }
 
         @JvmStatic
-        private fun renderFishingLine(color: String, deltaX: Float, deltaY: Float, deltaZ: Float, vertexBuffer: VertexConsumer, matrixEntry: PoseStack.Pose, segmentStartFraction: Float, segmentEndFraction: Float) {
+        private fun renderFishingLine(color: String, deltaX: Float, deltaY: Float, deltaZ: Float, vertexBuffer: VertexConsumer, matrixEntry: PoseStack.Pose, segmentStartFraction: Float, segmentEndFraction: Float, lineWidth: Float) {
             val colorObj = Color.decode(color)
             // Calculate the starting X position of the current segment based on the start fraction
             val startX = deltaX * segmentStartFraction
@@ -293,7 +297,7 @@ class PokeBobberEntityRenderer(context: EntityRendererProvider.Context?) : Legac
 
 
             // Add the vertex for the start of this segment
-            vertexBuffer.addVertex(matrixEntry.pose(), startX, startY, startZ).setColor(colorObj.red, colorObj.green, colorObj.blue, 255).setNormal(matrixEntry, deltaXSegment, deltaYSegment, deltaZSegment)
+            vertexBuffer.addVertex(matrixEntry.pose(), startX, startY, startZ).setColor(colorObj.red, colorObj.green, colorObj.blue, 255).setNormal(matrixEntry, deltaXSegment, deltaYSegment, deltaZSegment).setLineWidth(lineWidth)
         }
     }
 

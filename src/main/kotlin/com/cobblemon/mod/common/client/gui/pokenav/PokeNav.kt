@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.gui.pokenav
 
+import com.cobblemon.mod.common.client.onPress
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.api.gui.blitk
 import com.cobblemon.mod.common.client.CobblemonClient

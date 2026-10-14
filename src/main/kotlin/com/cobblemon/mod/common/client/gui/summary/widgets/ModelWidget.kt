@@ -126,16 +126,16 @@ class ModelWidget(
             headPitch = currentYawAndPitch.second,
             blockLight = blockLight,
             profileTransformType = ProfileTransformType.SUMMARY,
-        )
-
-        heldItemRenderer.renderOnModel(
-            pokemon.heldItem,
-            state,
-            matrices,
-            context.bufferSource(),
-            light = 0xF000F0,
-            true
-        )
+        ) { poseStack, bufferSource ->
+            heldItemRenderer.renderOnModel(
+                pokemon.heldItem,
+                state,
+                poseStack,
+                bufferSource,
+                light = 0xF000F0,
+                true
+            )
+        }
 
         matrices.popPose()
         context.disableScissor()

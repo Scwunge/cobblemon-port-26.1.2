@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.keybind
 
+import net.minecraft.client.KeyMapping
 import com.cobblemon.mod.common.util.displayClientMessage
 import com.cobblemon.mod.common.api.text.red
 import com.cobblemon.mod.common.api.text.yellow
@@ -25,7 +26,7 @@ abstract class CobblemonPartyLockedKeyBinding(
     name: String,
     type: InputConstants.Type,
     key: Int,
-    category: String
+    category: KeyMapping.Category
 ) : CobblemonKeyBinding(name, type, key, category) {
 
     private var skippedStarterSelectionMessageShown = false

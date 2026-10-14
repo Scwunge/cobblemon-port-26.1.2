@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.gui
 
+import net.minecraft.client.renderer.MultiBufferSource
+import com.mojang.blaze3d.vertex.PoseStack
 import com.cobblemon.mod.common.api.gui.renderSprite
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.client.render.SpriteType
@@ -55,7 +57,8 @@ fun drawProfilePokemon(
     a: Float = 1F,
     headYaw: Float = 0f,
     headPitch: Float = 0f,
-    blockLight: Int = 13
+    blockLight: Int = 13,
+    afterModel: ((PoseStack, MultiBufferSource.BufferSource) -> Unit)? = null
 ) = drawProfilePokemon(
     species = renderablePokemon.species.resourceIdentifier,
     matrixStack = matrixStack,
@@ -72,7 +75,8 @@ fun drawProfilePokemon(
     a = a,
     headYaw = headYaw,
     headPitch = headPitch,
-    blockLight = blockLight
+    blockLight = blockLight,
+    afterModel = afterModel
 )
 
 fun drawProfilePokemon(
@@ -92,7 +96,9 @@ fun drawProfilePokemon(
     a: Float = 1F,
     headYaw: Float = 0f,
     headPitch: Float = 0f,
-    blockLight: Int = 13
+    blockLight: Int = 13,
+    /** Drawn after the model in the model's pose, as callers used to do with the pose stack this left behind. */
+    afterModel: ((PoseStack, MultiBufferSource.BufferSource) -> Unit)? = null
 ) {
     // 3D content inside a GUI has to be drawn as a picture-in-picture element; the body below is the original
     // immediate-mode rendering, now run against the PIP's pose stack and buffers.
@@ -181,6 +187,8 @@ fun drawProfilePokemon(
         } else {
             renderSprite(poseStack, bufferSource, sprite)
         }
+        afterModel?.invoke(poseStack, bufferSource)
+        bufferSource.endBatch()
     }
 }
 

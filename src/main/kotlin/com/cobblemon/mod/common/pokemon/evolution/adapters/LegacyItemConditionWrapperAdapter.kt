@@ -50,7 +50,7 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
                 val nbtPredicate = NbtPredicate.CODEC.decode(JsonOps.INSTANCE, jObject.get(LEGACY_NBT)).result().get().first
                 val itemCustomDataPredicate = CustomDataPredicate(nbtPredicate)
                 return builder
-                    .withSubPredicate(DataComponentPredicates.CUSTOM_DATA, itemCustomDataPredicate)
+                    .withComponents(net.minecraft.advancements.criterion.DataComponentMatchers.Builder.components().partial(DataComponentPredicates.CUSTOM_DATA, itemCustomDataPredicate).build())
                     .build()
             }
         }
@@ -70,11 +70,11 @@ class LegacyItemConditionWrapperAdapter(val registryAccess: HolderLookup.Provide
                     if (isTag) {
                         val tag = TagKey.create(Registries.ITEM, id)
                         registryAccess.lookup(Registries.ITEM)
-                            .map { builder.of(tag) }
+                            .map { builder.of(it, tag) }
                             .orElseGet { builder }
                     } else {
                         BuiltInRegistries.ITEM.getOptional(id)
-                            .map { builder.of(it) }
+                            .map { builder.of(BuiltInRegistries.ITEM, it) }
                             .orElseGet { builder }
                     }
                 },

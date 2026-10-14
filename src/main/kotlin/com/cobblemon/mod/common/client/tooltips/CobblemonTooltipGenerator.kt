@@ -44,6 +44,6 @@ object CobblemonTooltipGenerator : TooltipGenerator() {
             val asPokeball = stack.item as PokeBallItem
             return "item.${asPokeball.pokeBall.name.namespace}.${asPokeball.pokeBall.name.path}.tooltip"
         }
-        return "${stack.descriptionId}.tooltip"
+        return "${stack.item.descriptionId}.tooltip"
     }
 }

@@ -55,7 +55,7 @@ class RevivalHerbItem(block: RevivalHerbBlock) : BlockItem(block, Properties().u
     override fun use(world: Level, user: Player, hand: InteractionHand): InteractionResult {
         if (user is ServerPlayer) {
             val result = use(user, user.getItemInHand(hand))
-            if (result.result != InteractionResult.PASS) {
+            if (result != InteractionResult.PASS) {
                 return result
             }
         }

@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.world.feature
 
+import com.cobblemon.mod.common.CobblemonEntities
 import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.CobblemonBlocks
 import com.cobblemon.mod.common.api.tags.CobblemonBiomeTags
@@ -236,10 +237,12 @@ class SaccharineTreeFeature : Feature<BlockStateConfiguration>(BlockStateConfigu
                             // This is caught and handled by BeeOccupantMixin.java, which turns it into a complete entity.
                             val properties = "${POKEMON_ARGS} lvl=${LEVEL_RANGE.random()}"
                             val compoundTag = CompoundTag()
-                            compoundTag.putString("id", POKEMON_PLACEHOLD_ID)
+                            // Occupants carry a real entity type since 1.21.9, so the placeholder is a marker key on
+                            // Pokémon entity data instead of a fake "id".
+                            compoundTag.putBoolean(POKEMON_PLACEHOLD_ID, true)
                             compoundTag.putString("pokemonProperties", properties)
                             val occupant = BeehiveBlockEntity.Occupant(
-                                CustomData.of(compoundTag), randomSource.nextInt(599), 600
+                                net.minecraft.world.item.component.TypedEntityData.of(CobblemonEntities.POKEMON, compoundTag), randomSource.nextInt(599), 600
                             )
                             beehiveBlockEntity?.storeBee(occupant)
                         }

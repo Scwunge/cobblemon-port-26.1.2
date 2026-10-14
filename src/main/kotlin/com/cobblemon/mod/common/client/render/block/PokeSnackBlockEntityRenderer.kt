@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.client.render.block
 
+import com.cobblemon.mod.common.client.render.legacy.renderSingleBlock
 import com.cobblemon.mod.common.api.berry.Berries
 import net.minecraft.client.renderer.rendertype.RenderTypes
 import com.cobblemon.mod.common.block.PokeSnackBlock
@@ -59,7 +60,7 @@ open class PokeSnackBlockEntityRenderer(ctx: BlockEntityRendererProvider.Context
 
             poseStack.pushPose()
             poseStack.translate(0.0, PokeSnackBlock.CAKE_HEIGHT, 0.0)
-            Minecraft.getInstance().blockRenderer.renderSingleBlock(
+            renderSingleBlock(
                 candleBlock.defaultBlockState().setValue(LIT, blockEntity.blockState.getValue(LIT)),
                 poseStack,
                 bufferSource,

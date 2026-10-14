@@ -42,12 +42,7 @@ class StartButton(
     var processing = false
     var shouldRepeat = false
 
-    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double) {
-        val d = event.x()
-        val e = event.y()
-        val i = event.button()
-        val f = dragX
-        val g = dragY
+    override fun mouseDragged(event: MouseButtonEvent, dragX: Double, dragY: Double): Boolean {
         return false
     }
     override fun defaultButtonNarrationText(builder: NarrationElementOutput) {}

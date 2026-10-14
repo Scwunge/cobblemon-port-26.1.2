@@ -8,6 +8,8 @@
 
 package com.cobblemon.mod.common.client.render.layer
 
+import com.cobblemon.mod.common.util.shoulderEntityRight
+import com.cobblemon.mod.common.util.shoulderEntityLeft
 import net.minecraft.util.profiling.Profiler
 import net.minecraft.client.renderer.entity.state.AvatarRenderState
 import com.cobblemon.mod.common.client.render.legacy.LegacyLivingEntityRenderer
@@ -48,7 +50,6 @@ import net.minecraft.nbt.Tag
 import net.minecraft.resources.Identifier
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.ItemStack
 
 class PokemonOnShoulderRenderer(renderLayerParent: RenderLayerParent<AvatarRenderState, PlayerModel>) :
@@ -177,7 +178,7 @@ class PokemonOnShoulderRenderer(renderLayerParent: RenderLayerParent<AvatarRende
             val heightOffset = -1.5 * scale
             val widthOffset = width / 2 - 0.7
             val chestItem = livingEntity.getItemBySlot(EquipmentSlot.CHEST)
-            val armorHeightOffset = if (chestItem.item is ArmorItem && !isArmorOffsetBlacklisted(chestItem)) {
+            val armorHeightOffset = if (isArmorItem(chestItem) && !isArmorOffsetBlacklisted(chestItem)) {
                 ARMOR_HEIGHT_OFFSET
             } else {
                 0F
@@ -276,6 +277,15 @@ class PokemonOnShoulderRenderer(renderLayerParent: RenderLayerParent<AvatarRende
 
         private const val ARMOR_HEIGHT_OFFSET = 1F / 16F
         private val playerCache = hashMapOf<UUID, ShoulderCache>()
+
+        /**
+         * ArmorItem was removed in 1.21.5; armor is now anything equippable with an equipment model. Elytra weren't
+         * ArmorItems, so gliders are left out.
+         */
+        private fun isArmorItem(itemStack: ItemStack): Boolean {
+            val equippable = itemStack.get(net.minecraft.core.component.DataComponents.EQUIPPABLE) ?: return false
+            return equippable.assetId().isPresent && !itemStack.has(net.minecraft.core.component.DataComponents.GLIDER)
+        }
 
         private fun isArmorOffsetBlacklisted(itemStack: ItemStack): Boolean {
             val itemIdentifier = BuiltInRegistries.ITEM.getKey(itemStack.item)

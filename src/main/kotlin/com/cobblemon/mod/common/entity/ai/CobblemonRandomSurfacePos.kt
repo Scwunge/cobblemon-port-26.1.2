@@ -36,7 +36,7 @@ class CobblemonRandomSurfacePos {
                 mob,
                 radius,
                 verticalRange,
-                 { pos: BlockPos? ->
+                 { pos: BlockPos ->
                      if (pos != null) {
                          mob.getWalkTargetValue(pos).toDouble()
                      }
@@ -44,7 +44,7 @@ class CobblemonRandomSurfacePos {
                  })
         }
 
-        fun getPos(mob: PathfinderMob, radius: Int, yRange: Int, toDoubleFunction: ToDoubleFunction<BlockPos?>): Vec3? {
+        fun getPos(mob: PathfinderMob, radius: Int, yRange: Int, toDoubleFunction: ToDoubleFunction<BlockPos>): Vec3? {
             val bl = GoalUtils.mobRestricted(mob, radius.toDouble())
             return RandomPos.generateRandomPos(Supplier {
                 val blockPos = RandomPos.generateRandomDirection(mob.getRandom(), radius, yRange)
@@ -69,8 +69,9 @@ class CobblemonRandomSurfacePos {
                 val blockPos: BlockPos? =
                     RandomPos.generateRandomDirectionWithinRadians(
                         mob.getRandom(),
+                        0.0,
                         radius.toDouble(),
-                        yRange.toDouble(),
+                        yRange,
                         0,
                         vectorPosition.x,
                         vectorPosition.z,

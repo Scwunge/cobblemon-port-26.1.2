@@ -34,7 +34,7 @@ class DisplayCaseRenderer(ctx: BlockEntityRendererProvider.Context) : LegacyBloc
     }
     val coinPouchStack: ItemStack by lazy { ItemStack(
         CobblemonItems.RELIC_COIN_POUCH
-    ).also { it.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(1)) } }
+    ).also { it.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(listOf(1.toFloat()), listOf(), listOf(), listOf())) } }
     override fun render(
         entity: DisplayCaseBlockEntity,
         tickDelta: Float,

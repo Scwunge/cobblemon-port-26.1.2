@@ -17,11 +17,12 @@ class BrewingStandInput(
     private val bottles: List<ItemStack>
 ) : RecipeInput {
 
-    override fun getItem(index: Int): ItemStack? {
+    // Null-marked since 1.21.9; out of range or missing slots read as empty
+    override fun getItem(index: Int): ItemStack {
         return when (index) {
             0 -> ingredient
-            in 1..3 -> bottles.getOrNull(index - 1)
-            else -> null
+            in 1..3 -> bottles.getOrNull(index - 1) ?: ItemStack.EMPTY
+            else -> ItemStack.EMPTY
         }
     }
 

@@ -38,7 +38,7 @@ class TypeGemsLootTableProvider(
     val registryLookup: CompletableFuture<HolderLookup.Provider>
 ) : FabricBlockLootSubProvider(dataOutput, registryLookup) {
 
-    override fun getName(): String? {
+    override fun getName(): String {
         return "Type Gems Loot Tables"
     }
 

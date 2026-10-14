@@ -92,7 +92,16 @@ fun ByteBuf.writeString(string: String): ByteBuf {
     return this
 }
 
-fun <T> RegistryFriendlyByteBuf.readList(reader: (FriendlyByteBuf) -> T): List<T> = readCollection(Lists::newArrayListWithCapacity, reader)
+/** FriendlyByteBuf#readList as it was before 1.21.9 null-marked it: entries may decode to null. */
+fun <T> RegistryFriendlyByteBuf.readList(reader: (FriendlyByteBuf) -> T): List<T> {
+    val size = readVarInt()
+    val list = Lists.newArrayListWithCapacity<T>(size)
+    repeat(size) { list.add(reader(this)) }
+    return list
+}
+
+/** FriendlyByteBuf#readNullable as it was before 1.21.9 null-marked it: the value itself may decode to null. */
+fun <T> FriendlyByteBuf.readNullableOf(reader: (FriendlyByteBuf) -> T?): T? = if (readBoolean()) reader(this) else null
 
 fun ByteBuf.readString(): String {
     return Utf8String.read(this, 32767)

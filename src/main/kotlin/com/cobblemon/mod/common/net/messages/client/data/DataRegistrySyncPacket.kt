@@ -12,7 +12,7 @@ import com.cobblemon.mod.common.api.net.NetworkPacket
 import io.netty.buffer.Unpooled
 import net.minecraft.network.RegistryFriendlyByteBuf
 
-abstract class DataRegistrySyncPacket<T, N : NetworkPacket<N>>(private val registryEntries: Collection<T>) : NetworkPacket<N> {
+abstract class DataRegistrySyncPacket<T : Any, N : NetworkPacket<N>>(private val registryEntries: Collection<T>) : NetworkPacket<N> {
 
     var buffer: RegistryFriendlyByteBuf? = null
     internal val entries = arrayListOf<T>()

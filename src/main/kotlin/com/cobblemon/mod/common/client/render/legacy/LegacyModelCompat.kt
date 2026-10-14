@@ -72,3 +72,16 @@ fun renderModel(
         }
     }
 }
+
+/**
+ * BlockRenderDispatcher#renderSingleBlock from 1.21.1 for model-shaped blocks: the block's model tinted with its
+ * tint index 0 colour (as there was no level to sample), drawn with [light] and [overlay].
+ */
+fun renderSingleBlock(state: BlockState, poseStack: PoseStack, bufferSource: net.minecraft.client.renderer.MultiBufferSource, light: Int, overlay: Int) {
+    if (state.renderShape != net.minecraft.world.level.block.RenderShape.MODEL) return
+    val colour = net.minecraft.client.Minecraft.getInstance().blockColors.getTintSource(state, 0)?.color(state) ?: -1
+    val red = (colour shr 16 and 0xFF) / 255F
+    val green = (colour shr 8 and 0xFF) / 255F
+    val blue = (colour and 0xFF) / 255F
+    renderModel(poseStack.last(), bufferSource, state, blockModelOf(state), red, green, blue, light, overlay)
+}

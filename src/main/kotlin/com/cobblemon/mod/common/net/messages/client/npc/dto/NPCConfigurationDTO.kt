@@ -87,11 +87,12 @@ class NPCConfigurationDTO : Encodable, Decodable {
         resourceIdentifier = buffer.readIdentifier()
         battle = buffer.readNullable { NPCBattleConfiguration().apply { decode(buffer) } }
         interactionInherited = buffer.readBoolean()
-        interaction = buffer.readNullable {
+        interaction = if (buffer.readBoolean()) {
             val type = buffer.readString()
-            val configType = NPCInteractConfiguration.types[type] ?: return@readNullable null
-            configType.clazz.getConstructor().newInstance().also { it.decode(buffer) }
-        }
+            NPCInteractConfiguration.types[type]?.let { configType ->
+                configType.clazz.getConstructor().newInstance().also { it.decode(buffer) }
+            }
+        } else null
         aspects = buffer.readList { buffer.readString() }.toMutableSet()
         behaviours = buffer.readList { buffer.readIdentifier() }.toMutableSet()
         registeredVariables = buffer.readList { MoLangConfigVariable.decode(buffer) }.toMutableList()

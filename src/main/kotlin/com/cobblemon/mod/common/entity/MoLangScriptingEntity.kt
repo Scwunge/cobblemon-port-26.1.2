@@ -82,8 +82,8 @@ interface MoLangScriptingEntity {
     fun saveScriptingToNBT(nbt: CompoundTag) {
         nbt.putBoolean(DataKeys.SCRIPTED_BEHAVIOURS_ARE_CUSTOM, behavioursAreCustom)
         nbt.put(DataKeys.SCRIPTED_BEHAVIOURS, ListTag().also { it.addAll(behaviours.map { StringTag.valueOf(it.toString()) }) })
-        nbt.put(DataKeys.SCRIPTED_DATA, MoLangFunctions.writeMoValueToNBT(data))
-        nbt.put(DataKeys.SCRIPTED_CONFIG, MoLangFunctions.writeMoValueToNBT(config))
+        MoLangFunctions.writeMoValueToNBT(data)?.let { nbt.put(DataKeys.SCRIPTED_DATA, it) }
+        MoLangFunctions.writeMoValueToNBT(config)?.let { nbt.put(DataKeys.SCRIPTED_CONFIG, it) }
     }
 
     fun loadScriptingFromNBT(nbt: CompoundTag) {

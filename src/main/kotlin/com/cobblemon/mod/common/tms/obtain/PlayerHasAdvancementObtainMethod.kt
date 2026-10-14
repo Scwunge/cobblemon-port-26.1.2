@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.tms.obtain
 
+import com.cobblemon.mod.common.util.server
 import com.cobblemon.mod.common.api.tms.ObtainMethod
 import com.cobblemon.mod.common.util.cobblemonResource
 import net.minecraft.network.RegistryFriendlyByteBuf
@@ -41,7 +42,7 @@ class PlayerHasAdvancementObtainMethod(val advancement: Identifier? = null) : Ob
 
     override fun writeToBuffer(buffer: RegistryFriendlyByteBuf) {
         buffer.writeUtf("cobblemon:advancement")
-        buffer.writeIdentifier(advancement ?: Identifier.tryParse("minecraft:empty"))
+        buffer.writeIdentifier(advancement ?: Identifier.parse("minecraft:empty"))
     }
 }
 

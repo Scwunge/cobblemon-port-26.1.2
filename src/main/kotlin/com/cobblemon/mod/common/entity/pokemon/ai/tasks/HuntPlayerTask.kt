@@ -113,7 +113,7 @@ class HuntPlayerTask : Behavior<LivingEntity>(
                 // if entity is in range of target
                 if (entity.distanceToSqr(target) <= ATTACK_RANGE * ATTACK_RANGE) {
                     // try to attack the target
-                    entity.doHurtTarget(target)
+                    entity.doHurtTarget(entity.level() as net.minecraft.server.level.ServerLevel, target)
                 } else {
                     // add target to LookWalkTarget memory
                     addLookWalkTargets(entity)
