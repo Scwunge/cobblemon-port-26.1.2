@@ -8,6 +8,10 @@
 
 package com.cobblemon.mod.common
 
+import net.minecraft.world.level.block.LeavesBlock
+import net.minecraft.world.level.block.ButtonBlock
+import net.minecraft.world.level.block.RotatedPillarBlock
+import net.minecraft.world.level.block.FlowerPotBlock
 import com.cobblemon.mod.common.api.apricorn.Apricorn
 import com.cobblemon.mod.common.api.pokemon.stats.Stats
 import com.cobblemon.mod.common.block.*
@@ -28,7 +32,6 @@ import com.cobblemon.mod.common.block.sign.CobblemonWallHangingSignBlock
 import com.cobblemon.mod.common.block.sign.CobblemonWallSignBlock
 import com.cobblemon.mod.common.block.tmmachine.TMMachineBlock
 import com.cobblemon.mod.common.block.general.MintLitterBlock
-import com.cobblemon.mod.common.mixin.invoker.BlocksInvoker
 import com.cobblemon.mod.common.mixin.invoker.DoorBlockInvoker
 import com.cobblemon.mod.common.mixin.invoker.FireBlockInvoker
 import com.cobblemon.mod.common.mixin.invoker.PressurePlateBlockInvoker
@@ -137,7 +140,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val APRICORN_FENCE_GATE = this.create("apricorn_fence_gate", { FenceGateBlock(APRICORN_WOOD_TYPE, BlockBehaviour.Properties.of().mapColor(APRICORN_PLANKS.defaultMapColor()).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava().forceSolidOn()) })
     @JvmField
-    val APRICORN_BUTTON = this.create("apricorn_button", { BlocksInvoker.createWoodenButtonBlock(APRICORN_BLOCK_SET_TYPE) })
+    val APRICORN_BUTTON = this.create("apricorn_button", { woodenButton(APRICORN_BLOCK_SET_TYPE) })
     @JvmField
     val APRICORN_PRESSURE_PLATE = this.create("apricorn_pressure_plate", { PressurePlateBlockInvoker.`cobblemon$create`(APRICORN_BLOCK_SET_TYPE, BlockBehaviour.Properties.of().mapColor(APRICORN_PLANKS.defaultMapColor()).noCollision().strength(0.5F).sound(SoundType.WOOD)) })
     @JvmField
@@ -210,7 +213,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val SACCHARINE_FENCE_GATE = this.create("saccharine_fence_gate", { FenceGateBlock(SACCHARINE_WOOD_TYPE, BlockBehaviour.Properties.of().mapColor(SACCHARINE_PLANKS.defaultMapColor()).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava().forceSolidOn()) })
     @JvmField
-    val SACCHARINE_BUTTON = this.create("saccharine_button", { BlocksInvoker.createWoodenButtonBlock(BlockSetType.OAK) })
+    val SACCHARINE_BUTTON = this.create("saccharine_button", { woodenButton(BlockSetType.OAK) })
     @JvmField
     val SACCHARINE_PRESSURE_PLATE = this.create("saccharine_pressure_plate", { PressurePlateBlockInvoker.`cobblemon$create`(SACCHARINE_BLOCK_SET_TYPE, BlockBehaviour.Properties.of().mapColor(SACCHARINE_PLANKS.defaultMapColor()).instrument(NoteBlockInstrument.BASS).noCollision().strength(0.5F).sound(SoundType.WOOD)) })
     @JvmField
@@ -823,7 +826,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     @JvmField
     val PEP_UP_FLOWER = this.create("pep_up_flower", { FlowerBlock(MobEffects.LEVITATION, 10F, BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).noCollision().instabreak().sound(SoundType.GRASS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY)) })
     @JvmField
-    val POTTED_PEP_UP_FLOWER = this.create("potted_pep_up_flower", { BlocksInvoker.createFlowerPotBlock(PEP_UP_FLOWER) })
+    val POTTED_PEP_UP_FLOWER = this.create("potted_pep_up_flower", { FlowerPotBlock(PEP_UP_FLOWER, Blocks.flowerPotProperties()) })
     @JvmField
     val HEARTY_GRAINS = this.create("hearty_grains", { HeartyGrainsBlock(BlockBehaviour.Properties.of().pushReaction(PushReaction.DESTROY).ignitedByLava().mapColor(MapColor.PLANT).noCollision().randomTicks().instabreak()) })
 
@@ -831,21 +834,21 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     val GALARICA_NUT_BUSH = this.create("galarica_nut_bush", { NutBushBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).randomTicks().noCollision().sound(SoundType.SWEET_BERRY_BUSH).pushReaction(PushReaction.DESTROY)) })
 
     @JvmField
-    val POTTED_RED_APRICORN_SAPLING = this.create("potted_red_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(RED_APRICORN_SAPLING) })
+    val POTTED_RED_APRICORN_SAPLING = this.create("potted_red_apricorn_sapling", { FlowerPotBlock(RED_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_YELLOW_APRICORN_SAPLING = this.create("potted_yellow_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(YELLOW_APRICORN_SAPLING) })
+    val POTTED_YELLOW_APRICORN_SAPLING = this.create("potted_yellow_apricorn_sapling", { FlowerPotBlock(YELLOW_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_GREEN_APRICORN_SAPLING = this.create("potted_green_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(GREEN_APRICORN_SAPLING) })
+    val POTTED_GREEN_APRICORN_SAPLING = this.create("potted_green_apricorn_sapling", { FlowerPotBlock(GREEN_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_BLUE_APRICORN_SAPLING = this.create("potted_blue_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(BLUE_APRICORN_SAPLING) })
+    val POTTED_BLUE_APRICORN_SAPLING = this.create("potted_blue_apricorn_sapling", { FlowerPotBlock(BLUE_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PINK_APRICORN_SAPLING = this.create("potted_pink_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(PINK_APRICORN_SAPLING) })
+    val POTTED_PINK_APRICORN_SAPLING = this.create("potted_pink_apricorn_sapling", { FlowerPotBlock(PINK_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_BLACK_APRICORN_SAPLING = this.create("potted_black_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(BLACK_APRICORN_SAPLING) })
+    val POTTED_BLACK_APRICORN_SAPLING = this.create("potted_black_apricorn_sapling", { FlowerPotBlock(BLACK_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_WHITE_APRICORN_SAPLING = this.create("potted_white_apricorn_sapling", { BlocksInvoker.createFlowerPotBlock(WHITE_APRICORN_SAPLING) })
+    val POTTED_WHITE_APRICORN_SAPLING = this.create("potted_white_apricorn_sapling", { FlowerPotBlock(WHITE_APRICORN_SAPLING, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_SACCHARINE_SAPLING = this.create("potted_saccharine_sapling", { BlocksInvoker.createFlowerPotBlock(SACCHARINE_SAPLING) })
+    val POTTED_SACCHARINE_SAPLING = this.create("potted_saccharine_sapling", { FlowerPotBlock(SACCHARINE_SAPLING, Blocks.flowerPotProperties()) })
 
     @JvmField
     val RED_MINT_LEAF_LITTER = this.mintLitter("red_mint_leaf_litter", MapColor.COLOR_RED)
@@ -1080,145 +1083,145 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
     //val BINDING_SOIL = this.create("binding_soil", { BindingSoilBlock(BlockBehaviour.Properties.of()) })
 
     @JvmField
-    val POTTED_AGUAV_BERRY = this.create("potted_aguav_berry", { BlocksInvoker.createFlowerPotBlock(AGUAV_BERRY) })
+    val POTTED_AGUAV_BERRY = this.create("potted_aguav_berry", { FlowerPotBlock(AGUAV_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_APICOT_BERRY = this.create("potted_apicot_berry", { BlocksInvoker.createFlowerPotBlock(APICOT_BERRY) })
+    val POTTED_APICOT_BERRY = this.create("potted_apicot_berry", { FlowerPotBlock(APICOT_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_ASPEAR_BERRY = this.create("potted_aspear_berry", { BlocksInvoker.createFlowerPotBlock(ASPEAR_BERRY) })
+    val POTTED_ASPEAR_BERRY = this.create("potted_aspear_berry", { FlowerPotBlock(ASPEAR_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_BABIRI_BERRY = this.create("potted_babiri_berry", { BlocksInvoker.createFlowerPotBlock(BABIRI_BERRY) })
+    val POTTED_BABIRI_BERRY = this.create("potted_babiri_berry", { FlowerPotBlock(BABIRI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_BELUE_BERRY = this.create("potted_belue_berry", { BlocksInvoker.createFlowerPotBlock(BELUE_BERRY) })
+    val POTTED_BELUE_BERRY = this.create("potted_belue_berry", { FlowerPotBlock(BELUE_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_BLUK_BERRY = this.create("potted_bluk_berry", { BlocksInvoker.createFlowerPotBlock(BLUK_BERRY) })
+    val POTTED_BLUK_BERRY = this.create("potted_bluk_berry", { FlowerPotBlock(BLUK_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CHARTI_BERRY = this.create("potted_charti_berry", { BlocksInvoker.createFlowerPotBlock(CHARTI_BERRY) })
+    val POTTED_CHARTI_BERRY = this.create("potted_charti_berry", { FlowerPotBlock(CHARTI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CHERI_BERRY = this.create("potted_cheri_berry", { BlocksInvoker.createFlowerPotBlock(CHERI_BERRY) })
+    val POTTED_CHERI_BERRY = this.create("potted_cheri_berry", { FlowerPotBlock(CHERI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CHESTO_BERRY = this.create("potted_chesto_berry", { BlocksInvoker.createFlowerPotBlock(CHESTO_BERRY) })
+    val POTTED_CHESTO_BERRY = this.create("potted_chesto_berry", { FlowerPotBlock(CHESTO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CHILAN_BERRY = this.create("potted_chilan_berry", { BlocksInvoker.createFlowerPotBlock(CHILAN_BERRY) })
+    val POTTED_CHILAN_BERRY = this.create("potted_chilan_berry", { FlowerPotBlock(CHILAN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CHOPLE_BERRY = this.create("potted_chople_berry", { BlocksInvoker.createFlowerPotBlock(CHOPLE_BERRY) })
+    val POTTED_CHOPLE_BERRY = this.create("potted_chople_berry", { FlowerPotBlock(CHOPLE_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_COBA_BERRY = this.create("potted_coba_berry", { BlocksInvoker.createFlowerPotBlock(COBA_BERRY) })
+    val POTTED_COBA_BERRY = this.create("potted_coba_berry", { FlowerPotBlock(COBA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_COLBUR_BERRY = this.create("potted_colbur_berry", { BlocksInvoker.createFlowerPotBlock(COLBUR_BERRY) })
+    val POTTED_COLBUR_BERRY = this.create("potted_colbur_berry", { FlowerPotBlock(COLBUR_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CORNN_BERRY = this.create("potted_cornn_berry", { BlocksInvoker.createFlowerPotBlock(CORNN_BERRY) })
+    val POTTED_CORNN_BERRY = this.create("potted_cornn_berry", { FlowerPotBlock(CORNN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_CUSTAP_BERRY = this.create("potted_custap_berry", { BlocksInvoker.createFlowerPotBlock(CUSTAP_BERRY) })
+    val POTTED_CUSTAP_BERRY = this.create("potted_custap_berry", { FlowerPotBlock(CUSTAP_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_DURIN_BERRY = this.create("potted_durin_berry", { BlocksInvoker.createFlowerPotBlock(DURIN_BERRY) })
+    val POTTED_DURIN_BERRY = this.create("potted_durin_berry", { FlowerPotBlock(DURIN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_EGGANT_BERRY = this.create("potted_eggant_berry", { BlocksInvoker.createFlowerPotBlock(EGGANT_BERRY) })
+    val POTTED_EGGANT_BERRY = this.create("potted_eggant_berry", { FlowerPotBlock(EGGANT_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_ENIGMA_BERRY = this.create("potted_enigma_berry", { BlocksInvoker.createFlowerPotBlock(ENIGMA_BERRY) })
+    val POTTED_ENIGMA_BERRY = this.create("potted_enigma_berry", { FlowerPotBlock(ENIGMA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_FIGY_BERRY = this.create("potted_figy_berry", { BlocksInvoker.createFlowerPotBlock(FIGY_BERRY) })
+    val POTTED_FIGY_BERRY = this.create("potted_figy_berry", { FlowerPotBlock(FIGY_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_GANLON_BERRY = this.create("potted_ganlon_berry", { BlocksInvoker.createFlowerPotBlock(GANLON_BERRY) })
+    val POTTED_GANLON_BERRY = this.create("potted_ganlon_berry", { FlowerPotBlock(GANLON_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_GREPA_BERRY = this.create("potted_grepa_berry", { BlocksInvoker.createFlowerPotBlock(GREPA_BERRY) })
+    val POTTED_GREPA_BERRY = this.create("potted_grepa_berry", { FlowerPotBlock(GREPA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_HABAN_BERRY = this.create("potted_haban_berry", { BlocksInvoker.createFlowerPotBlock(HABAN_BERRY) })
+    val POTTED_HABAN_BERRY = this.create("potted_haban_berry", { FlowerPotBlock(HABAN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_HONDEW_BERRY = this.create("potted_hondew_berry", { BlocksInvoker.createFlowerPotBlock(HONDEW_BERRY) })
+    val POTTED_HONDEW_BERRY = this.create("potted_hondew_berry", { FlowerPotBlock(HONDEW_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_HOPO_BERRY = this.create("potted_hopo_berry", { BlocksInvoker.createFlowerPotBlock(HOPO_BERRY) })
+    val POTTED_HOPO_BERRY = this.create("potted_hopo_berry", { FlowerPotBlock(HOPO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_IAPAPA_BERRY = this.create("potted_iapapa_berry", { BlocksInvoker.createFlowerPotBlock(IAPAPA_BERRY) })
+    val POTTED_IAPAPA_BERRY = this.create("potted_iapapa_berry", { FlowerPotBlock(IAPAPA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_JABOCA_BERRY = this.create("potted_jaboca_berry", { BlocksInvoker.createFlowerPotBlock(JABOCA_BERRY) })
+    val POTTED_JABOCA_BERRY = this.create("potted_jaboca_berry", { FlowerPotBlock(JABOCA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_KASIB_BERRY = this.create("potted_kasib_berry", { BlocksInvoker.createFlowerPotBlock(KASIB_BERRY) })
+    val POTTED_KASIB_BERRY = this.create("potted_kasib_berry", { FlowerPotBlock(KASIB_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_KEBIA_BERRY = this.create("potted_kebia_berry", { BlocksInvoker.createFlowerPotBlock(KEBIA_BERRY) })
+    val POTTED_KEBIA_BERRY = this.create("potted_kebia_berry", { FlowerPotBlock(KEBIA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_KEE_BERRY = this.create("potted_kee_berry", { BlocksInvoker.createFlowerPotBlock(KEE_BERRY) })
+    val POTTED_KEE_BERRY = this.create("potted_kee_berry", { FlowerPotBlock(KEE_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_KELPSY_BERRY = this.create("potted_kelpsy_berry", { BlocksInvoker.createFlowerPotBlock(KELPSY_BERRY) })
+    val POTTED_KELPSY_BERRY = this.create("potted_kelpsy_berry", { FlowerPotBlock(KELPSY_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_LANSAT_BERRY = this.create("potted_lansat_berry", { BlocksInvoker.createFlowerPotBlock(LANSAT_BERRY) })
+    val POTTED_LANSAT_BERRY = this.create("potted_lansat_berry", { FlowerPotBlock(LANSAT_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_LEPPA_BERRY = this.create("potted_leppa_berry", { BlocksInvoker.createFlowerPotBlock(LEPPA_BERRY) })
+    val POTTED_LEPPA_BERRY = this.create("potted_leppa_berry", { FlowerPotBlock(LEPPA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_LIECHI_BERRY = this.create("potted_liechi_berry", { BlocksInvoker.createFlowerPotBlock(LIECHI_BERRY) })
+    val POTTED_LIECHI_BERRY = this.create("potted_liechi_berry", { FlowerPotBlock(LIECHI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_LUM_BERRY = this.create("potted_lum_berry", { BlocksInvoker.createFlowerPotBlock(LUM_BERRY) })
+    val POTTED_LUM_BERRY = this.create("potted_lum_berry", { FlowerPotBlock(LUM_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_MAGO_BERRY = this.create("potted_mago_berry", { BlocksInvoker.createFlowerPotBlock(MAGO_BERRY) })
+    val POTTED_MAGO_BERRY = this.create("potted_mago_berry", { FlowerPotBlock(MAGO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_MAGOST_BERRY = this.create("potted_magost_berry", { BlocksInvoker.createFlowerPotBlock(MAGOST_BERRY) })
+    val POTTED_MAGOST_BERRY = this.create("potted_magost_berry", { FlowerPotBlock(MAGOST_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_MARANGA_BERRY = this.create("potted_maranga_berry", { BlocksInvoker.createFlowerPotBlock(MARANGA_BERRY) })
+    val POTTED_MARANGA_BERRY = this.create("potted_maranga_berry", { FlowerPotBlock(MARANGA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_MICLE_BERRY = this.create("potted_micle_berry", { BlocksInvoker.createFlowerPotBlock(MICLE_BERRY) })
+    val POTTED_MICLE_BERRY = this.create("potted_micle_berry", { FlowerPotBlock(MICLE_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_NANAB_BERRY = this.create("potted_nanab_berry", { BlocksInvoker.createFlowerPotBlock(NANAB_BERRY) })
+    val POTTED_NANAB_BERRY = this.create("potted_nanab_berry", { FlowerPotBlock(NANAB_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_NOMEL_BERRY = this.create("potted_nomel_berry", { BlocksInvoker.createFlowerPotBlock(NOMEL_BERRY) })
+    val POTTED_NOMEL_BERRY = this.create("potted_nomel_berry", { FlowerPotBlock(NOMEL_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_OCCA_BERRY = this.create("potted_occa_berry", { BlocksInvoker.createFlowerPotBlock(OCCA_BERRY) })
+    val POTTED_OCCA_BERRY = this.create("potted_occa_berry", { FlowerPotBlock(OCCA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_ORAN_BERRY = this.create("potted_oran_berry", { BlocksInvoker.createFlowerPotBlock(ORAN_BERRY) })
+    val POTTED_ORAN_BERRY = this.create("potted_oran_berry", { FlowerPotBlock(ORAN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PAMTRE_BERRY = this.create("potted_pamtre_berry", { BlocksInvoker.createFlowerPotBlock(PAMTRE_BERRY) })
+    val POTTED_PAMTRE_BERRY = this.create("potted_pamtre_berry", { FlowerPotBlock(PAMTRE_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PASSHO_BERRY = this.create("potted_passho_berry", { BlocksInvoker.createFlowerPotBlock(PASSHO_BERRY) })
+    val POTTED_PASSHO_BERRY = this.create("potted_passho_berry", { FlowerPotBlock(PASSHO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PAYAPA_BERRY = this.create("potted_payapa_berry", { BlocksInvoker.createFlowerPotBlock(PAYAPA_BERRY) })
+    val POTTED_PAYAPA_BERRY = this.create("potted_payapa_berry", { FlowerPotBlock(PAYAPA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PECHA_BERRY = this.create("potted_pecha_berry", { BlocksInvoker.createFlowerPotBlock(PECHA_BERRY) })
+    val POTTED_PECHA_BERRY = this.create("potted_pecha_berry", { FlowerPotBlock(PECHA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PERSIM_BERRY = this.create("potted_persim_berry", { BlocksInvoker.createFlowerPotBlock(PERSIM_BERRY) })
+    val POTTED_PERSIM_BERRY = this.create("potted_persim_berry", { FlowerPotBlock(PERSIM_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PETAYA_BERRY = this.create("potted_petaya_berry", { BlocksInvoker.createFlowerPotBlock(PETAYA_BERRY) })
+    val POTTED_PETAYA_BERRY = this.create("potted_petaya_berry", { FlowerPotBlock(PETAYA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_PINAP_BERRY = this.create("potted_pinap_berry", { BlocksInvoker.createFlowerPotBlock(PINAP_BERRY) })
+    val POTTED_PINAP_BERRY = this.create("potted_pinap_berry", { FlowerPotBlock(PINAP_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_POMEG_BERRY = this.create("potted_pomeg_berry", { BlocksInvoker.createFlowerPotBlock(POMEG_BERRY) })
+    val POTTED_POMEG_BERRY = this.create("potted_pomeg_berry", { FlowerPotBlock(POMEG_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_QUALOT_BERRY = this.create("potted_qualot_berry", { BlocksInvoker.createFlowerPotBlock(QUALOT_BERRY) })
+    val POTTED_QUALOT_BERRY = this.create("potted_qualot_berry", { FlowerPotBlock(QUALOT_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_RABUTA_BERRY = this.create("potted_rabuta_berry", { BlocksInvoker.createFlowerPotBlock(RABUTA_BERRY) })
+    val POTTED_RABUTA_BERRY = this.create("potted_rabuta_berry", { FlowerPotBlock(RABUTA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_RAWST_BERRY = this.create("potted_rawst_berry", { BlocksInvoker.createFlowerPotBlock(RAWST_BERRY) })
+    val POTTED_RAWST_BERRY = this.create("potted_rawst_berry", { FlowerPotBlock(RAWST_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_RAZZ_BERRY = this.create("potted_razz_berry", { BlocksInvoker.createFlowerPotBlock(RAZZ_BERRY) })
+    val POTTED_RAZZ_BERRY = this.create("potted_razz_berry", { FlowerPotBlock(RAZZ_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_RINDO_BERRY = this.create("potted_rindo_berry", { BlocksInvoker.createFlowerPotBlock(RINDO_BERRY) })
+    val POTTED_RINDO_BERRY = this.create("potted_rindo_berry", { FlowerPotBlock(RINDO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_ROSELI_BERRY = this.create("potted_roseli_berry", { BlocksInvoker.createFlowerPotBlock(ROSELI_BERRY) })
+    val POTTED_ROSELI_BERRY = this.create("potted_roseli_berry", { FlowerPotBlock(ROSELI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_ROWAP_BERRY = this.create("potted_rowap_berry", { BlocksInvoker.createFlowerPotBlock(ROWAP_BERRY) })
+    val POTTED_ROWAP_BERRY = this.create("potted_rowap_berry", { FlowerPotBlock(ROWAP_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_SALAC_BERRY = this.create("potted_salac_berry", { BlocksInvoker.createFlowerPotBlock(SALAC_BERRY) })
+    val POTTED_SALAC_BERRY = this.create("potted_salac_berry", { FlowerPotBlock(SALAC_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_SHUCA_BERRY = this.create("potted_shuca_berry", { BlocksInvoker.createFlowerPotBlock(SHUCA_BERRY) })
+    val POTTED_SHUCA_BERRY = this.create("potted_shuca_berry", { FlowerPotBlock(SHUCA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_SITRUS_BERRY = this.create("potted_sitrus_berry", { BlocksInvoker.createFlowerPotBlock(SITRUS_BERRY) })
+    val POTTED_SITRUS_BERRY = this.create("potted_sitrus_berry", { FlowerPotBlock(SITRUS_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_SPELON_BERRY = this.create("potted_spelon_berry", { BlocksInvoker.createFlowerPotBlock(SPELON_BERRY) })
+    val POTTED_SPELON_BERRY = this.create("potted_spelon_berry", { FlowerPotBlock(SPELON_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_STARF_BERRY = this.create("potted_starf_berry", { BlocksInvoker.createFlowerPotBlock(STARF_BERRY) })
+    val POTTED_STARF_BERRY = this.create("potted_starf_berry", { FlowerPotBlock(STARF_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_TAMATO_BERRY = this.create("potted_tamato_berry", { BlocksInvoker.createFlowerPotBlock(TAMATO_BERRY) })
+    val POTTED_TAMATO_BERRY = this.create("potted_tamato_berry", { FlowerPotBlock(TAMATO_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_TANGA_BERRY = this.create("potted_tanga_berry", { BlocksInvoker.createFlowerPotBlock(TANGA_BERRY) })
+    val POTTED_TANGA_BERRY = this.create("potted_tanga_berry", { FlowerPotBlock(TANGA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_TOUGA_BERRY = this.create("potted_touga_berry", { BlocksInvoker.createFlowerPotBlock(TOUGA_BERRY) })
+    val POTTED_TOUGA_BERRY = this.create("potted_touga_berry", { FlowerPotBlock(TOUGA_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_WACAN_BERRY = this.create("potted_wacan_berry", { BlocksInvoker.createFlowerPotBlock(WACAN_BERRY) })
+    val POTTED_WACAN_BERRY = this.create("potted_wacan_berry", { FlowerPotBlock(WACAN_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_WATMEL_BERRY = this.create("potted_watmel_berry", { BlocksInvoker.createFlowerPotBlock(WATMEL_BERRY) })
+    val POTTED_WATMEL_BERRY = this.create("potted_watmel_berry", { FlowerPotBlock(WATMEL_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_WEPEAR_BERRY = this.create("potted_wepear_berry", { BlocksInvoker.createFlowerPotBlock(WEPEAR_BERRY) })
+    val POTTED_WEPEAR_BERRY = this.create("potted_wepear_berry", { FlowerPotBlock(WEPEAR_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_WIKI_BERRY = this.create("potted_wiki_berry", { BlocksInvoker.createFlowerPotBlock(WIKI_BERRY) })
+    val POTTED_WIKI_BERRY = this.create("potted_wiki_berry", { FlowerPotBlock(WIKI_BERRY, Blocks.flowerPotProperties()) })
     @JvmField
-    val POTTED_YACHE_BERRY = this.create("potted_yache_berry", { BlocksInvoker.createFlowerPotBlock(YACHE_BERRY) })
+    val POTTED_YACHE_BERRY = this.create("potted_yache_berry", { FlowerPotBlock(YACHE_BERRY, Blocks.flowerPotProperties()) })
 
     init {
         /**
@@ -1264,7 +1267,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
      * Calls helper method from Vanilla
      */
     private fun log(name: String, arg: MapColor = MapColor.DIRT, arg2: MapColor = MapColor.DIRT): Block {
-        return this.create(name) { BlocksInvoker.createLogBlock(arg, arg2) }
+        return this.create(name) { RotatedPillarBlock(Blocks.logProperties(arg, arg2, SoundType.WOOD)) }
     }
 
     /**
@@ -1293,7 +1296,24 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
      * copied over from Vanilla
      */
     private fun leaves(name: String): Block {
-        return this.create(name) { BlocksInvoker.createLeavesBlock(SoundType.GRASS) }
+        return this.create(name) { PlainLeavesBlock(Blocks.leavesProperties(SoundType.GRASS)) }
+    }
+
+    /** Blocks#woodenButton before 1.21.2. */
+    private fun woodenButton(blockSetType: BlockSetType): Block = ButtonBlock(blockSetType, 30, Blocks.buttonProperties())
+
+    /**
+     * The leaves Blocks#leaves made before 1.21.5, when LeavesBlock became abstract: leaves without falling leaf
+     * particles.
+     */
+    class PlainLeavesBlock(properties: BlockBehaviour.Properties) : LeavesBlock(0F, properties) {
+        override fun codec(): com.mojang.serialization.MapCodec<out LeavesBlock> = CODEC
+
+        override fun spawnFallingLeavesParticle(level: net.minecraft.world.level.Level, pos: net.minecraft.core.BlockPos, random: net.minecraft.util.RandomSource) {}
+
+        companion object {
+            val CODEC: com.mojang.serialization.MapCodec<PlainLeavesBlock> = simpleCodec(::PlainLeavesBlock)
+        }
     }
 
     private fun typeGemBlock(name: String, mapColor: MapColor): Block {
@@ -1320,7 +1340,7 @@ object CobblemonBlocks : PlatformRegistry<Registry<Block>, ResourceKey<Registry<
 
     fun typeGemClusters() = typeGemClusters.toMap()
 
-    private fun pottedPlant(name: String, flower: Block) = this.create(name, { BlocksInvoker.createFlowerPotBlock(flower) })
+    private fun pottedPlant(name: String, flower: Block) = this.create(name, { FlowerPotBlock(flower, Blocks.flowerPotProperties()) })
 
     private fun mintLitter(name: String, color: MapColor) = this.create(
         name, { MintLitterBlock(
