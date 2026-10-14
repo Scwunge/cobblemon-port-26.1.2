@@ -15,22 +15,20 @@
   "type": "farmersdelight:cooking",
   "experience": 1.0,
   "ingredients": [
-    [
-      {
-        "item": "minecraft:apple"
-      },
-      {
-        "tag": "cobblemon:apples"
-      }
-    ],
-    [
-      {
-        "item": "minecraft:apple"
-      },
-      {
-        "tag": "cobblemon:apples"
-      }
-    ],
+    {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "minecraft:apple",
+        "#cobblemon:apples"
+      ]
+    },
+    {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "minecraft:apple",
+        "#cobblemon:apples"
+      ]
+    },
     "minecraft:sugar"
   ],
   "recipe_book_tab": "drinks",

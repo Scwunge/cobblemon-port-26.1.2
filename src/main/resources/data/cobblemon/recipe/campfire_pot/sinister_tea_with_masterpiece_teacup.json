@@ -6,14 +6,13 @@
     "cobblemon:masterpiece_teacup",
     "cobblemon:masterpiece_teacup",
     "cobblemon:masterpiece_teacup",
-    [
-      {
-        "item": "minecraft:water_bucket"
-      },
-      {
-        "tag": "c:drinks/milk"
-      }
-    ]
+    {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "minecraft:water_bucket",
+        "#c:drinks/milk"
+      ]
+    }
   ],
   "result": {
     "components": {
@@ -25,7 +24,7 @@
           "id": "cobblemon:masterpiece_teacup"
         }
       },
-      "minecraft:custom_model_data": 2
+      "minecraft:custom_model_data": { "floats": [2] }
     },
     "id": "cobblemon:sinister_tea",
     "count": 3

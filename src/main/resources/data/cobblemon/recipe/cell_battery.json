@@ -8,14 +8,13 @@
   ],
   "key": {
     "C": "#c:ingots/copper",
-    "R": [
-      {
-        "tag": "c:dusts/redstone"
-      },
-      {
-        "item": "cobblemon:electric_gem"
-      }
-    ],
+    "R": {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "#c:dusts/redstone",
+        "cobblemon:electric_gem"
+      ]
+    },
     "I": "#c:ingots/iron"
   },
   "result": {

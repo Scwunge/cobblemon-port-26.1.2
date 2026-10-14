@@ -41,12 +41,15 @@ import net.minecraft.world.level.Level
 
 class CookingPotRecipe(
     val pattern: ShapedRecipePattern,
-    override val result: ItemStack,
+    val resultTemplate: ItemStackTemplate,
     override val groupName: String,
     override val category: CookingPotBookCategory,
     override val seasoningTag: TagKey<Item>,
     override val seasoningProcessors: List<SeasoningProcessor>
 ) : CookingPotRecipeBase {
+    // Item components are bound after data loads, so the stack is created from the template on use.
+    override val result: ItemStack get() = resultTemplate.create()
+
     private var placementInfo: PlacementInfo? = null
 
     override fun getType() = CobblemonRecipeTypes.COOKING_POT_COOKING
@@ -62,7 +65,7 @@ class CookingPotRecipe(
             this.pattern.width(),
             this.pattern.height(),
             this.pattern.ingredients().map { it.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE) },
-            SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(this.result)),
+            SlotDisplay.ItemStackSlotDisplay(this.resultTemplate),
             craftingStationDisplay()
         )
     )
@@ -82,7 +85,7 @@ class CookingPotRecipe(
             val CODEC: MapCodec<CookingPotRecipe> = RecordCodecBuilder.mapCodec { instance ->
                 instance.group(
                     ShapedRecipePattern.MAP_CODEC.forGetter { recipe -> recipe.pattern },
-                    ItemStack.CODEC.fieldOf("result").forGetter { recipe -> recipe.result },
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter { recipe -> recipe.resultTemplate },
                     Codec.STRING.optionalFieldOf("group", "").forGetter { recipe -> recipe.groupName },
                     CookingPotBookCategory.CODEC.fieldOf("category").orElse(CookingPotBookCategory.MISC).forGetter { recipe -> recipe.category },
                     TagKey.codec(Registries.ITEM).fieldOf("seasoningTag").orElse(CobblemonItemTags.EMPTY).forGetter { recipe -> recipe.seasoningTag },
@@ -101,7 +104,7 @@ class CookingPotRecipe(
                 val category = buffer.readEnum(CookingPotBookCategory::class.java)
                 val seasoningTag = TagKey.create(Registries.ITEM, buffer.readIdentifier())
                 val pattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer)
-                val result = ItemStack.STREAM_CODEC.decode(buffer)
+                val result = ItemStackTemplate.STREAM_CODEC.decode(buffer)
                 val seasoningProcessors = buffer.readList {
                     val type = buffer.readString()
                     SeasoningProcessor.processors[type] ?: error("Unknown seasoning processor: $type")
@@ -114,7 +117,7 @@ class CookingPotRecipe(
                 buffer.writeEnum(recipe.category)
                 buffer.writeIdentifier(recipe.seasoningTag.location)
                 ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern)
-                ItemStack.STREAM_CODEC.encode(buffer, recipe.result)
+                ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.resultTemplate)
                 buffer.writeCollection(recipe.seasoningProcessors) { _, it ->
                     buffer.writeString(it.type)
                 }

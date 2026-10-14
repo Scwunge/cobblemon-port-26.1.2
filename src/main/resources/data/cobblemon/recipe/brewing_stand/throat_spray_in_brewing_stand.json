@@ -1,9 +1,7 @@
 {
   "type": "cobblemon:brewing_stand",
   "input": "cobblemon:petaya_berry",
-  "bottle": {
-    "item": "cobblemon:potion"
-  },
+  "bottle": "cobblemon:potion",
   "result": {
     "id": "cobblemon:throat_spray"
   }

@@ -19,14 +19,13 @@
   "key": {
     "#": "#c:crops/wheat",
     "O": "farmersdelight:pie_crust",
-    "a": [
-      {
-        "item": "minecraft:apple"
-      },
-      {
-        "tag": "cobblemon:apples"
-      }
-    ],
+    "a": {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "minecraft:apple",
+        "#cobblemon:apples"
+      ]
+    },
     "x": "minecraft:sugar"
   },
   "pattern": [

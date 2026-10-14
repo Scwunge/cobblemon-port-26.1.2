@@ -6,14 +6,13 @@
     "minecraft:bowl",
     "minecraft:bowl",
     "minecraft:bowl",
-    [
-      {
-        "item": "minecraft:water_bucket"
-      },
-      {
-        "tag": "c:drinks/milk"
-      }
-    ]
+    {
+      "fabric:type": "fabric:any",
+      "ingredients": [
+        "minecraft:water_bucket",
+        "#c:drinks/milk"
+      ]
+    }
   ],
   "result": {
     "id": "cobblemon:sinister_tea",

@@ -3,7 +3,7 @@
     "icon": {
       "id": "cobblemon:link_cable",
 	"components": {
-        "minecraft:custom_model_data": 1
+        "minecraft:custom_model_data": { "floats": [1] }
       }
     },
     "title": {

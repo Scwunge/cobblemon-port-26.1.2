@@ -1,9 +1,7 @@
 {
   "type": "cobblemon:brewing_stand",
   "input": "cobblemon:pep_up_flower",
-  "bottle": {
-    "item": "cobblemon:ether"
-  },
+  "bottle": "cobblemon:ether",
   "result": {
     "id": "cobblemon:max_ether"
   }

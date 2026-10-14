@@ -16,6 +16,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.ItemStackTemplate
 import net.minecraft.world.item.crafting.Ingredient
 import net.minecraft.world.item.crafting.Recipe
 import net.fabricmc.fabric.api.recipe.v1.sync.SynchronizedRecipes
@@ -29,8 +30,11 @@ class BrewingStandRecipe(
     val groupName: String,
     val input: Ingredient,
     val bottle: Ingredient,
-    val result: ItemStack
+    val resultTemplate: ItemStackTemplate
 ) : Recipe<BrewingStandInput> {
+    // Item components are bound after data loads, so the stack is created from the template on use.
+    val result: ItemStack get() = resultTemplate.create()
+
 
     override fun getType() = CobblemonRecipeTypes.BREWING_STAND
     override fun getSerializer(): RecipeSerializer<BrewingStandRecipe> = SERIALIZER
@@ -76,7 +80,7 @@ class BrewingStandRecipe(
                     Codec.STRING.optionalFieldOf("group", "").forGetter { recipe -> recipe.groupName },
                     Ingredient.CODEC.fieldOf("input").forGetter { recipe -> recipe.input },
                     Ingredient.CODEC.fieldOf("bottle").forGetter { recipe -> recipe.bottle },
-                    ItemStack.CODEC.fieldOf("result").forGetter { recipe -> recipe.result }
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter { recipe -> recipe.resultTemplate }
                 ).apply(instance, ::BrewingStandRecipe)
             }
 
@@ -87,7 +91,7 @@ class BrewingStandRecipe(
                 val group = buffer.readUtf(32767)
                 val input = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer)
                 val bottle = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer)
-                val result = ItemStack.STREAM_CODEC.decode(buffer)
+                val result = ItemStackTemplate.STREAM_CODEC.decode(buffer)
                 return BrewingStandRecipe(group, input, bottle, result)
             }
 
@@ -95,7 +99,7 @@ class BrewingStandRecipe(
                 buffer.writeUtf(recipe.groupName)
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.input)
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, recipe.bottle)
-                ItemStack.STREAM_CODEC.encode(buffer, recipe.result)
+                ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.resultTemplate)
             }
     }
 }

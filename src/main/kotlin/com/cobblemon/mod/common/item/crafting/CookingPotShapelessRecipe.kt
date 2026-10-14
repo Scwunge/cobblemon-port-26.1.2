@@ -36,11 +36,14 @@ import net.minecraft.world.level.Level
 class CookingPotShapelessRecipe(
     override val groupName: String,
     override val category: CookingPotBookCategory,
-    override val result: ItemStack,
+    val resultTemplate: ItemStackTemplate,
     private val ingredients: List<Ingredient>,
     override val seasoningTag: TagKey<Item>,
     override val seasoningProcessors: List<SeasoningProcessor>
 ) : Recipe<CraftingInput>, CookingPotRecipeBase {
+    // Item components are bound after data loads, so the stack is created from the template on use.
+    override val result: ItemStack get() = resultTemplate.create()
+
     override fun getType(): RecipeType<CookingPotShapelessRecipe> = CobblemonRecipeTypes.COOKING_POT_SHAPELESS
     private var placementInfo: PlacementInfo? = null
 
@@ -54,7 +57,7 @@ class CookingPotShapelessRecipe(
     override fun display(): List<RecipeDisplay> = listOf(
         ShapelessCraftingRecipeDisplay(
             this.ingredients.map(Ingredient::display),
-            SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(this.result)),
+            SlotDisplay.ItemStackSlotDisplay(this.resultTemplate),
             craftingStationDisplay()
         )
     )
@@ -81,9 +84,9 @@ class CookingPotShapelessRecipe(
                 instance.group(
                     Codec.STRING.optionalFieldOf("group", "").forGetter { it.groupName },
                     CookingPotBookCategory.CODEC.fieldOf("category").orElse(CookingPotBookCategory.MISC).forGetter { it.category },
-                    ItemStack.CODEC.fieldOf("result").forGetter { it.result },
+                    ItemStackTemplate.CODEC.fieldOf("result").forGetter { it.resultTemplate },
                     Ingredient.CODEC.listOf().fieldOf("ingredients").flatXmap({ list ->
-                        val ingredients = list.filter { !it.isEmpty }
+                        val ingredients = list
                         when {
                             ingredients.isEmpty() -> DataResult.error { "No ingredients for shapeless recipe" }
                             ingredients.size > 9 -> DataResult.error { "Too many ingredients for shapeless recipe" }
@@ -108,7 +111,7 @@ class CookingPotShapelessRecipe(
                 val seasoningTag = TagKey.create(Registries.ITEM, buffer.readIdentifier())
                 val size = buffer.readVarInt()
                 val ingredients = List(size) { Ingredient.CONTENTS_STREAM_CODEC.decode(buffer) }
-                val result = ItemStack.STREAM_CODEC.decode(buffer)
+                val result = ItemStackTemplate.STREAM_CODEC.decode(buffer)
                 val seasoningProcessors = buffer.readList {
                     val type = buffer.readString()
                     SeasoningProcessor.processors[type] ?: error("Unknown seasoning processor: $type")
@@ -124,7 +127,7 @@ class CookingPotShapelessRecipe(
                 recipe.ingredients.forEach { ingredient ->
                     Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient)
                 }
-                ItemStack.STREAM_CODEC.encode(buffer, recipe.result)
+                ItemStackTemplate.STREAM_CODEC.encode(buffer, recipe.resultTemplate)
                 buffer.writeCollection(recipe.seasoningProcessors) { _, it ->
                     buffer.writeString(it.type)
                 }
