@@ -1,0 +1,57 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "entries": [
+      {
+        "threshold": 2.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/sinister_masterpiece_tea",
+          "tints": [
+            {
+              "type": "cobblemon:sinister_tea",
+              "tint_index": 0
+            },
+            {
+              "type": "cobblemon:sinister_tea",
+              "tint_index": 1
+            }
+          ]
+        }
+      },
+      {
+        "threshold": 3.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "cobblemon:item/sinister_unremarkable_tea",
+          "tints": [
+            {
+              "type": "cobblemon:sinister_tea",
+              "tint_index": 0
+            },
+            {
+              "type": "cobblemon:sinister_tea",
+              "tint_index": 1
+            }
+          ]
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "cobblemon:item/sinister_tea",
+      "tints": [
+        {
+          "type": "cobblemon:sinister_tea",
+          "tint_index": 0
+        },
+        {
+          "type": "cobblemon:sinister_tea",
+          "tint_index": 1
+        }
+      ]
+    }
+  }
+}

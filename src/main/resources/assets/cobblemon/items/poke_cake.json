@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "cobblemon:item/poke_cake",
+    "tints": [
+      {
+        "type": "cobblemon:poke_snack",
+        "tint_index": 0
+      }
+    ]
+  }
+}
