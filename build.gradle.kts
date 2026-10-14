@@ -147,7 +147,7 @@ tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
         options.release.set(javaVersion)
-        options.compilerArgs.add("-Xlint:-processing,-classfile,-serial")
+        options.compilerArgs.addAll(listOf("-Xlint:-processing,-classfile,-serial", "-Xmaxerrs", "2000"))
     }
 
     withType<KotlinCompile> {

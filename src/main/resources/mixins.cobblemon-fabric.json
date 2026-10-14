@@ -7,8 +7,7 @@
   "client": [
     "FabricCameraMixin",
     "GameRendererMixin",
-    "GuiMixin",
-    "pokeball.ModelLoaderMixin"
+    "GuiMixin"
   ],
   "mixins": [
     "EntityMixin",

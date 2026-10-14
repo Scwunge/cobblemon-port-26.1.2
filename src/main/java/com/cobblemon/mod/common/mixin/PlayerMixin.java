@@ -11,6 +11,9 @@ package com.cobblemon.mod.common.mixin;
 import net.minecraft.network.syncher.SynchedEntityData;
 import com.cobblemon.mod.common.entity.player.ShoulderData;
 import com.cobblemon.mod.common.Cobblemon;
+import com.cobblemon.mod.common.util.NbtCompatKt;
+import com.cobblemon.mod.common.util.PlayerExtensionsKt;
+import net.minecraft.world.entity.Avatar;
 import com.cobblemon.mod.common.CobblemonItems;
 import com.cobblemon.mod.common.OrientationControllable;
 import com.cobblemon.mod.common.api.events.CobblemonEvents;
@@ -75,31 +78,17 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin extends LivingEntity implements ScannableEntity, OrientationControllable, PlayerDuck, RidePassenger {
+public abstract class PlayerMixin extends Avatar implements ScannableEntity, OrientationControllable, PlayerDuck, RidePassenger {
 
     @Unique
     private Vector3f cobblemon$driverInput;
     @Unique
     private Vector3f cobblemon$lastSentDriverInput;
 
-    @Shadow public abstract CompoundTag getShoulderEntityLeft();
-
-    @Shadow public abstract CompoundTag getShoulderEntityRight();
-
-    @Shadow public abstract void respawnEntityOnShoulder(CompoundTag entityNbt);
-
-    @Shadow public abstract void setShoulderEntityRight(CompoundTag entityNbt);
-
-    @Shadow public abstract void setShoulderEntityLeft(CompoundTag entityNbt);
-
     @Shadow public abstract boolean isSpectator();
 
     @Shadow public abstract boolean addItem(ItemStack stack);
 
-    @Shadow public abstract void displayClientMessage(Component message, boolean overlay);
-
-    @Shadow @Final private static Map<Pose, EntityDimensions> POSES;
-    @Shadow @Final public static EntityDimensions STANDING_DIMENSIONS;
     @Shadow protected int jumpTriggerTime;
     @Unique private final OrientationController cobblemon$orientationController = new OrientationController(this);
 
@@ -113,69 +102,12 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
         super(p_20966_, p_20967_);
     }
 
-    @Inject(method = "respawnEntityOnShoulder", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;"), cancellable = true)
-    private void cobblemon$removePokemon(CompoundTag nbt, CallbackInfo ci) {
-        if (CompoundTagExtensionsKt.isPokemonEntity(nbt)) {
-            final UUID uuid = CompoundTagUtilities.getPokemonID(nbt);
-            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
-                final UUID uuidRight = CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight());
-                if (uuid.equals(uuidRight)) {
-                    this.recallPokemon(uuidRight);
-                    this.setShoulderEntityRight(new CompoundTag());
-                }
-            }
-            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
-                final UUID uuidLeft = CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft());
-                if (uuid.equals(uuidLeft)) {
-                    this.recallPokemon(uuidLeft);
-                    this.setShoulderEntityLeft(new CompoundTag());
-                }
-            }
-            ci.cancel();
-        }
-    }
-
     @Override
     public EntityDimensions getDefaultDimensions(Pose pose) {
         if (this.getVehicle() instanceof PokemonEntity) {
             return STANDING_DIMENSIONS;
         }
-        return POSES.getOrDefault(pose, STANDING_DIMENSIONS);
-    }
-
-    @Inject(
-        method = "removeEntitiesOnShoulder",
-        at = @At(
-            value = "JUMP",
-            opcode = Opcodes.IFGE,
-            ordinal = 0,
-            shift = At.Shift.AFTER
-        ),
-        cancellable = true
-    )
-    private void cobblemon$preventPokemonDropping(CallbackInfo ci) {
-        // We want to allow both of these to forcefully remove the entities
-        if (this.isSpectator() || this.isDeadOrDying())
-            return;
-        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
-            this.respawnEntityOnShoulder(this.getShoulderEntityLeft());
-            this.setShoulderEntityLeft(new CompoundTag());
-        }
-        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
-            this.respawnEntityOnShoulder(this.getShoulderEntityRight());
-            this.setShoulderEntityRight(new CompoundTag());
-        }
-        ci.cancel();
-    }
-
-    private void recallPokemon(UUID uuid) {
-        // We need to do this cause the Entity doesn't store a reference to its storage
-        final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.getUUID(), this.registryAccess());
-        for (Pokemon pokemon : party) {
-            if (pokemon.getUuid().equals(uuid)) {
-                pokemon.recall();
-            }
-        }
+        return super.getDefaultDimensions(pose);
     }
 
     @Redirect(
@@ -204,39 +136,10 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
         return player.onGround();
     }
 
-    @Inject(
-        method = "eat",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/player/Player;getFoodData()Lnet/minecraft/world/food/FoodData;",
-            shift = At.Shift.AFTER
-        )
-    )
-    public void onEatFood(Level world, ItemStack stack, FoodProperties foodComponent, CallbackInfoReturnable<ItemStack> cir) {
-        if (!level().isClientSide) {
-            if (stack.is(CobblemonItemTags.LEAVES_LEFTOVERS) && level().random.nextDouble() < Cobblemon.config.getAppleLeftoversChance()) {
-                ItemStack leftovers = new ItemStack(CobblemonItems.LEFTOVERS);
-                ServerPlayer player = Objects.requireNonNull(getServer()).getPlayerList().getPlayer(uuid);
-                assert player != null;
-                CobblemonEvents.LEFTOVERS_CREATED.postThen(
-                    new LeftoversCreatedEvent(player, leftovers),
-                    leftoversCreatedEvent -> null,
-                    leftoversCreatedEvent -> {
-                        if(!player.addItem(leftoversCreatedEvent.getLeftovers())) {
-                            var itemPos = player.getLookAngle().scale(0.5f).add(position());
-                            level().addFreshEntity(new ItemEntity(level(), itemPos.x(), itemPos.y(), itemPos.z(), leftoversCreatedEvent.getLeftovers()));
-                        }
-                        return null;
-                    }
-                );
-            }
-        }
-    }
-
     @Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
-    public void isInvulnerableTo(DamageSource source, CallbackInfoReturnable<Boolean> ci) {
-        if (!level().isClientSide && (Object) this instanceof ServerPlayer player) {
-            boolean invulnerableInBattle = this.level().getGameRules().getBoolean(CobblemonGameRules.BATTLE_INVULNERABILITY);
+    public void isInvulnerableTo(ServerLevel level, DamageSource source, CallbackInfoReturnable<Boolean> ci) {
+        if ((Object) this instanceof ServerPlayer player) {
+            boolean invulnerableInBattle = level.getGameRules().get(CobblemonGameRules.BATTLE_INVULNERABILITY);
             boolean inBattle = Cobblemon.INSTANCE.getBattleRegistry().getBattleByParticipatingPlayer(player) != null;
             if (invulnerableInBattle && inBattle) {
                 ci.setReturnValue(true);
@@ -246,11 +149,14 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
 
     @Override @Nullable
     public PokedexEntityData resolvePokemonScan() {
-        if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())){
-            return getDataFromShoulderPokemon(this.getShoulderEntityRight());
+        // Shoulder entities live on ServerPlayer since 1.21.9; both sides read the synced copy (see ShoulderData)
+        CompoundTag right = PlayerExtensionsKt.getShoulderEntityRight((Player) (Object) this);
+        CompoundTag left = PlayerExtensionsKt.getShoulderEntityLeft((Player) (Object) this);
+        if (CompoundTagUtilities.isShoulderPokemon(right)){
+            return getDataFromShoulderPokemon(right);
         }
-        if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())){
-            return getDataFromShoulderPokemon(this.getShoulderEntityLeft());
+        if (CompoundTagUtilities.isShoulderPokemon(left)){
+            return getDataFromShoulderPokemon(left);
         }
         return null;
     }
@@ -258,22 +164,22 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
     @Nullable @Unique
     private PokedexEntityData getDataFromShoulderPokemon(CompoundTag shoulderTag) {
         Pokemon pokemon;
-        if (level().isClientSide) {
-            CompoundTag pokemonTag = shoulderTag.getCompound(DataKeys.POKEMON);
+        if (level().isClientSide()) {
+            CompoundTag pokemonTag = shoulderTag.getCompoundOrEmpty(DataKeys.POKEMON);
             if (pokemonTag.isEmpty()) return null;
-            Species species = PokemonSpecies.getByIdentifier(Identifier.parse(pokemonTag.getString(DataKeys.POKEMON_SPECIES_IDENTIFIER)));
+            Species species = PokemonSpecies.getByIdentifier(Identifier.parse(pokemonTag.getStringOr(DataKeys.POKEMON_SPECIES_IDENTIFIER, "")));
             if (species == null) return null;
-            String formId = pokemonTag.getString(DataKeys.POKEMON_FORM_ID);
+            String formId = pokemonTag.getStringOr(DataKeys.POKEMON_FORM_ID, "");
             FormData form = species.getStandardForm();
             List<FormData> formList = species.getForms().stream().filter(it -> it.formOnlyShowdownId().equals(formId)).toList();
             if (!formList.isEmpty()) form = formList.getFirst();
             if (form == null) return null;
-            String genderString = pokemonTag.getString(DataKeys.POKEMON_GENDER);
+            String genderString = pokemonTag.getStringOr(DataKeys.POKEMON_GENDER, "");
             if (genderString.isEmpty()) return null;
             Gender gender = Gender.valueOf(genderString);
-            boolean shiny = pokemonTag.getBoolean(DataKeys.POKEMON_SHINY);
-            int level = pokemonTag.getInt(DataKeys.POKEMON_LEVEL);
-            Set<String> aspects = shoulderTag.getList(DataKeys.SHOULDER_ASPECTS, Tag.TAG_STRING).stream().map(Tag::getAsString).collect(Collectors.toSet());
+            boolean shiny = pokemonTag.getBooleanOr(DataKeys.POKEMON_SHINY, false);
+            int level = pokemonTag.getIntOr(DataKeys.POKEMON_LEVEL, 0);
+            Set<String> aspects = shoulderTag.getListOrEmpty(DataKeys.SHOULDER_ASPECTS).stream().map(tag -> tag.asString().orElse("")).collect(Collectors.toSet());
 
             pokemon = new Pokemon();
             pokemon.setSpecies(species);
@@ -284,7 +190,7 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
             pokemon.setForcedAspects(aspects);
         } else {
             PlayerPartyStore party = Cobblemon.INSTANCE.getStorage().getParty(this.getUUID(), this.registryAccess());
-            pokemon = party.get(shoulderTag.getUUID(DataKeys.SHOULDER_UUID));
+            pokemon = party.get(NbtCompatKt.getUUID(shoulderTag, DataKeys.SHOULDER_UUID));
         }
         return (pokemon == null) ? null : new PokedexEntityData(pokemon, null);
     }
@@ -295,17 +201,17 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
     }
 
     @Override
-    public void absMoveTo(double x, double y, double z, float yaw, float pitch) {
+    public void absSnapTo(double x, double y, double z, float yaw, float pitch) {
         if (cobblemon$orientationController.getActive()) {
-            this.absMoveTo(x, y, z);
+            this.absSnapTo(x, y, z);
             this.setYRot(yaw % 360.0f);
             this.setXRot(pitch % 360.0f);
             this.yRotO = this.getYRot();
             this.xRotO = this.getXRot();
         }
         else {
-            this.absMoveTo(x, y, z);
-            this.absRotateTo(yaw, pitch);
+            this.absSnapTo(x, y, z);
+            this.absSnapRotationTo(yaw, pitch);
         }
     }
 
@@ -378,15 +284,16 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
     }
 
     /**
+     * (Sweeping moved to doSweepAttack in 1.21.11.)
      * Sweeping attacks apply post-attack enchantment effects (e.g. Fire Aspect) to every entity caught
      * in the sweep, even if the damage itself was blocked. Skip them for Pokémon immune to the attack.
      */
     @WrapOperation(
-            method = "attack",
+            method = "doSweepAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;doPostAttackEffects(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V")
     )
     private void cobblemon$skipPostAttackEffectsOnImmunePokemon(ServerLevel level, Entity target, DamageSource source, Operation<Void> original) {
-        if (target instanceof PokemonEntity pokemonEntity && pokemonEntity.isInvulnerableTo(source)) {
+        if (target instanceof PokemonEntity pokemonEntity && pokemonEntity.isInvulnerableTo(level, source)) {
             return;
         }
         original.call(level, target, source);
@@ -396,11 +303,11 @@ public abstract class PlayerMixin extends LivingEntity implements ScannableEntit
      * Sweeping attacks also knock back every entity caught in the sweep regardless of whether it took damage.
      */
     @WrapOperation(
-            method = "attack",
+            method = "doSweepAttack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;knockback(DDD)V")
     )
-    private void cobblemon$skipKnockbackOnImmunePokemon(LivingEntity target, double strength, double x, double z, Operation<Void> original, @Local DamageSource source) {
-        if (target instanceof PokemonEntity pokemonEntity && pokemonEntity.isInvulnerableTo(source)) {
+    private void cobblemon$skipKnockbackOnImmunePokemon(LivingEntity target, double strength, double x, double z, Operation<Void> original, @Local(argsOnly = true) DamageSource source) {
+        if (target instanceof PokemonEntity pokemonEntity && pokemonEntity.level() instanceof ServerLevel level && pokemonEntity.isInvulnerableTo(level, source)) {
             return;
         }
         original.call(target, strength, x, z);

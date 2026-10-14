@@ -11,6 +11,12 @@ package com.cobblemon.mod.common.mixin;
 import net.minecraft.nbt.CompoundTag;
 import com.cobblemon.mod.common.entity.player.ShoulderData;
 import com.cobblemon.mod.common.Cobblemon;
+import org.objectweb.asm.Opcodes;
+import java.util.UUID;
+import com.cobblemon.mod.common.pokemon.Pokemon;
+import com.cobblemon.mod.common.api.storage.party.PartyStore;
+import com.cobblemon.mod.common.util.CompoundTagUtilities;
+import com.cobblemon.mod.common.util.CompoundTagExtensionsKt;
 import com.cobblemon.mod.common.OrientationControllable;
 import com.cobblemon.mod.common.PlayerSpawnerAccessor;
 import com.cobblemon.mod.common.api.riding.RidingStyle;
@@ -40,11 +46,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
 
     @Shadow
-    public abstract ServerLevel serverLevel();
+    public abstract ServerLevel level();
 
     @Shadow
-    @Final
-    public MinecraftServer server;
+    public abstract CompoundTag getShoulderEntityLeft();
+
+    @Shadow
+    public abstract CompoundTag getShoulderEntityRight();
+
+    @Shadow
+    protected abstract void setShoulderEntityLeft(CompoundTag tag);
+
+    @Shadow
+    protected abstract void setShoulderEntityRight(CompoundTag tag);
+
+    @Shadow
+    private void respawnEntityOnShoulder(CompoundTag tag) {
+        throw new AssertionError();
+    }
     @Unique
     public PlayerSpawner cobblemon$spawner;
 
@@ -87,7 +106,8 @@ public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
         });
     }
 
-    @Inject(method = "stopRiding", at = @At("HEAD"))
+    // stopRiding is Entity's since 1.21.11; it removes the vehicle through removeVehicle
+    @Inject(method = "removeVehicle", at = @At("HEAD"))
     public void cobblemon$resetOrientationOnDismount(CallbackInfo ci) {
         ServerPlayer player = (ServerPlayer)(Object)this;
         if (!(player.getVehicle() instanceof OrientationControllable controllableVehicle)) return;
@@ -95,7 +115,7 @@ public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
     }
 
     //TODO: Switch to sending out on load instead of preventing saving
-    @ModifyExpressionValue(method = "addAdditionalSaveData", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hasExactlyOnePlayerPassenger()Z"))
+    @ModifyExpressionValue(method = "saveParentVehicle", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hasExactlyOnePlayerPassenger()Z"))
     private boolean cobblemon$cancelSavingPokemonMounts(boolean original, @Local(ordinal=0) Entity entity) {
         return original && !(entity instanceof PokemonEntity);
     }
@@ -138,10 +158,10 @@ public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
     @Unique
     private boolean cobblemon$canSpawn() {
         return Cobblemon.config.getEnableSpawning() &&
-                this.serverLevel().getGameRules().getBoolean(CobblemonGameRules.DO_POKEMON_SPAWNING) &&
+                this.level().getGameRules().get(CobblemonGameRules.DO_POKEMON_SPAWNING) &&
                 // intentionally last as this is a more expensive check, even with all the caching
                 !Cobblemon.config.getWorldSpawningBlocklist().contains(
-                        ((ServerLevelDuck) this.serverLevel()).cobblemon$getLevelResourceLocation()
+                        ((ServerLevelDuck) this.level()).cobblemon$getLevelResourceLocation()
                 );
     }
 
@@ -154,5 +174,69 @@ public abstract class ServerPlayerMixin implements PlayerSpawnerAccessor {
     @Inject(method = "setShoulderEntityRight", at = @At("TAIL"))
     private void cobblemon$syncShoulderEntityRight(CompoundTag tag, CallbackInfo ci) {
         ((ServerPlayer) (Object) this).getEntityData().set(ShoulderData.RIGHT, tag);
+    }
+
+    /*
+     * Shoulder entities moved from Player to ServerPlayer in 1.21.9; these were PlayerMixin's.
+     */
+
+    @Inject(method = "respawnEntityOnShoulder", at = @At("HEAD"), cancellable = true)
+    private void cobblemon$removePokemon(CompoundTag nbt, CallbackInfo ci) {
+        if (CompoundTagExtensionsKt.isPokemonEntity(nbt)) {
+            final UUID uuid = CompoundTagUtilities.getPokemonID(nbt);
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
+                final UUID uuidRight = CompoundTagUtilities.getPokemonID(this.getShoulderEntityRight());
+                if (uuid.equals(uuidRight)) {
+                    this.cobblemon$recallPokemon(uuidRight);
+                    this.setShoulderEntityRight(new CompoundTag());
+                }
+            }
+            if (CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
+                final UUID uuidLeft = CompoundTagUtilities.getPokemonID(this.getShoulderEntityLeft());
+                if (uuid.equals(uuidLeft)) {
+                    this.cobblemon$recallPokemon(uuidLeft);
+                    this.setShoulderEntityLeft(new CompoundTag());
+                }
+            }
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+        method = "removeEntitiesOnShoulder",
+        at = @At(
+            value = "JUMP",
+            opcode = Opcodes.IFGE,
+            ordinal = 0,
+            shift = At.Shift.AFTER
+        ),
+        cancellable = true
+    )
+    private void cobblemon$preventPokemonDropping(CallbackInfo ci) {
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        // We want to allow both of these to forcefully remove the entities
+        if (player.isSpectator() || player.isDeadOrDying())
+            return;
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityLeft())) {
+            this.respawnEntityOnShoulder(this.getShoulderEntityLeft());
+            this.setShoulderEntityLeft(new CompoundTag());
+        }
+        if (!CompoundTagUtilities.isShoulderPokemon(this.getShoulderEntityRight())) {
+            this.respawnEntityOnShoulder(this.getShoulderEntityRight());
+            this.setShoulderEntityRight(new CompoundTag());
+        }
+        ci.cancel();
+    }
+
+    @Unique
+    private void cobblemon$recallPokemon(UUID uuid) {
+        // We need to do this cause the Entity doesn't store a reference to its storage
+        ServerPlayer player = (ServerPlayer) (Object) this;
+        final PartyStore party = Cobblemon.INSTANCE.getStorage().getParty(player.getUUID(), player.registryAccess());
+        for (Pokemon pokemon : party) {
+            if (pokemon.getUuid().equals(uuid)) {
+                pokemon.recall();
+            }
+        }
     }
 }
