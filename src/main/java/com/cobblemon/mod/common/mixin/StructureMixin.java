@@ -29,6 +29,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -54,6 +56,7 @@ public abstract class StructureMixin {
 			cancellable = true
 	)
 	private void cobblemon$rejectStartsOutsideHeightRange(
+			Holder<Structure> selected, ResourceKey<Level> dimension,
 			RegistryAccess registryAccess, ChunkGenerator chunkGenerator, BiomeSource biomeSource,
 			RandomState randomState, StructureTemplateManager structureTemplateManager, long seed,
 			ChunkPos chunkPos, int references, LevelHeightAccessor heightAccessor,

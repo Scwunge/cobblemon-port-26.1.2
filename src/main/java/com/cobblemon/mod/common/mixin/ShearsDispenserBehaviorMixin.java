@@ -15,6 +15,7 @@ import net.minecraft.core.dispenser.ShearsDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -24,7 +25,7 @@ public abstract class ShearsDispenserBehaviorMixin {
 
     // This exists, so we can execute our custom interaction only if no one redirected shears interactions to overwrite the vanilla ones.
     @Inject(method = "tryShearBeehive", at = @At("HEAD"), cancellable = true)
-    private static void cobblemon$tryApricornHarvest(ServerLevel world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private static void cobblemon$tryApricornHarvest(ServerLevel world, ItemStack tool, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         final BlockState state = world.getBlockState(pos);
         if (state.getBlock() instanceof ShearableBlock shearableBlock) {
             cir.setReturnValue(shearableBlock.attemptShear(world, state, pos, () -> Unit.INSTANCE));
