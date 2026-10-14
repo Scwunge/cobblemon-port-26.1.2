@@ -2,6 +2,6 @@
   "parent": "cobblemon:block/orb_wall",
   "textures": {
         "texture": "cobblemon:block/decorative/orb_flame",
-        "particle": "cobblemon:item/held_items/flame_orb"
+        "particle": "cobblemon:block/held_items/flame_orb"
   }
 }

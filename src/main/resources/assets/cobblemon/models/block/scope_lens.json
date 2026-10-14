@@ -1,7 +1,7 @@
 {
 	"textures": {
 		"0": "cobblemon:block/decorative/scope_lens",
-		"particle": "cobblemon:item/held_items/scope_lens"
+		"particle": "cobblemon:block/held_items/scope_lens"
 	},
 	"elements": [
 		{

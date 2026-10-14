@@ -2,7 +2,7 @@
 	"texture_size": [32, 16],
 	"textures": {
 		"0": "cobblemon:block/decorative/heat_rock",
-		"particle": "cobblemon:item/held_items/heat_rock"
+		"particle": "cobblemon:block/held_items/heat_rock"
 	},
 	"elements": [
 		{
