@@ -17,5 +17,10 @@ Every later commit is port work, so `git diff <first-commit>` shows exactly what
   licensed by their authors under Creative Commons Attribution-NonCommercial 3.0; each model folder
   has its own `license` file. They may not be used for commercial purposes, including paid or
   paywalled builds of this port.
+- **Included third-party mods.** These were ported to 26.1.2 and merged in, with changes. Each keeps its own
+  licence, kept in `src/main/resources/licenses/`:
+  - [Cobbreeding](https://gitlab.com/ludichat/Cobbreeding) by Ludichat and Fuzuki (MIT): Pokémon breeding in the
+    pasture block, under `ludichat.cobbreeding`. Its Cloth Config/Mod Menu config screen and Cobblemon Size
+    Variations support were left out; the config is still read from `config/cobbreeding/main.json`.
 - This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
   Game Freak, The Pokémon Company or Mojang.

@@ -90,6 +90,7 @@ class CobblemonFabricClient: ClientModInitializer, CobblemonClientImplementation
         }
 
         CobblemonFabric.networkManager.registerClientHandlers()
+        ludichat.cobbreeding.fabric.CobbreedingFabric.initializeClient()
 
         // Atlases are stitched by the game's atlas manager since 1.21.9 (see CobblemonAtlases); coded assets are
         // loaded once they are, as they need the atlases' sprites.
