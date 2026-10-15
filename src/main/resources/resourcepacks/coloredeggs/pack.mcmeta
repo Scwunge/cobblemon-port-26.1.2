@@ -1,6 +1,7 @@
 {
   "pack": {
     "description": "Colors eggs depending on the types of the Pokémon inside.",
-    "pack_format": 34
+    "min_format": 84,
+    "max_format": 84
   }
 }
