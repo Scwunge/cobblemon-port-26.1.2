@@ -37,7 +37,8 @@
   },
   "mixins": [
     "mixins.cobblemon-common.json",
-    "mixins.cobblemon-fabric.json"
+    "mixins.cobblemon-fabric.json",
+    "mixins.cobbreeding.json"
   ],
   "accessWidener": "cobblemon-common.accesswidener",
   "depends": {
