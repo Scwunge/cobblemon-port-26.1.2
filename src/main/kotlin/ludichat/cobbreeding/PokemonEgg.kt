@@ -156,9 +156,9 @@ class PokemonEgg(settings: Properties) : Item(settings) {
             stack.set(TIMER, timer - 20)
 
             // Egg hatches faster is the player has a Pokémon with an ability increasing hatching speed
-            run
+            if (entity is ServerPlayer)
             {
-                if (hasIncubatorAbility(Cobblemon.storage.getParty(entity as ServerPlayer)))
+                if (hasIncubatorAbility(Cobblemon.storage.getParty(entity)))
                     stack.set(TIMER, timer - 40)
                 if (timer <= 0)
                 {
