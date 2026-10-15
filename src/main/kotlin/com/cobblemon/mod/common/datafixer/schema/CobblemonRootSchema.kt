@@ -13,7 +13,6 @@ import com.cobblemon.mod.common.util.DataKeys
 import com.mojang.datafixers.DSL
 import com.mojang.datafixers.schemas.Schema
 import com.mojang.datafixers.types.templates.TypeTemplate
-import net.minecraft.util.datafix.DataFixers
 import net.minecraft.util.datafix.fixes.References
 import net.minecraft.util.datafix.schemas.NamespacedSchema
 import java.util.function.Supplier
@@ -75,14 +74,12 @@ class CobblemonRootSchema(versionKey: Int, parent: Schema?) : Schema(versionKey,
                 )
             )
         }
-        //We steal the definition of the item stack type from the vanilla schema
-        //DO NOT CHANGE THE NUMBER IN HERE.
-        //This is the version of the schema that was being used when THIS schema was made.
-        //Specifically, this schema was pre item components
-        //If you need a different number, make a new schema
-        val vanillaSchema = DataFixers.getDataFixer().getSchema(38180)
+        //The item stack only needs its id, everything else (Count, tag) passes through as remainder
+        //ItemStackComponentizationFix works on the whole stack as a Dynamic, so it doesn't need more than that
+        //Don't build this from a vanilla schema's type: its nested recursive types point at indices in vanilla's
+        //type family, which are other types (or nothing) in ours, and building the fix rule from version 0 then throws
         schema.registerType(true, References.ITEM_STACK) {
-            vanillaSchema.getType(References.ITEM_STACK).buildTemplate()
+            DSL.optionalFields("id", DSL.constType(NamespacedSchema.namespacedString()))
         }
     }
 
