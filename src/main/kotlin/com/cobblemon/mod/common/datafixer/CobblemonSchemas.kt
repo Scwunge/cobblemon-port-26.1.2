@@ -12,10 +12,13 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.datafixer.fix.*
 import com.cobblemon.mod.common.datafixer.schema.CobblemonRootSchema
 import com.cobblemon.mod.common.datafixer.schema.CobblemonSchemaV2
-import com.google.common.util.concurrent.ThreadFactoryBuilder
 import com.mojang.datafixers.DSL.TypeReference
+import com.mojang.datafixers.DataFixUtils
 import com.mojang.datafixers.DataFixer
 import com.mojang.datafixers.DataFixerBuilder
+import com.mojang.datafixers.DataFixerUpper
+import com.mojang.datafixers.TypeRewriteRule
+import com.mojang.datafixers.functions.PointFreeRule
 import com.mojang.datafixers.schemas.Schema
 import com.mojang.datafixers.util.Pair
 import com.mojang.serialization.Codec
@@ -23,12 +26,22 @@ import com.mojang.serialization.DataResult
 import com.mojang.serialization.Dynamic
 import com.mojang.serialization.DynamicOps
 import net.minecraft.util.datafix.fixes.ItemStackComponentizationFix
-import java.util.concurrent.Executors
+import org.apache.logging.log4j.LogManager
+import java.lang.reflect.InvocationTargetException
+import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object CobblemonSchemas {
     private val SAME: (Int, Schema) -> Schema = ::Schema
+    private val LOGGER = LogManager.getLogger()
+
+    /**
+     * Data versions whose fix rules could not be built. Data saved at these versions is loaded without fixing.
+     */
+    private val BROKEN_VERSIONS = mutableSetOf<Int>()
+    private val REPORTED_SKIPS = ConcurrentHashMap.newKeySet<String>()
     private val RESULT: DataFixerBuilder.Result = this.create()
+    private val FIXER: DataFixer = GuardedDataFixer(RESULT.fixer())
 
     const val DATA_VERSION = 3
 
@@ -36,7 +49,7 @@ object CobblemonSchemas {
      * The Cobblemon [DataFixer].
      */
     @JvmStatic
-    val DATA_FIXER: DataFixer get() = RESULT.fixer()
+    val DATA_FIXER: DataFixer get() = FIXER
 
     const val VERSION_KEY = "${Cobblemon.MODID}:data_version"
 
@@ -53,20 +66,37 @@ object CobblemonSchemas {
     private fun create(): DataFixerBuilder.Result {
         val builder = DataFixerBuilder(DATA_VERSION)
         this.appendSchemas(builder)
-        val types = CobblemonTypeReferences.types()
         val result = builder.build()
-        if (types.isEmpty()) {
-            return result
-        }
-        val executor = Executors.newSingleThreadExecutor(
-            ThreadFactoryBuilder()
-                .setNameFormat("${Cobblemon.MODID} Datafixer Bootstrap")
-                .setDaemon(true)
-                .setPriority(1)
-                .build()
-        )
-        result.optimize(types, executor).join()
+        this.prepareRules(result.fixer())
         return result
+    }
+
+    /**
+     * Builds the rules for upgrading every older data version now, instead of lazily on whichever thread loads old data first.
+     *
+     * DFU's own optimize only starts from versions that have fixes, so data with no version (saved before Cobblemon 1.6) was never covered.
+     * If building a rewrite throws, DFU 10 leaves its pending entry behind and every later load from that version waits on it forever.
+     * Versions that fail here are logged and skipped by [GuardedDataFixer] rather than hanging the server.
+     */
+    private fun prepareRules(fixer: DataFixer) {
+        val getRule = DataFixerUpper::class.java.getDeclaredMethod("getRule", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
+            .apply { isAccessible = true }
+        val optimizationRule = DataFixerUpper::class.java.getDeclaredField("OPTIMIZATION_RULE")
+            .apply { isAccessible = true }
+            .get(null) as PointFreeRule
+        for (version in 0 until DATA_VERSION) {
+            try {
+                val rule = getRule.invoke(fixer, version, DATA_VERSION) as TypeRewriteRule
+                val schema = fixer.getSchema(DataFixUtils.makeKey(version))
+                for (typeName in schema.types()) {
+                    schema.getType { typeName }.rewrite(rule, optimizationRule)
+                }
+            } catch (e: Exception) {
+                BROKEN_VERSIONS += version
+                val cause = (e as? InvocationTargetException)?.targetException ?: e
+                LOGGER.error("Could not build the Cobblemon data fixes from data version {}, data saved at that version will load without them", version, cause)
+            }
+        }
     }
 
     private fun appendSchemas(builder: DataFixerBuilder) {
@@ -107,6 +137,21 @@ object CobblemonSchemas {
             val dataFixedDynamic = DATA_FIXER.update(this.typeReference, dynamicWithoutVersion, inputVersion, DATA_VERSION)
             return this.baseCodec.decode(dataFixedDynamic)
         }
+    }
+
+    private class GuardedDataFixer(private val fixer: DataFixer) : DataFixer {
+
+        override fun <T> update(type: TypeReference, input: Dynamic<T>, version: Int, newVersion: Int): Dynamic<T> {
+            if (version < newVersion && version in BROKEN_VERSIONS) {
+                if (REPORTED_SKIPS.add("${type.typeName()} $version")) {
+                    LOGGER.error("Loading {} from Cobblemon data version {} without data fixes, see the error logged at startup", type.typeName(), version)
+                }
+                return input
+            }
+            return this.fixer.update(type, input, version, newVersion)
+        }
+
+        override fun getSchema(key: Int): Schema = this.fixer.getSchema(key)
     }
 
 
