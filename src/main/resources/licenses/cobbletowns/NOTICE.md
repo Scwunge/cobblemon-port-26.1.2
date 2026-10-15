@@ -15,5 +15,6 @@ The files were modified to load on Minecraft 26.1.2:
 - Nested loot table entries use `value` instead of `name`.
 - `set_nbt` loot functions replaced with `set_custom_data`, and the matching item selectors in the
   spawn functions now check the `minecraft:custom_data` component.
+- `minecraft:grass` in loot tables renamed to `minecraft:short_grass`.
 - The `load` function no longer sets the world-wide `commandBlockOutput` game rule.
 - Structure `.nbt` files are unchanged; Minecraft and Cobblemon upgrade them when they load.
