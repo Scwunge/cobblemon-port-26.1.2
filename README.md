@@ -17,5 +17,9 @@ Every later commit is port work, so `git diff <first-commit>` shows exactly what
   licensed by their authors under Creative Commons Attribution-NonCommercial 3.0; each model folder
   has its own `license` file. They may not be used for commercial purposes, including paid or
   paywalled builds of this port.
+- **Bundled datapacks** are included as built-in data, modified to load on 26.1.2 (each folder in
+  `src/main/resources/licenses/` has the licence and lists the changes):
+  - [CobbleTowns](https://modrinth.com/mod/cobbletowns) by lastgreenseer, MIT
+    (`src/main/resources/licenses/cobbletowns/`).
 - This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
   Game Freak, The Pokémon Company or Mojang.
