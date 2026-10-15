@@ -39,29 +39,13 @@ import java.util.UUID;
 
 @Mixin(PastureBlock.class)
 public abstract class PastureBlockMixin {
-    // This mixin can't extend Block (its codec() visibility no longer lets a Java subclass compile), so it shadows what it needs.
-    @Shadow
-    protected abstract void registerDefaultState(BlockState state);
-
-    @Shadow
-    public abstract BlockState defaultBlockState();
 
     @Unique
     private static final BooleanProperty HAS_EGG = CustomProperties.HAS_EGG;
     @Unique
     private static final BooleanProperty BREEDING_ACTIVATED = CustomProperties.BREEDING_ACTIVATED;
 
-    @Inject(at = @At("TAIL"), method = "<init>")
-    private void init(BlockBehaviour.Properties properties, CallbackInfo ci) {
-        registerDefaultState(defaultBlockState().setValue(HAS_EGG, false));
-        registerDefaultState(defaultBlockState().setValue(BREEDING_ACTIVATED, false));
-    }
-
-    @Inject(at = @At("TAIL"), method = "createBlockStateDefinition")
-    private void appendProperties(StateDefinition.Builder<Block, BlockState> builder, CallbackInfo ci) {
-        builder.add(HAS_EGG);
-        builder.add(BREEDING_ACTIVATED);
-    }
+    // The HAS_EGG and BREEDING_ACTIVATED block states are added in PastureBlock itself.
 
     @Inject(at = @At("HEAD"), method = "useWithoutItem", cancellable = true)
     private void onUse(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
