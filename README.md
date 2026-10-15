@@ -7,4 +7,15 @@ The first commit in this repository is the upstream 1.8.2 source, unmodified, fl
 Architectury `common` + `fabric` modules into a single Fabric project (the NeoForge module is dropped).
 Every later commit is port work, so `git diff <first-commit>` shows exactly what changed.
 
-Licensed MPL-2.0, same as upstream (see `LICENSE`).
+## Licence
+
+- **Code** is licensed under the Mozilla Public License 2.0, the same as upstream (see `LICENSE`).
+  This is a modified version of Cobblemon by the Cobblemon Contributors; the port changes are in the
+  commit history. Every source file keeps its MPL header, and anyone who gets a build of this port
+  can get its source here, under the same licence.
+- **Pokémon models and animations** (`src/main/resources/assets/cobblemon/bedrock/pokemon/`) are
+  licensed by their authors under Creative Commons Attribution-NonCommercial 3.0; each model folder
+  has its own `license` file. They may not be used for commercial purposes, including paid or
+  paywalled builds of this port.
+- This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
+  Game Freak, The Pokémon Company or Mojang.
