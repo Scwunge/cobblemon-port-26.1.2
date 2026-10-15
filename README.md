@@ -22,5 +22,15 @@ Every later commit is port work, so `git diff <first-commit>` shows exactly what
   - [Cobbreeding](https://gitlab.com/ludichat/Cobbreeding) by Ludichat and Fuzuki (MIT): Pokémon breeding in the
     pasture block, under `ludichat.cobbreeding`. Its Cloth Config/Mod Menu config screen and Cobblemon Size
     Variations support were left out; the config is still read from `config/cobbreeding/main.json`.
+- **Bundled datapacks** are included as built-in data, modified to load on 26.1.2 (each folder in
+  `src/main/resources/licenses/` has the licence and lists the changes):
+  - [CobbleTowns](https://modrinth.com/mod/cobbletowns) by lastgreenseer, MIT
+    (`src/main/resources/licenses/cobbletowns/`).
+  - [PokéCenter PCs](https://modrinth.com/mod/pokecenter-pc-cobblemon) by Instrafe, MIT
+    (`src/main/resources/licenses/pokecenter-pcs/`). It adds a PC to Cobblemon's village Poké
+    Centers; those structure files stay under the MPL.
+  - [LegendaryStructures](https://modrinth.com/mod/legendarystructures) by bonanca, a port of an
+    earlier pack by LastGreenSeer, MIT as declared by bonanca
+    (`src/main/resources/licenses/legendarystructures/`).
 - This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
   Game Freak, The Pokémon Company or Mojang.

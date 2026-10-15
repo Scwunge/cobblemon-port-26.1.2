@@ -1,0 +1,15 @@
+{
+  "name": "legendarystructures:power_plant_lower",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "legendarystructures:power_plant_lower",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}
