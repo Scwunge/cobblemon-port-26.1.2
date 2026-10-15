@@ -21,5 +21,8 @@ Every later commit is port work, so `git diff <first-commit>` shows exactly what
   `src/main/resources/licenses/` has the licence and lists the changes):
   - [CobbleTowns](https://modrinth.com/mod/cobbletowns) by lastgreenseer, MIT
     (`src/main/resources/licenses/cobbletowns/`).
+  - [PokéCenter PCs](https://modrinth.com/mod/pokecenter-pc-cobblemon) by Instrafe, MIT
+    (`src/main/resources/licenses/pokecenter-pcs/`). It adds a PC to Cobblemon's village Poké
+    Centers; those structure files stay under the MPL.
 - This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
   Game Freak, The Pokémon Company or Mojang.
