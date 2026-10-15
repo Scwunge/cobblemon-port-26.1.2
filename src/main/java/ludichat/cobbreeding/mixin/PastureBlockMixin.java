@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import ludichat.cobbreeding.CustomProperties;
 import ludichat.cobbreeding.PastureBreedingData;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,15 +38,18 @@ import java.util.UUID;
 
 
 @Mixin(PastureBlock.class)
-public abstract class PastureBlockMixin extends Block {
+public abstract class PastureBlockMixin {
+    // This mixin can't extend Block (its codec() visibility no longer lets a Java subclass compile), so it shadows what it needs.
+    @Shadow
+    protected abstract void registerDefaultState(BlockState state);
+
+    @Shadow
+    public abstract BlockState defaultBlockState();
+
     @Unique
     private static final BooleanProperty HAS_EGG = CustomProperties.HAS_EGG;
     @Unique
     private static final BooleanProperty BREEDING_ACTIVATED = CustomProperties.BREEDING_ACTIVATED;
-
-    public PastureBlockMixin(Properties settings) {
-        super(settings);
-    }
 
     @Inject(at = @At("TAIL"), method = "<init>")
     private void init(BlockBehaviour.Properties properties, CallbackInfo ci) {
@@ -61,7 +65,7 @@ public abstract class PastureBlockMixin extends Block {
 
     @Inject(at = @At("HEAD"), method = "useWithoutItem", cancellable = true)
     private void onUse(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             boolean is_bottom_part = state.getValue(PastureBlock.Companion.getPART()) == PastureBlock.PasturePart.BOTTOM;
             PastureInventory pastureInventory = (PastureInventory) world.getBlockEntity(pos);
 
@@ -90,7 +94,7 @@ public abstract class PastureBlockMixin extends Block {
 
     @Inject(at = @At("HEAD"), method = "playerWillDestroy")
     private void onBroken(Level world, BlockPos pos, BlockState state, Player player, CallbackInfoReturnable<BlockState> cir) {
-        if (!world.isClientSide) {
+        if (!world.isClientSide()) {
             PastureBreedingData.registry.remove(pos);
 
             if (state.getValue(PastureBlock.Companion.getPART()) == PastureBlock.PasturePart.TOP)

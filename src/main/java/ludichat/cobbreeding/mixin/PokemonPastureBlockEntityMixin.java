@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import org.slf4j.Logger;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -98,7 +100,7 @@ public abstract class PokemonPastureBlockEntityMixin extends BlockEntity impleme
     private static void tick(Level world, BlockPos pos, BlockState state, PokemonPastureBlockEntity blockEntity, CallbackInfo ci) {
         long world_time = world.getGameTime();
         // Encapsulating to avoid conflict with other pasture mods
-        if (!world.isClientSide && world_time%Cobblemon.config.getPastureBlockUpdateTicks() == 0) {
+        if (!world.isClientSide() && world_time%Cobblemon.config.getPastureBlockUpdateTicks() == 0) {
             List<Pokemon> pokemon = new LinkedList<>(); // List of pastured pokémon
             try {
                 List<PokemonPastureBlockEntity.Tethering> tetheredPokemon = blockEntity.getTetheredPokemon();
@@ -254,15 +256,15 @@ public abstract class PokemonPastureBlockEntityMixin extends BlockEntity impleme
     }
 
     @Inject(at = @At("HEAD"), method = "saveAdditional")
-    private void writeNbt(CompoundTag nbt, HolderLookup.Provider provider, CallbackInfo ci) {
-        ContainerHelper.saveAllItems(nbt, getItems(), provider);
+    private void writeNbt(ValueOutput output, CallbackInfo ci) {
+        ContainerHelper.saveAllItems(output, getItems());
     }
 
     @Inject(at = @At("TAIL"), method = "loadAdditional")
-    private void readNbt(CompoundTag nbt, HolderLookup.Provider provider, CallbackInfo ci) {
+    private void readNbt(ValueInput input, CallbackInfo ci) {
 //        LOGGER.info("Loading pasture inventory:");
 //        for (var item : getItems()) { LOGGER.info("\t{}", item); }
-        ContainerHelper.loadAllItems(nbt, getItems(), provider);
+        ContainerHelper.loadAllItems(input, getItems());
     }
 
     @Override
