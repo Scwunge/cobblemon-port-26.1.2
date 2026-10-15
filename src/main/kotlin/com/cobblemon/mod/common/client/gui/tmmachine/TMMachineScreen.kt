@@ -49,7 +49,6 @@ import com.mojang.blaze3d.platform.InputConstants
 import com.mojang.blaze3d.vertex.PoseStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
 import net.minecraft.core.BlockPos
 import net.minecraft.network.chat.Component
@@ -58,7 +57,6 @@ import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.util.Mth
 import net.minecraft.world.entity.player.Inventory
-import net.minecraft.world.inventory.ContainerInput
 import net.minecraft.world.inventory.Slot
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -74,7 +72,7 @@ import com.cobblemon.mod.common.client.render.gui.scale
 import com.cobblemon.mod.common.client.render.gui.mulPose
 import com.cobblemon.mod.common.client.render.gui.hasShiftDown
 
-class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, title: Component) : AbstractContainerScreen<TMMachineMenu>(containerMenu, inventory, title, WIDTH, HEIGHT) {
+class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, title: Component) : SlotClickAwareContainerScreen<TMMachineMenu>(containerMenu, inventory, title, WIDTH, HEIGHT) {
     companion object {
         const val HEIGHT = 226
         const val WIDTH = 191
@@ -1126,8 +1124,7 @@ class TMMachineScreen(containerMenu: TMMachineMenu, val inventory: Inventory, ti
         return super.mouseClicked(event, doubleClick)
     }
 
-    override fun slotClicked(slot: Slot, slotId: Int, mouseButton: Int, type: ContainerInput) {
-        super.slotClicked(slot, slotId, mouseButton, type)
+    override fun afterSlotClicked() {
         updateHeldStackMove()
         checkForSlotChanges()
     }
