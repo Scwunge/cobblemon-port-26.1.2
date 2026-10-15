@@ -2223,7 +2223,9 @@ open class PokemonEntity(
     override fun stopSeenByPlayer(player: ServerPlayer) {
         if (this.ownerUUID == player.uuid && tethering == null) {
             // queuedToDespawn = true
-            if (this.removalReason != RemovalReason.DISCARDED) {
+            // Removing an entity also stops its tracking, which calls this, so skip it when any removal is already running
+            // (a second remove inside the first one's callback makes vanilla warn that the entity isn't in its section).
+            if (!this.isRemoved) {
                 this.remove(RemovalReason.DISCARDED)
             }
             return
