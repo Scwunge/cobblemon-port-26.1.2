@@ -1,5 +1,6 @@
 {
-	"values": [
-		"cobbletowns:tick"
-	]
+  "values": [
+    "cobbletowns:tick",
+    "legendarystructures:tick"
+  ]
 }

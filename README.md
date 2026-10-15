@@ -24,5 +24,8 @@ Every later commit is port work, so `git diff <first-commit>` shows exactly what
   - [PokéCenter PCs](https://modrinth.com/mod/pokecenter-pc-cobblemon) by Instrafe, MIT
     (`src/main/resources/licenses/pokecenter-pcs/`). It adds a PC to Cobblemon's village Poké
     Centers; those structure files stay under the MPL.
+  - [LegendaryStructures](https://modrinth.com/mod/legendarystructures) by bonanca, a port of an
+    earlier pack by LastGreenSeer, MIT as declared by bonanca
+    (`src/main/resources/licenses/legendarystructures/`).
 - This is an unofficial fan project, not affiliated with or endorsed by the Cobblemon team, Nintendo,
   Game Freak, The Pokémon Company or Mojang.
