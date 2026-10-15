@@ -1,6 +1,7 @@
 package ludichat.cobbreeding.utils
 
 import ludichat.cobbreeding.Cobbreeding
+import net.minecraft.core.UUIDUtil
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtIo
 import java.io.File
@@ -32,7 +33,7 @@ object CobbreedingFile {
             if (posValue != null && posValue.isNotEmpty())
                 nbt.putIntArray(key, posValue)
             if (uuidValue != null)
-                nbt.putUUID(key, uuidValue)
+                nbt.putIntArray(key, UUIDUtil.uuidToIntArray(uuidValue))
 
             // Writing with the new entry
             NbtIo.write(nbt, file.toPath())
@@ -74,7 +75,7 @@ object CobbreedingFile {
             if (file.exists())
                 nbt = NbtIo.read(file.toPath())!!
 
-            return nbt.getUUID(key)
+            return UUIDUtil.uuidFromIntArray(nbt.getIntArray(key).orElseThrow())
 
         } catch (_: IOException)
         {

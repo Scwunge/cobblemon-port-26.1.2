@@ -52,7 +52,7 @@ class NeuterProperty : CustomPokemonPropertyType<BooleanProperty> {
 
         fun matchPokemon(pokemon: Pokemon, value: Boolean): Boolean {
             if (pokemon.persistentData.contains(KEY)) {
-                return pokemon.persistentData.getBoolean(KEY) == value
+                return pokemon.persistentData.getBooleanOr(KEY, false) == value
             }
             return false
         }

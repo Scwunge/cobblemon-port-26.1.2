@@ -7,19 +7,21 @@ import com.cobblemon.mod.common.api.pokemon.PokemonProperties
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.api.pokemon.feature.FlagSpeciesFeature
 import com.cobblemon.mod.common.api.pokemon.feature.StringSpeciesFeature
-import com.cobblemon.mod.common.client.CobblemonClient
 import com.cobblemon.mod.common.pokemon.Pokemon
 import com.cobblemon.mod.common.util.DataKeys
 import com.cobblemon.mod.common.util.isServerSide
 import kotlinx.serialization.internal.throwArrayMissingFieldException
-import ludichat.cobbreeding.compat.CobblemonSizeVariations
 import ludichat.cobbreeding.components.CobbreedingComponents
 import ludichat.cobbreeding.utils.toSemVer
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.InteractionResult
+import net.minecraft.server.level.ServerLevel
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.component.TooltipDisplay
+import java.util.function.Consumer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
@@ -49,8 +51,7 @@ class PokemonEgg(settings: Properties) : Item(settings) {
     /**
      * Used to transition eggs from older version to avoid breaking them.
      */
-    override fun verifyComponentsAfterLoad(itemStack: ItemStack) {
-        super.verifyComponentsAfterLoad(itemStack)
+    private fun upgradeComponents(itemStack: ItemStack) {
 
         when (val componentVersion = itemStack.getOrDefault(VERSION, "")) {
             // Short-circuit to avoid semver conversions (potentially expensive regex)
@@ -91,10 +92,11 @@ class PokemonEgg(settings: Properties) : Item(settings) {
         level: Level,
         player: Player,
         usedHand: InteractionHand
-    ): InteractionResultHolder<ItemStack?>? {
+    ): InteractionResult {
         val itemStack = player.getItemInHand(usedHand)
 
-        if (!level.isServerSide()) return InteractionResultHolder.pass(itemStack)
+        if (!level.isServerSide()) return InteractionResult.PASS
+        upgradeComponents(itemStack)
 
         // If encryption disabled and egg is not decrypted already
         if (!Cobbreeding.config.eggEncryptionEnabled && !itemStack.has(POKEMON_PROPERTIES)) {
@@ -102,45 +104,48 @@ class PokemonEgg(settings: Properties) : Item(settings) {
             if (!itemStack.has(EGG_INFO)) {
                 Cobbreeding.LOGGER.error("Failed to decrypt egg: no data (player: ${player.scoreboardName})")
                 player.sendSystemMessage(Component.translatable("cobbreeding.msg.decrypt.fail"))
-                return InteractionResultHolder.fail(itemStack)
+                return InteractionResult.FAIL
                 // Maybe consume instead since egg is irrecoverable?
             }
 
             itemStack.set(POKEMON_PROPERTIES, EggUtilities.decrypt(itemStack.get(EGG_INFO)!!).asString())
             Cobbreeding.LOGGER.info("Successfully decrypted egg (player: ${player.scoreboardName})")
             player.sendSystemMessage(Component.translatable("cobbreeding.msg.decrypt.success"))
-            return InteractionResultHolder.success(itemStack)
+            return InteractionResult.SUCCESS
         }
 
-        return InteractionResultHolder.pass(itemStack)
+        return InteractionResult.PASS
     }
 
     override fun appendHoverText(
         stack: ItemStack,
         context: TooltipContext,
-        lines: MutableList<Component>,
+        display: TooltipDisplay,
+        lines: Consumer<Component>,
         type: TooltipFlag
     ) {
-        super.appendHoverText(stack, context, lines, type)
+        super.appendHoverText(stack, context, display, lines, type)
 
         val pokemonName = stack.get(NAME)?.split(" ")
         if (pokemonName != null)
         {
             val species = PokemonSpecies.getByName(pokemonName[0].lowercase())
             if (species != null)
-                lines.add(species.translatedName)
+                lines.accept(species.translatedName)
             if (pokemonName.size > 1)
-                lines.add(Component.literal(pokemonName[1]))
+                lines.accept(Component.literal(pokemonName[1]))
         }
 
         val timer = stack.getOrDefault(TIMER, DEFAULT_TIMER)
-        lines.add(Component.literal(ticksToTime(timer)))
+        lines.accept(Component.literal(ticksToTime(timer)))
     }
 
-    override fun inventoryTick(stack: ItemStack, world: Level, entity: Entity, slot: Int, selected: Boolean) {
-        super.inventoryTick(stack, world, entity, slot, selected)
+    // Item ticking is server-side only now, so the timer is only counted down on the server (the client reads the synced component).
+    override fun inventoryTick(stack: ItemStack, world: ServerLevel, entity: Entity, slot: EquipmentSlot?) {
+        super.inventoryTick(stack, world, entity, slot)
 
         if (entity is Player) {
+            upgradeComponents(stack)
             // Handling a timer to play this action every second instead of every tick
             val second = stack.getOrDefault(SECOND, DEFAULT_SECOND)
             stack.set(SECOND, second + 1)
@@ -151,12 +156,7 @@ class PokemonEgg(settings: Properties) : Item(settings) {
             stack.set(TIMER, timer - 20)
 
             // Egg hatches faster is the player has a Pokémon with an ability increasing hatching speed
-            if (world.isClientSide)
-            {
-                if (hasIncubatorAbility(CobblemonClient.storage.party))
-                    stack.set(TIMER, timer - 40)
-            }
-            else
+            run
             {
                 if (hasIncubatorAbility(Cobblemon.storage.getParty(entity as ServerPlayer)))
                     stack.set(TIMER, timer - 40)
@@ -229,11 +229,6 @@ class PokemonEgg(settings: Properties) : Item(settings) {
             CobblemonEvents.HATCH_EGG_PRE.post(HatchEggEvent.Pre(properties, entity as ServerPlayer))
             val pokemon = properties.create()
             pokemon.setFriendship(120)
-
-            // CobblemonSizeVariations compat
-            if (CobblemonSizeVariations.enabled) {
-                CobblemonSizeVariations.event?.let { pokemon.it() }
-            }
 
             // Baby sheep have to grow their wool
             if (pokemon.species == PokemonSpecies.getByName("wooloo") || pokemon.species == PokemonSpecies.getByName("mareep"))

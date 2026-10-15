@@ -4,7 +4,9 @@ import com.cobblemon.mod.common.Cobblemon
 import com.cobblemon.mod.common.pokemon.Pokemon
 import ludichat.cobbreeding.NeuterProperty
 import ludichat.cobbreeding.network.ToggleNeuterPacket
-import net.minecraft.client.gui.GuiGraphics
+import com.cobblemon.mod.common.api.gui.blitk
+import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.narration.NarratedElementType
 import net.minecraft.client.gui.narration.NarrationElementOutput
@@ -28,28 +30,14 @@ class ToggleNeuterButton(
     protected var texture: Identifier = Identifier.fromNamespaceAndPath("cobbreeding", "textures/gui/neuter_button.png")
     protected var cross: Identifier = Identifier.fromNamespaceAndPath("cobbreeding", "textures/gui/cross.png")
 
-    override fun onClick(mouseX: Double, mouseY: Double) {
+    override fun onClick(event: MouseButtonEvent, doubleClick: Boolean) {
         Cobblemon.implementation.networkManager.sendToServer(ToggleNeuterPacket(pokemon.uuid))
     }
 
-    override fun renderWidget(guiGraphics: GuiGraphics, mouseX: Int, mouseY: Int, partialTick: Float) {
-        guiGraphics.blit(
-            texture,
-            x, y,
-            width, height,
-            0f, 0f,
-            width, height,
-            width, height
-        )
+    override fun extractWidgetRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
+        blitk(matrixStack = guiGraphics.pose(), texture = texture, x = x, y = y, width = width, height = height)
         if (NeuterProperty.get(pokemon)) {
-            guiGraphics.blit(
-                cross,
-                x+3, y+3,
-                14, 14,
-                0f, 0f,
-                14, 14,
-                14, 14
-            )
+            blitk(matrixStack = guiGraphics.pose(), texture = cross, x = x + 3, y = y + 3, width = 14, height = 14)
         }
     }
 
