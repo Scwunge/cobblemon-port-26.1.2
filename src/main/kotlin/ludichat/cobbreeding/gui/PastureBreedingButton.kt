@@ -46,13 +46,13 @@ class PastureBreedingButton(
     override fun extractWidgetRenderState(guiGraphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, partialTick: Float) {
         blitk(matrixStack = guiGraphics.pose(), texture = texture, x = x, y = y, width = width, height = height)
         state = Minecraft.getInstance().level!!.getBlockState(blockPos)
-        if (!state.getValue(CustomProperties.BREEDING_ACTIVATED)) {
+        if (!state.getOptionalValue(CustomProperties.BREEDING_ACTIVATED).orElse(false)) {
             blitk(matrixStack = guiGraphics.pose(), texture = cross, x = x + 3, y = y + 3, width = 14, height = 14)
         }
     }
 
     override fun updateWidgetNarration(narrationElementOutput: NarrationElementOutput) {
-        val isOn = if (state.getValue(CustomProperties.BREEDING_ACTIVATED)) "ON" else "OFF"
+        val isOn = if (state.getOptionalValue(CustomProperties.BREEDING_ACTIVATED).orElse(false)) "ON" else "OFF"
         narrationElementOutput.add(NarratedElementType.TITLE, "Breeding $isOn")
     }
 

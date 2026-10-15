@@ -43,6 +43,9 @@ public class PastureGUIMixin extends Screen {
             {
                 BlockPos blockPos = ((BlockHitResult) hitResult).getBlockPos();
                 BlockState state = world.getBlockState(blockPos);
+                // The crosshair can be off the pasture by the time the screen opens; no button then rather than a crash.
+                if (!(state.getBlock() instanceof PastureBlock))
+                    return;
                 if (state.getValue(PastureBlock.Companion.getPART()) == PastureBlock.PasturePart.TOP)
                     blockPos = blockPos.below();
                 int x = (width - BASE_WIDTH) / 2;

@@ -40,6 +40,8 @@ object ToggleBreedingPacketPacketHandler: ServerNetworkPacketHandler<ToggleBreed
             return
         val pastureBlock = pastureLink.pos
         val pastureState = world.getBlockState(pastureBlock)
+        if (!pastureState.hasProperty(CustomProperties.BREEDING_ACTIVATED))
+            return
 
         // Save file path
         val path: Path = server.getWorldPath(LevelResource.ROOT).resolve("pokemon").resolve("cobbreeding")
