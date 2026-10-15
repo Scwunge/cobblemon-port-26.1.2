@@ -19,5 +19,8 @@ The files were modified to load on Minecraft 26.1.2:
 - The `load` function no longer sets the world-wide `commandBlockOutput` game rule.
 - Forge-only entity attributes (`forge:entity_gravity`, `forge:step_height_addition`) removed from
   the entities saved in five structures (`pokemon_tower`, `strange_house`, `lab`, `oak`, `scientist`).
-  Nothing else in the structure `.nbt` files was changed; Minecraft and Cobblemon upgrade them when
+- Two wild Pokémon (a Rattata and a Cottonee) saved into `lavender_town/buildings/pokemon_tower.nbt`
+  removed: every Lavender Town would spawn them with the same UUIDs, and their pre-1.6 Pokémon data
+  hung world generation in this port. The tower's own spawners still provide its Pokémon.
+- Nothing else in the structure `.nbt` files was changed; Minecraft and Cobblemon upgrade them when
   they load.
