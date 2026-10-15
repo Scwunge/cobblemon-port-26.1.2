@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 34,
-    "description": "Adds visual differences for region-biased Pokémon."
+    "description": "Adds visual differences for region-biased Pokémon.",
+    "min_format": 84,
+    "max_format": 84
   }
 }

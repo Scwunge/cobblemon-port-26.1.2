@@ -8,6 +8,7 @@
 
 package com.cobblemon.mod.common.block
 
+import ludichat.cobbreeding.CustomProperties
 import com.cobblemon.mod.common.util.blockUpdated
 import net.minecraft.util.RandomSource
 import net.minecraft.world.level.ScheduledTickAccess
@@ -139,7 +140,9 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         registerDefaultState(stateDefinition.any()
             .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH)
             .setValue(PART, PasturePart.BOTTOM)
-            .setValue(ON, false))
+            .setValue(ON, false)
+            .setValue(CustomProperties.HAS_EGG, false)
+            .setValue(CustomProperties.BREEDING_ACTIVATED, false))
     }
 
     override fun getRenderShape(state: BlockState) = RenderShape.MODEL
@@ -192,6 +195,9 @@ class PastureBlock(settings: Properties): BaseEntityBlock(settings), LegacyOnRem
         builder.add(PART)
         builder.add(ON)
         builder.add(WATERLOGGED)
+        // Cobbreeding: an egg waiting in the nest, and whether breeding is switched on for this pasture.
+        builder.add(CustomProperties.HAS_EGG)
+        builder.add(CustomProperties.BREEDING_ACTIVATED)
     }
 
     fun checkBreakEntity(world: net.minecraft.world.level.LevelReader, state: BlockState, pos: BlockPos) {

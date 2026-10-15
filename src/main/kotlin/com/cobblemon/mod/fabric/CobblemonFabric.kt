@@ -107,6 +107,7 @@ object CobblemonFabric : CobblemonImplementation {
         Cobblemon.initialize()
         networkManager.registerMessages()
         networkManager.registerServerHandlers()
+        ludichat.cobbreeding.fabric.CobbreedingFabric.initialize()
 
         //This has to be registered elsewhere on forge so we cant do it in common
         CobblemonSherds.registerSherds()

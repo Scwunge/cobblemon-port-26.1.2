@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 34,
-    "description": "Adds distinct shiny textures for Magikarp Jump forms."
+    "description": "Adds distinct shiny textures for Magikarp Jump forms.",
+    "min_format": 84,
+    "max_format": 84
   }
 }
