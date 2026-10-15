@@ -2,17 +2,24 @@
   "schemaVersion": 1,
   "id": "cobblemon",
   "version": "${version}",
-  "name": "Cobblemon",
-  "description": "Adds Pokémon to the world, letting you find, battle, capture, and evolve them.",
+  "name": "Cobblemon (Unofficial 26.1.2 Port)",
+  "description": "Unofficial port of Cobblemon 1.8.2 to Minecraft 26.1.2. Adds Pokémon to the world, letting you find, battle, capture, and evolve them. Not affiliated with or supported by the Cobblemon Team: report port bugs to the port's issue tracker, not to Cobblemon.",
   "authors": [
     "The Cobblemon Team"
   ],
+  "contributors": [
+    "Scwunge (26.1.2 port)",
+    "Ludichat and Fuzuki (Cobbreeding)",
+    "lastgreenseer (CobbleTowns)",
+    "Instrafe (PokéCenter PCs)",
+    "bonanca and LastGreenSeer (LegendaryStructures)"
+  ],
   "contact": {
-    "homepage": "https://cobblemon.com/",
-    "sources": "https://gitlab.com/cable-mc/cobblemon",
-    "issues": "https://gitlab.com/cable-mc/cobblemon/-/issues"
+    "homepage": "https://github.com/Scwunge/cobblemon-port-26.1.2",
+    "sources": "https://github.com/Scwunge/cobblemon-port-26.1.2",
+    "issues": "https://github.com/Scwunge/cobblemon-port-26.1.2/issues"
   },
-  "license": "MPL-2.0",
+  "license": ["MPL-2.0", "CC-BY-NC-3.0", "MIT"],
   "icon": "assets/cobblemon/icon_cobblemon.png",
   "environment": "*",
   "entrypoints": {
@@ -44,15 +51,14 @@
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "minecraft": "${minecraft_version}",
     "java": "${java_version}"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.curseforge": "https://www.curseforge.com/minecraft/mc-mods/cobblemon",
-        "modmenu.modrinth": "https://modrinth.com/mod/cobblemon",
-        "modmenu.discord": "https://discord.gg/cobblemon"
+        "modmenu.github_releases": "https://github.com/Scwunge/cobblemon-port-26.1.2"
       }
     },
     "loom:injected_interfaces": {

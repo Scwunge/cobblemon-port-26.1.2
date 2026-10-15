@@ -163,6 +163,7 @@ tasks {
             "version" to project.version.toString(),
             "fabric_loader_version" to libs.versions.fabric.loader.get(),
             "fabric_api_version" to libs.versions.fabric.api.get(),
+            "fabric_kotlin_version" to libs.versions.fabric.kotlin.get(),
             "minecraft_version" to mcVersion,
             "java_version" to javaVersion.toString(),
         )
